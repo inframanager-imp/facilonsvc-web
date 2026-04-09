@@ -91,7 +91,7 @@ export const PersonalInformation: React.FC = () => {
                                         <option value="">Select Gender</option>
                                         <option value="1">Male</option>
                                         <option value="2">Female</option>
-                                        <option value="3">Other</option>
+                                        <option value="3">Transgender</option>
                                     </select>
                                     {errors.gender && <span className="error-message">{errors.gender.message}</span>}
                                 </div>

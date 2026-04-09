@@ -136,7 +136,7 @@ export const NextholderForm: React.FC<NextholderFormProps> = ({ initialData, onS
                             <option value="Child">Child</option>
                             <option value="Parent">Parent</option>
                             <option value="Sibling">Sibling</option>
-                            <option value="Other">Other</option>
+                            <option value="Transgender">Transgender</option>
                         </select>
                     </div>
                     <div className="form-group">

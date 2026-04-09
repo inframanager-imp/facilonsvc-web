@@ -154,7 +154,7 @@ export const JourneyManagement: React.FC<JourneyManagementProps> = ({
                                         <option value="Missing documents">Missing documents</option>
                                         <option value="Changed mind">Changed my mind</option>
                                         <option value="Technical issues">Technical issues</option>
-                                        <option value="Other">Other</option>
+                                        <option value="Transgender">Transgender</option>
                                     </select>
                                 </div>
                                 <div className="form-group">

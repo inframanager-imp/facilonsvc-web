@@ -581,7 +581,7 @@ export const InvestorRegistration: React.FC = () => {
                     <option value="">Select Gender</option>
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
-                    <option value="Other">Other</option>
+                    <option value="Transgender">Transgender</option>
                   </select>
                   {errors.gender && <span className="field-error">{errors.gender}</span>}
                 </div>

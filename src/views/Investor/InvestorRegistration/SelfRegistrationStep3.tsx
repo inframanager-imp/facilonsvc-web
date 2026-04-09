@@ -8,15 +8,15 @@ import type {
 } from '../../../services/investor.service';
 import type {
   MasterCountryDto,
-  MasterLookupDto
+  MasterLookupDto,
+  MasterTitleDto
 } from '../../../services/content.service';
-import PrivacyPolicyModal from '../IntroducedRegistration/PrivacyPolicyModal';
 import TermsModal from '../IntroducedRegistration/TermsModal';
 import { toast } from 'react-toastify';
 import '../IntroducedRegistration/IntroducedInvestorRegistration.scss';
 
 /**
- * Step 3: Registration Details with 4 Consent Checkboxes
+ * Step 3: Registration Details with consent confirmations
  * Matches Laravel: register-step4.blade.php
  */
 export const SelfRegistrationStep3: React.FC = () => {
@@ -27,14 +27,12 @@ export const SelfRegistrationStep3: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [countries, setCountries] = useState<MasterCountryDto[]>([]);
   const [nationalities, setNationalities] = useState<MasterLookupDto[]>([]);
+  const [titles, setTitles] = useState<MasterTitleDto[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   // Modal states
-  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
-  const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
-  const [privacyCheckboxEnabled, setPrivacyCheckboxEnabled] = useState(false);
   const [termsCheckboxEnabled, setTermsCheckboxEnabled] = useState(false);
 
   // Additional checkboxes
@@ -78,23 +76,8 @@ export const SelfRegistrationStep3: React.FC = () => {
 
     contentService.getCountries().then(setCountries).catch(() => {});
     contentService.getNationalities().then(setNationalities).catch(() => {});
+    contentService.getTitles().then(setTitles).catch(() => {});
   }, [uniqueCode, email, navigate]);
-
-  const openPrivacyModal = (e?: React.MouseEvent) => {
-    e?.preventDefault();
-    e?.stopPropagation();
-    setShowPrivacyModal(true);
-  };
-
-  const closePrivacyModal = () => {
-    setShowPrivacyModal(false);
-  };
-
-  const acceptPrivacy = () => {
-    setPrivacyCheckboxEnabled(true);
-    setPrivacyAccepted(true);
-    setShowPrivacyModal(false);
-  };
 
   const openTermsModal = (e?: React.MouseEvent) => {
     e?.preventDefault();
@@ -125,10 +108,6 @@ export const SelfRegistrationStep3: React.FC = () => {
       toast.error('Please confirm that the information provided is accurate');
       return;
     }
-    if (!privacyAccepted) {
-      toast.error('Please read and accept the Privacy Policy');
-      return;
-    }
     if (!termsAccepted) {
       toast.error('Please read and accept the Terms and Conditions');
       return;
@@ -136,6 +115,9 @@ export const SelfRegistrationStep3: React.FC = () => {
 
     // Validate form fields
     const validationErrors: Record<string, string> = {};
+    if (!individualData.title) {
+      validationErrors.title = 'Title is required';
+    }
     if (!individualData.firstName?.trim()) {
       validationErrors.firstName = 'First name is required';
     }
@@ -193,10 +175,6 @@ export const SelfRegistrationStep3: React.FC = () => {
     }
     if (!informationAccuracy) {
       toast.error('Please confirm that the information provided is accurate');
-      return;
-    }
-    if (!privacyAccepted) {
-      toast.error('Please read and accept the Privacy Policy');
       return;
     }
     if (!termsAccepted) {
@@ -296,6 +274,30 @@ export const SelfRegistrationStep3: React.FC = () => {
                       <form onSubmit={handleIndividualSubmit}>
                         <h3 style={{ marginBottom: '20px' }}>Individual Registration</h3>
 
+                        {/* Title */}
+                        <div className="single-field">
+                          <label htmlFor="title">Title <span className="star-color">*</span></label>
+                          <select
+                            id="title"
+                            value={individualData.title ?? ''}
+                            onChange={(e) => {
+                              const v = e.target.value;
+                              setIndividualData((p) => ({
+                                ...p,
+                                title: v === '' ? undefined : Number.parseInt(v, 10),
+                              }));
+                            }}
+                          >
+                            <option value="">Select Title</option>
+                            {titles.map((t) => (
+                              <option key={t.myRowId ?? t.id} value={t.id}>
+                                {t.ssName}
+                              </option>
+                            ))}
+                          </select>
+                          {errors.title && <span role="alert">{errors.title}</span>}
+                        </div>
+
                         {/* First Name */}
                         <div className="single-field">
                           <label htmlFor="firstName">First Name <span className="star-color">*</span></label>
@@ -377,11 +379,11 @@ export const SelfRegistrationStep3: React.FC = () => {
                               <input
                                 type="radio"
                                 name="gender"
-                                value="Other"
-                                checked={individualData.gender === 'Other'}
+                                value="Transgender"
+                                checked={individualData.gender === 'Transgender'}
                                 onChange={(e) => setIndividualData(p => ({ ...p, gender: e.target.value }))}
                               />
-                              <span>Other</span>
+                              <span>Transgender</span>
                             </label>
                           </div>
                           {errors.gender && <span role="alert">{errors.gender}</span>}
@@ -498,7 +500,7 @@ export const SelfRegistrationStep3: React.FC = () => {
                           </>
                         )}
 
-                        {/* 4 CONSENT CHECKBOXES - Laravel Match */}
+                        {/* Consents - Laravel Match */}
                         <div id="note_confirm_div" style={{ marginTop: '30px' }}>
                           {/* 1. WhatsApp Communication */}
                           <div className="single-field">
@@ -544,33 +546,7 @@ export const SelfRegistrationStep3: React.FC = () => {
                             </div>
                           </div>
 
-                          {/* 3. Privacy Policy */}
-                          <div className="single-field">
-                            <div className="checkbox-wrapper-33">
-                              <label className="checkbox" onClick={(e) => !privacyCheckboxEnabled && openPrivacyModal(e)}>
-                                <input
-                                  className="checkbox__trigger visuallyhidden"
-                                  type="checkbox"
-                                  id="privacyCheckbox"
-                                  checked={privacyAccepted}
-                                  disabled={!privacyCheckboxEnabled}
-                                  onChange={(e) => privacyCheckboxEnabled && setPrivacyAccepted(e.target.checked)}
-                                />
-                                <span className="checkbox__symbol">
-                                  <svg aria-hidden="true" className="icon-checkbox" width="28px" height="28px" viewBox="0 0 28 28" version="1" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M4 14l8 7L24 7"></path>
-                                  </svg>
-                                </span>
-                                <p className="checkbox__textwrapper">
-                                  I have read and understood the{' '}
-                                  <a href="javascript:void(0);" onClick={openPrivacyModal}>Privacy Policy</a>
-                                  <span className="star-color">*</span>
-                                </p>
-                              </label>
-                            </div>
-                          </div>
-
-                          {/* 4. Terms and Conditions */}
+                          {/* 3. Terms and Conditions */}
                           <div className="single-field">
                             <div className="checkbox-wrapper-33">
                               <label className="checkbox" onClick={(e) => !termsCheckboxEnabled && openTermsModal(e)}>
@@ -763,7 +739,7 @@ export const SelfRegistrationStep3: React.FC = () => {
                           {errors.isSecuritiesRegulated && <span role="alert">{errors.isSecuritiesRegulated}</span>}
                         </div>
 
-                        {/* 4 CONSENT CHECKBOXES */}
+                        {/* Consents */}
                         <div id="note_confirm_div" style={{ marginTop: '30px' }}>
                           {/* 1. WhatsApp Communication */}
                           <div className="single-field">
@@ -809,33 +785,7 @@ export const SelfRegistrationStep3: React.FC = () => {
                             </div>
                           </div>
 
-                          {/* 3. Privacy Policy */}
-                          <div className="single-field">
-                            <div className="checkbox-wrapper-33">
-                              <label className="checkbox" onClick={(e) => !privacyCheckboxEnabled && openPrivacyModal(e)}>
-                                <input
-                                  className="checkbox__trigger visuallyhidden"
-                                  type="checkbox"
-                                  id="privacyCheckbox"
-                                  checked={privacyAccepted}
-                                  disabled={!privacyCheckboxEnabled}
-                                  onChange={(e) => privacyCheckboxEnabled && setPrivacyAccepted(e.target.checked)}
-                                />
-                                <span className="checkbox__symbol">
-                                  <svg aria-hidden="true" className="icon-checkbox" width="28px" height="28px" viewBox="0 0 28 28" version="1" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M4 14l8 7L24 7"></path>
-                                  </svg>
-                                </span>
-                                <p className="checkbox__textwrapper">
-                                  I have read and understood the{' '}
-                                  <a href="javascript:void(0);" onClick={openPrivacyModal}>Privacy Policy</a>
-                                  <span className="star-color">*</span>
-                                </p>
-                              </label>
-                            </div>
-                          </div>
-
-                          {/* 4. Terms and Conditions */}
+                          {/* 3. Terms and Conditions */}
                           <div className="single-field">
                             <div className="checkbox-wrapper-33">
                               <label className="checkbox" onClick={(e) => !termsCheckboxEnabled && openTermsModal(e)}>
@@ -900,11 +850,6 @@ export const SelfRegistrationStep3: React.FC = () => {
       </section>
 
       {/* Modals */}
-      <PrivacyPolicyModal
-        show={showPrivacyModal}
-        onClose={closePrivacyModal}
-        onAccept={acceptPrivacy}
-      />
       <TermsModal
         show={showTermsModal}
         onClose={closeTermsModal}
