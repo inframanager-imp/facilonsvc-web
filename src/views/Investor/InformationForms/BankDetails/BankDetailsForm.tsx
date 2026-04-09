@@ -1,10 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { profileService, UserBankDetailsDto } from '../../../../services/profile.service';
+import { profileService, UserBankDetailsDto, PreferredBankDto } from '../../../../services/profile.service';
 import { toast } from 'react-toastify';
 import { validateBankDetails } from '../../../../utils/investorValidation';
 import { SharedFormContext } from '../shared/types';
 import { useDelegationPermissions } from '../../../../contexts/DelegationPermissionsContext';
 import { getPermissionErrorMessage } from '../../../../utils/apiClient';
+
+/** Indian states & UTs — Laravel populates this from master_states filtered to India. */
+const INDIAN_STATES = [
+  'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh', 'Goa',
+  'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka', 'Kerala',
+  'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland',
+  'Odisha', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura',
+  'Uttar Pradesh', 'Uttarakhand', 'West Bengal',
+  'Andaman and Nicobar Islands', 'Chandigarh', 'Dadra and Nagar Haveli and Daman and Diu',
+  'Delhi', 'Jammu and Kashmir', 'Ladakh', 'Lakshadweep', 'Puducherry',
+];
 
 interface BankDetailsFormProps {
   initialData: UserBankDetailsDto | null;
@@ -26,6 +37,7 @@ export const BankDetailsForm: React.FC<BankDetailsFormProps> = ({
   const [formData, setFormData] = useState<Partial<UserBankDetailsDto>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
+  const [preferredBank, setPreferredBank] = useState<PreferredBankDto | null>(null);
 
   useEffect(() => {
     if (initialData) {
@@ -33,13 +45,38 @@ export const BankDetailsForm: React.FC<BankDetailsFormProps> = ({
     }
   }, [initialData]);
 
+  // Load broker's preferred bank (Laravel parity) and prefill bankName when empty
+  useEffect(() => {
+    let cancelled = false;
+    profileService.getPreferredBank()
+      .then((pb) => {
+        if (cancelled || !pb) return;
+        setPreferredBank(pb);
+        if (pb.isBroker && pb.bankName) {
+          setFormData((prev) => ({
+            ...prev,
+            bankName: prev.bankName && prev.bankName.trim() !== '' ? prev.bankName : pb.bankName ?? '',
+          }));
+        }
+      })
+      .catch((err) => {
+        // Non-fatal — the form still works without the preferred-bank hint
+        console.warn('[BankDetailsForm] failed to load preferred bank:', err);
+      });
+    return () => { cancelled = true; };
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    const payload = {
-      ...formData,
-      settlementAccountType: formData.settlementAccountType || (formData.accountType ? 'yes' : ''),
-    } as UserBankDetailsDto;
+    // settlementAccountType is now an explicit radio the user answers (Laravel parity).
+    // Require it before submit.
+    if (!formData.settlementAccountType) {
+      setErrors({ settlementAccountType: 'Please answer the NRE-account question.' });
+      toast.error('Please answer: Do you already have a NRE account?');
+      return;
+    }
+    const payload = { ...formData } as UserBankDetailsDto;
     
     const newErrors = validateBankDetails(payload);
     if (Object.keys(newErrors).length > 0) {
@@ -72,6 +109,44 @@ export const BankDetailsForm: React.FC<BankDetailsFormProps> = ({
     <form className="investor-profile__card" onSubmit={handleSubmit}>
       <h3>Bank Details</h3>
       <div className="investor-profile__grid">
+        {/* Laravel parity: settlement_account_type — gate the bank fields on this answer.
+            When the broker has a preferred bank configured, the question names the bank
+            (matches Laravel: "Do you already have a NRE account with {bank}?"). */}
+        <div className="form-group form-group--full">
+          <label>
+            {preferredBank?.isBroker && preferredBank.bankName
+              ? `Do you already have a NRE account with ${preferredBank.bankName}?`
+              : 'Do you already have a NRE account?'}
+            {' '}<span className="text-danger">*</span>
+          </label>
+          <div style={{ display: 'flex', gap: '1.5rem', marginTop: '0.4rem' }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 'normal' }}>
+              <input
+                type="radio"
+                name="settlementAccountType"
+                value="yes"
+                checked={formData.settlementAccountType === 'yes'}
+                onChange={() => setFormData({ ...formData, settlementAccountType: 'yes' })}
+              /> Yes
+            </label>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 'normal' }}>
+              <input
+                type="radio"
+                name="settlementAccountType"
+                value="no"
+                checked={formData.settlementAccountType === 'no'}
+                onChange={() => setFormData({ ...formData, settlementAccountType: 'no' })}
+              /> No
+            </label>
+          </div>
+          {errors.settlementAccountType && <div className="invalid-feedback">{errors.settlementAccountType}</div>}
+        </div>
+      </div>
+
+      {/* Laravel equivalent of #show_account_type_div — show the remaining bank fields
+          only once the settlement-account question has been answered. */}
+      {(formData.settlementAccountType === 'yes' || formData.settlementAccountType === 'no') && (
+      <div className="investor-profile__grid">
         <div className="form-group">
           <label>Bank Name <span className="text-danger">*</span></label>
           <input
@@ -81,7 +156,7 @@ export const BankDetailsForm: React.FC<BankDetailsFormProps> = ({
           />
           {errors.bankName && <div className="invalid-feedback">{errors.bankName}</div>}
         </div>
-        
+
         <div className="form-group">
           <label>Account Type <span className="text-danger">*</span></label>
           <select
@@ -98,8 +173,8 @@ export const BankDetailsForm: React.FC<BankDetailsFormProps> = ({
           {errors.accountType && <div className="invalid-feedback">{errors.accountType}</div>}
         </div>
 
-        {/* PIS fields — visible only for NRO / NRE accounts */}
-        {(formData.accountType === 'nro' || formData.accountType === 'nre') && (
+        {/* PIS fields — Laravel shows only for NRE (line 1922) */}
+        {formData.accountType === 'nre' && (
           <>
             <div className="form-group form-group--full">
               <label>Do you have PIS Approval? <span className="text-danger">*</span></label>
@@ -196,8 +271,73 @@ export const BankDetailsForm: React.FC<BankDetailsFormProps> = ({
             onChange={(e) => setFormData({ ...formData, bankBranchAddress: e.target.value })}
           />
         </div>
+
+        <div className="form-group">
+          <label>MICR No. <span className="text-danger">*</span></label>
+          <input
+            value={formData.bankDetailsMicr ?? ''}
+            onChange={(e) => {
+              const v = e.target.value.replace(/\D/g, '').slice(0, 9);
+              setFormData({ ...formData, bankDetailsMicr: v });
+            }}
+            placeholder="Enter 9-digit MICR Number"
+            maxLength={9}
+            pattern="\d{9}"
+            inputMode="numeric"
+            className={errors.bankDetailsMicr ? 'form-control is-invalid' : 'form-control'}
+          />
+          {errors.bankDetailsMicr && <div className="invalid-feedback">{errors.bankDetailsMicr}</div>}
+        </div>
+
+        <div className="form-group">
+          <label>Country <span className="text-danger">*</span></label>
+          <select
+            className="form-control"
+            value={formData.bankDetailsCountry ?? 'India'}
+            onChange={(e) => setFormData({ ...formData, bankDetailsCountry: e.target.value })}
+          >
+            {/* Laravel defaults to India from master_countries */}
+            <option value="India">INDIA</option>
+          </select>
+        </div>
+
+        <div className="form-group">
+          <label>State <span className="text-danger">*</span></label>
+          <select
+            className={errors.bankDetailsState ? 'form-control is-invalid' : 'form-control'}
+            value={formData.bankDetailsState ?? ''}
+            onChange={(e) => setFormData({ ...formData, bankDetailsState: e.target.value })}
+          >
+            <option value="">Select State</option>
+            {INDIAN_STATES.map((s) => (
+              <option key={s} value={s}>{s.toUpperCase()}</option>
+            ))}
+          </select>
+          {errors.bankDetailsState && <div className="invalid-feedback">{errors.bankDetailsState}</div>}
+        </div>
+
+        <div className="form-group">
+          <label>City <span className="text-danger">*</span></label>
+          <input
+            value={formData.bankDetailsCity ?? ''}
+            onChange={(e) => setFormData({ ...formData, bankDetailsCity: e.target.value })}
+            className={errors.bankDetailsCity ? 'form-control is-invalid' : 'form-control'}
+          />
+          {errors.bankDetailsCity && <div className="invalid-feedback">{errors.bankDetailsCity}</div>}
+        </div>
+
+        <div className="form-group">
+          <label>Postal / Zip code <span className="text-danger">*</span></label>
+          <input
+            value={formData.bankDetailsZipCode ?? ''}
+            onChange={(e) => setFormData({ ...formData, bankDetailsZipCode: e.target.value })}
+            className={errors.bankDetailsZipCode ? 'form-control is-invalid' : 'form-control'}
+          />
+          {errors.bankDetailsZipCode && <div className="invalid-feedback">{errors.bankDetailsZipCode}</div>}
+        </div>
       </div>
-      
+      )}
+
       <button type="submit" className="btn-save" disabled={saving || !canEdit}>
         {saving ? 'Saving...' : 'Save'}
       </button>

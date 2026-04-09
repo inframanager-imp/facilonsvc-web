@@ -92,11 +92,46 @@ export const TaxInformationForm: React.FC<TaxInformationFormProps> = ({
       <h3>Tax Information</h3>
       <div className="investor-profile__grid">
         <div className="form-group">
+          <label>Tax Info</label>
+          <select
+            value={formData.taxInfo ?? ''}
+            onChange={(e) => setFormData({ ...formData, taxInfo: e.target.value })}
+            className="form-control"
+          >
+            <option value="">Select</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+          </select>
+        </div>
+
+        <div className="form-group">
+          <label>Are you a US Person (FATCA)?</label>
+          <select
+            value={formData.usPersonFatca ?? ''}
+            onChange={(e) => setFormData({ ...formData, usPersonFatca: e.target.value })}
+            className="form-control"
+          >
+            <option value="">Select</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+          </select>
+        </div>
+
+        <div className="form-group">
           <label>PAN Number</label>
           <input
             value={formData.panNumber ?? ''}
             onChange={(e) => setFormData({ ...formData, panNumber: e.target.value })}
             placeholder="ABCDE1234F"
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Tax PAN No</label>
+          <input
+            value={formData.taxPanNo ?? ''}
+            onChange={(e) => setFormData({ ...formData, taxPanNo: e.target.value })}
+            placeholder="Tax PAN (if different)"
           />
         </div>
         

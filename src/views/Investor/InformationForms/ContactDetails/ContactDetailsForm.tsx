@@ -90,7 +90,23 @@ export const ContactDetailsForm: React.FC<ContactDetailsFormProps> = ({
           />
           {errors.addressLine1 && <div className="invalid-feedback">{errors.addressLine1}</div>}
         </div>
-        
+
+        <div className="form-group form-group--full">
+          <label>Address Line 2</label>
+          <input
+            value={formData.addressLine2 ?? ''}
+            onChange={(e) => setFormData({ ...formData, addressLine2: e.target.value })}
+          />
+        </div>
+
+        <div className="form-group form-group--full">
+          <label>Address Line 3</label>
+          <input
+            value={formData.addressLine3 ?? ''}
+            onChange={(e) => setFormData({ ...formData, addressLine3: e.target.value })}
+          />
+        </div>
+
         <div className="form-group">
           <label>City <span className="text-danger">*</span></label>
           <input
@@ -165,6 +181,20 @@ export const ContactDetailsForm: React.FC<ContactDetailsFormProps> = ({
               />
               {errors.corrAddressLine1 && <div className="invalid-feedback">{errors.corrAddressLine1}</div>}
             </div>
+            <div className="form-group form-group--full">
+              <label>Address Line 2</label>
+              <input
+                value={formData.corrAddressLine2 ?? ''}
+                onChange={(e) => setFormData({ ...formData, corrAddressLine2: e.target.value })}
+              />
+            </div>
+            <div className="form-group form-group--full">
+              <label>Address Line 3</label>
+              <input
+                value={formData.corrAddressLine3 ?? ''}
+                onChange={(e) => setFormData({ ...formData, corrAddressLine3: e.target.value })}
+              />
+            </div>
             <div className="form-group">
               <label>City <span className="text-danger">*</span></label>
               <input
@@ -191,6 +221,16 @@ export const ContactDetailsForm: React.FC<ContactDetailsFormProps> = ({
                 className={errors.corrUserZipCode ? 'form-control is-invalid' : ''}
               />
               {errors.corrUserZipCode && <div className="invalid-feedback">{errors.corrUserZipCode}</div>}
+            </div>
+            <div className="form-group">
+              <label>Country <span className="text-danger">*</span></label>
+              <input
+                value={formData.corrUserCountry ?? ''}
+                onChange={(e) => setFormData({ ...formData, corrUserCountry: e.target.value })}
+                className={errors.corrUserCountry ? 'form-control is-invalid' : ''}
+                placeholder="e.g. India"
+              />
+              {errors.corrUserCountry && <div className="invalid-feedback">{errors.corrUserCountry}</div>}
             </div>
           </>
         )}

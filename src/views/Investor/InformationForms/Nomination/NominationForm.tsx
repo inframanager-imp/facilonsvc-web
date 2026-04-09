@@ -243,32 +243,40 @@ export const NominationForm: React.FC<NominationFormProps> = ({
           <label>Nominee Address</label>
           <input
             className="form-control"
-            value={formData.nomineeAddress ?? ''}
-            onChange={(e) => setFormData({ ...formData, nomineeAddress: e.target.value })}
+            value={formData.nomineeAddress1 ?? formData.nomineeAddress ?? ''}
+            onChange={(e) => setFormData({ ...formData, nomineeAddress1: e.target.value, nomineeAddress: e.target.value })}
           />
         </div>
         <div className="form-group">
           <label>City</label>
           <input
             className="form-control"
-            value={formData.nomineeCity ?? ''}
-            onChange={(e) => setFormData({ ...formData, nomineeCity: e.target.value })}
+            value={formData.nomineeCity1 ?? formData.nomineeCity ?? ''}
+            onChange={(e) => setFormData({ ...formData, nomineeCity1: e.target.value, nomineeCity: e.target.value })}
           />
         </div>
         <div className="form-group">
           <label>State</label>
           <input
             className="form-control"
-            value={formData.nomineeState ?? ''}
-            onChange={(e) => setFormData({ ...formData, nomineeState: e.target.value })}
+            value={formData.nomineeState1 ?? formData.nomineeState ?? ''}
+            onChange={(e) => setFormData({ ...formData, nomineeState1: e.target.value, nomineeState: e.target.value })}
           />
         </div>
         <div className="form-group">
-          <label>Postal Code</label>
+          <label>Country</label>
           <input
             className="form-control"
-            value={formData.nomineePostalCode ?? ''}
-            onChange={(e) => setFormData({ ...formData, nomineePostalCode: e.target.value })}
+            value={formData.nomineeCountry1 ?? ''}
+            onChange={(e) => setFormData({ ...formData, nomineeCountry1: e.target.value })}
+          />
+        </div>
+        <div className="form-group">
+          <label>Pincode</label>
+          <input
+            className="form-control"
+            value={formData.nomineePincode1 ?? formData.nomineePostalCode ?? ''}
+            onChange={(e) => setFormData({ ...formData, nomineePincode1: e.target.value, nomineePostalCode: e.target.value })}
           />
         </div>
 
@@ -385,6 +393,46 @@ export const NominationForm: React.FC<NominationFormProps> = ({
             onChange={(e) => updateNomineeShare2FromInput(e.target.value)}
           />
           {errors.nomineeShare2 && <div className="invalid-feedback">{errors.nomineeShare2}</div>}
+        </div>
+        <div className="form-group form-group--full">
+          <label>Nominee 2 Address</label>
+          <input
+            className="form-control"
+            value={formData.nomineeAddress2 ?? ''}
+            onChange={(e) => setFormData({ ...formData, nomineeAddress2: e.target.value })}
+          />
+        </div>
+        <div className="form-group">
+          <label>City</label>
+          <input
+            className="form-control"
+            value={formData.nomineeCity2 ?? ''}
+            onChange={(e) => setFormData({ ...formData, nomineeCity2: e.target.value })}
+          />
+        </div>
+        <div className="form-group">
+          <label>State</label>
+          <input
+            className="form-control"
+            value={formData.nomineeState2 ?? ''}
+            onChange={(e) => setFormData({ ...formData, nomineeState2: e.target.value })}
+          />
+        </div>
+        <div className="form-group">
+          <label>Country</label>
+          <input
+            className="form-control"
+            value={formData.nomineeCountry2 ?? ''}
+            onChange={(e) => setFormData({ ...formData, nomineeCountry2: e.target.value })}
+          />
+        </div>
+        <div className="form-group">
+          <label>Pincode</label>
+          <input
+            className="form-control"
+            value={formData.nomineePincode2 ?? ''}
+            onChange={(e) => setFormData({ ...formData, nomineePincode2: e.target.value })}
+          />
         </div>
         </>
         )}
@@ -508,6 +556,46 @@ export const NominationForm: React.FC<NominationFormProps> = ({
           />
           {errors.nomineeShare3 && <div className="invalid-feedback">{errors.nomineeShare3}</div>}
         </div>
+        <div className="form-group form-group--full">
+          <label>Nominee 3 Address</label>
+          <input
+            className="form-control"
+            value={formData.nomineeAddress3 ?? ''}
+            onChange={(e) => setFormData({ ...formData, nomineeAddress3: e.target.value })}
+          />
+        </div>
+        <div className="form-group">
+          <label>City</label>
+          <input
+            className="form-control"
+            value={formData.nomineeCity3 ?? ''}
+            onChange={(e) => setFormData({ ...formData, nomineeCity3: e.target.value })}
+          />
+        </div>
+        <div className="form-group">
+          <label>State</label>
+          <input
+            className="form-control"
+            value={formData.nomineeState3 ?? ''}
+            onChange={(e) => setFormData({ ...formData, nomineeState3: e.target.value })}
+          />
+        </div>
+        <div className="form-group">
+          <label>Country</label>
+          <input
+            className="form-control"
+            value={formData.nomineeCountry3 ?? ''}
+            onChange={(e) => setFormData({ ...formData, nomineeCountry3: e.target.value })}
+          />
+        </div>
+        <div className="form-group">
+          <label>Pincode</label>
+          <input
+            className="form-control"
+            value={formData.nomineePincode3 ?? ''}
+            onChange={(e) => setFormData({ ...formData, nomineePincode3: e.target.value })}
+          />
+        </div>
         </>
         )}
 
@@ -603,6 +691,232 @@ export const NominationForm: React.FC<NominationFormProps> = ({
                 onChange={(e) => setFormData({ ...formData, guardianMobile1: e.target.value })}
               />
             </div>
+            <div className="form-group">
+              <label>Guardian Email</label>
+              <input
+                type="email"
+                className="form-control"
+                value={formData.guardianEmail1 ?? ''}
+                onChange={(e) => setFormData({ ...formData, guardianEmail1: e.target.value })}
+              />
+            </div>
+            <div className="form-group">
+              <label>Guardian Date of Birth</label>
+              <input
+                type="date"
+                className="form-control"
+                value={formData.guardianDob1 ?? ''}
+                onChange={(e) => setFormData({ ...formData, guardianDob1: e.target.value })}
+              />
+            </div>
+            <div className="form-group">
+              <label>Guardian PAN</label>
+              <input
+                className="form-control"
+                value={formData.guardianPanNo1 ?? ''}
+                onChange={(e) => setFormData({ ...formData, guardianPanNo1: e.target.value })}
+                placeholder="ABCDE1234F"
+                maxLength={10}
+              />
+            </div>
+
+            {/* Guardian 2 (if nominee 2 is also a minor) */}
+            {showNominee2Section && (
+              <>
+                <div className="form-group form-group--full">
+                  <h4 style={{ margin: '1rem 0 0.5rem 0', color: '#333' }}>Guardian Details (Nominee 2)</h4>
+                </div>
+                <div className="form-group">
+                  <label>Name of Guardian</label>
+                  <input
+                    className="form-control"
+                    value={formData.guardianName2 ?? ''}
+                    onChange={(e) => setFormData({ ...formData, guardianName2: e.target.value })}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Guardian Document Type</label>
+                  <select
+                    className="form-control"
+                    value={formData.guardianDocType2 ?? ''}
+                    onChange={(e) => setFormData({ ...formData, guardianDocType2: e.target.value })}
+                  >
+                    {NOMINATION_DOC_TYPE_OPTIONS.map((o) => (
+                      <option key={`g2dt-${o.value || 'x'}`} value={o.value}>{o.label}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Document Number</label>
+                  <input
+                    className="form-control"
+                    value={formData.guardianDocNo2 ?? ''}
+                    onChange={(e) => setFormData({ ...formData, guardianDocNo2: e.target.value })}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>ISD Code</label>
+                  <select
+                    className="form-control"
+                    value={formData.guardianCountrycode2 ?? ''}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        guardianCountrycode2: e.target.value ? Number(e.target.value) : undefined,
+                      })
+                    }
+                  >
+                    <option value="">Select ISD</option>
+                    {sharedContext.isdCodes.map((c) => {
+                      const cid = c.id ?? c.myRowId;
+                      if (cid == null) return null;
+                      return (
+                        <option key={`g2isd-${cid}`} value={cid}>
+                          {c.countryName ?? c.nationality ?? '—'}
+                          {c.codeValue != null ? ` (+${c.codeValue})` : ''}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Mobile</label>
+                  <input
+                    type="tel"
+                    className="form-control"
+                    value={formData.guardianMobile2 ?? ''}
+                    onChange={(e) => setFormData({ ...formData, guardianMobile2: e.target.value })}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Email</label>
+                  <input
+                    type="email"
+                    className="form-control"
+                    value={formData.guardianEmail2 ?? ''}
+                    onChange={(e) => setFormData({ ...formData, guardianEmail2: e.target.value })}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Date of Birth</label>
+                  <input
+                    type="date"
+                    className="form-control"
+                    value={formData.guardianDob2 ?? ''}
+                    onChange={(e) => setFormData({ ...formData, guardianDob2: e.target.value })}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>PAN</label>
+                  <input
+                    className="form-control"
+                    value={formData.guardianPanNo2 ?? ''}
+                    onChange={(e) => setFormData({ ...formData, guardianPanNo2: e.target.value })}
+                    placeholder="ABCDE1234F"
+                    maxLength={10}
+                  />
+                </div>
+              </>
+            )}
+
+            {/* Guardian 3 (if nominee 3 is also a minor) */}
+            {showNominee3Section && (
+              <>
+                <div className="form-group form-group--full">
+                  <h4 style={{ margin: '1rem 0 0.5rem 0', color: '#333' }}>Guardian Details (Nominee 3)</h4>
+                </div>
+                <div className="form-group">
+                  <label>Name of Guardian</label>
+                  <input
+                    className="form-control"
+                    value={formData.guardianName3 ?? ''}
+                    onChange={(e) => setFormData({ ...formData, guardianName3: e.target.value })}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Guardian Document Type</label>
+                  <select
+                    className="form-control"
+                    value={formData.guardianDocType3 ?? ''}
+                    onChange={(e) => setFormData({ ...formData, guardianDocType3: e.target.value })}
+                  >
+                    {NOMINATION_DOC_TYPE_OPTIONS.map((o) => (
+                      <option key={`g3dt-${o.value || 'x'}`} value={o.value}>{o.label}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Document Number</label>
+                  <input
+                    className="form-control"
+                    value={formData.guardianDocNo3 ?? ''}
+                    onChange={(e) => setFormData({ ...formData, guardianDocNo3: e.target.value })}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>ISD Code</label>
+                  <select
+                    className="form-control"
+                    value={formData.guardianCountrycode3 ?? ''}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        guardianCountrycode3: e.target.value ? Number(e.target.value) : undefined,
+                      })
+                    }
+                  >
+                    <option value="">Select ISD</option>
+                    {sharedContext.isdCodes.map((c) => {
+                      const cid = c.id ?? c.myRowId;
+                      if (cid == null) return null;
+                      return (
+                        <option key={`g3isd-${cid}`} value={cid}>
+                          {c.countryName ?? c.nationality ?? '—'}
+                          {c.codeValue != null ? ` (+${c.codeValue})` : ''}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Mobile</label>
+                  <input
+                    type="tel"
+                    className="form-control"
+                    value={formData.guardianMobile3 ?? ''}
+                    onChange={(e) => setFormData({ ...formData, guardianMobile3: e.target.value })}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Email</label>
+                  <input
+                    type="email"
+                    className="form-control"
+                    value={formData.guardianEmail3 ?? ''}
+                    onChange={(e) => setFormData({ ...formData, guardianEmail3: e.target.value })}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Date of Birth</label>
+                  <input
+                    type="date"
+                    className="form-control"
+                    value={formData.guardianDob3 ?? ''}
+                    onChange={(e) => setFormData({ ...formData, guardianDob3: e.target.value })}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>PAN</label>
+                  <input
+                    className="form-control"
+                    value={formData.guardianPanNo3 ?? ''}
+                    onChange={(e) => setFormData({ ...formData, guardianPanNo3: e.target.value })}
+                    placeholder="ABCDE1234F"
+                    maxLength={10}
+                  />
+                </div>
+              </>
+            )}
           </>
         )}
       </div>

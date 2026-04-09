@@ -73,6 +73,22 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProps> = (
       <h3>Personal Information</h3>
       <div className="investor-profile__grid">
         <div className="form-group">
+          <label>Title <span className="text-danger">*</span></label>
+          <select
+            value={formData.nameTitle ?? ''}
+            onChange={(e) => setFormData({ ...formData, nameTitle: e.target.value })}
+            className={errors.nameTitle ? 'form-control is-invalid' : ''}
+          >
+            <option value="">Select</option>
+            <option value="Mr">Mr</option>
+            <option value="Mrs">Mrs</option>
+            <option value="Miss">Miss</option>
+            <option value="Ms">Ms</option>
+            <option value="Dr">Dr</option>
+          </select>
+          {errors.nameTitle && <div className="invalid-feedback">{errors.nameTitle}</div>}
+        </div>
+        <div className="form-group">
           <label>First Name <span className="text-danger">*</span></label>
           <input
             value={formData.investorFirstName ?? ''}
@@ -381,6 +397,20 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProps> = (
             className={errors.addressLine1 ? 'form-control is-invalid' : ''}
           />
           {errors.addressLine1 && <div className="invalid-feedback">{errors.addressLine1}</div>}
+        </div>
+        <div className="form-group form-group--full">
+          <label>Address Line 2</label>
+          <input
+            value={formData.addressLine2 ?? ''}
+            onChange={(e) => setFormData({ ...formData, addressLine2: e.target.value })}
+          />
+        </div>
+        <div className="form-group form-group--full">
+          <label>Address Line 3</label>
+          <input
+            value={formData.addressLine3 ?? ''}
+            onChange={(e) => setFormData({ ...formData, addressLine3: e.target.value })}
+          />
         </div>
         <div className="form-group form-group--full">
           <label>City <span className="text-danger">*</span></label>

@@ -65,8 +65,127 @@ export const ResidentialStatusForm: React.FC<ResidentialStatusFormProps> = ({
 
   return (
     <form className="investor-profile__card" onSubmit={handleSubmit}>
-      <h3>Proof of Address</h3>
+      <h3>Residential Status &amp; Proof of Address</h3>
       <div className="investor-profile__grid">
+
+        {/* Residential Status selector */}
+        <div className="form-group">
+          <label>Residential Status<span className="text-danger">*</span></label>
+          <select
+            className={errors.residentialStatus ? 'form-control is-invalid' : 'form-control'}
+            value={formData.residentialStatus ?? ''}
+            onChange={(e) => setFormData({ ...formData, residentialStatus: e.target.value })}
+          >
+            <option value="">Select</option>
+            <option value="Resident Indian">Resident Indian</option>
+            <option value="NRI">NRI</option>
+            <option value="OCI">OCI</option>
+            <option value="PIO">PIO</option>
+            <option value="Foreign National">Foreign National</option>
+          </select>
+          {errors.residentialStatus && <div className="invalid-feedback">{errors.residentialStatus}</div>}
+        </div>
+
+        {/* Person of Indian Origin */}
+        <div className="form-group">
+          <label>Person of Indian Origin</label>
+          <select
+            className="form-control"
+            value={formData.personOrigin ?? ''}
+            onChange={(e) => setFormData({ ...formData, personOrigin: e.target.value })}
+          >
+            <option value="">Select</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+          </select>
+        </div>
+
+        {/* Proof of Address */}
+        <div className="form-group">
+          <label>Proof of Address<span className="text-danger">*</span></label>
+          <select
+            className={errors.proofOfAddress ? 'form-control is-invalid' : 'form-control'}
+            value={formData.proofOfAddress ?? ''}
+            onChange={(e) => setFormData({ ...formData, proofOfAddress: e.target.value })}
+          >
+            <option value="">Select</option>
+            <option value="Passport">Passport</option>
+            <option value="Driving License">Driving License</option>
+            <option value="Aadhaar">Aadhaar</option>
+            <option value="Voter ID">Voter ID</option>
+            <option value="Utility Bill issued within 2 months">Utility Bill (within 2 months)</option>
+            <option value="Bank Statement">Bank Statement</option>
+          </select>
+          {errors.proofOfAddress && <div className="invalid-feedback">{errors.proofOfAddress}</div>}
+        </div>
+
+        {/* Aadhaar availability */}
+        <div className="form-group">
+          <label>Do you have an Aadhaar?</label>
+          <select
+            className="form-control"
+            value={formData.aadharNumberOption ?? ''}
+            onChange={(e) => setFormData({ ...formData, aadharNumberOption: e.target.value })}
+          >
+            <option value="">Select</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+          </select>
+        </div>
+
+        {/* Aadhaar number (shown if aadharNumberOption = yes) */}
+        {formData.aadharNumberOption === 'yes' && (
+          <>
+            <div className="form-group">
+              <label>Aadhaar Number<span className="text-danger">*</span></label>
+              <input
+                type="text"
+                maxLength={12}
+                className={errors.aadharNumber ? 'form-control is-invalid' : 'form-control'}
+                value={formData.aadharNumber ?? ''}
+                onChange={(e) => setFormData({ ...formData, aadharNumber: e.target.value })}
+              />
+              {errors.aadharNumber && <div className="invalid-feedback">{errors.aadharNumber}</div>}
+            </div>
+            <div className="form-group">
+              <label>User Aadhaar No</label>
+              <input
+                type="text"
+                maxLength={12}
+                className="form-control"
+                value={formData.userAadharNo ?? ''}
+                onChange={(e) => setFormData({ ...formData, userAadharNo: e.target.value })}
+              />
+            </div>
+          </>
+        )}
+
+        {/* OCI availability */}
+        <div className="form-group">
+          <label>Do you have OCI?</label>
+          <select
+            className="form-control"
+            value={formData.ociAvailable ?? ''}
+            onChange={(e) => setFormData({ ...formData, ociAvailable: e.target.value })}
+          >
+            <option value="">Select</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+          </select>
+        </div>
+
+        {/* Date of OCI (shown if ociAvailable = yes) */}
+        {formData.ociAvailable === 'yes' && (
+          <div className="form-group">
+            <label>Date of OCI</label>
+            <input
+              type="date"
+              className="form-control"
+              value={formData.dateOfOci ?? ''}
+              onChange={(e) => setFormData({ ...formData, dateOfOci: e.target.value })}
+            />
+          </div>
+        )}
 
         {/* OCI Fields - For NRI Investors */}
         <div className="form-group">

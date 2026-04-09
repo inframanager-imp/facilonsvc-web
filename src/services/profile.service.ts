@@ -121,6 +121,24 @@ export interface InvestorConsentsDto {
 }
 
 export interface UserResidentialStatusDto {
+  // Top-level residential status selector (NRI / Resident / Foreign National / PIO)
+  residentialStatus?: string;
+
+  // Person of Indian Origin flag
+  personOrigin?: string; // "yes" | "no"
+
+  // Proof of address
+  proofOfAddress?: string;
+
+  // Aadhaar (Indian KYC)
+  aadharNumberOption?: string; // "yes" | "no" (has Aadhaar?)
+  aadharNumber?: string;
+  userAadharNo?: string;
+
+  // OCI availability + date-of-OCI (Laravel: oci_available, date_of_oci)
+  ociAvailable?: string; // "yes" | "no"
+  dateOfOci?: string;
+
   // Type of Proof - For Foreign Nationals
   userTypeOfProof?: string; // "Visa" or "Resident Proof"
 
@@ -160,6 +178,21 @@ export interface UserTaxInfoDto {
   taxPanFatherName?: string;
   taxResidencyCertificateNo?: string;
   taxResidencyCertificateDate?: string;
+
+  // Laravel parity fields
+  /** Top-level tax info selector (Laravel: tax_info) */
+  taxInfo?: string;
+  /** Separate tax PAN number (Laravel: tax_pan_no — distinct from personal panNumber) */
+  taxPanNo?: string;
+  /** Explicit US-person FATCA yes/no (Laravel: us_person_fatca) */
+  usPersonFatca?: string;
+}
+
+export interface PreferredBankDto {
+  /** true when service_provider_type == "100000000" (Broker) */
+  isBroker: boolean;
+  /** Broker's preferred-bank display name, or null if not resolvable */
+  bankName?: string | null;
 }
 
 export interface UserBankDetailsDto {
@@ -174,6 +207,13 @@ export interface UserBankDetailsDto {
   bankBranchAddress?: string;
   bankCountry?: number;
   isPrimaryAccount?: boolean;
+
+  // Structured bank branch address (Laravel parity: bank_details_*)
+  bankDetailsCity?: string;
+  bankDetailsState?: string;
+  bankDetailsCountry?: string;
+  bankDetailsZipCode?: string;
+  bankDetailsMicr?: string;
 
   // RBI
   rbiApproval?: string;
@@ -243,6 +283,11 @@ export interface UserNominationDto {
   nomineeDocNo1?: string;
   nomineeShare1?: number;
   nomineeCountrycode1?: number;
+  nomineeAddress1?: string;
+  nomineeCity1?: string;
+  nomineeState1?: string;
+  nomineeCountry1?: string;
+  nomineePincode1?: string;
   guardianName1?: string;
   guardianPanNo1?: string;
   guardianDocType1?: string;
@@ -262,7 +307,13 @@ export interface UserNominationDto {
   nomineeDocType2?: string;
   nomineeDocNo2?: string;
   nomineeCountrycode2?: number;
+  nomineeAddress2?: string;
+  nomineeCity2?: string;
+  nomineeState2?: string;
+  nomineeCountry2?: string;
+  nomineePincode2?: string;
   guardianName2?: string;
+  guardianPanNo2?: string;
   guardianDocType2?: string;
   guardianDocNo2?: string;
   guardianCountrycode2?: number;
@@ -280,7 +331,13 @@ export interface UserNominationDto {
   nomineeDocType3?: string;
   nomineeDocNo3?: string;
   nomineeCountrycode3?: number;
+  nomineeAddress3?: string;
+  nomineeCity3?: string;
+  nomineeState3?: string;
+  nomineeCountry3?: string;
+  nomineePincode3?: string;
   guardianName3?: string;
+  guardianPanNo3?: string;
   guardianDocType3?: string;
   guardianDocNo3?: string;
   guardianCountrycode3?: number;
@@ -409,6 +466,12 @@ class ProfileService {
   async updateBankDetails(data: UserBankDetailsDto): Promise<UserBankDetailsDto> {
     const response = await this.client.put<UserBankDetailsDto>(`${this.baseUrl}/bank-details`, data);
     return response.data;
+  }
+
+  /** Fetch the broker's preferred-bank display name (Laravel parity). */
+  async getPreferredBank(): Promise<PreferredBankDto | null> {
+    const response = await this.client.get<PreferredBankDto>(`${this.baseUrl}/bank-details/preferred-bank`);
+    return response.status === 204 || !response.data ? null : response.data;
   }
 
   async getContactDetails(): Promise<UserContactDetailsDto | null> {
