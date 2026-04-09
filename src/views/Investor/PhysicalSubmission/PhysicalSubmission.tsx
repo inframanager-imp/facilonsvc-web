@@ -360,6 +360,8 @@ export const PhysicalSubmission: React.FC = () => {
                                       onChange={(e) => handleInputChange('courierName', e.target.value)}
                                       disabled={!verificationCompleted}
                                       placeholder="e.g., DHL, BlueDart"
+                                      required={submissionType === 'courier'}
+                                      maxLength={100}
                                     />
                                   </div>
                                 </div>
@@ -374,6 +376,7 @@ export const PhysicalSubmission: React.FC = () => {
                                       value={formData.dispatchDate}
                                       onChange={(e) => handleInputChange('dispatchDate', e.target.value)}
                                       disabled={!verificationCompleted}
+                                      required={submissionType === 'courier'}
                                     />
                                   </div>
                                 </div>
@@ -389,6 +392,8 @@ export const PhysicalSubmission: React.FC = () => {
                                       onChange={(e) => handleInputChange('awbNumber', e.target.value)}
                                       disabled={!verificationCompleted}
                                       placeholder="Tracking Number"
+                                      required={submissionType === 'courier'}
+                                      maxLength={50}
                                     />
                                   </div>
                                 </div>

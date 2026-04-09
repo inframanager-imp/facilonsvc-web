@@ -46,44 +46,44 @@ export const InPersonVerification: React.FC = () => {
     };
 
     const steps = [
-      { 
-        label: 'Submit Information', 
-        route: '/investor/profile', 
+      {
+        label: 'Submit Information',
+        route: '/investor/profile',
         key: 'information',
         percent: isCompleted('personalInfo') ? '100%' : '50%',
         isComplete: isCompleted('personalInfo')
       },
-      { 
-        label: 'KYC Documents', 
-        route: '/investor/documents', 
+      {
+        label: 'KYC Documents',
+        route: '/investor/documents',
         key: 'documents',
         percent: accountSummary ? `${Math.min(100, (accountSummary.kycDocumentsUploaded / accountSummary.kycDocumentsRequired) * 100)}%` : '0%',
         isComplete: accountSummary ? accountSummary.kycDocumentsUploaded >= accountSummary.kycDocumentsRequired : false
       },
-      { 
-        label: 'Onboarding Forms', 
-        route: '/investor/documents', 
+      {
+        label: 'Onboarding Forms',
+        route: '/investor/onboarding',
         key: 'onboarding',
         percent: accountSummary ? `${Math.min(100, (accountSummary.onboardingDocumentsUploaded / accountSummary.onboardingDocumentsRequired) * 100)}%` : '0%',
         isComplete: accountSummary ? accountSummary.onboardingDocumentsUploaded >= accountSummary.onboardingDocumentsRequired : false
       },
-      { 
-        label: 'In-person Verification', 
-        route: '/investor/verification', 
+      {
+        label: 'In-person Verification',
+        route: '/investor/verification',
         key: 'verification',
         percent: verificationStatus?.currentStatus === 'completed' ? '100%' : '0%',
         isComplete: verificationStatus?.currentStatus === 'completed'
       },
-      { 
-        label: 'Physical Submission', 
-        route: '/investor/physical-submission', 
+      {
+        label: 'Physical Submission',
+        route: '/investor/physical-submission',
         key: 'physical',
         percent: verificationStatus?.physicalSubmission?.submitted ? '100%' : '0%',
         isComplete: verificationStatus?.physicalSubmission?.submitted || false
       },
-      { 
-        label: 'Account Details', 
-        route: '/investor/account-details', 
+      {
+        label: 'Account Details',
+        route: '/investor/account-details',
         key: 'account',
         percent: accountSummary?.accountOpeningStatus ? '100%' : '0%',
         isComplete: accountSummary?.accountOpeningStatus || false
@@ -167,7 +167,7 @@ export const InPersonVerification: React.FC = () => {
 
                     {/* Tab panes */}
                     <div className="tab-content tabs">
-                      <div role="tabpanel" className="tab-pane fade in active" id="Section1">
+                      <div role="tabpanel" className="tab-pane active" id="Section1">
                         <form>
                           <div className="row">
                             <div className="col-md-6">
