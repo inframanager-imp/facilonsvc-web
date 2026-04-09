@@ -1,0 +1,706 @@
+@import '../../../styles/investor-theme';
+
+.physical-submission-container {
+  padding: 20px 0;
+
+  .loading, .error {
+    text-align: center;
+    padding: 40px;
+    font-size: 16px;
+    color: $investor-text-secondary;
+  }
+
+  .error {
+    color: $investor-accent;
+  }
+
+  // Progress Bar Section
+  .physical__progress-section {
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+    padding: 1rem 0;
+    background-color: transparent;
+    border-radius: 8px;
+    position: relative;
+    z-index: 1;
+
+    .container-fluid {
+      padding: 0 15px;
+    }
+
+    h2 {
+      font-size: 36px !important;
+      color: #be1717 !important;
+      font-weight: 500 !important;
+      margin-bottom: 1.5rem !important;
+      margin-top: 1.5rem !important;
+    }
+
+    .step-progress {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: nowrap;
+      gap: 20px;
+      padding: 1rem 0;
+
+      @media (max-width: 768px) {
+        flex-direction: column;
+        align-items: center;
+
+        .step:not(:last-child)::after {
+          content: '';
+          position: absolute;
+          width: 2px;
+          height: 60px;
+          top: 100px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: #4bb543 !important;
+        }
+      }
+    }
+
+    .step {
+      margin-bottom: 10px;
+      position: relative;
+      flex: 1;
+      min-width: 100px;
+      text-align: center;
+
+      &:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        top: 40px;
+        left: 50%;
+        right: -50%;
+        height: 3px;
+        background: #28a745 !important;
+        z-index: 1;
+      }
+
+      p {
+        margin-top: 10px;
+        font-size: 14px;
+        font-weight: 500;
+        color: $investor-text-heading;
+
+        @media (max-width: 768px) {
+          font-size: 12px;
+        }
+      }
+    }
+
+    // Completed step indicator - shows green tick above ALL completed steps
+    .step-completed {
+      position: relative;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: -40px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 54px;
+        height: 35px;
+        background-image: url('https://anvaya.online/facilon/demo/public/status/green-tick-green-arrow-pointing-right.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        z-index: 99;
+      }
+
+      @media (max-width: 480px) {
+        &::before {
+          top: 0 !important;
+          left: 80% !important;
+        }
+      }
+    }
+
+    .circle-chart {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: conic-gradient(#4a6e7a 0% 0%, #ccc 0% 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+      font-size: 18px;
+      font-weight: bold;
+      color: #fff;
+
+      &.active-one {
+        background: conic-gradient(#4a6e7a 0% 100%, #ccc 100% 100%) !important;
+        background-color: #28a745;
+      }
+
+      &.active-three {
+        background: conic-gradient(#4a6e7a 0% 20%, #ccc 20% 100%) !important;
+      }
+
+      &.active-five {
+        background: conic-gradient(#4a6e7a 0% 40%, #ccc 40% 100%) !important;
+      }
+
+      @media (max-width: 768px) {
+        width: 70px;
+        height: 70px;
+        font-size: 14px;
+      }
+    }
+  }
+
+  // Form Section
+  .derivatives-wrap {
+    background-color: #fff;
+    padding: 40px 0;
+
+    .form-group {
+      margin-bottom: 20px;
+
+      label {
+        display: block;
+        font-weight: 600;
+        color: $investor-text-heading;
+        margin-bottom: 8px;
+        font-size: 14px;
+        text-align: left;
+      }
+
+      .form-control {
+        width: 100%;
+        padding: 10px 15px;
+        border: 1px solid $investor-border;
+        border-radius: 4px;
+        font-size: 14px;
+
+        &:focus {
+          outline: none;
+          border-color: $investor-accent;
+        }
+      }
+    }
+
+    .radio-inline {
+      display: inline-block;
+      margin-right: 20px;
+      font-weight: normal;
+
+      input[type="radio"] {
+        margin-right: 5px;
+      }
+    }
+
+    .btn-primary {
+      background-color: $investor-accent !important;
+      border-color: $investor-accent !important;
+      padding: 12px 30px;
+      font-weight: 600;
+      border-radius: 4px;
+
+      &:hover {
+        background-color: darken($investor-accent, 10%) !important;
+        border-color: darken($investor-accent, 10%) !important;
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+
+.physical-submission {
+  padding: 30px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  h1 {
+    font-family: $investor-font-family;
+    font-size: $investor-h2-size;
+    color: $investor-text-heading;
+    margin-bottom: 10px;
+  }
+
+  &__subtitle {
+    color: $investor-text-secondary;
+    font-size: 16px;
+    margin-bottom: 30px;
+  }
+
+  &__card {
+    @include investor-card;
+    margin-bottom: 30px;
+
+    &--highlight {
+      background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+      border-left: 4px solid $investor-accent;
+    }
+
+    h2 {
+      font-size: $investor-h3-size;
+      color: $investor-text-heading;
+      margin: 0 0 20px 0;
+      font-weight: 600;
+    }
+
+    h3 {
+      font-size: 20px;
+      color: $investor-text-heading;
+      margin: 0 0 15px 0;
+      font-weight: 600;
+    }
+
+    h4 {
+      font-size: 16px;
+      color: $investor-text-heading;
+      margin: 0 0 8px 0;
+      font-weight: 600;
+    }
+
+    p {
+      color: $investor-text;
+      margin: 0 0 10px 0;
+      line-height: 1.6;
+    }
+
+    .text-muted {
+      color: $investor-text-secondary;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+  }
+}
+
+// Alert Messages
+.alert {
+  display: flex;
+  gap: 15px;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+
+  &--info {
+    background-color: #d1ecf1;
+    border: 1px solid #bee5eb;
+  }
+
+  &--warning {
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+  }
+
+  &__icon {
+    font-size: 28px;
+    flex-shrink: 0;
+  }
+
+  &__content {
+    flex: 1;
+
+    h3 {
+      margin: 0 0 10px 0;
+      font-size: 18px;
+      color: $investor-text-heading;
+    }
+
+    p {
+      margin: 0;
+      color: $investor-text;
+      line-height: 1.6;
+
+      strong {
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+// Card Header with Badge
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid $investor-border;
+
+  h2 {
+    margin: 0;
+  }
+
+  .completion-badge {
+    background: linear-gradient(135deg, $investor-accent 0%, $investor-accent-dark 100%);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 700;
+  }
+}
+
+// Progress Bar
+.progress-bar-section {
+  margin-bottom: 30px;
+
+  .progress-bar {
+    height: 12px;
+    background-color: $investor-border-light;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 10px;
+
+    &__fill {
+      height: 100%;
+      background: linear-gradient(90deg, $investor-accent 0%, $investor-accent-dark 100%);
+      border-radius: 6px;
+      transition: width 0.5s ease;
+    }
+  }
+
+  .progress-text {
+    font-size: 14px;
+    color: $investor-text-secondary;
+    margin: 0;
+  }
+}
+
+// Document Checklist
+.document-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.document-item {
+  display: flex;
+  gap: 15px;
+  padding: 20px;
+  background-color: $investor-body-bg;
+  border: 2px solid $investor-border;
+  border-radius: 8px;
+  transition: all 0.3s;
+
+  &:hover {
+    border-color: $investor-accent;
+    box-shadow: 0 2px 8px rgba(190, 23, 23, 0.1);
+  }
+
+  &__checkbox {
+    flex-shrink: 0;
+
+    input[type="checkbox"] {
+      display: none;
+
+      & + label {
+        width: 24px;
+        height: 24px;
+        border: 2px solid $investor-border;
+        border-radius: 4px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+
+        &::after {
+          content: '✓';
+          color: transparent;
+          font-size: 16px;
+          font-weight: 700;
+        }
+      }
+
+      &:checked + label {
+        background-color: $investor-accent;
+        border-color: $investor-accent;
+
+        &::after {
+          color: #fff;
+        }
+      }
+    }
+  }
+
+  &__content {
+    flex: 1;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+
+    h4 {
+      margin: 0;
+    }
+  }
+
+  p {
+    font-size: 14px;
+    color: $investor-text-secondary;
+    margin: 0;
+  }
+}
+
+// Badges
+.badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+
+  &--mandatory {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+}
+
+// Office Grid
+.office-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
+  margin-top: 20px;
+}
+
+.office-card {
+  border: 2px solid $investor-border;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s;
+
+  &:hover {
+    border-color: $investor-accent;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  &__header {
+    background: linear-gradient(135deg, $investor-accent 0%, $investor-accent-dark 100%);
+    padding: 20px;
+
+    h3 {
+      color: #fff;
+      margin: 0;
+      font-size: 18px;
+    }
+  }
+
+  &__body {
+    padding: 20px;
+  }
+
+  &__footer {
+    padding: 15px 20px;
+    background-color: $investor-body-bg;
+    border-top: 1px solid $investor-border;
+
+    .btn-link {
+      color: $investor-accent;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      transition: color 0.3s;
+
+      &:hover {
+        color: $investor-accent-dark;
+      }
+    }
+  }
+}
+
+.office-info {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 15px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &__icon {
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  &__content {
+    flex: 1;
+
+    p {
+      margin: 0;
+      line-height: 1.4;
+    }
+  }
+
+  &__label {
+    font-size: 12px;
+    font-weight: 600;
+    color: $investor-text-secondary;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+}
+
+// Process Steps
+.process-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+  padding-left: 50px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 20px;
+    top: 30px;
+    bottom: 30px;
+    width: 2px;
+    background: linear-gradient(180deg, $investor-accent 0%, $investor-accent-dark 100%);
+  }
+}
+
+.process-step {
+  display: flex;
+  gap: 20px;
+  position: relative;
+
+  &__number {
+    position: absolute;
+    left: -50px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, $investor-accent 0%, $investor-accent-dark 100%);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(190, 23, 23, 0.3);
+  }
+
+  &__content {
+    flex: 1;
+    padding: 10px 0;
+
+    h4 {
+      margin: 0 0 8px 0;
+      color: $investor-text-heading;
+    }
+
+    p {
+      margin: 0;
+      color: $investor-text-secondary;
+      font-size: 14px;
+    }
+  }
+}
+
+// FAQ List
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.faq-item {
+  padding-bottom: 20px;
+  border-bottom: 1px solid $investor-border;
+
+  &:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  h4 {
+    color: $investor-accent;
+    margin: 0 0 10px 0;
+    font-size: 16px;
+  }
+
+  p {
+    margin: 0;
+    color: $investor-text;
+    font-size: 14px;
+  }
+}
+
+// Support Section
+.support-section {
+  text-align: center;
+
+  h3 {
+    color: $investor-text-heading;
+    margin-bottom: 10px;
+  }
+
+  p {
+    color: $investor-text;
+    margin-bottom: 20px;
+  }
+}
+
+.support-contacts {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.support-contact {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  color: $investor-text-heading;
+
+  &__icon {
+    font-size: 24px;
+  }
+}
+
+// Responsive Design
+@media (max-width: 767px) {
+  .physical-submission {
+    padding: 20px 15px;
+  }
+
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .office-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .process-steps {
+    padding-left: 40px;
+
+    &::before {
+      left: 15px;
+    }
+  }
+
+  .process-step__number {
+    left: -40px;
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+  }
+
+  .support-contacts {
+    flex-direction: column;
+    gap: 15px;
+  }
+}

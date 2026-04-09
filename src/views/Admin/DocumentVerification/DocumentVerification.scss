@@ -1,0 +1,495 @@
+@import '../../../styles/investor-theme';
+
+.admin-documents {
+  padding: 30px 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+
+  h1 {
+    font-family: $investor-font-family;
+    font-size: $investor-h2-size;
+    color: $investor-text-heading;
+    margin-bottom: 10px;
+  }
+
+  &__subtitle {
+    color: $investor-text-secondary;
+    font-size: 16px;
+    margin-bottom: 30px;
+  }
+
+  .loading {
+    text-align: center;
+    padding: 60px 20px;
+    font-size: 18px;
+    color: $investor-text-secondary;
+  }
+
+  &__card {
+    background-color: $investor-card-bg;
+    border: 1px solid $investor-border;
+    border-radius: 8px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: $investor-shadow;
+
+    h2 {
+      font-size: 20px;
+      color: $investor-text-heading;
+      margin: 0 0 20px 0;
+      font-weight: 600;
+    }
+  }
+
+  &__stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+}
+
+// Stat Cards
+.stat-card {
+  background: linear-gradient(135deg, $investor-border-light 0%, #ffffff 100%);
+  border: 2px solid $investor-border;
+  border-radius: 12px;
+  padding: 25px;
+  text-align: center;
+  transition: all 0.3s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  &--warning {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffffff 100%);
+    border-color: #ffc107;
+
+    .stat-card__value {
+      color: #856404;
+    }
+  }
+
+  &--success {
+    background: linear-gradient(135deg, #d4edda 0%, #ffffff 100%);
+    border-color: #28a745;
+
+    .stat-card__value {
+      color: #155724;
+    }
+  }
+
+  &--danger {
+    background: linear-gradient(135deg, #f8d7da 0%, #ffffff 100%);
+    border-color: #dc3545;
+
+    .stat-card__value {
+      color: #721c24;
+    }
+  }
+
+  &__value {
+    font-size: 48px;
+    font-weight: 700;
+    color: $investor-accent;
+    margin-bottom: 10px;
+  }
+
+  &__label {
+    font-size: 14px;
+    color: $investor-text-secondary;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+}
+
+// Filters
+.filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    label {
+      font-size: 14px;
+      font-weight: 600;
+      color: $investor-text-heading;
+    }
+
+    input,
+    select {
+      padding: 10px 15px;
+      border: 1px solid $investor-border;
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: $investor-font-family;
+
+      &:focus {
+        outline: none;
+        border-color: $investor-accent;
+        box-shadow: 0 0 0 3px rgba(190, 23, 23, 0.1);
+      }
+    }
+  }
+}
+
+// Documents Table
+.documents-table {
+  overflow-x: auto;
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+
+    thead {
+      background-color: $investor-body-bg;
+
+      th {
+        padding: 15px 12px;
+        text-align: left;
+        font-size: 13px;
+        font-weight: 700;
+        color: $investor-text-heading;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid $investor-border;
+      }
+    }
+
+    tbody {
+      tr {
+        border-bottom: 1px solid $investor-border-light;
+        transition: background-color 0.2s;
+
+        &:hover {
+          background-color: rgba(190, 23, 23, 0.02);
+        }
+
+        td {
+          padding: 15px 12px;
+          font-size: 14px;
+          color: $investor-text;
+
+          &.investor-cell {
+            font-family: monospace;
+            font-weight: 600;
+            color: $investor-accent;
+          }
+
+          &.filename-cell {
+            max-width: 250px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+
+          &.actions-cell {
+            white-space: nowrap;
+          }
+        }
+      }
+    }
+  }
+}
+
+.btn-action {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  border: 1px solid $investor-border;
+  background-color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-right: 8px;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  &--primary {
+    &:hover {
+      background-color: $investor-accent;
+      border-color: $investor-accent;
+      color: #fff;
+    }
+  }
+
+  &--secondary {
+    &:hover {
+      background-color: #007bff;
+      border-color: #007bff;
+      color: #fff;
+    }
+  }
+}
+
+// Status Badge
+.status-badge {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 16px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  &--warning {
+    background-color: #fff3cd;
+    color: #856404;
+  }
+
+  &--success {
+    background-color: #d4edda;
+    color: #155724;
+  }
+
+  &--danger {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+}
+
+// Empty State
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+
+  p {
+    font-size: 18px;
+    color: $investor-text-secondary;
+  }
+}
+
+// Modal — scoped under .modal-overlay only so we never override Bootstrap .modal (react-bootstrap)
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+
+  .modal {
+    background-color: #fff;
+    border-radius: 12px;
+    max-width: 700px;
+    width: 100%;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+
+    &-header {
+      padding: 25px 30px;
+      border-bottom: 2px solid $investor-border;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      h2 {
+        margin: 0;
+        font-size: 24px;
+        color: $investor-text-heading;
+      }
+    }
+
+    &-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: none;
+      background-color: $investor-border-light;
+      font-size: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      &:hover {
+        background-color: $investor-accent;
+        color: #fff;
+      }
+    }
+
+    &-body {
+      padding: 30px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    &-footer {
+      padding: 20px 30px;
+      border-top: 1px solid $investor-border;
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+  }
+}
+
+.document-details {
+  .detail-row {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 15px;
+    padding: 12px 0;
+    border-bottom: 1px solid $investor-border-light;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &--full {
+      grid-template-columns: 1fr;
+    }
+
+    .detail-label {
+      font-weight: 600;
+      color: $investor-text-secondary;
+      font-size: 14px;
+    }
+
+    .detail-value {
+      color: $investor-text-heading;
+      font-size: 14px;
+
+      &.remarks {
+        background-color: #fff5f5;
+        padding: 10px;
+        border-radius: 6px;
+        color: #dc3545;
+        font-style: italic;
+      }
+    }
+  }
+}
+
+.action-form {
+  margin-top: 30px;
+  padding-top: 30px;
+  border-top: 2px solid $investor-border;
+
+  h3 {
+    margin: 0 0 15px 0;
+    font-size: 18px;
+    color: $investor-text-heading;
+  }
+
+  textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid $investor-border;
+    border-radius: 6px;
+    font-family: $investor-font-family;
+    font-size: 14px;
+    resize: vertical;
+
+    &:focus {
+      outline: none;
+      border-color: $investor-accent;
+      box-shadow: 0 0 0 3px rgba(190, 23, 23, 0.1);
+    }
+  }
+}
+
+.btn-modal {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &--download {
+    background-color: #007bff;
+    color: #fff;
+
+    &:hover:not(:disabled) {
+      background-color: #0056b3;
+    }
+  }
+
+  &--success {
+    background-color: #28a745;
+    color: #fff;
+
+    &:hover:not(:disabled) {
+      background-color: #218838;
+    }
+  }
+
+  &--danger {
+    background-color: #dc3545;
+    color: #fff;
+
+    &:hover:not(:disabled) {
+      background-color: #c82333;
+    }
+  }
+
+  &--secondary {
+    background-color: $investor-border-light;
+    color: $investor-text-heading;
+
+    &:hover:not(:disabled) {
+      background-color: $investor-border;
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 767px) {
+  .admin-documents {
+    padding: 20px 15px;
+
+    &__stats {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .filters {
+    grid-template-columns: 1fr;
+  }
+
+  .documents-table {
+    table {
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+  }
+
+  .modal-overlay .modal {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 0;
+
+    &-body {
+      padding: 20px;
+    }
+  }
+
+  .document-details {
+    .detail-row {
+      grid-template-columns: 1fr;
+    }
+  }
+}

@@ -1,0 +1,51 @@
+.broker-dashboard-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+  .dashboard-main-content {
+    margin-left: 0;
+    padding: 2rem;
+    flex: 1;
+  }
+}
+
+.broker-dashboard {
+  max-width: 1000px;
+  margin: 0 auto;
+
+  h1 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    i {
+      color: #3498db;
+    }
+  }
+
+  &__subtitle {
+    color: #6c757d;
+    margin-bottom: 1.5rem;
+  }
+
+  &__status-lookup {
+    .card-body {
+      padding: 1.25rem;
+    }
+  }
+
+  &__tabs {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  &__loading {
+    text-align: center;
+    padding: 3rem;
+    color: #6c757d;
+  }
+}

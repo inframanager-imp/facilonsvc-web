@@ -1,0 +1,113 @@
+.sa-dashboard {
+  padding: 24px;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
+
+    &-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    margin-bottom: 24px;
+
+    h2 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: #1a1a2e;
+      margin-bottom: 4px;
+    }
+
+    p {
+      color: #6c757d;
+      margin-bottom: 0;
+    }
+  }
+
+  &__stats {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+
+  &__stat-card {
+    background: #fff;
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    padding: 18px 24px;
+    min-width: 160px;
+    flex: 1;
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: #6c757d;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #0d6efd;
+      line-height: 1.1;
+    }
+  }
+
+  &__table-card {
+    background: #fff;
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    overflow: hidden;
+
+    .card-header-bar {
+      padding: 16px 20px;
+      border-bottom: 1px solid #e9ecef;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      h5 {
+        margin: 0;
+        font-weight: 600;
+        font-size: 1rem;
+      }
+    }
+  }
+
+  .scope-badge {
+    font-size: 0.72rem;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-weight: 500;
+
+    &--FULL_ONBOARDING { background: #d1fae5; color: #065f46; }
+    &--CKYC_ONLY       { background: #dbeafe; color: #1e40af; }
+    &--ONBOARDING_ONLY { background: #fef3c7; color: #92400e; }
+    &--VIEW_ONLY       { background: #f3f4f6; color: #374151; }
+  }
+
+  .permission-icons {
+    display: flex;
+    gap: 6px;
+    font-size: 0.75rem;
+
+    span {
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: #f8f9fa;
+      border: 1px solid #dee2e6;
+      color: #495057;
+    }
+  }
+
+  .action-btn {
+    font-size: 0.82rem;
+    padding: 5px 14px;
+    border-radius: 6px;
+  }
+}

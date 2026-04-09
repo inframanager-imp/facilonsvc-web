@@ -1,0 +1,16 @@
+@import '../../../styles/investor-theme';
+
+.user-profile-page {
+  padding: 20px;
+  
+  h1 {
+    margin-bottom: 20px;
+  }
+  
+  .card {
+    background: $investor-card-bg;
+    padding: 20px;
+    border-radius: $investor-border-radius;
+    box-shadow: $investor-shadow;
+  }
+}

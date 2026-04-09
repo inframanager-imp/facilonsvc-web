@@ -1,0 +1,434 @@
+import React, { useState, useEffect } from 'react';
+import { profileService, UserPersonalInformationDto } from '../../../../services/profile.service';
+import { toast } from 'react-toastify';
+import { validatePersonalInformation } from '../../../../utils/investorValidation';
+import { normalizeDateForInput, normalizeCountryOfResidenceForForm } from '../../../../utils/formHelpers';
+import { SharedFormContext } from '../shared/types';
+import { useDelegationPermissions } from '../../../../contexts/DelegationPermissionsContext';
+import { getPermissionErrorMessage } from '../../../../utils/apiClient';
+
+interface PersonalInformationFormProps {
+  initialData: UserPersonalInformationDto | null;
+  onSave: () => void;
+  canEdit: boolean;
+  canSubmit: boolean;
+  isProxyMode: boolean;
+  sharedContext: SharedFormContext;
+}
+
+export const PersonalInformationForm: React.FC<PersonalInformationFormProps> = ({
+  initialData,
+  onSave,
+  canEdit,
+  isProxyMode,
+  sharedContext
+}) => {
+  const delegationPerms = useDelegationPermissions();
+  const [formData, setFormData] = useState<Partial<UserPersonalInformationDto>>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (initialData) {
+      setFormData({
+        ...initialData,
+        userDob: normalizeDateForInput(initialData.userDob),
+        countryOfResidence: normalizeCountryOfResidenceForForm(initialData.countryOfResidence),
+      });
+    }
+  }, [initialData]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    const newErrors = validatePersonalInformation(formData as UserPersonalInformationDto);
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      const firstError = Object.values(newErrors)[0];
+      toast.error(firstError ? `Please fix: ${firstError}` : 'Please fix the errors in the form');
+      return;
+    }
+    
+    setErrors({});
+    setSaving(true);
+    
+    try {
+      await profileService.updatePersonalInfo(formData as UserPersonalInformationDto);
+      toast.success('Personal information updated');
+      onSave();
+    } catch (err: any) {
+      const permissionError = getPermissionErrorMessage(err);
+      if (permissionError) {
+        toast.error(permissionError);
+      } else {
+        toast.error(err.response?.data?.message || 'Failed to update');
+      }
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <form className="investor-profile__card" onSubmit={handleSubmit}>
+      <h3>Personal Information</h3>
+      <div className="investor-profile__grid">
+        <div className="form-group">
+          <label>First Name <span className="text-danger">*</span></label>
+          <input
+            value={formData.investorFirstName ?? ''}
+            onChange={(e) => setFormData({ ...formData, investorFirstName: e.target.value })}
+            className={errors.investorFirstName ? 'form-control is-invalid' : ''}
+          />
+          {errors.investorFirstName && <div className="invalid-feedback">{errors.investorFirstName}</div>}
+        </div>
+        
+        <div className="form-group">
+          <label>Middle Name</label>
+          <input
+            value={formData.investorMiddleName ?? ''}
+            onChange={(e) => setFormData({ ...formData, investorMiddleName: e.target.value })}
+          />
+        </div>
+        
+        <div className="form-group">
+          <label>Last Name <span className="text-danger">*</span></label>
+          <input
+            value={formData.investorLastName ?? ''}
+            onChange={(e) => setFormData({ ...formData, investorLastName: e.target.value })}
+            className={errors.investorLastName ? 'form-control is-invalid' : ''}
+          />
+          {errors.investorLastName && <div className="invalid-feedback">{errors.investorLastName}</div>}
+        </div>
+        
+        <div className="form-group">
+          <label>Date Of Birth <span className="text-danger">*</span></label>
+          <input
+            type="date"
+            value={formData.userDob ?? ''}
+            onChange={(e) => setFormData({ ...formData, userDob: e.target.value })}
+            className={errors.userDob ? 'form-control is-invalid' : ''}
+          />
+          {errors.userDob && <div className="invalid-feedback">{errors.userDob}</div>}
+        </div>
+
+        <div className="form-group">
+          <label>Gender <span className="text-danger">*</span></label>
+          <select
+            value={formData.gender ?? ''}
+            onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
+            className={errors.gender ? 'form-control is-invalid' : ''}
+          >
+            <option value="">Select</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Transgender">Transgender</option>
+          </select>
+          {errors.gender && <div className="invalid-feedback">{errors.gender}</div>}
+        </div>
+        
+        <div className="form-group">
+          <label>Marital Status <span className="text-danger">*</span></label>
+          <select
+            value={formData.maritalStatus ?? ''}
+            onChange={(e) => setFormData({ ...formData, maritalStatus: e.target.value })}
+            className={errors.maritalStatus ? 'form-control is-invalid' : ''}
+          >
+            <option value="">Select</option>
+            <option value="1">Single</option>
+            <option value="2">Married</option>
+            <option value="3">Widowed</option>
+            <option value="5">Seperated</option>
+            <option value="4">Divorced</option>
+          </select>
+          {errors.maritalStatus && <div className="invalid-feedback">{errors.maritalStatus}</div>}
+        </div>
+
+        {/* Maiden Name - Show if Female or Married */}
+        {(formData.gender === 'Female' || formData.maritalStatus === '2') && (
+          <>
+            <div className="form-group form-group--full">
+              <h4 style={{ margin: '0.5rem 0', color: '#666', fontSize: '0.95rem' }}>Maiden Name (if applicable)</h4>
+            </div>
+            <div className="form-group">
+              <label>Title <span className="text-danger">*</span></label>
+              <select
+                value={formData.maidenTitle ?? ''}
+                onChange={(e) => setFormData({ ...formData, maidenTitle: e.target.value })}
+              >
+                <option value="">Select</option>
+                <option value="Mr">Mr</option>
+                <option value="Mrs">Mrs</option>
+                <option value="Miss">Miss</option>
+              </select>
+            </div>
+            <div className="form-group">
+              <label>Maiden First Name <span className="text-danger">*</span></label>
+              <input
+                value={formData.maidenName ?? ''}
+                onChange={(e) => setFormData({ ...formData, maidenName: e.target.value })}
+              />
+            </div>
+            <div className="form-group">
+              <label>Maiden Middle Name</label>
+              <input
+                value={formData.maidenMiddleName ?? ''}
+                onChange={(e) => setFormData({ ...formData, maidenMiddleName: e.target.value })}
+              />
+            </div>
+            <div className="form-group">
+              <label>Maiden Last Name <span className="text-danger">*</span></label>
+              <input
+                value={formData.maidenLastName ?? ''}
+                onChange={(e) => setFormData({ ...formData, maidenLastName: e.target.value })}
+              />
+            </div>
+          </>
+        )}
+
+        <div className="form-group">
+          <label>City Of Birth <span className="text-danger">*</span></label>
+          <input
+            value={formData.cityOfDob ?? ''}
+            onChange={(e) => setFormData({ ...formData, cityOfDob: e.target.value })}
+            className={errors.cityOfDob ? 'form-control is-invalid' : ''}
+          />
+          {errors.cityOfDob && <div className="invalid-feedback">{errors.cityOfDob}</div>}
+        </div>
+        
+        <div className="form-group">
+          <label>Country Of Birth <span className="text-danger">*</span></label>
+          <input
+            value={formData.countryDob ?? ''}
+            onChange={(e) => setFormData({ ...formData, countryDob: e.target.value })}
+            className={errors.countryDob ? 'form-control is-invalid' : ''}
+          />
+          {errors.countryDob && <div className="invalid-feedback">{errors.countryDob}</div>}
+        </div>
+        
+        <div className="form-group">
+          <label>Citizenship <span className="text-danger">*</span></label>
+          <input
+            value={formData.citizenship ?? ''}
+            onChange={(e) => setFormData({ ...formData, citizenship: e.target.value })}
+            className={errors.citizenship ? 'form-control is-invalid' : ''}
+            placeholder="e.g. Indian"
+          />
+          {errors.citizenship && <div className="invalid-feedback">{errors.citizenship}</div>}
+        </div>
+        
+        <div className="form-group">
+          <label>Country of Residence <span className="text-danger">*</span></label>
+          <input
+            value={formData.countryOfResidence ?? ''}
+            onChange={(e) => setFormData({ ...formData, countryOfResidence: e.target.value })}
+            className={errors.countryOfResidence ? 'form-control is-invalid' : ''}
+            placeholder="e.g. India"
+          />
+          {errors.countryOfResidence && <div className="invalid-feedback">{errors.countryOfResidence}</div>}
+        </div>
+        
+        <div className="form-group">
+          <label>PAN Number <span className="text-danger">*</span></label>
+          <input
+            value={formData.panNumber ?? ''}
+            onChange={(e) => setFormData({ ...formData, panNumber: e.target.value })}
+          />
+        </div>
+
+        {/* Father's Details */}
+        <div className="form-group form-group--full">
+          <h4 style={{ margin: '1.5rem 0 0.5rem 0', color: '#333', fontSize: '1rem' }}>Father's Details</h4>
+        </div>
+        <div className="form-group">
+          <label>Title</label>
+          <select
+            value={formData.fatherNameTitle ?? ''}
+            onChange={(e) => setFormData({ ...formData, fatherNameTitle: e.target.value })}
+          >
+            <option value="">Select</option>
+            <option value="Mr">Mr</option>
+            <option value="Shri">Shri</option>
+            <option value="Late">Late</option>
+          </select>
+        </div>
+        <div className="form-group">
+          <label>Father's First Name <span className="text-danger">*</span></label>
+          <input
+            value={formData.fathersFirstName ?? ''}
+            onChange={(e) => setFormData({ ...formData, fathersFirstName: e.target.value })}
+            className={errors.fathersFirstName ? 'form-control is-invalid' : ''}
+          />
+          {errors.fathersFirstName && <div className="invalid-feedback">{errors.fathersFirstName}</div>}
+        </div>
+        <div className="form-group">
+          <label>Father's Middle Name</label>
+          <input
+            value={formData.fathersMiddleName ?? ''}
+            onChange={(e) => setFormData({ ...formData, fathersMiddleName: e.target.value })}
+          />
+        </div>
+        <div className="form-group">
+          <label>Father's Last Name <span className="text-danger">*</span></label>
+          <input
+            value={formData.fathersLastName ?? ''}
+            onChange={(e) => setFormData({ ...formData, fathersLastName: e.target.value })}
+            className={errors.fathersLastName ? 'form-control is-invalid' : ''}
+          />
+          {errors.fathersLastName && <div className="invalid-feedback">{errors.fathersLastName}</div>}
+        </div>
+
+        {/* Mother's Details */}
+        <div className="form-group form-group--full">
+          <h4 style={{ margin: '1.5rem 0 0.5rem 0', color: '#333', fontSize: '1rem' }}>Mother's Details</h4>
+        </div>
+        <div className="form-group">
+          <label>Title</label>
+          <select
+            value={formData.motherNameTitle ?? ''}
+            onChange={(e) => setFormData({ ...formData, motherNameTitle: e.target.value })}
+          >
+            <option value="">Select</option>
+            <option value="Mrs">Mrs</option>
+            <option value="Miss">Miss</option>
+            <option value="Shrimati">Shrimati</option>
+            <option value="Late">Late</option>
+          </select>
+        </div>
+        <div className="form-group">
+          <label>Mother's First Name <span className="text-danger">*</span></label>
+          <input
+            value={formData.motherFirstName ?? ''}
+            onChange={(e) => setFormData({ ...formData, motherFirstName: e.target.value })}
+            className={errors.motherFirstName ? 'form-control is-invalid' : ''}
+          />
+          {errors.motherFirstName && <div className="invalid-feedback">{errors.motherFirstName}</div>}
+        </div>
+        <div className="form-group">
+          <label>Mother's Middle Name</label>
+          <input
+            value={formData.motherMiddleName ?? ''}
+            onChange={(e) => setFormData({ ...formData, motherMiddleName: e.target.value })}
+          />
+        </div>
+        <div className="form-group">
+          <label>Mother's Last Name <span className="text-danger">*</span></label>
+          <input
+            value={formData.motherLastName ?? ''}
+            onChange={(e) => setFormData({ ...formData, motherLastName: e.target.value })}
+            className={errors.motherLastName ? 'form-control is-invalid' : ''}
+          />
+          {errors.motherLastName && <div className="invalid-feedback">{errors.motherLastName}</div>}
+        </div>
+
+        {/* Spouse Details - Show only if married */}
+        {formData.maritalStatus === '2' && (
+          <>
+            <div className="form-group form-group--full">
+              <h4 style={{ margin: '1.5rem 0 0.5rem 0', color: '#333', fontSize: '1rem' }}>Spouse Details</h4>
+            </div>
+            <div className="form-group">
+              <label>Title</label>
+              <select
+                value={formData.spouseNameTitle ?? ''}
+                onChange={(e) => setFormData({ ...formData, spouseNameTitle: e.target.value })}
+              >
+                <option value="">Select</option>
+                <option value="Mr">Mr</option>
+                <option value="Mrs">Mrs</option>
+                <option value="Miss">Miss</option>
+              </select>
+            </div>
+            <div className="form-group">
+              <label>Spouse First Name</label>
+              <input
+                value={formData.spouseName ?? ''}
+                onChange={(e) => setFormData({ ...formData, spouseName: e.target.value })}
+              />
+            </div>
+            <div className="form-group">
+              <label>Spouse Middle Name</label>
+              <input
+                value={formData.spouseMiddleName ?? ''}
+                onChange={(e) => setFormData({ ...formData, spouseMiddleName: e.target.value })}
+              />
+            </div>
+            <div className="form-group">
+              <label>Spouse Last Name</label>
+              <input
+                value={formData.spouseLastName ?? ''}
+                onChange={(e) => setFormData({ ...formData, spouseLastName: e.target.value })}
+              />
+            </div>
+            <div className="form-group form-group--full">
+              <label>Spouse Maiden Name</label>
+              <input
+                value={formData.spouseMaidenName ?? ''}
+                onChange={(e) => setFormData({ ...formData, spouseMaidenName: e.target.value })}
+              />
+            </div>
+          </>
+        )}
+
+        {/* Address Section */}
+        <div className="form-group form-group--full">
+          <h4 style={{ margin: '1.5rem 0 0.5rem 0', color: '#333', fontSize: '1rem' }}>Address</h4>
+        </div>
+        <div className="form-group form-group--full">
+          <label>Address Line 1 <span className="text-danger">*</span></label>
+          <input
+            value={formData.addressLine1 ?? ''}
+            onChange={(e) => setFormData({ ...formData, addressLine1: e.target.value })}
+            className={errors.addressLine1 ? 'form-control is-invalid' : ''}
+          />
+          {errors.addressLine1 && <div className="invalid-feedback">{errors.addressLine1}</div>}
+        </div>
+        <div className="form-group form-group--full">
+          <label>City <span className="text-danger">*</span></label>
+          <input
+            value={formData.userCity ?? ''}
+            onChange={(e) => setFormData({ ...formData, userCity: e.target.value })}
+            className={errors.userCity ? 'form-control is-invalid' : ''}
+          />
+          {errors.userCity && <div className="invalid-feedback">{errors.userCity}</div>}
+        </div>
+        <div className="form-group">
+          <label>State <span className="text-danger">*</span></label>
+          <input
+            value={formData.userState ?? ''}
+            onChange={(e) => setFormData({ ...formData, userState: e.target.value })}
+            className={errors.userState ? 'form-control is-invalid' : ''}
+          />
+          {errors.userState && <div className="invalid-feedback">{errors.userState}</div>}
+        </div>
+        <div className="form-group">
+          <label>ZIP / Postal Code <span className="text-danger">*</span></label>
+          <input
+            value={formData.userZipCode ?? ''}
+            onChange={(e) => setFormData({ ...formData, userZipCode: e.target.value })}
+            className={errors.userZipCode ? 'form-control is-invalid' : ''}
+          />
+          {errors.userZipCode && <div className="invalid-feedback">{errors.userZipCode}</div>}
+        </div>
+        <div className="form-group">
+          <label>Country <span className="text-danger">*</span></label>
+          <input
+            value={formData.userCountry ?? ''}
+            onChange={(e) => setFormData({ ...formData, userCountry: e.target.value })}
+            placeholder="e.g. India"
+            className={errors.userCountry ? 'form-control is-invalid' : ''}
+          />
+          {errors.userCountry && <div className="invalid-feedback">{errors.userCountry}</div>}
+        </div>
+      </div>
+      
+      <button type="submit" className="btn-save" disabled={saving || !canEdit}>
+        {saving ? 'Saving...' : 'Save'}
+      </button>
+      {!canEdit && delegationPerms.isProxyMode && (
+        <small className="text-warning d-block mt-2">
+          You don't have permission to edit KYC information. Contact the investor to update delegation permissions.
+        </small>
+      )}
+    </form>
+  );
+};

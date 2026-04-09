@@ -1,0 +1,540 @@
+@import '../../../styles/investor-theme';
+
+// Laravel Bootstrap Tab Styling - EXACT MATCH
+.investor-profile {
+  min-height: 100vh;
+  background-color: $investor-body-bg;
+  padding: 30px 20px;
+
+  &--loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+  }
+
+  // Profile Header
+  .profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+
+    h1 {
+      font-family: $investor-font-family;
+      font-size: $investor-h2-size; // 28px
+      color: $investor-text-heading;
+      margin: 0;
+    }
+
+    .profile-actions {
+      display: flex;
+      gap: 10px;
+
+      button {
+        padding: 10px 20px;
+        font-size: 14px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: none;
+
+        &.btn-secondary {
+          background-color: #6c757d;
+          color: white;
+
+          &:hover {
+            background-color: #5a6268;
+          }
+        }
+
+        &.btn-primary {
+          background-color: $investor-accent;
+          color: white;
+
+          &:hover {
+            background-color: darken($investor-accent, 10%);
+          }
+        }
+      }
+    }
+  }
+
+  h1 {
+    font-family: $investor-font-family;
+    font-size: $investor-h2-size; // 28px
+    color: $investor-text-heading;
+    margin-bottom: 20px;
+  }
+
+  // Progress Section - Compact
+  &__progress-section {
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+    padding: 1rem 0;
+    background-color: transparent;
+    border-radius: 8px;
+    position: relative;
+    z-index: 1;
+
+    .container-fluid {
+      padding: 0 15px;
+    }
+
+    h2 {
+      margin-top: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    // Override step-progress spacing for compact view
+    .step-progress {
+      margin-top: 1rem;
+      padding: 1% 20px 2% 20px;
+      gap: 10px;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+
+      @media (max-width: 768px) {
+        flex-direction: column;
+        align-items: center;
+
+        .step:not(:last-child)::after {
+          content: '';
+          position: absolute;
+          width: 2px;
+          height: 60px;
+          top: 100px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: #4bb543 !important;
+        }
+      }
+    }
+
+    .step {
+      margin-bottom: 10px;
+      position: relative;
+      flex: 1;
+      min-width: 100px;
+      text-align: center;
+
+      // Connecting line between steps
+      &:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        top: 40px;
+        left: 50%;
+        right: -50%;
+        height: 3px;
+        background: #28a745 !important;
+        z-index: 1;
+      }
+    }
+
+    .step p {
+      margin-top: 8px;
+      font-size: 14px;
+      position: relative;
+      z-index: 2;
+
+      a {
+        color: inherit;
+        text-decoration: none;
+
+        &:hover {
+          color: #be1717;
+        }
+      }
+    }
+
+    // Completed step indicator - shows green tick above ALL completed steps
+    .step-completed {
+      position: relative;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: -40px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 54px;
+        height: 35px;
+        background-image: url('https://anvaya.online/facilon/demo/public/status/green-tick-green-arrow-pointing-right.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        z-index: 99;
+      }
+
+      @media (max-width: 480px) {
+        &::before {
+          top: 0 !important;
+          left: 80% !important;
+        }
+      }
+    }
+
+    .circle-chart {
+      width: 100px;
+      height: 100px;
+      font-size: 18px;
+      font-weight: bold;
+      position: relative;
+      z-index: 2;
+      margin: 0 auto;
+      border-radius: 50%;
+      background: conic-gradient(#4a6e7a 0% 0%, #ccc 0% 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+
+      &.active-one {
+        background: conic-gradient(#4a6e7a 0% 100%, #ccc 100% 100%) !important;
+        background-color: #28a745;
+      }
+
+      &.active-three {
+        background: conic-gradient(#4a6e7a 0% 20%, #ccc 20% 100%) !important;
+      }
+
+      &.active-five {
+        background: conic-gradient(#4a6e7a 0% 40%, #ccc 40% 100%) !important;
+      }
+
+      @media (max-width: 768px) {
+        width: 70px;
+        height: 70px;
+        font-size: 14px;
+      }
+    }
+  }
+
+  // Bootstrap Nav Tabs (Laravel style)
+  &__tabs {
+    border-bottom: 2px solid $investor-accent; // Red underline like Laravel
+    display: flex;
+    margin-bottom: 0; // No gap, connected to content
+    padding-left: 0;
+    list-style: none;
+
+    button {
+      padding: 12px 20px;
+      font-family: $investor-font-family;
+      font-size: 16px;
+      font-weight: 500;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: $investor-text;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: -2px; // Overlap with bottom border
+      position: relative;
+
+      &:hover {
+        color: $investor-accent;
+      }
+
+      &.active {
+        background: $investor-accent; // Red background
+        border: none;
+        color: #fff;
+        border-radius: 0; // No border radius on tabs
+      }
+    }
+  }
+
+  // Tab Content Container (Laravel style)
+  &__card {
+    background-color: $investor-card-bg;
+    border: 1px solid $investor-border;
+    border-top: none; // Connected to tabs
+    border-radius: 0 0 4px 4px; // Only bottom corners rounded
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: $investor-shadow;
+
+    h3 {
+      margin-bottom: 20px;
+      font-family: $investor-font-family;
+      font-size: $investor-h3-size; // 22px
+      font-weight: 600;
+      color: $investor-text-heading;
+    }
+  }
+
+  // Form Grid (Laravel col-md-4 style)
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); // 3 columns like col-md-4
+    gap: 20px;
+    margin-bottom: 20px;
+
+    @media (max-width: 991px) {
+      grid-template-columns: repeat(2, 1fr); // 2 columns on tablet
+    }
+
+    @media (max-width: 767px) {
+      grid-template-columns: 1fr; // 1 column on mobile
+    }
+
+    .form-group--full {
+      grid-column: 1 / -1;
+    }
+  }
+
+  // Native multi-select (e.g. Investment Experience in — matches Select2-style multi)
+  .form-group select.investor-profile__multiselect {
+    background-image: none;
+    min-height: 9rem;
+    padding: 0.5rem 0.75rem;
+    cursor: pointer;
+
+    option {
+      padding: 0.35rem 0.5rem;
+    }
+  }
+
+  // Form Group (Laravel style)
+  .form-group {
+    margin-bottom: 20px;
+
+    &.first {
+      // Laravel uses .first class
+      margin-top: 0;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px; // Laravel spacing
+      color: $investor-text-heading;
+      font-size: 14px;
+      font-weight: 600; // Laravel uses bold labels
+    }
+
+    input,
+    select,
+    textarea {
+      @include investor-form-control;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+      height: auto; // Override fixed height from mixin
+    }
+
+    select {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 16px 12px;
+      appearance: none;
+      padding-right: 40px;
+    }
+
+    // Readonly inputs (Laravel style)
+    input[readonly],
+    select[disabled],
+    textarea[readonly] {
+      background-color: $investor-border-light; // #e9ecef
+      cursor: not-allowed;
+    }
+
+    &--checkbox {
+      grid-column: 1 / -1;
+
+      label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        font-weight: normal;
+
+        input[type='checkbox'] {
+          width: auto;
+          height: auto;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  // Validation Styles
+  .text-danger {
+    color: $investor-danger;
+    margin-left: 4px;
+  }
+
+  // Bootstrap sets .invalid-feedback { display: none } — must override so messages show next to fields
+  .invalid-feedback {
+    display: block !important;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.875em;
+    color: $investor-danger;
+  }
+
+  input.is-invalid,
+  select.is-invalid,
+  textarea.is-invalid {
+    border-color: $investor-danger;
+    padding-right: calc(1.5em + 0.75rem);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5zM6 8.2h.01'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right calc(0.375em + 0.1875rem) center;
+    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+
+    &:focus {
+      border-color: $investor-danger;
+      box-shadow: 0 0 0 0.2rem rgba($investor-danger, 0.25);
+    }
+  }
+
+  &__hint {
+    margin-bottom: 16px;
+    font-size: 14px;
+    color: $investor-text-secondary;
+    line-height: 1.5;
+  }
+
+  &__consents {
+    grid-template-columns: 1fr;
+  }
+
+  // Save button (Laravel style)
+  .btn-save {
+    @include investor-btn-primary;
+    cursor: pointer;
+    border: none;
+    margin-top: 20px;
+
+    &:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+  }
+
+  // Final Submit Section
+  &__final-submit {
+    margin-top: 40px;
+
+    .investor-profile__card {
+      text-align: center;
+      background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+      border: 2px solid $investor-accent;
+
+      h3 {
+        color: $investor-accent;
+        margin-bottom: 15px;
+      }
+
+      p {
+        color: $investor-text;
+        margin-bottom: 25px;
+        font-size: 16px;
+        line-height: 1.6;
+      }
+
+      .btn-final-submit {
+        @include investor-btn-primary;
+        cursor: pointer;
+        border: none;
+        font-size: 18px;
+        font-weight: 700;
+        padding: 15px 40px;
+        height: auto;
+        min-width: 300px;
+        box-shadow: 0 4px 12px rgba(190, 23, 23, 0.3);
+
+        &:hover {
+          box-shadow: 0 6px 16px rgba(190, 23, 23, 0.4);
+          transform: translateY(-2px);
+        }
+
+        &:disabled {
+          opacity: 0.65;
+          cursor: not-allowed;
+          transform: none;
+        }
+      }
+    }
+  }
+
+  // Buttons Section for Final Submit
+  &__buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+
+    .btn-preview {
+      background-color: #6c757d;
+      color: white;
+      padding: 12px 30px;
+      border-radius: 4px;
+      cursor: pointer;
+      border: none;
+      font-size: 16px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: #5a6268;
+      }
+
+      &:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+      }
+    }
+
+    .btn-save {
+      @include investor-btn-primary;
+      cursor: pointer;
+      border: none;
+      font-size: 16px;
+      padding: 12px 30px;
+
+      &:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+
+// Row/Col system like Bootstrap (for Laravel compatibility)
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -15px;
+}
+
+.col-md-4,
+.col-md-3,
+.col-md-2 {
+  padding: 0 15px;
+  width: 100%;
+
+  @media (min-width: 768px) {
+    &.col-md-4 {
+      width: 33.333333%;
+    }
+
+    &.col-md-3 {
+      width: 25%;
+    }
+
+    &.col-md-2 {
+      width: 16.666667%;
+    }
+  }
+}

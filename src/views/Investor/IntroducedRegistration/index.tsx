@@ -1,0 +1,9 @@
+export { default as IntroduceInvestor1Redirect } from './IntroduceInvestor1Redirect';
+export { default as IntroducedInvestorStart } from './IntroducedInvestorStart';
+export { default as IntroducedInvestorConsent } from './IntroducedInvestorConsent';
+export { default as IntroducedInvestorStep1 } from './IntroducedInvestorStep1';
+export { default as IntroducedInvestorStep2 } from './IntroducedInvestorStep2';
+export { default as IntroducedInvestorStep4 } from './IntroducedInvestorStep4';
+export { default as IntroducedInvestorSuccess } from './IntroducedInvestorSuccess';
+export { default as PrivacyPolicyModal } from './PrivacyPolicyModal';
+export { default as TermsModal } from './TermsModal';

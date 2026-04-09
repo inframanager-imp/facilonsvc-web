@@ -1,0 +1,68 @@
+.admin-investor-list-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+  .dashboard-main-content {
+    margin-left: 0;
+    padding: 2rem;
+    flex: 1;
+  }
+}
+
+.admin-investor-list {
+  max-width: 1200px;
+  margin: 0 auto;
+
+  &__header {
+    margin-bottom: 1.5rem;
+
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      i {
+        color: #3498db;
+      }
+    }
+
+    &-subtitle {
+      color: #6c757d;
+      margin: 0;
+    }
+  }
+
+  &__search {
+    margin-bottom: 1.5rem;
+
+    .input-group {
+      max-width: 500px;
+    }
+  }
+
+  &__loading {
+    text-align: center;
+    padding: 3rem;
+    color: #6c757d;
+
+    .spinner-border {
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  &__table-wrapper {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+
+  &__pagination {
+    margin-top: 1rem;
+    padding: 1rem 0;
+  }
+}

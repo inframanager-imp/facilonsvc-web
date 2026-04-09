@@ -1,0 +1,109 @@
+.sa-investor-list {
+  min-height: 100vh;
+  background: #f8f9fa;
+
+  &__body {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 28px 16px;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+
+    h2 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #1e293b;
+      margin: 0;
+    }
+  }
+
+  &__search {
+    max-width: 340px;
+    margin-bottom: 20px;
+  }
+
+  &__table {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      background: #f1f5f9;
+      padding: 12px 16px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    td {
+      padding: 14px 16px;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 0.9rem;
+      vertical-align: middle;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: #f8fafc;
+    }
+  }
+
+  &__scope-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+
+    &--full { background: #d1fae5; color: #065f46; }
+    &--ckyc { background: #dbeafe; color: #1e40af; }
+    &--onboarding { background: #fef3c7; color: #92400e; }
+    &--view { background: #f3f4f6; color: #374151; }
+  }
+
+  &__perm-chips {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+
+    span {
+      background: #e0f2fe;
+      color: #0369a1;
+      border-radius: 8px;
+      padding: 2px 6px;
+      font-size: 0.72rem;
+    }
+  }
+
+  &__expiry {
+    font-size: 0.82rem;
+
+    &--soon { color: #ef4444; font-weight: 600; }
+    &--ok   { color: #6b7280; }
+    &--none { color: #9ca3af; font-style: italic; }
+  }
+
+  &__empty {
+    text-align: center;
+    padding: 60px;
+    color: #9ca3af;
+  }
+}

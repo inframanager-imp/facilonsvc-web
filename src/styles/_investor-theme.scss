@@ -1,0 +1,105 @@
+// Investor Theme - Laravel match
+$investor-accent: #BE1717;
+$investor-accent-hover: #a01414;
+$investor-accent-dark: #8b1010;
+$investor-body-bg: #f8f9fa;
+$investor-card-bg: #ffffff;
+$investor-text: #333333;
+$investor-text-heading: #212529;
+$investor-text-secondary: #6c757d;
+$investor-border: #dee2e6;
+$investor-border-light: #e9ecef;
+$investor-success: #28a745;
+$investor-danger: #dc3545;
+$investor-font-family: 'Roboto', sans-serif;
+$investor-font-size-base: 14px;
+$investor-font-size: 14px;
+$investor-line-height: 1.6;
+$investor-h2-size: 28px;
+$investor-h3-size: 22px;
+$investor-h4-size: 18px;
+$investor-border-radius: 4px;
+$investor-shadow: 0 4px 20px rgba(0,0,0,0.1);
+$investor-input-bg: #ffffff;
+$investor-input-border: 1px solid #ced4da;
+$investor-input-focus: rgba(190, 23, 23, 0.25);
+$investor-input-height: 40px;
+$investor-input-padding: 8px 15px;
+$investor-btn-primary-bg: #BE1717;
+$investor-btn-primary-hover: #a01414;
+$investor-btn-secondary-bg: #6c757d;
+$investor-btn-outline-border: 1px solid #dee2e6;
+$investor-container-max-width: 1200px;
+
+@mixin investor-form-control {
+  font-family: $investor-font-family;
+  font-size: $investor-font-size-base;
+  line-height: $investor-line-height;
+  color: $investor-text;
+  background-color: $investor-input-bg;
+  border: $investor-input-border;
+  border-radius: $investor-border-radius;
+  height: $investor-input-height;
+  padding: $investor-input-padding;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  
+  &:focus {
+    border-color: $investor-accent;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem $investor-input-focus;
+  }
+}
+
+@mixin investor-btn-primary {
+  background-color: $investor-btn-primary-bg !important;
+  border: none;
+  border-radius: $investor-border-radius;
+  color: white !important;
+  padding: 10px 20px;
+  height: 45px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: $investor-font-family;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  
+  &:hover {
+    background-color: $investor-btn-primary-hover !important;
+    color: white !important;
+  }
+}
+
+@mixin investor-card {
+  background-color: $investor-card-bg;
+  border-radius: $investor-border-radius;
+  box-shadow: $investor-shadow;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+@mixin investor-btn-outline {
+  background-color: transparent;
+  border: $investor-btn-outline-border;
+  border-radius: $investor-border-radius;
+  color: $investor-text;
+  padding: 10px 20px;
+  height: 45px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: $investor-font-family;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  
+  &:hover {
+    background-color: $investor-border-light;
+    border-color: $investor-border;
+  }
+}

@@ -1,0 +1,119 @@
+.delegation-management {
+  padding: 24px;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 12px;
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #1a1a2e;
+      margin: 0;
+    }
+  }
+
+  &__empty {
+    text-align: center;
+    padding: 48px 24px;
+    color: #6c757d;
+
+    p {
+      margin-bottom: 16px;
+    }
+  }
+
+  .delegation-card {
+    background: #fff;
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    margin-bottom: 16px;
+    overflow: hidden;
+
+    &--pending {
+      border: 2px solid #ffc107;
+      background: #fffbf0;
+    }
+
+    &__top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid #f0f0f0;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    &__agent {
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    &__code {
+      font-size: 0.82rem;
+      color: #6c757d;
+    }
+
+    &__email {
+      font-size: 0.82rem;
+      color: #6c757d;
+      margin-top: 2px;
+    }
+
+    &__body {
+      padding: 14px 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 10px;
+      font-size: 0.85rem;
+    }
+
+    &__field {
+      .label {
+        color: #9ca3af;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+
+      .value {
+        font-weight: 500;
+        color: #1f2937;
+      }
+    }
+
+    &__notes {
+      padding: 12px 20px;
+      background: #f9fafb;
+      border-top: 1px solid #f0f0f0;
+      font-size: 0.875rem;
+      color: #6b7280;
+    }
+
+    &__footer {
+      padding: 12px 20px;
+      background: #f9fafb;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      border-top: 1px solid #f0f0f0;
+    }
+  }
+
+  .scope-badge {
+    font-size: 0.72rem;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-weight: 500;
+
+    &--FULL_ONBOARDING { background: #d1fae5; color: #065f46; }
+    &--CKYC_ONLY       { background: #dbeafe; color: #1e40af; }
+    &--ONBOARDING_ONLY { background: #fef3c7; color: #92400e; }
+    &--VIEW_ONLY       { background: #f3f4f6; color: #374151; }
+  }
+}

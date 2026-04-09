@@ -1,0 +1,279 @@
+/* Laravel Theme Alignment */
+
+:root {
+    --primary-red: #be1717;
+    --secondary-slate: #4a6e7a;
+    --success-green: #4bb543;
+    --bg-color: #ede9e6;
+    --text-color: #1f1f1f;
+    --header-bg: #c5c8c8;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Roboto Condensed', sans-serif;
+}
+
+/* Header Alignment */
+.header_style_01 {
+    background-color: var(--header-bg);
+    padding: 0;
+    box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.30);
+    z-index: 111;
+}
+
+.navbar-brand img {
+    height: 80px;
+    /* Adjusted from 100px for better fit */
+    padding: 5px;
+}
+
+/* Tab Styles */
+.nav-tabs {
+    border-bottom: 1px solid #ddd;
+}
+
+.nav-tabs>li>a {
+    color: #555;
+    cursor: pointer;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-bottom-color: transparent;
+    margin-right: 2px;
+    line-height: 1.42857143;
+    padding: 10px 15px;
+    display: block;
+    border-radius: 4px 4px 0 0;
+}
+
+.nav-tabs>li.active>a,
+.nav-tabs>li.active>a:hover,
+.nav-tabs>li.active>a:focus {
+    color: #555;
+    cursor: default;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-bottom-color: transparent;
+}
+
+/* Buttons */
+.Continue-complete-button {
+    background-color: var(--primary-red) !important;
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-align: center;
+    text-transform: capitalize;
+    padding: 11px 30px;
+    border-radius: 100px;
+    display: inline-block;
+    transition: background 0.3s ease;
+    border: none;
+    text-decoration: none;
+}
+
+.Continue-complete-button:hover {
+    background-color: var(--secondary-slate) !important;
+    color: white;
+}
+
+.Abandon-button {
+    padding: 10px 30px;
+    font-size: 16px;
+    font-weight: 700;
+    background-color: var(--primary-red);
+    border: none;
+    color: white;
+    border-radius: 100px;
+    /* Consistent with other buttons */
+}
+
+.Abandon-button:hover {
+    background-color: var(--secondary-slate);
+    color: white;
+}
+
+/* Step Progress (Journey) */
+.step-progress {
+    margin-top: 40px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 3% 20px;
+}
+
+.step {
+    flex: 1;
+    min-width: 100px;
+    text-align: center;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    right: -50%;
+    height: 3px;
+    background: var(--success-green);
+    z-index: -1;
+}
+
+.circle-chart {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: conic-gradient(var(--secondary-slate) 0% 0%, #ccc 0% 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    color: #fff;
+    font-weight: bold;
+    font-size: 18px;
+    /* Added font size */
+}
+
+.circle-chart.active-one {
+    background: conic-gradient(var(--secondary-slate) 0% 100%, #ccc 100% 100%) !important;
+}
+
+.circle-chart.active-two {
+    background: conic-gradient(var(--secondary-slate) 0% 10%, #ccc 10% 100%) !important;
+}
+
+.circle-chart.active-three {
+    background: conic-gradient(var(--secondary-slate) 0% 20%, #ccc 20% 100%) !important;
+}
+
+.circle-chart.active-four {
+    background: conic-gradient(var(--secondary-slate) 0% 30%, #ccc 30% 100%) !important;
+}
+
+.circle-chart.active-five {
+    background: conic-gradient(var(--secondary-slate) 0% 40%, #ccc 40% 100%) !important;
+}
+
+.circle-chart.active-six {
+    background: conic-gradient(var(--secondary-slate) 0% 50%, #ccc 50% 100%) !important;
+}
+
+.circle-chart.active-seven {
+    background: conic-gradient(var(--secondary-slate) 0% 60%, #ccc 60% 100%) !important;
+}
+
+.circle-chart.active-eight {
+    background: conic-gradient(var(--secondary-slate) 0% 70%, #ccc 70% 100%) !important;
+}
+
+.circle-chart.active-nine {
+    background: conic-gradient(var(--secondary-slate) 0% 80%, #ccc 80% 100%) !important;
+}
+
+.circle-chart.active-ten {
+    background: conic-gradient(var(--secondary-slate) 0% 90%, #ccc 90% 100%) !important;
+}
+
+.img-tick {
+    height: 40px;
+    width: 40px;
+}
+
+.step p {
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+/* Responsive behavior for mobile */
+@media (max-width: 768px) {
+    .step-progress {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .step {
+        flex: none;
+        width: 100%;
+    }
+
+    .step:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        width: 2px;
+        height: 60px;
+        top: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--success-green) !important;
+    }
+
+    .circle-chart {
+        width: 70px;
+        height: 70px;
+        font-size: 14px;
+    }
+
+    .step p {
+        font-size: 12px;
+        margin-top: 8px;
+    }
+}
+
+/* Modals */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.modal-content-custom {
+    background-color: #fff;
+    padding: 30px 20px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 420px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.modal-content-custom p {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 25px;
+}
+
+.modal-btn {
+    padding: 10px 24px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    cursor: pointer;
+    margin: 0 10px;
+    background: white;
+    transition: background 0.3s ease;
+}
+
+.modal-btn.no-btn {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+}
+
+.modal-btn.no-btn:hover {
+    background-color: #c0392b;
+}

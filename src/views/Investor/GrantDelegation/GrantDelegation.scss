@@ -1,0 +1,89 @@
+.grant-delegation {
+  padding: 24px;
+  max-width: 680px;
+  margin: 0 auto;
+
+  &__title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #1a1a2e;
+  }
+
+  &__subtitle {
+    color: #6c757d;
+    margin-bottom: 28px;
+    font-size: 0.9rem;
+  }
+
+  .card {
+    border-radius: 10px;
+    border: 1px solid #e9ecef;
+    margin-bottom: 20px;
+  }
+
+  .consent-box {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 16px;
+    font-size: 0.85rem;
+    color: #495057;
+
+    ul {
+      margin-bottom: 0;
+      padding-left: 18px;
+
+      li {
+        margin-bottom: 4px;
+      }
+    }
+  }
+
+  .permission-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px;
+  }
+
+  .permission-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 12px;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: border-color 0.15s;
+
+    &:hover {
+      border-color: #0d6efd;
+    }
+
+    &.selected {
+      border-color: #0d6efd;
+      background: #eff6ff;
+    }
+
+    input[type="checkbox"] {
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .perm-label {
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .perm-desc {
+      font-size: 0.75rem;
+      color: #6c757d;
+    }
+  }
+
+  .error-message {
+    color: #dc3545;
+    font-size: 0.8rem;
+    margin-top: 4px;
+  }
+}

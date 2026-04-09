@@ -1,0 +1,473 @@
+@import '../../../styles/investor-theme';
+
+.onboarding-documents {
+  padding: 20px 0;
+
+  .loading, .error {
+    text-align: center;
+    padding: 40px;
+    font-size: 16px;
+    color: #6c757d;
+  }
+
+  .error {
+    color: #be1717;
+  }
+
+  // Progress Bar Section (matching other components)
+  .onboarding__progress-section {
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+    padding: 1rem 0;
+    background-color: transparent;
+    border-radius: 8px;
+    position: relative;
+    z-index: 1;
+
+    .container-fluid {
+      padding: 0 15px;
+    }
+
+    h2 {
+      font-size: 36px !important;
+      color: #be1717 !important;
+      font-weight: 500 !important;
+      margin-bottom: 1.5rem !important;
+      margin-top: 1.5rem !important;
+    }
+
+    .step-progress {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: nowrap;
+      gap: 20px;
+      padding: 1rem 0;
+
+      @media (max-width: 768px) {
+        flex-direction: column;
+        align-items: center;
+
+        .step:not(:last-child)::after {
+          content: '';
+          position: absolute;
+          width: 2px;
+          height: 60px;
+          top: 100px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: #4bb543 !important;
+        }
+      }
+    }
+
+    .step {
+      margin-bottom: 10px;
+      position: relative;
+      flex: 1;
+      min-width: 100px;
+      text-align: center;
+
+      &:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        top: 40px;
+        left: 50%;
+        right: -50%;
+        height: 3px;
+        background: #28a745 !important;
+        z-index: 1;
+      }
+
+      p {
+        margin-top: 10px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #333;
+
+        @media (max-width: 768px) {
+          font-size: 12px;
+        }
+      }
+    }
+
+    // Completed step indicator - shows green tick above ALL completed steps
+    .step-completed {
+      position: relative;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: -40px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 54px;
+        height: 35px;
+        background-image: url('https://anvaya.online/facilon/demo/public/status/green-tick-green-arrow-pointing-right.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        z-index: 99;
+      }
+
+      @media (max-width: 480px) {
+        &::before {
+          top: 0 !important;
+          left: 80% !important;
+        }
+      }
+    }
+
+    .circle-chart {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: conic-gradient(#4a6e7a 0% 0%, #ccc 0% 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+      font-size: 18px;
+      font-weight: bold;
+      color: #fff;
+
+      &.active-one {
+        background: conic-gradient(#4a6e7a 0% 100%, #ccc 100% 100%) !important;
+        background-color: #28a745;
+      }
+
+      &.active-three {
+        background: conic-gradient(#4a6e7a 0% 20%, #ccc 20% 100%) !important;
+      }
+
+      &.active-five {
+        background: conic-gradient(#4a6e7a 0% 40%, #ccc 40% 100%) !important;
+      }
+
+      @media (max-width: 768px) {
+        width: 70px;
+        height: 70px;
+        font-size: 14px;
+      }
+    }
+  }
+
+  // Main Content Section
+  .derivatives-wrap {
+    background-color: #fff;
+    padding: 40px 0;
+    min-height: 600px;
+  }
+
+  .onboarding-heading {
+    color: #be1717;
+    font-size: 32px;
+    font-weight: 500;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+
+  .on-borad-subtitle-custom {
+    font-size: 18px;
+    color: #6c757d;
+    margin-bottom: 30px;
+  }
+
+  // Alert styling
+  .alert {
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+
+    &.alert-warning {
+      background-color: #fff3cd;
+      border: 1px solid #ffc107;
+      color: #856404;
+    }
+
+    .btn {
+      margin-top: 10px;
+    }
+  }
+
+  // Accordion Menu
+  .accordion-menu {
+    margin-bottom: 30px;
+
+    ul {
+      list-style: none;
+      padding: 0;
+
+      li {
+        border-bottom: 1px solid #e0e0e0;
+        padding: 15px 0;
+        position: relative;
+
+        input[type="checkbox"] {
+          position: absolute;
+          left: -9999px;
+
+          &:checked + i.arrow {
+            transform: rotate(90deg);
+          }
+
+          &:checked ~ p {
+            display: block;
+          }
+        }
+
+        i.arrow {
+          position: absolute;
+          right: 0;
+          top: 20px;
+          width: 0;
+          height: 0;
+          border-left: 6px solid transparent;
+          border-right: 6px solid transparent;
+          border-top: 8px solid #be1717;
+          transition: transform 0.3s;
+        }
+
+        h2 {
+          font-size: 16px;
+          font-weight: 600;
+          color: #333;
+          margin-bottom: 0;
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+
+          i.fa-solid.fa-circle {
+            font-size: 10px;
+            color: #be1717;
+            margin-right: 10px;
+            vertical-align: middle;
+          }
+        }
+
+        p {
+          margin-top: 10px;
+          color: #6c757d;
+          padding-left: 20px;
+          display: block;
+        }
+      }
+    }
+  }
+
+  // Upload Section
+  .upload-section {
+    margin-top: 40px;
+
+    h3 {
+      color: #333;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .upload-card {
+      border: 2px dashed #e0e0e0;
+      border-radius: 8px;
+      padding: 30px 15px;
+      text-align: center;
+      transition: all 0.3s;
+      cursor: pointer;
+      background-color: #f9f9f9;
+
+      &:hover {
+        border-color: #be1717;
+        background-color: #fff;
+      }
+
+      .upload-label {
+        cursor: pointer;
+        display: block;
+
+        input[type="file"] {
+          display: none;
+        }
+
+        i {
+          font-size: 48px;
+          color: #be1717;
+          display: block;
+          margin-bottom: 10px;
+        }
+
+        span {
+          display: block;
+          font-size: 14px;
+          font-weight: 500;
+          color: #333;
+        }
+      }
+    }
+  }
+
+  // Uploaded Documents List
+  .uploaded-documents {
+    margin-top: 40px;
+
+    h3 {
+      color: #333;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .table {
+      background-color: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+
+      thead {
+        background-color: #4a6e7a;
+        color: #fff;
+
+        th {
+          border: none;
+          padding: 15px;
+          font-weight: 600;
+        }
+      }
+
+      tbody {
+        tr {
+          &:hover {
+            background-color: #f8f9fa;
+          }
+
+          td {
+            padding: 15px;
+            vertical-align: middle;
+            border-color: #e0e0e0;
+          }
+        }
+      }
+
+      .badge {
+        padding: 5px 10px;
+        font-size: 12px;
+        border-radius: 4px;
+
+        &.badge-success {
+          background-color: #28a745;
+          color: #fff;
+        }
+
+        &.badge-warning {
+          background-color: #ffc107;
+          color: #333;
+        }
+
+        &.badge-danger {
+          background-color: #dc3545;
+          color: #fff;
+        }
+      }
+
+      .btn-sm {
+        padding: 5px 10px;
+        font-size: 12px;
+      }
+
+      .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        color: #fff;
+
+        &:hover {
+          background-color: #c82333;
+          border-color: #bd2130;
+        }
+      }
+    }
+  }
+
+  .btn-primary {
+    background-color: #be1717;
+    border-color: #be1717;
+    padding: 12px 30px;
+    font-weight: 600;
+
+    &:hover {
+      background-color: darken(#be1717, 10%);
+      border-color: darken(#be1717, 10%);
+    }
+
+    i {
+      margin-right: 8px;
+    }
+  }
+
+  .my-4 {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .mt-4 {
+    margin-top: 1.5rem;
+  }
+
+  // Upload Button (matching Laravel styles)
+  .upload-button {
+    background-color: #be1717;
+    color: white !important;
+    padding: 8px 18px;
+    font-family: sans-serif;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    margin-top: 1rem;
+    margin-left: 5%;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 700;
+    border: none;
+
+    &:hover {
+      background-color: darken(#be1717, 10%);
+    }
+
+    @media (max-width: 768px) {
+      display: block !important;
+      margin: 20px auto 0 !important;
+      text-align: center;
+      margin-top: -19px !important;
+    }
+  }
+
+  // File chosen indicator
+  [id^="file-chosen"] {
+    margin-left: 20px;
+    font-family: sans-serif;
+    color: #666;
+    font-size: 13px;
+  }
+
+  // Form group styling
+  .form-group.first {
+    margin-bottom: 25px;
+
+    label {
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 5px;
+      display: block;
+
+      a {
+        color: #be1717 !important;
+        text-decoration: underline;
+        margin-left: 5px;
+      }
+    }
+  }
+
+  // Onboarding documents section
+  .onboarding-documents-section {
+    margin-top: 30px;
+
+    h3 {
+      color: #333;
+      margin-bottom: 10px;
+    }
+  }
+}

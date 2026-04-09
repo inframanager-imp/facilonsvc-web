@@ -1,0 +1,100 @@
+.pdf-preview-container {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.pdf-preview-loading {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  gap: 1rem;
+}
+
+.pdf-preview-loading .spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.pdf-preview-toolbar {
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  display: flex;
+  gap: 1rem;
+  z-index: 1000;
+  justify-content: center;
+}
+
+.pdf-preview-toolbar .btn-action,
+.pdf-preview-toolbar .btn-close {
+  padding: 0.5rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.pdf-preview-toolbar .btn-action {
+  background-color: #007bff;
+  color: white;
+}
+
+.pdf-preview-toolbar .btn-action:hover {
+  background-color: #0056b3;
+}
+
+.pdf-preview-toolbar .btn-close {
+  background-color: #6c757d;
+  color: white;
+}
+
+.pdf-preview-toolbar .btn-close:hover {
+  background-color: #5a6268;
+}
+
+.pdf-preview-content {
+  max-width: 210mm;
+  margin: 2rem auto;
+  background-color: white;
+  padding: 2rem;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* Hide the buttons from the FreeMarker template - we use React toolbar instead */
+.pdf-preview-content .pdf-button-container,
+.pdf-preview-content .pdf-button {
+  display: none !important;
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  .pdf-preview-container {
+    background-color: white;
+  }
+
+  .pdf-preview-content {
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+  }
+}

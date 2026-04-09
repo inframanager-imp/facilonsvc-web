@@ -1,0 +1,69 @@
+// Rendered in document.body via `container` — flex-center the shell so it never sticks to top-left
+// (parent layouts with transform/filter can break Bootstrap’s fixed positioning otherwise).
+.modal.accept-delegation-modal-root {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.modal.accept-delegation-modal-root .modal-dialog.accept-delegation-modal-dialog {
+  margin: 0 auto !important;
+  width: 100%;
+  max-width: min(900px, calc(100vw - 2rem));
+  max-height: calc(100vh - 2rem);
+  display: flex;
+  align-items: center;
+  min-height: unset;
+}
+
+.modal.accept-delegation-modal-root .modal-dialog.accept-delegation-modal-dialog .modal-content {
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+}
+
+.accept-delegation-modal {
+  .sa-details {
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+
+    h6 {
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: #495057;
+    }
+
+    p {
+      font-size: 0.9rem;
+      color: #6c757d;
+    }
+  }
+
+  .scope-selection,
+  .permissions-selection,
+  .validity-info {
+    h6 {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: #495057;
+    }
+  }
+
+  .consent-section {
+    padding: 1rem;
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 8px;
+    margin-top: 1.5rem;
+
+    .form-check-label {
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+  }
+
+  .form-check-input:disabled ~ .form-check-label {
+    opacity: 0.6;
+  }
+}

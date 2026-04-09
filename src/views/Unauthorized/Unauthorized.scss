@@ -1,0 +1,31 @@
+.unauthorized-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.unauthorized-content {
+  text-align: center;
+  padding: 40px;
+}
+
+.unauthorized-title {
+  font-size: 8rem;
+  font-weight: bold;
+  color: #dc3545;
+  margin-bottom: 20px;
+}
+
+.unauthorized-subtitle {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.unauthorized-message {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 30px;
+}

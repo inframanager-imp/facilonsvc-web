@@ -1,0 +1,360 @@
+@import '../../../styles/investor-theme';
+
+.appointments {
+  padding: 30px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+
+    h1 {
+      font-family: $investor-font-family;
+      font-size: $investor-h2-size;
+      color: $investor-text-heading;
+      margin: 0;
+    }
+
+    @media (max-width: 767px) {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 15px;
+    }
+  }
+
+  .loading {
+    text-align: center;
+    padding: 60px 20px;
+    font-size: 18px;
+    color: $investor-text-secondary;
+  }
+}
+
+// Buttons
+.btn-primary,
+.btn-secondary,
+.btn-outline,
+.btn-danger,
+.btn-submit {
+  @include investor-btn-primary;
+  cursor: pointer;
+  border: none;
+  font-weight: 600;
+}
+
+.btn-secondary {
+  background-color: $investor-border;
+  color: $investor-text-heading;
+
+  &:hover {
+    background-color: darken($investor-border, 10%);
+  }
+}
+
+.btn-outline {
+  background-color: transparent;
+  border: 2px solid $investor-accent;
+  color: $investor-accent;
+
+  &:hover {
+    background-color: $investor-accent;
+    color: #fff;
+  }
+}
+
+.btn-danger {
+  background-color: #dc3545;
+
+  &:hover {
+    background-color: #c82333;
+  }
+}
+
+.btn-submit {
+  width: 100%;
+  padding: 15px;
+  font-size: 18px;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+// Empty State
+.empty-state {
+  text-align: center;
+  padding: 80px 20px;
+  background-color: $investor-body-bg;
+  border-radius: 12px;
+  border: 2px dashed $investor-border;
+
+  p {
+    font-size: 20px;
+    color: $investor-text-secondary;
+    margin-bottom: 25px;
+  }
+}
+
+// Appointment Cards
+.appointment-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 25px;
+}
+
+.appointment-card {
+  @include investor-card;
+  display: flex;
+  flex-direction: column;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid $investor-border;
+
+    .office-badge {
+      background: linear-gradient(135deg, $investor-accent 0%, $investor-accent-dark 100%);
+      color: #fff;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+  }
+
+  &__body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    .info-row {
+      display: flex;
+      gap: 10px;
+
+      &--full {
+        flex-direction: column;
+      }
+
+      .label {
+        font-size: 14px;
+        font-weight: 600;
+        color: $investor-text-secondary;
+        min-width: 130px;
+      }
+
+      .value {
+        font-size: 14px;
+        color: $investor-text-heading;
+        flex: 1;
+      }
+    }
+  }
+
+  &__footer {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid $investor-border;
+
+    button {
+      flex: 1;
+    }
+  }
+}
+
+// Status Badges
+.status-badge {
+  padding: 5px 12px;
+  border-radius: 16px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  &--success {
+    background-color: #d4edda;
+    color: #155724;
+  }
+
+  &--info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+  }
+
+  &--secondary {
+    background-color: $investor-border-light;
+    color: $investor-text-secondary;
+  }
+
+  &--danger {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+}
+
+// Booking Form
+.booking-card {
+  @include investor-card;
+  max-width: 800px;
+  margin: 0 auto;
+
+  h2 {
+    font-size: $investor-h3-size;
+    color: $investor-text-heading;
+    margin: 0 0 30px 0;
+    font-weight: 600;
+  }
+
+  h3 {
+    font-size: 18px;
+    color: $investor-text-heading;
+    margin: 0 0 15px 0;
+    font-weight: 600;
+  }
+
+  .hint {
+    font-size: 13px;
+    color: $investor-text-secondary;
+    margin-top: 8px;
+  }
+
+  .no-slots {
+    text-align: center;
+    padding: 30px;
+    background-color: #fff3cd;
+    border-radius: 8px;
+    color: #856404;
+    font-weight: 600;
+  }
+}
+
+.form-section {
+  margin-bottom: 35px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// Office Grid
+.office-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.office-option {
+  padding: 20px;
+  border: 2px solid $investor-border;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+
+  &:hover {
+    border-color: $investor-accent;
+    box-shadow: 0 4px 12px rgba(190, 23, 23, 0.1);
+  }
+
+  &.selected {
+    border-color: $investor-accent;
+    background-color: #fff5f5;
+    box-shadow: 0 4px 12px rgba(190, 23, 23, 0.15);
+  }
+
+  h4 {
+    font-size: 16px;
+    color: $investor-text-heading;
+    margin: 0 0 10px 0;
+    font-weight: 600;
+  }
+
+  p {
+    font-size: 13px;
+    color: $investor-text-secondary;
+    margin: 5px 0;
+  }
+}
+
+// Date Input
+.date-input {
+  @include investor-form-control;
+  width: 100%;
+  max-width: 300px;
+}
+
+// Time Slots
+.time-slots {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.time-slot {
+  padding: 12px 20px;
+  border: 2px solid $investor-border;
+  border-radius: 8px;
+  background-color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  color: $investor-text-heading;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: $investor-accent;
+    background-color: #fff5f5;
+  }
+
+  &.selected {
+    border-color: $investor-accent;
+    background-color: $investor-accent;
+    color: #fff;
+  }
+}
+
+// Notes Input
+.notes-input {
+  @include investor-form-control;
+  width: 100%;
+  resize: vertical;
+  min-height: 100px;
+  font-family: $investor-font-family;
+}
+
+// Responsive
+@media (max-width: 767px) {
+  .appointments {
+    padding: 20px 15px;
+  }
+
+  .appointment-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .office-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .time-slots {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .appointment-card__body .info-row {
+    flex-direction: column;
+    gap: 5px;
+
+    .label {
+      min-width: auto;
+    }
+  }
+}

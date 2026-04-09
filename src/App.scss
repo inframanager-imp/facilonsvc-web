@@ -1,0 +1,47 @@
+@import 'styles/laravel-theme.scss';
+@import './styles/investor-theme';
+
+// App-wide styles - Investor theme alignment (docs/Investor)
+body {
+  margin: 0;
+  font-family: $investor-font-family;
+  font-size: $investor-font-size-base;
+  line-height: $investor-line-height;
+  color: $investor-text;
+  background-color: $investor-body-bg;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: $investor-text-heading;
+}
+
+a {
+  color: $investor-text-heading;
+  text-decoration: none;
+  transition: all 0.3s ease-in-out;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+// Bootstrap overrides and custom styles
+.container-fluid {
+  padding: 0;
+}
+
+// Loading spinner
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
