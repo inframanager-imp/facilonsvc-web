@@ -107,7 +107,13 @@ export const introducedInvestorService = {
   resendOtp: (uniqueCode: string) =>
     apiClient.post<ApiResponseDto>('/api/investor/introduced/resend-otp', null, {
       params: { uniqueCode }
-    })
+    }),
+
+  /**
+   * Get session prefill data (email, name) for Step1 form
+   */
+  getSessionPrefill: (uniqueCode: string) =>
+    apiClient.get<IntroducedInvestorDetailsDto>(`/api/investor/introduced/session/${uniqueCode}`)
 };
 
 export default introducedInvestorService;

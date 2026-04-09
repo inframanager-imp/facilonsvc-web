@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import introducedInvestorService, { Step1RequestDto } from '../../../services/introducedInvestorService';
 import './IntroducedInvestorRegistration.scss';
@@ -11,6 +11,7 @@ const IntroducedInvestorStep1: React.FC = () => {
   const { uniqueCode } = useParams<{ uniqueCode: string }>();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [prefillLoading, setPrefillLoading] = useState(true);
   const [error, setError] = useState('');
   const [formData, setFormData] = useState<Step1RequestDto>({
     uniqueCode: uniqueCode!,
@@ -25,10 +26,37 @@ const IntroducedInvestorStep1: React.FC = () => {
     agreeForOtp: false
   });
 
+  // Fetch session prefill data (email, name) on mount
+  useEffect(() => {
+    const fetchPrefill = async () => {
+      try {
+        setPrefillLoading(true);
+        const response = await introducedInvestorService.getSessionPrefill(uniqueCode!);
+        const data = response.data;
+        setFormData(prev => ({
+          ...prev,
+          email: data.email || '',
+          firstName: data.firstName || '',
+          middleName: data.middleName || '',
+          lastName: data.lastName || '',
+          mobileNumber: data.mobile || ''
+        }));
+      } catch (err: any) {
+        console.error('Error fetching session prefill:', err);
+      } finally {
+        setPrefillLoading(false);
+      }
+    };
+    if (uniqueCode) {
+      fetchPrefill();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [uniqueCode]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
     const checked = (e.target as HTMLInputElement).checked;
-    
+
     setFormData(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value
@@ -37,7 +65,7 @@ const IntroducedInvestorStep1: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.agreeForOtp) {
       alert('Please agree to receive OTP on your email');
       return;
@@ -47,7 +75,7 @@ const IntroducedInvestorStep1: React.FC = () => {
       setLoading(true);
       setError('');
       const response = await introducedInvestorService.submitStep1(formData);
-      
+
       if (response.data.success) {
         navigate(`/investor/introduced/step2/${uniqueCode}`);
       }
@@ -58,6 +86,10 @@ const IntroducedInvestorStep1: React.FC = () => {
       setLoading(false);
     }
   };
+
+  if (prefillLoading) {
+    return <div className="loading-container">Loading registration form...</div>;
+  }
 
   return (
     <>
@@ -168,53 +200,49 @@ const IntroducedInvestorStep1: React.FC = () => {
                       <div className="single-field">
                         <label htmlFor="email">
                           Please enter your Email: <span className="star-color">*</span>
-                          <a href="#" data-toggle="popover" data-trigger="hover" title="Email"
-                            data-content="This email will be used to send messages and updates">
-                            <img src="/frontend/images/information-button.png" alt="info" />
-                          </a>
                         </label>
                         <input
                           type="email"
                           name="email"
                           id="email"
                           value={formData.email}
-                          onChange={handleChange}
+                          readOnly
+                          style={{ backgroundColor: '#f5f5f5', cursor: 'not-allowed' }}
                           required
                         />
                       </div>
 
-                      <div className="single-field mobile-no">
+                      <div className="single-field">
                         <label htmlFor="mobileNumber">
                           Please enter your Mobile No: <span className="star-color">*</span>
-                          <a href="#" data-toggle="popover" data-trigger="hover" title="Mobile No."
-                            data-content="This number will be used for interacting with you">
-                            <img src="/frontend/images/information-button.png" alt="info" />
-                          </a>
                         </label>
-                        <select
-                          name="countryCode"
-                          id="countryCode"
-                          value={formData.countryCode}
-                          onChange={handleChange}
-                        >
-                          <option value="+91">+91 (India)</option>
-                          <option value="+1">+1 (USA)</option>
-                          <option value="+44">+44 (UK)</option>
-                          <option value="+971">+971 (UAE)</option>
-                        </select>
-                        <input
-                          type="text"
-                          name="mobileNumber"
-                          id="mobileNumber"
-                          value={formData.mobileNumber}
-                          onChange={(e) => {
-                            const value = e.target.value.replace(/[^0-9]/g, '');
-                            setFormData(prev => ({ ...prev, mobileNumber: value }));
-                          }}
-                          minLength={10}
-                          maxLength={16}
-                          required
-                        />
+                        <div className="mobile-input-row">
+                          <select
+                            name="countryCode"
+                            id="countryCode"
+                            value={formData.countryCode}
+                            onChange={handleChange}
+                          >
+                            <option value="+91">+91 (India)</option>
+                            <option value="+1">+1 (USA)</option>
+                            <option value="+44">+44 (UK)</option>
+                            <option value="+971">+971 (UAE)</option>
+                          </select>
+                          <input
+                            type="text"
+                            name="mobileNumber"
+                            id="mobileNumber"
+                            value={formData.mobileNumber}
+                            onChange={(e) => {
+                              const value = e.target.value.replace(/[^0-9]/g, '');
+                              setFormData(prev => ({ ...prev, mobileNumber: value }));
+                            }}
+                            placeholder="Enter mobile number"
+                            minLength={10}
+                            maxLength={16}
+                            required
+                          />
+                        </div>
                       </div>
 
                       <div className="single-field">
