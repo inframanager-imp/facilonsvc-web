@@ -61,7 +61,6 @@ const IntroducedInvestorSuccess: React.FC = () => {
                           </p>
                           <p style={{ fontSize: '14px', color: '#666', marginBottom: '30px' }}>
                             Please check your inbox (and spam folder) for the email containing your login details.
-                            Your password is: <strong>Invest@1234</strong>
                           </p>
                         </>
                       )}
@@ -87,19 +86,7 @@ const IntroducedInvestorSuccess: React.FC = () => {
                         </button>
                       </div>
 
-                      <div style={{ marginTop: '20px' }}>
-                        <a
-                          href="/"
-                          style={{
-                            color: '#BE1717',
-                            textDecoration: 'none',
-                            fontSize: '14px',
-                            fontWeight: 600
-                          }}
-                        >
-                          Return to Home
-                        </a>
-                      </div>
+
                     </div>
                   </div>
                 </div>
