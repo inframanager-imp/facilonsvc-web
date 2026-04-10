@@ -99,7 +99,7 @@ const IntroducedInvestorStep1: React.FC = () => {
         <div className="container">
           <div className="row align-items-center">
             <div className="col-lg-7 col-md-7 col-sm-12">
-              <div className="lgf4_Left_content" style={{ marginBottom: '250px' }}>
+              <div className="lgf4_Left_content">
                 <h3>Investor <span>Registration</span></h3>
                 <p>
                   Before we start the registration process we would like to verify your email address
@@ -207,7 +207,6 @@ const IntroducedInvestorStep1: React.FC = () => {
                           id="email"
                           value={formData.email}
                           readOnly
-                          style={{ backgroundColor: '#f5f5f5', cursor: 'not-allowed' }}
                           required
                         />
                       </div>

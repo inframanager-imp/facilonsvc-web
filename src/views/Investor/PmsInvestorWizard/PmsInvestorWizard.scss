@@ -1,150 +1,625 @@
-@import '../../../styles/investor-theme';
+// PMS Investor Wizard — Laravel parity styles
+//
+// Faithful port of Laravel's frontend stylesheet for the PMS introducer flow:
+//   - public/frontend/css/formdesign.css   (.login-form-style4, .login-register3-form-middle,
+//                                            .button-1, .single-field, .checkbox-wrapper-33,
+//                                            .lgf4_Left_content, .star-color)
+//   - public/frontend/css/formdesign.css   .steps4-sec custom radio system (lines 524-602)
+//
+// Verified against the actual Laravel CSS (not guesses) — see formdesign.css line refs
+// in inline comments below.
+//
+// Key facts about the Laravel visual system:
+//   • Primary teal: #3e6f7c   (.button-1 bg, .checkbox primary, radio accent, popover header)
+//   • Primary red:  #be1717   (.star-color, h2 color, .button-1 hover)
+//   • Inputs use a Material-style underline (border-bottom only, transparent bg)
+//   • Card heading is LEFT-aligned and red, with a 15% width red ::before underline
+//   • Background image has a flat dark overlay (rgba(3,4,5,0.59)), NOT a gradient
+//   • The .button-1 is solid teal with capitalized text and a red hover
+//   • Custom radios use circle pseudo elements with a teal dot when checked
+//   • There is NO step indicator anywhere — each Laravel step is its own routed page
+
+$pms-teal: #3e6f7c;
+$pms-red: #be1717;
+$pms-text: #030405;
+$pms-input-text: #000031;
+$pms-input-border: rgba(62, 111, 124, 0.27);
+$pms-bg-image: 'https://anvaya.online/facilon/public/frontend/images/banner/2125.jpg';
 
 .pms-investor-wizard {
-  min-height: 100vh;
-  background-color: $investor-body-bg;
-  padding: 40px 20px;
+  // Mirrors .login-form-style4 (formdesign.css:1-21)
+  // min-height + flex layout + dark overlay via ::after
+  min-height: 90vh;
+  background: url(#{$pms-bg-image}) center/cover no-repeat;
+  display: flex;
+  position: relative;
+  z-index: 1;
+  padding: 70px 0;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(3, 4, 5, 0.59);
+    z-index: -1;
+  }
 
   &__container {
-    max-width: $investor-container-max-width;
+    max-width: 1200px;
     margin: 0 auto;
-    @include investor-card;
+    width: 100%;
+    padding: 0 20px;
   }
 
-  &__subtitle {
-    color: $investor-text-secondary;
-    margin-top: -8px;
-    margin-bottom: 24px;
-  }
-
-  h2 {
-    color: $investor-text-heading;
-    margin-bottom: 8px;
-  }
-
-  &__steps {
+  &__row {
     display: flex;
-    gap: 16px;
-    margin-bottom: 32px;
-  }
-
-  &__step {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    justify-content: center;
-    background-color: #e0e0e0;
-    color: $investor-text-secondary;
-    font-weight: 600;
-    transition: all 0.3s ease;
-
-    &.active {
-      background-color: $investor-accent !important;
-      border: none;
-      color: #fff !important;
-    }
+    gap: 40px;
   }
 
-  &__form {
-    .form-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 16px;
-    }
-
-    .form-row--mobile {
-      grid-template-columns: 1fr 1.5fr;
-    }
-
-    .form-hint {
-      color: $investor-text-secondary;
-      font-size: 14px;
-      margin-bottom: 16px;
-    }
-
-    .form-hint-list {
-      color: $investor-text-secondary;
-      font-size: 14px;
-      margin-bottom: 20px;
-      padding-left: 20px;
-
-      li {
-        margin-bottom: 8px;
-      }
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-
-      label {
-        display: block;
-        margin-bottom: 8px;
-        color: $investor-text-heading;
-      }
-
-      input,
-      select {
-        @include investor-form-control;
-        width: 100%;
-      }
-
-      &--radio {
-        label {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          margin-right: 16px;
-          cursor: pointer;
-        }
-      }
-
-      &--checkbox {
-        label {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          cursor: pointer;
-
-          input {
-            width: auto;
-          }
-        }
-      }
-
-      &--legal {
-        margin-top: 16px;
-        padding-top: 16px;
-        border-top: 1px solid $investor-border;
-      }
-    }
-
-    .otp-inputs {
-      display: flex;
-      gap: 12px;
-
-      input {
-        width: 56px;
-        text-align: center;
-        font-size: 18px;
-      }
-    }
+  // ================================================================
+  // Left intro column (Laravel: .lgf4_Left_content — formdesign.css:31-50)
+  // ================================================================
+  &__intro {
+    flex: 1 1 40%;
+    color: #fff;
 
     h3 {
-      margin-bottom: 20px;
+      color: #fff;
+      font-size: 32px;
+      text-transform: capitalize;
+      font-weight: 700;
+      line-height: 53px;
+      margin: 0 0 20px;
+
+      // Laravel wraps the highlighted phrase in a teal pill <span>
+      span {
+        background-color: $pms-teal;
+        padding: 3px 26px;
+        border-radius: 40px;
+        text-transform: uppercase;
+        font-weight: 400;
+      }
     }
 
-    .btn-primary {
-      @include investor-btn-primary;
-      margin-top: 24px;
-      cursor: pointer;
-      border: none;
+    p {
+      line-height: 30px;
+      color: #fff;
+      font-size: 20px;
+      margin: 0;
+    }
 
-      &:disabled {
-        opacity: 0.7;
-        cursor: not-allowed;
+    // Bullet hint list (Laravel: .list-type1)
+    .list-type1 {
+      margin-top: 18px;
+
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
       }
+
+      li {
+        position: relative;
+        padding-left: 28px;
+        margin-bottom: 12px;
+        color: #fff;
+        font-size: 16px;
+        line-height: 1.5;
+
+        &::before {
+          content: '\2713';
+          position: absolute;
+          left: 0;
+          top: 1px;
+          color: #4caf50;
+          font-weight: 700;
+        }
+      }
+    }
+  }
+
+  &__col-form {
+    flex: 1 1 50%;
+  }
+
+  // ================================================================
+  // White card (Laravel: .login-form-style3-main — formdesign.css:154-164)
+  // ================================================================
+  &__card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 30px 30px;
+
+    // Laravel: .login-register_style3-head h2 — left-aligned red heading
+    // with a 15% width ::before underline (formdesign.css:170-178, 345-354)
+    h2 {
+      text-align: left;
+      font-size: 26px;
+      text-transform: capitalize;
+      margin: 0 0 18px;
+      font-weight: 900;
+      color: $pms-red;
+      position: relative;
+      padding-bottom: 10px;
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 15%;
+        height: 3px;
+        background: $pms-red;
+        transition: all 0.3s linear;
+      }
+    }
+  }
+
+  // ================================================================
+  // Form group (Laravel: .single-field — formdesign.css:223-227, 338-344)
+  // ================================================================
+  .single-field {
+    width: 100%;
+    position: relative;
+    margin-bottom: 15px;
+
+    label {
+      display: block;
+      font-weight: 500;
+      color: $pms-text;
+      margin-bottom: 0;
+      padding: 5px 10px 5px 0;
+      font-size: 15px;
+    }
+
+    .star-color {
+      color: $pms-red;
+      margin-left: 2px;
+    }
+
+    // Material-style underline inputs (formdesign.css:228-260)
+    input[type='text'],
+    input[type='email'],
+    input[type='tel'],
+    input[type='url'],
+    input[type='password'],
+    input[type='date'],
+    select {
+      width: 100%;
+      border: none;
+      border-bottom: 1px solid $pms-input-border;
+      padding: 7px 0;
+      font-size: 15px;
+      color: $pms-input-text;
+      background: transparent;
+      transition: all 0.4s ease-in-out;
+      box-sizing: border-box;
+      border-radius: 0;
+
+      &::placeholder {
+        color: #827f7f;
+        font-size: 15px;
+        opacity: 1;
+      }
+
+      &:focus,
+      &:focus-visible {
+        outline: none;
+        box-shadow: none;
+        border-bottom: 1px solid $pms-teal;
+      }
+
+      &:disabled,
+      &[readonly] {
+        color: #666;
+        opacity: 0.85;
+      }
+    }
+
+    // ISD code + mobile row
+    &.mobile-no {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+
+      label {
+        flex: 1 1 100%;
+      }
+
+      select {
+        flex: 0 0 38%;
+      }
+
+      input {
+        flex: 1;
+      }
+    }
+
+    .form-error {
+      color: $pms-red;
+      font-size: 13px;
+      margin-top: 4px;
+      display: block;
+    }
+
+    &.mb-0 {
+      margin-bottom: 0;
+    }
+
+    &.self-sec1 {
+      margin-top: 8px;
+    }
+  }
+
+  // ================================================================
+  // Custom radios (Laravel: .steps4-sec .radio — formdesign.css:524-587)
+  // Each radio is a span with a circle pseudo-element on the left.
+  // ================================================================
+  .radio-box {
+    margin-top: 6px;
+    margin-bottom: 0;
+
+    .radio {
+      display: inline-block;
+      cursor: pointer;
+      user-select: none;
+      text-align: left;
+      margin-top: 0;
+      margin-right: 11px;
+      margin-bottom: 0;
+      position: relative;
+
+      input[type='radio'] {
+        display: none;
+      }
+
+      span {
+        display: inline-block;
+        position: relative;
+        padding-left: 30px;
+        font-weight: 500;
+        color: $pms-teal;
+        font-size: 15px;
+        line-height: 24px;
+
+        &::before {
+          content: '';
+          display: block;
+          position: absolute;
+          top: 4px;
+          left: 0;
+          border-radius: 50%;
+          margin-right: 5px;
+          width: 16px;
+          height: 16px;
+          border: 1px solid #ccc;
+          background: #fff;
+        }
+
+        &::after {
+          content: '';
+          display: block;
+          width: 10px;
+          height: 10px;
+          background: $pms-teal;
+          position: absolute;
+          border-radius: 50%;
+          top: 7px;
+          left: 3px;
+          opacity: 0;
+          transform: scale(0, 0);
+          transition: all 0.2s cubic-bezier(0.64, 0.57, 0.67, 1.53);
+        }
+      }
+
+      input[type='radio']:checked + span::after {
+        opacity: 1;
+        transform: scale(1, 1);
+      }
+    }
+  }
+
+  // self-sec1 wraps Yes/No radios with extra left padding (formdesign.css:668-673)
+  .self-sec1 .radio-box {
+    padding-left: 0;
+  }
+
+  // ================================================================
+  // Custom checkbox (Laravel: .checkbox-wrapper-33 — formdesign.css:365-471)
+  // Teal primary, 1.1em square, stroke-based check icon.
+  // ================================================================
+  .checkbox-wrapper-33 {
+    --s-small: 10px;
+    --border-width: 1px;
+    --c-primary: #{$pms-teal};
+    --c-primary-20-percent-opacity: rgba(62, 111, 124, 0.5);
+    text-align: start;
+    margin-left: 1px;
+    margin-bottom: 0;
+
+    .visuallyhidden {
+      border: 0;
+      clip: rect(0 0 0 0);
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      padding: 0;
+      position: absolute;
+      width: 1px;
+    }
+
+    .checkbox {
+      display: flex;
+      align-items: flex-start;
+      cursor: pointer;
+    }
+
+    .checkbox + .checkbox {
+      margin-top: var(--s-small);
+    }
+
+    .checkbox__symbol {
+      display: flex;
+      margin-right: calc(var(--s-small) * 0.7);
+      border: var(--border-width) solid var(--c-primary);
+      position: relative;
+      border-radius: 0.1em;
+      width: 1.1em;
+      height: 1.1em;
+      flex-shrink: 0;
+      transition: box-shadow 0.4s ease, background-color 0.4s;
+      box-shadow: 0 0 0 0 rgba(62, 111, 124, 0.3);
+      align-self: center;
+
+      .icon-checkbox {
+        width: 1em;
+        height: 1em;
+        margin: auto;
+        fill: none;
+        stroke-width: 3;
+        stroke: currentColor;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        color: $pms-teal;
+        display: inline-block;
+
+        path {
+          transition: stroke-dashoffset 0.2s ease-in;
+          stroke-dasharray: 30px, 31px;
+          stroke-dashoffset: 31px;
+        }
+      }
+    }
+
+    .checkbox__trigger:checked + .checkbox__symbol .icon-checkbox path {
+      transition: stroke-dashoffset 0.4s cubic-bezier(0.11, 0.29, 0.18, 0.98);
+      stroke-dashoffset: 0;
+    }
+
+    .checkbox__trigger:focus + .checkbox__symbol {
+      box-shadow: 0 0 0 0.25em var(--c-primary-20-percent-opacity);
+    }
+
+    .checkbox__textwrapper {
+      margin: 0;
+      font-weight: 500;
+      color: #000;
+      line-height: 21px;
+      font-size: 15px;
+
+      // Laravel uses an <a> for the privacy/terms link;
+      // we use a button so style it the same way.
+      a,
+      .pms-investor-wizard__inline-link {
+        color: $pms-teal;
+        text-decoration: underline;
+        background: none;
+        border: none;
+        padding: 0;
+        font: inherit;
+        cursor: pointer;
+      }
+    }
+
+    .checkbox__trigger:disabled + .checkbox__symbol {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  // ================================================================
+  // Primary button (Laravel: .button-1 — formdesign.css:289-305)
+  // Solid teal with red hover, capitalized (NOT uppercase).
+  // ================================================================
+  .button-1 {
+    display: inline-block;
+    padding: 15px 30px;
+    text-transform: capitalize;
+    font-weight: 500;
+    font-size: 16px;
+    background: $pms-teal;
+    color: #fff;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.4s ease-in-out;
+
+    &:hover:not(:disabled) {
+      background: $pms-red;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  // ================================================================
+  // OTP boxes (Laravel: .row.otp-sec — inline in step 2 blade)
+  // ================================================================
+  .otp-sec {
+    display: flex;
+    gap: 10px;
+
+    .col {
+      flex: 1;
+
+      input {
+        width: 100%;
+        text-align: center;
+        font-size: 22px;
+        font-weight: 700;
+        padding: 12px 0;
+        border: none;
+        border-bottom: 2px solid $pms-input-border;
+        background: transparent;
+        color: $pms-input-text;
+        border-radius: 0;
+
+        &:focus {
+          outline: none;
+          border-bottom-color: $pms-teal;
+        }
+      }
+    }
+  }
+
+  &__inline-link {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    color: $pms-teal;
+    text-decoration: underline;
+    cursor: pointer;
+    font: inherit;
+
+    &:hover {
+      color: $pms-red;
+    }
+  }
+
+  &__note {
+    background: #fff8e1;
+    border-left: 4px solid #f7b500;
+    padding: 12px 14px;
+    border-radius: 4px;
+    margin-bottom: 18px;
+    font-size: 14px;
+    color: #5c4400;
+  }
+
+  // ================================================================
+  // Modal (Laravel: .modal in step4 blade — inline <style>)
+  // ================================================================
+  &__modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 60px 16px;
+    overflow-y: auto;
+
+    &-content {
+      background: #fff;
+      border-radius: 10px;
+      padding: 24px 28px;
+      max-width: 820px;
+      width: 100%;
+      max-height: calc(100vh - 120px);
+      overflow-y: auto;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      position: relative;
+
+      .close {
+        position: absolute;
+        top: 14px;
+        right: 18px;
+        font-size: 28px;
+        font-weight: 700;
+        color: #888;
+        cursor: pointer;
+        background: none;
+        border: none;
+        padding: 0;
+        line-height: 1;
+
+        &:hover {
+          color: $pms-red;
+        }
+      }
+
+      h2 {
+        font-size: 22px;
+        margin: 0 0 14px;
+        text-align: left;
+        color: $pms-text;
+        padding-bottom: 0;
+
+        &::before {
+          display: none;
+        }
+      }
+
+      h3 {
+        font-size: 16px;
+        margin: 18px 0 8px;
+        color: $pms-text;
+      }
+
+      p {
+        font-size: 14px;
+        line-height: 1.65;
+        margin: 0 0 12px;
+        color: #555;
+      }
+    }
+  }
+
+  // ================================================================
+  // Responsive
+  // ================================================================
+  @media (max-width: 992px) {
+    padding: 40px 0;
+
+    &__row {
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    &__intro h3 {
+      font-size: 26px;
+      line-height: 1.4;
+    }
+
+    &__intro p {
+      font-size: 17px;
+      line-height: 1.5;
+    }
+
+    &__card {
+      padding: 26px 22px;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .single-field.mobile-no {
+      flex-direction: column;
+
+      select,
+      input {
+        flex: 1 1 100%;
+      }
+    }
+
+    .otp-sec .col input {
+      font-size: 18px;
+      padding: 10px 0;
     }
   }
 }

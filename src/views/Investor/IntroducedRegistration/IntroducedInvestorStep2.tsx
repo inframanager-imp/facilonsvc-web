@@ -131,16 +131,16 @@ const IntroducedInvestorStep2: React.FC = () => {
 
                 <div className="list-type1">
                   <ul>
-                    <li style={{ color: '#fff' }}>
+                    <li>
                       <i className="fa-solid fa-check"></i>
                       An email with a One-Time Password has been sent to your email address.
                       This OTP is valid for 10 minutes.
                     </li>
-                    <li style={{ color: '#fff' }}>
+                    <li>
                       <i className="fa-solid fa-check"></i>
                       Please check your spam or junk folder if you do not see the email.
                     </li>
-                    <li style={{ color: '#fff' }}>
+                    <li>
                       <i className="fa-solid fa-check"></i>
                       If you have not received the OTP, you may resend it after the timer ends.
                     </li>
@@ -157,12 +157,8 @@ const IntroducedInvestorStep2: React.FC = () => {
                   </div>
 
                   <div className="login-register3-form-middle">
-                    {(success || error) && (
-                      <div style={{ textAlign: 'center', marginBottom: '15px' }}>
-                        {success && <p style={{ color: 'green', margin: 0 }}>{success}</p>}
-                        {error && <p style={{ color: 'red', margin: 0 }}>{error}</p>}
-                      </div>
-                    )}
+                    {success && <div className="alert alert-success">{success}</div>}
+                    {error && <div className="alert alert-danger">{error}</div>}
 
                     <form onSubmit={handleSubmit}>
                       <input type="hidden" name="unique_code" value={uniqueCode} />

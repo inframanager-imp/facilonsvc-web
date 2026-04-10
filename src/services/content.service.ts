@@ -50,6 +50,8 @@ export interface MasterPortfolioManagersDto {
   ssPortfolioManagerId?: string;
   ssServiceProviderType?: string;
   ssNameOfTheFirmValue?: string;
+  /** Resolved firm display name from master_accounts.name. Prefer this in UI. */
+  firmName?: string;
 }
 
 export interface MasterPmsPlansDto {
@@ -63,6 +65,8 @@ export interface MasterPmsPlansDto {
   ssPmsValue?: string;
   ssPreferredBankValue?: string;
   ssSchemeValue?: string;
+  /** Resolved preferred bank display name (from master_accounts via _ss_preferredbank_value). */
+  preferredBankName?: string;
 }
 
 export interface MasterPmsBanksDto {
@@ -71,6 +75,8 @@ export interface MasterPmsBanksDto {
   ssPmsBankId?: string;
   ssPortfolioManagerValue?: string;
   ssBankValue?: string;
+  /** Resolved bank display name (from master_accounts via ss_bank_value). */
+  bankName?: string;
 }
 
 class ContentService {

@@ -461,23 +461,23 @@ const IntroducedInvestorStep4: React.FC = () => {
                               </label>
 
                               <div className="radio-box">
-                                <label className="radio expander" style={{ display: 'inline-block' }}>
+                                <label className="radio">
                                   <input
                                     name="sameWhatsapp"
                                     type="radio"
                                     value="Yes"
                                     onChange={() => setShowDiffWhatsappDiv(false)}
                                   />
-                                  <span style={{ padding: '0px 7px 0px 25px' }}>Yes</span>
+                                  <span>Yes</span>
                                 </label>
-                                <label className="radio" style={{ display: 'inline-block' }}>
+                                <label className="radio">
                                   <input
                                     name="sameWhatsapp"
                                     type="radio"
                                     value="No"
                                     onChange={() => setShowDiffWhatsappDiv(true)}
                                   />
-                                  <span style={{ padding: '0px 16px 0px 29px' }}>No</span>
+                                  <span>No</span>
                                 </label>
                               </div>
                             </div>
@@ -603,8 +603,7 @@ const IntroducedInvestorStep4: React.FC = () => {
                             <div className="single-field mb-0">
                               <button
                                 type="button"
-                                className="button-1"
-                                style={{ padding: '12px 20px', fontSize: '18px', display: 'inline-block', width: '100%', textAlign: 'center' }}
+                                className="button-2"
                                 onClick={() => navigate(-1)}
                               >
                                 Cancel

@@ -1,171 +1,280 @@
-// Introduced Investor Registration - Laravel UI Clone
-// Matches: docs/Investor/resources/views/investor/introduce-*.blade.php
+// Self / Introduced Investor Registration — Laravel parity styles
+//
+// Shared by ALL pages under /investor/register/* and /investor/introduced/*:
+//   - MarketInterestCheck, SelfRegistrationStep1-3, Consent, Success, ThankYou
+//   - IntroducedInvestorWizard, IntroducedInvestorStart, Step1-4
+//
+// Ported from Laravel public/frontend/css/formdesign.css with verified line refs.
+// Key palette:  teal #3e6f7c  |  red #be1717  |  text #030405  |  input border rgba(62,111,124,0.27)
 
-// Main section with background image
+$teal: #3e6f7c;
+$red: #be1717;
+$text: #030405;
+$input-text: #000031;
+$input-border: rgba(62, 111, 124, 0.27);
+
+// ================================================================
+// Page section (formdesign.css:1-21)
+// ================================================================
 .login-form-style4 {
+  min-height: 90vh;
   background-size: cover;
-  background-position: center;
   background-repeat: no-repeat;
-  min-height: 100vh;
-  padding: 60px 0;
+  background-position: center center;
+  position: relative;
+  z-index: 1;
   display: flex;
-  align-items: center;
+
+  // Dark overlay (formdesign.css:10-21)
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(3, 4, 5, 0.59);
+    z-index: -1;
+  }
 
   &.steps4-sec {
-    align-items: flex-start;
+    min-height: inherit !important;
+    padding: 20px 0;
+  }
+
+  &.section-padding {
+    padding: 70px 0;
   }
 
   .container {
     max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 15px;
+  }
+
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .align-items-center {
+    align-items: center !important;
   }
 }
 
-// Left content section
+// ================================================================
+// Left intro column (formdesign.css:22-50, 355-363)
+// ================================================================
 .lgf4_Left_content {
   color: #fff;
-  margin-bottom: 50px;
+  margin-bottom: 20px;
 
   h3 {
-    font-size: 42px;
-    font-weight: 700;
     color: #fff;
+    font-size: 32px;
+    text-transform: capitalize;
+    font-weight: 700;
+    line-height: 53px;
     margin-bottom: 20px;
-    line-height: 1.3;
 
+    // Laravel wraps highlighted text in a teal pill <span> (formdesign.css:355-363)
     span {
-      color: #BE1717;
+      background-color: $teal;
+      padding: 3px 26px;
+      border-radius: 40px;
+      text-transform: uppercase;
+      font-weight: 400;
     }
   }
 
   p {
-    font-size: 18px;
+    line-height: 30px;
     color: #fff;
-    margin-bottom: 20px;
-    line-height: 1.6;
+    font-size: 20px;
   }
 
+  // OTP hint list (list-type1)
   .list-type1 {
     ul {
       list-style: none;
       padding: 0;
       margin: 20px 0;
+    }
 
-      li {
-        color: #fff;
-        font-size: 16px;
-        margin-bottom: 15px;
-        line-height: 1.6;
+    li {
+      color: #fff;
+      font-size: 16px;
+      margin-bottom: 12px;
+      line-height: 1.6;
+      position: relative;
+      padding-left: 28px;
 
-        i {
-          color: #28a745;
-          margin-right: 10px;
-        }
+      &::before {
+        content: '\2713';
+        position: absolute;
+        left: 0;
+        top: 1px;
+        color: #4caf50;
+        font-weight: 700;
+      }
+
+      i {
+        color: #28a745;
+        margin-right: 10px;
       }
     }
   }
 }
 
-// Form container
+// ================================================================
+// White card (formdesign.css:154-164) — NO box-shadow in Laravel
+// ================================================================
 .login-form-style3-main {
-  background: #fff;
+  background: #ffffff;
   border-radius: 10px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  padding: 30px 30px;
 
   .login-form-style3-main_full {
-    padding: 40px 30px;
+    width: 100%;
   }
 }
 
-// Form header
+// ================================================================
+// Card heading (formdesign.css:165-178, 345-354)
+// Left-aligned, red, with 15% ::before underline
+// ================================================================
 .login-register_style3-head {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 15px;
+  overflow: hidden;
 
   h2 {
-    font-size: 28px;
-    font-weight: 700;
-    color: #333;
+    text-align: left;
+    font-size: 26px;
+    text-transform: capitalize;
     margin-bottom: 10px;
+    font-weight: 900;
+    color: $red;
+    position: relative;
+    padding-bottom: 10px;
+
+    // Red underline (formdesign.css:345-354)
+    &::before {
+      content: '';
+      width: 15%;
+      left: 0;
+      bottom: 0;
+      height: 3px;
+      background: $red;
+      position: absolute;
+      transition: all 0.3s linear;
+    }
   }
 }
 
-// Form middle section
+// ================================================================
+// Form middle section — inputs, labels, radios, checkboxes, buttons
+// ================================================================
 .login-register3-form-middle {
   form {
+    // -----------------------------------------------
+    // .single-field (formdesign.css:223-227, 338-344)
+    // -----------------------------------------------
     .single-field {
-      margin-bottom: 20px;
+      width: 100%;
+      position: relative;
+      margin-bottom: 15px;
 
       label {
+        font-weight: 500;
+        color: $text;
+        margin-bottom: 0;
+        padding: 5px 10px 5px 0;
         display: block;
-        font-size: 14px;
-        font-weight: 600;
-        color: #333;
-        margin-bottom: 8px;
+        font-size: 15px;
 
         .star-color {
-          color: #BE1717;
+          color: $red;
           margin-left: 2px;
         }
 
-        a {
-          img {
-            width: 16px;
-            height: 16px;
-            margin-left: 5px;
-            vertical-align: middle;
-          }
+        a img {
+          width: 18px;
+          margin-left: 6px;
+          margin-top: -5px;
         }
       }
 
-      input[type="text"],
-      input[type="email"],
-      input[type="password"],
-      input[type="date"],
+      // Material-style underline inputs (formdesign.css:228-260)
+      input[type='text'],
+      input[type='email'],
+      input[type='password'],
+      input[type='tel'],
+      input[type='url'],
+      input[type='date'],
       select {
         width: 100%;
-        padding: 12px 15px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        font-size: 14px;
-        transition: border-color 0.3s;
+        border: none;
+        border-bottom: 1px solid $input-border;
+        padding: 7px 0;
+        font-size: 15px;
+        color: $input-text;
+        background-color: transparent;
+        transition: all 0.4s ease-in-out;
+        box-sizing: border-box;
+        border-radius: 0;
+
+        &::placeholder {
+          color: #827f7f;
+          font-size: 15px;
+          opacity: 1;
+        }
 
         &:focus {
+          border-bottom-color: $teal;
+        }
+
+        &:focus,
+        &:focus-visible {
           outline: none;
-          border-color: #BE1717;
+          box-shadow: none;
         }
 
         &:disabled,
         &[readonly] {
-          background-color: #f5f5f5;
-          cursor: not-allowed;
+          color: #666;
+          opacity: 0.85;
+          background-color: transparent;
         }
       }
 
-      select {
-        cursor: pointer;
-        appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: right 15px center;
-        padding-right: 35px;
-      }
-
+      // ISD + mobile row
       &.mobile-no {
         display: flex;
         gap: 10px;
+        flex-wrap: wrap;
+
+        label {
+          flex: 1 1 100%;
+        }
 
         select {
-          width: 140px;
-          flex-shrink: 0;
+          flex: 0 0 38%;
         }
 
         input {
           flex: 1;
         }
       }
+
+      &.mb-0 {
+        margin-bottom: 0;
+      }
+
+      &.self-sec1 {
+        margin-top: 8px;
+      }
     }
 
-    // Mobile number row: country code dropdown + input side by side
+    // Mobile number alternate row style
     .mobile-input-row {
       display: flex;
       gap: 10px;
@@ -175,63 +284,82 @@
         width: 35%;
         min-width: 120px;
         flex-shrink: 0;
-        padding: 12px 15px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        font-size: 14px;
-        cursor: pointer;
-        appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: right 15px center;
-        padding-right: 35px;
-
-        &:focus {
-          outline: none;
-          border-color: #BE1717;
-        }
       }
 
-      input[type="text"] {
+      input[type='text'] {
         flex: 1;
         min-width: 0;
-        padding: 12px 15px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        font-size: 14px;
-
-        &:focus {
-          outline: none;
-          border-color: #BE1717;
-        }
       }
     }
 
-    // Self/Legal Entity radio buttons
+    // -----------------------------------------------
+    // Custom radios (formdesign.css:524-602)
+    // Hidden native input + circle pseudo elements
+    // -----------------------------------------------
     .single-field.self-sec,
     .single-field.self-sec1 {
       .radio-box {
         display: flex;
-        gap: 20px;
         flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 0;
 
         label.radio {
-          display: flex;
-          align-items: center;
+          display: inline-block;
           cursor: pointer;
-          font-size: 14px;
-          color: #333;
-          font-weight: 500;
+          user-select: none;
+          text-align: left;
+          margin-right: 11px;
+          margin-bottom: 0;
+          position: relative;
 
-          input[type="radio"] {
-            margin-right: 8px;
-            cursor: pointer;
-            width: 18px;
-            height: 18px;
+          input[type='radio'] {
+            display: none;
           }
 
           span {
-            user-select: none;
+            display: inline-block;
+            position: relative;
+            padding-left: 30px;
+            font-weight: 500;
+            color: $teal;
+            font-size: 15px;
+            line-height: 24px;
+
+            // Outer circle (formdesign.css:547-558)
+            &::before {
+              content: '';
+              display: block;
+              position: absolute;
+              top: 4px;
+              left: 0;
+              border-radius: 50%;
+              width: 16px;
+              height: 16px;
+              border: 1px solid #ccc;
+              background: #fff;
+            }
+
+            // Inner teal dot (formdesign.css:560-573)
+            &::after {
+              content: '';
+              display: block;
+              width: 10px;
+              height: 10px;
+              background: $teal;
+              position: absolute;
+              border-radius: 50%;
+              top: 7px;
+              left: 3px;
+              opacity: 0;
+              transform: scale(0, 0);
+              transition: all 0.2s cubic-bezier(0.64, 0.57, 0.67, 1.53);
+            }
+          }
+
+          input[type='radio']:checked + span::after {
+            opacity: 1;
+            transform: scale(1, 1);
           }
 
           &.expander {
@@ -242,66 +370,174 @@
       }
     }
 
-    // Custom checkbox
-    .checkbox-wrapper-33 {
-      .checkbox {
-        display: flex;
-        align-items: flex-start;
+    // Radios without the .self-sec wrapper (fallback)
+    .radio-box {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+
+      label.radio {
+        display: inline-block;
         cursor: pointer;
+        position: relative;
 
-        .checkbox__trigger {
-          position: absolute;
-          opacity: 0;
-          pointer-events: none;
+        input[type='radio'] {
+          display: none;
         }
 
-        .checkbox__symbol {
-          width: 28px;
-          height: 28px;
-          border: 2px solid #ddd;
-          border-radius: 5px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-right: 10px;
-          flex-shrink: 0;
-          transition: all 0.3s;
+        span {
+          display: inline-block;
+          position: relative;
+          padding-left: 30px;
+          font-weight: 500;
+          color: $teal;
+          font-size: 15px;
+          line-height: 24px;
 
-          svg {
+          &::before {
+            content: '';
+            display: block;
+            position: absolute;
+            top: 4px;
+            left: 0;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            border: 1px solid #ccc;
+            background: #fff;
+          }
+
+          &::after {
+            content: '';
+            display: block;
+            width: 10px;
+            height: 10px;
+            background: $teal;
+            position: absolute;
+            border-radius: 50%;
+            top: 7px;
+            left: 3px;
             opacity: 0;
-            transition: opacity 0.3s;
-
-            path {
-              stroke: #fff;
-              stroke-width: 3;
-              fill: none;
-            }
+            transform: scale(0, 0);
+            transition: all 0.2s cubic-bezier(0.64, 0.57, 0.67, 1.53);
           }
         }
 
-        .checkbox__trigger:checked ~ .checkbox__symbol {
-          background-color: #BE1717;
-          border-color: #BE1717;
-
-          svg {
-            opacity: 1;
-          }
-        }
-
-        .checkbox__textwrapper {
-          font-size: 14px;
-          color: #333;
-          line-height: 1.5;
-          margin: 0;
-
-          .star-color {
-            color: #BE1717;
-          }
+        input[type='radio']:checked + span::after {
+          opacity: 1;
+          transform: scale(1, 1);
         }
       }
     }
 
+    // -----------------------------------------------
+    // Custom checkboxes (formdesign.css:365-471)
+    // Teal primary, stroke-based SVG icon
+    // -----------------------------------------------
+    .checkbox-wrapper-33 {
+      --s-small: 10px;
+      --border-width: 1px;
+      --c-primary: #{$teal};
+      --c-primary-20: rgba(62, 111, 124, 0.5);
+      text-align: start;
+      margin-left: 1px;
+      margin-bottom: 0;
+
+      .checkbox {
+        display: flex;
+        align-items: flex-start;
+        cursor: pointer;
+      }
+
+      .checkbox + .checkbox {
+        margin-top: var(--s-small);
+      }
+
+      .checkbox__trigger {
+        position: absolute;
+        clip: rect(0 0 0 0);
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        padding: 0;
+        border: 0;
+        overflow: hidden;
+      }
+
+      .checkbox__symbol {
+        display: flex;
+        margin-right: calc(var(--s-small) * 0.7);
+        border: var(--border-width) solid var(--c-primary);
+        position: relative;
+        border-radius: 0.1em;
+        width: 1.1em;
+        height: 1.1em;
+        flex-shrink: 0;
+        align-self: center;
+        transition: box-shadow 0.4s ease, background-color 0.4s;
+        box-shadow: 0 0 0 0 rgba(62, 111, 124, 0.3);
+
+        svg,
+        .icon-checkbox {
+          width: 1em;
+          height: 1em;
+          margin: auto;
+          fill: none;
+          stroke-width: 3;
+          stroke: currentColor;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+          color: $teal;
+          display: inline-block;
+
+          path {
+            transition: stroke-dashoffset 0.2s ease-in;
+            stroke-dasharray: 30px, 31px;
+            stroke-dashoffset: 31px;
+          }
+        }
+      }
+
+      .checkbox__trigger:checked + .checkbox__symbol,
+      .checkbox__trigger:checked ~ .checkbox__symbol {
+        svg path,
+        .icon-checkbox path {
+          transition: stroke-dashoffset 0.4s cubic-bezier(0.11, 0.29, 0.18, 0.98);
+          stroke-dashoffset: 0;
+        }
+      }
+
+      .checkbox__trigger:focus + .checkbox__symbol {
+        box-shadow: 0 0 0 0.25em var(--c-primary-20);
+      }
+
+      .checkbox__trigger:disabled + .checkbox__symbol,
+      .checkbox__trigger:disabled ~ .checkbox__symbol {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .checkbox__textwrapper {
+        margin: 0;
+        font-weight: 500;
+        color: #000;
+        line-height: 21px;
+        font-size: 15px;
+
+        .star-color {
+          color: $red;
+        }
+
+        a {
+          color: $teal;
+          text-decoration: underline;
+        }
+      }
+    }
+
+    // -----------------------------------------------
     // OTP input boxes
+    // -----------------------------------------------
     .otp-sec {
       display: flex;
       gap: 10px;
@@ -311,61 +547,67 @@
 
         input {
           width: 100%;
-          height: 60px;
           text-align: center;
-          font-size: 24px;
+          font-size: 22px;
           font-weight: 700;
-          border: 2px solid #ddd;
-          border-radius: 8px;
+          padding: 12px 0;
+          border: none;
+          border-bottom: 2px solid $input-border;
+          background: transparent;
+          color: $input-text;
+          border-radius: 0;
           transition: border-color 0.3s;
 
           &:focus {
             outline: none;
-            border-color: #BE1717;
+            border-bottom-color: $teal;
           }
         }
       }
     }
 
-    // Timer section
+    // Timer
     .timer-sec {
       font-size: 14px;
       color: #666;
 
       .timer {
         font-weight: 700;
-        color: #BE1717;
+        color: $red;
       }
     }
 
-    // Buttons
+    // -----------------------------------------------
+    // Buttons (formdesign.css:289-305)
+    // Teal solid with red hover
+    // -----------------------------------------------
     .button-1,
     .button-2 {
       display: inline-block;
-      padding: 14px 40px;
-      border-radius: 50px;
+      padding: 15px 30px;
+      text-transform: capitalize;
+      font-weight: 500;
       font-size: 16px;
-      font-weight: 600;
+      border-radius: 10px;
       text-align: center;
       cursor: pointer;
-      transition: all 0.3s;
+      transition: all 0.4s ease-in-out;
       border: none;
       text-decoration: none;
     }
 
     .button-1 {
-      background: #BE1717;
+      background: $teal;
       color: #fff;
 
       &:hover {
-        background: #9f1212;
+        background: $red;
         color: #fff;
       }
 
       &:disabled {
-        background: #ccc;
-        cursor: not-allowed;
         opacity: 0.6;
+        cursor: not-allowed;
       }
     }
 
@@ -380,17 +622,105 @@
       }
     }
 
-    .single-field.mb-0 {
-      margin-bottom: 0;
+    // MarketInterestCheck style-3 button (maps to .button-1)
+    .btn-style3 {
+      display: inline-block;
+      padding: 15px 30px;
+      text-transform: capitalize;
+      font-weight: 500;
+      font-size: 16px;
+      background: $teal;
+      color: #fff;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.4s ease-in-out;
+
+      &:hover {
+        background: $red;
+      }
+    }
+  }
+
+  // .button-1 / .button-2 also directly under .login-register3-form-middle
+  // (not only inside form) — IntroducedInvestorStart places buttons outside <form>.
+  .button-1 {
+    display: inline-block;
+    padding: 15px 30px;
+    text-transform: capitalize;
+    font-weight: 500;
+    font-size: 16px;
+    background: $teal;
+    color: #fff;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.4s ease-in-out;
+
+    &:hover {
+      background: $red;
+      color: #fff;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  .button-2 {
+    display: inline-block;
+    padding: 15px 30px;
+    text-transform: capitalize;
+    font-weight: 500;
+    font-size: 16px;
+    background: #f5f5f5;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.4s ease-in-out;
+
+    &:hover {
+      background: #e5e5e5;
     }
   }
 }
 
-// Consent page specific styles
+// ================================================================
+// Investor detail summary box (IntroducedInvestorStart — gray box
+// with bold labels for investor type, nationality, product, plan, scheme).
+// Matches the Laravel screenshot: light gray bg, rounded corners,
+// padding, bold label text.
+// ================================================================
+.investor-detail-box {
+  background: #f5f5f7;
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-top: 10px;
+
+  p {
+    margin: 0 0 6px;
+    font-size: 15px;
+    color: $text;
+    line-height: 1.6;
+
+    strong {
+      font-weight: 700;
+    }
+  }
+}
+
+// ================================================================
+// Consent page
+// ================================================================
 .privacy-policy-sec {
   padding: 0 !important;
 }
 
+// ================================================================
+// Modal (privacy / terms)
+// ================================================================
 .modal {
   display: none;
   position: fixed;
@@ -416,17 +746,17 @@
     width: 90%;
     max-height: 85vh;
     overflow-y: auto;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 
     .close {
       float: right;
       font-size: 28px;
       font-weight: bold;
       cursor: pointer;
-      color: #333;
+      color: #888;
 
       &:hover {
-        color: red;
+        color: $red;
       }
     }
 
@@ -440,16 +770,16 @@
     }
 
     &::-webkit-scrollbar-thumb {
-      background: #BE1717;
+      background: $teal;
       border-radius: 10px;
 
       &:hover {
-        background: #9f1212;
+        background: $red;
       }
     }
 
     scrollbar-width: thin;
-    scrollbar-color: #BE1717 #f1f1f1;
+    scrollbar-color: $teal #f1f1f1;
   }
 
   #acceptWrapper.sticky-btn {
@@ -464,11 +794,11 @@
   list-style-type: decimal;
 
   li::marker {
-    color: red;
+    color: $red;
   }
 
   li a {
-    color: #BE1717;
+    color: $red;
   }
 }
 
@@ -479,9 +809,8 @@
     padding: 0 0 20px;
     margin: 0;
     line-height: 62px;
-    margin-top: 0;
     text-transform: none;
-    color: #BE1717;
+    color: $red;
   }
 
   h4 {
@@ -490,7 +819,7 @@
     margin: 0;
     line-height: 62px;
     text-transform: none;
-    color: #BE1717;
+    color: $red;
   }
 
   h6 {
@@ -499,11 +828,22 @@
     margin: 0;
     line-height: 62px;
     text-transform: none;
-    color: #BE1717;
+    color: $red;
   }
 }
 
-// Consent page container styles
+// ================================================================
+// Consent page wrapper (replaces inline bg + min-height on consent)
+// ================================================================
+.consent-page-wrapper {
+  background: #f5f5f7;
+  min-height: 100vh;
+  padding: 24px 0;
+}
+
+// ================================================================
+// Consent page container
+// ================================================================
 .consent-container {
   max-width: 1024px;
   margin: 24px auto;
@@ -579,7 +919,7 @@
       align-items: flex-start;
       cursor: pointer;
 
-      input[type="checkbox"] {
+      input[type='checkbox'] {
         margin-right: 10px;
         margin-top: 3px;
         width: 18px;
@@ -598,17 +938,17 @@
 
     button {
       padding: 10px 18px;
-      border-radius: 999px;
+      border-radius: 10px;
       border: none;
       cursor: pointer;
       font-size: 0.9rem;
 
       &.primary {
-        background: #0056d6;
+        background: $teal;
         color: #fff;
 
         &:hover {
-          background: #004bb5;
+          background: $red;
         }
 
         &:disabled {
@@ -629,7 +969,7 @@
   }
 
   .required {
-    color: #d00000;
+    color: $red;
   }
 
   small {
@@ -638,15 +978,16 @@
   }
 }
 
-// Error messages
-span[role="alert"] {
-  color: red;
+// ================================================================
+// Error / alert elements
+// ================================================================
+span[role='alert'] {
+  color: $red;
   font-size: 13px;
   display: block;
   margin-top: 5px;
 }
 
-// Success/Error alerts
 .alert {
   padding: 12px 15px;
   border-radius: 5px;
@@ -665,19 +1006,22 @@ span[role="alert"] {
   }
 }
 
+// ================================================================
 // Responsive
+// ================================================================
 @media (max-width: 991px) {
   .lgf4_Left_content {
     margin-bottom: 30px;
     text-align: center;
 
     h3 {
-      font-size: 32px;
+      font-size: 26px;
+      line-height: 1.4;
     }
   }
 
-  .login-form-style3-main_full {
-    padding: 30px 20px;
+  .login-form-style3-main {
+    padding: 26px 22px;
   }
 }
 
@@ -699,11 +1043,9 @@ span[role="alert"] {
     gap: 10px !important;
   }
 
-  .otp-sec {
-    .col input {
-      height: 50px;
-      font-size: 20px;
-    }
+  .otp-sec .col input {
+    font-size: 18px;
+    padding: 10px 0;
   }
 
   .actions {

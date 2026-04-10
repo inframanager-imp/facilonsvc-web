@@ -4,12 +4,15 @@ import introducedInvestorService from '../../../services/introducedInvestorServi
 import './IntroducedInvestorRegistration.scss';
 
 /**
- * Step 0: Initial landing page showing investor details from Dataverse
+ * Step 0: Initial landing page showing investor details from Dataverse.
  * Matches Laravel: introduce-multiple-register-main-step.blade.php
+ *
+ * Layout: .login-form-style4 with two-column intro + card from formdesign.css.
+ * The detail labels (Investor Type, Nationality, etc.) are shown as plain
+ * bold text on a light gray box — NOT as radio circles.
  */
 const IntroducedInvestorStart: React.FC = () => {
   const params = useParams();
-  /** Laravel-style long token (may include '/') or plain ss_name — see route /investor/introduced/start/* */
   const investorRefFromSplat = params['*']?.trim();
   const investorRefFromParam = (params as { investorId?: string }).investorId?.trim();
   const investorRef = investorRefFromSplat || investorRefFromParam || '';
@@ -40,7 +43,7 @@ const IntroducedInvestorStart: React.FC = () => {
       return;
     }
     fetchInvestorDetails();
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- load when ref from URL changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [investorRef]);
 
   const handleContinue = () => {
@@ -66,92 +69,70 @@ const IntroducedInvestorStart: React.FC = () => {
   }
 
   return (
-    <>
-      {/* Header with Logo */}
-      <header className="header header_style_01">
-        <nav className="navbar navbar-default">
-          <div className="container">
-            <div className="navbar-header">
-              <a className="navbar-brand" href="/" style={{ padding: 0 }}>
-                <img src="/assets/images/logo.png" alt="Facilon" style={{ height: '50px' }} />
-              </a>
+    <section
+      className="login-form-style4 steps4-sec section-padding align-items-center"
+      style={{ backgroundImage: "url('https://anvaya.online/facilon/public/frontend/images/banner/2125.jpg')" }}
+    >
+      <div className="container">
+        <div className="row align-items-center">
+          {/* Left column — intro text */}
+          <div className="col-lg-5 col-md-12 col-sm-12">
+            <div className="lgf4_Left_content">
+              <h3>Welcome To <span>Facilon Services</span> Registration Process</h3>
             </div>
           </div>
-        </nav>
-      </header>
 
-      <section 
-        className="login-form-style4 steps4-sec section-padding" 
-        style={{ backgroundImage: 'url(/assets/images/banner/2125.jpg)' }}
-      >
-        <div className="container">
-          <div className="row align-items-center">
-            <div className="col-lg-5 col-md-12 col-sm-12">
-              <div className="lgf4_Left_content">
-                <h3>Welcome to <span>Facilon Services</span> Registration Process</h3>
-              </div>
-            </div>
+          {/* Right column — white card */}
+          <div className="col-lg-7 col-md-12 col-sm-12">
+            <div className="login-form-style3-main">
+              <div className="login-form-style3-main_full">
+                <div className="login-register_style3-head">
+                  <h2>Investor Registration</h2>
+                </div>
 
-            <div className="col-lg-7 col-md-12 col-sm-12" style={{ marginTop: '4%' }}>
-              <div className="login-form-style3-main">
-                <div className="login-form-style3-main_full">
-                  <div className="login-register_style3-head">
-                    <h2>Investor Registration</h2>
-                  </div>
+                <p><strong>Welcome {investorDetails.firstName?.toUpperCase()},</strong></p>
+                <p>
+                  You have been introduced to Facilon by your{' '}
+                  {investorDetails.serviceProviderType}{' '}
+                  {investorDetails.brokerName?.toUpperCase()}.
+                </p>
+                <p>
+                  Facilon has been engaged by {investorDetails.brokerName?.toUpperCase()} to
+                  facilitate your onboarding journey.
+                </p>
+                <p>Please confirm the details below before registering with us.</p>
 
-                  <span><strong>Welcome {investorDetails.firstName},</strong></span><br />
-                  <span>You have been introduced to Facilon by your{' '}
-                    <span>{investorDetails.serviceProviderType}{' '}</span>
-                    {investorDetails.brokerName?.toUpperCase()}.
-                  </span><br />
-                  <p>Facilon has been engaged by {investorDetails.brokerName?.toUpperCase()} to facilitate your onboarding journey.</p>
-                  <p>Please confirm the details below before registering with us.</p>
-
-                  <div className="login-register3-form-middle">
-                    <div className="single-field self-sec">
-                      <div className="radio-box">
-                        <label className="radio expander">
-                          <span>INVESTOR TYPE: {investorDetails.investorTypeName?.toUpperCase()}</span>
-                        </label><br />
-                        <label className="radio expander">
-                          <span>NATIONALITY: {investorDetails.nationalityName?.toUpperCase()}</span>
-                        </label><br />
-                        <label className="radio">
-                          <span>PRODUCT: {investorDetails.productName?.toUpperCase()}</span>
-                        </label><br />
-                        <label className="radio">
-                          <span>PLAN: {investorDetails.planName?.toUpperCase()}</span>
-                        </label><br />
-                        <label className="radio">
-                          <span>SCHEME: {investorDetails.schemeName?.toUpperCase()}</span>
-                        </label>
-                      </div>
-                    </div>
+                <div className="login-register3-form-middle">
+                  {/* Gray detail box — matches the Laravel screenshot exactly:
+                      plain bold text labels, light gray background, rounded corners */}
+                  <div className="investor-detail-box">
+                    <p><strong>INVESTOR TYPE : </strong>{investorDetails.investorTypeName?.toUpperCase()}</p>
+                    <p><strong>NATIONALITY : </strong>{investorDetails.nationalityName?.toUpperCase()}</p>
+                    {investorDetails.countryOfResidence && (
+                      <p><strong>COUNTRY OF RESIDENCE : </strong>{investorDetails.countryOfResidence?.toUpperCase()}</p>
+                    )}
+                    <p><strong>PRODUCT : </strong>{investorDetails.productName?.toUpperCase()}</p>
+                    <p><strong>PLAN : </strong>{investorDetails.planName?.toUpperCase()}</p>
+                    <p><strong>SCHEME : </strong>Not Applicable</p>
 
                     {investorDetails.emailAlreadyExists ? (
-                      <div className="alert alert-warning">
-                        <p>Your email {investorDetails.email} is already registered with us.</p>
-                        <p>Please login with your existing credentials to continue.</p>
-                        <button className="button-1" onClick={() => navigate('/login')}>
-                          Login
-                        </button>
-                      </div>
+                      <>
+                        <br />
+                        <p>Your email <strong>{investorDetails.email}</strong> is already registered with Us.</p>
+                        <div className="single-field mb-0">
+                          <button className="button-1" onClick={() => navigate('/login')}>
+                            Login with Existing and Check details
+                          </button>
+                        </div>
+                      </>
                     ) : (
                       <>
                         <br />
                         <p>Please click on Continue to provide your consent for the data and proceed with the registration.</p>
-                        <div id="button_div" className="mt-4">
-                          <div className="row justify-content-center">
-                            <div className="col-md-6 d-flex justify-content-center">
-                              <button 
-                                onClick={handleContinue}
-                                className="button-1"
-                                style={{ display: 'inline-block', textAlign: 'center' }}
-                              >
-                                Continue
-                              </button>
-                            </div>
-                          </div>
+                        <div className="single-field mb-0">
+                          <button className="button-1" onClick={handleContinue}>
+                            Continue
+                          </button>
                         </div>
                       </>
                     )}
@@ -161,8 +142,8 @@ const IntroducedInvestorStart: React.FC = () => {
             </div>
           </div>
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 };
 

@@ -50,20 +50,7 @@ const IntroducedInvestorConsent: React.FC = () => {
 
   return (
     <>
-      {/* Header with Logo */}
-      <header className="header header_style_01">
-        <nav className="navbar navbar-default">
-          <div className="container">
-            <div className="navbar-header">
-              <a className="navbar-brand" href="/" style={{ padding: 0 }}>
-                <img src="/assets/images/logo.png" alt="Facilon" style={{ height: '50px' }} />
-              </a>
-            </div>
-          </div>
-        </nav>
-      </header>
-
-      <div style={{ background: '#f5f5f7', minHeight: '100vh', padding: '24px 0' }}>
+      <div className="consent-page-wrapper">
         <div className="consent-container">
           <h1>Individual Investor Privacy & Consent Notice</h1>
           <p className="meta">Version 1.0 &nbsp;|&nbsp; Effective Date: {getCurrentDate()}</p>

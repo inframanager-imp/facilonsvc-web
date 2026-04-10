@@ -6,7 +6,12 @@ export interface PmsNextholderInitDto {
   countryOfIncorporation?: number;
   pmsManagerId: number;
   pmsPlanId: number;
-  pmsBankId: number;
+  /**
+   * Optional. {@code master_pms_banks} can be empty in dev / pre-Dataverse-sync
+   * environments — in that case the wizard auto-derives the bank from the
+   * selected plan's preferred bank and the backend accepts a null pmsBankId.
+   */
+  pmsBankId?: number;
 }
 
 export interface PmsNextholderPersonalDto {
@@ -60,6 +65,61 @@ export interface OtpResponseDto {
   expiresInMinutes: number;
 }
 
+/** Envelope returned by POST /pms-investor/send-otp and /verify-otp. */
+export interface PmsOtpResponseDto {
+  success: boolean;
+  code: string; // "ok" | "mismatch" | "expired" | "locked" | "rate_limited" | "not_issued" | "invalid_request"
+  message: string;
+  emailSent?: boolean | null;
+  smsSent?: boolean | null;
+  expiresInMinutes?: number | null;
+  remainingAttempts?: number | null;
+}
+
+/** Full payload POSTed to /pms-investor/register — mirrors Java PmsInvestorRegistrationDto. */
+export interface PmsInvestorRegistrationPayload {
+  // Identity
+  firstName: string;
+  middleName?: string;
+  lastName: string;
+  email: string;
+  mobilePhone: string;
+  password: string;
+
+  // Demographics (Laravel parity)
+  userDob?: string;        // yyyy-MM-dd
+  gender?: string;
+  countryCodeId?: number;
+  nationalityId?: number;
+  nationalityName?: string;
+  legalCountryId?: number;
+  registerAs?: string;     // "Self" | "Legal Entity"
+  legalEntityFullName?: string;
+  fullName?: string;
+
+  // Conditional KYC
+  pancard?: string;        // "Yes" | "No"
+  ociCard?: string;        // "Yes" | "No"
+  indianOrigin?: string;   // "Yes" | "No"
+
+  // WhatsApp / consent
+  sameWhatsapp?: string;   // "Yes" | "No"
+  diffMobWhatsapp?: string;
+  agreeToWhatsapp?: boolean;
+  agreeForOtp?: boolean;
+  confirmation?: boolean;
+  agreePrivacy?: boolean;
+  agreeTerms?: boolean;
+
+  // PMS required
+  pmsManagerId: number;
+  pmsPlanId: number;
+  pmsBankId: number;
+  accountNumber: string;
+  agreementDate: string;   // yyyy-MM-dd
+  comments?: string;
+}
+
 export interface PmsRegistrationDto {
   investmentAmount?: number;
   portfolioType?: string;
@@ -100,6 +160,7 @@ export interface PmsPortfolioPreferencesDto {
 export interface PmsOtpRequestDto {
   email?: string;
   mobileNumber?: string;
+  firstName?: string;
 }
 
 export interface PmsOtpVerifyDto {
@@ -118,34 +179,27 @@ class PmsInvestorService {
     return { uniqueCode: 'TEMP', step: 1, message: 'Success' };
   }
 
-  // Step 2: Send OTP
-  async step2(code: string, data: PmsNextholderPersonalDto): Promise<OtpResponseDto> {
-    const req: PmsOtpRequestDto = {
+  // Step 2: Send OTP (real Graph email + SMS delivery, rate-limited server-side)
+  async step2(code: string, data: PmsNextholderPersonalDto): Promise<PmsOtpResponseDto> {
+    const req: PmsOtpRequestDto & { firstName?: string } = {
       email: data.email,
-      mobileNumber: data.mobileNumber
+      mobileNumber: data.mobileNumber,
+      firstName: data.firstName,
     };
-    await apiClient.post<string>(`${this.baseUrl}/send-otp`, req);
-    return { message: 'OTP sent', emailSent: true, smsSent: true, expiresInMinutes: 10 };
+    const response = await apiClient.post<PmsOtpResponseDto>(`${this.baseUrl}/send-otp`, req);
+    return response.data;
   }
 
-  // Step 3: Verify OTP
-  async step3(data: IntroNextholderVerifyOtpDto): Promise<IntroInvestorResponseDto> {
-    // Need mobile/email from state? The VerifyDto has uniqueCode, emailOtp, smsOtp. 
-    // But backend /verify-otp needs email/mobile.
-    // We will assume the wizard passes email/mobile if we change the interface, 
-    // OR we just use dummy verification if data is missing.
-    // However, let's try to pass email/mobile if possible.
-    // Since interface change might break other things, we will cast or extend.
+  // Step 3: Verify OTP (server-side brute-force protection)
+  async step3(data: IntroNextholderVerifyOtpDto & { email?: string; mobileNumber?: string }): Promise<PmsOtpResponseDto> {
     const req: PmsOtpVerifyDto = {
       emailOtp: data.emailOtp,
       smsOtp: data.smsOtp,
-      // email/mobile should be passed but interface doesn't have it.
-      // We will rely on PmsInvestorWizard to pass it in `data` as any.
-      email: (data as any).email,
-      mobileNumber: (data as any).mobileNumber
+      email: data.email,
+      mobileNumber: data.mobileNumber,
     };
-    await apiClient.post<string>(`${this.baseUrl}/verify-otp`, req);
-    return { uniqueCode: data.uniqueCode, step: 3, message: 'Verified' };
+    const response = await apiClient.post<PmsOtpResponseDto>(`${this.baseUrl}/verify-otp`, req);
+    return response.data;
   }
 
   // Step 4: Register (Create User & Investor)
