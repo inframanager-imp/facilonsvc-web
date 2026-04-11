@@ -49,6 +49,7 @@ import { DocumentUpload } from './views/Investor/DocumentUpload/DocumentUpload';
 import { OnboardingDocuments } from './views/Investor/OnboardingDocuments/OnboardingDocuments';
 import { PublicDocumentSubmission } from './views/Investor/PublicDocumentSubmission/PublicDocumentSubmission';
 import { InvestorProfilePdf } from './views/Investor/InvestorProfilePdf/InvestorProfilePdf';
+import { KycPdfPreview } from './views/Investor/KycPdfPreview/KycPdfPreview';
 import { UserProfile } from './views/User/UserProfile/UserProfile';
 import { InvestorTypeCategoryManagement } from './views/Admin/InvestorTypeCategory/InvestorTypeCategory';
 import { MarketTypeManagement } from './views/Admin/MarketType/MarketType';
@@ -136,13 +137,21 @@ const App: React.FC = () => {
           <Route path="/investor/introduced/success" element={<IntroducedInvestorSuccess />} />
           <Route path="/investor/pms/register" element={<PmsInvestorWizard />} />
           <Route path="/investor/document-submission/:token" element={<PublicDocumentSubmission />} />
-          <Route 
-            path="/investor/profile-pdf" 
+          <Route
+            path="/investor/profile-pdf"
             element={
               <ProtectedRoute>
                 <InvestorProfilePdf />
               </ProtectedRoute>
-            } 
+            }
+          />
+          <Route
+            path="/investor/kyc-pdf"
+            element={
+              <ProtectedRoute>
+                <KycPdfPreview />
+              </ProtectedRoute>
+            }
           />
           <Route path="/service-agreement" element={<ServiceAgreement />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />

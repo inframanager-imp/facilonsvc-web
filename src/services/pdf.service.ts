@@ -100,6 +100,53 @@ class PdfService {
             printWindow.document.close();
         }
     }
+
+    // ─── KYC Form (36-page Account Opening Kit) ───
+
+    /** Download the filled KYC form PDF for the current user. */
+    async downloadKycFormPdf(): Promise<Blob> {
+        const response = await apiClient.get<Blob>(`${this.baseUrl}/kyc-form`, {
+            responseType: 'blob'
+        });
+        return response.data;
+    }
+
+    /** Get the HTML preview of the filled KYC form. */
+    async getKycFormPreviewHtml(): Promise<string> {
+        const response = await apiClient.get<string>(`${this.baseUrl}/kyc-form/preview`, {
+            responseType: 'text'
+        });
+        return response.data;
+    }
+
+    /** Get the structured form data JSON (for the edit UI). */
+    async getKycFormData(): Promise<any> {
+        const response = await apiClient.get(`${this.baseUrl}/kyc-form/data`);
+        return response.data;
+    }
+
+    /** Trigger browser download of the KYC form PDF. */
+    async downloadKycFormFile(filename?: string): Promise<void> {
+        const blob = await this.downloadKycFormPdf();
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename || 'KYC_Account_Opening_Kit.pdf';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+    }
+
+    /** Open the KYC form preview in a new window. */
+    async openKycFormPreview(): Promise<void> {
+        const html = await this.getKycFormPreviewHtml();
+        const printWindow = window.open('', '_blank');
+        if (printWindow) {
+            printWindow.document.write(html);
+            printWindow.document.close();
+        }
+    }
 }
 
 export const pdfService = new PdfService();

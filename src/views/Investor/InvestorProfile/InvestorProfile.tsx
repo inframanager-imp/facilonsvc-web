@@ -852,14 +852,14 @@ export const InvestorProfile: React.FC = () => {
 
   const handleDownloadAccountOpeningKit = async () => {
     try {
-      await pdfService.downloadAccountOpeningKitFile();
-      toast.success('Account Opening Kit PDF downloaded successfully');
+      await pdfService.downloadKycFormFile();
+      toast.success('KYC Account Opening Kit PDF downloaded successfully');
     } catch (err: any) {
       const permissionError = getPermissionErrorMessage(err);
       if (permissionError) {
         toast.error(permissionError);
       } else {
-        toast.error(err.response?.data?.message || 'Failed to download Account Opening Kit PDF');
+        toast.error(err.response?.data?.message || 'Failed to download KYC Account Opening Kit PDF');
       }
     }
   };

@@ -146,43 +146,43 @@ export const OnboardingDocuments: React.FC = () => {
   const handleDownloadAccountOpeningBooklet = async (e: React.MouseEvent) => {
     e.preventDefault();
     try {
-      toast.info('Generating Account Opening Kit PDF, please wait...');
-      
-      // Use pdfService.downloadAccountOpeningKit() for comprehensive Account Opening Kit
-      const blob = await pdfService.downloadAccountOpeningKit();
-      
-      console.log('[Account Opening Kit PDF] Blob size:', blob.size, 'bytes');
-      console.log('[Account Opening Kit PDF] Blob type:', blob.type);
-      
+      toast.info('Generating KYC Account Opening Kit PDF, please wait...');
+
+      // Uses FreeMarker template (kyc-form-master.ftl) converted from Laravel pdf.blade
+      const blob = await pdfService.downloadKycFormPdf();
+
+      console.log('[KYC Form PDF] Blob size:', blob.size, 'bytes');
+      console.log('[KYC Form PDF] Blob type:', blob.type);
+
       if (blob.size === 0) {
         throw new Error('Generated PDF is empty');
       }
-      
+
       // Create blob URL and open in new tab (like Laravel stream with inline disposition)
       const url = window.URL.createObjectURL(blob);
       const newWindow = window.open(url, '_blank');
-      
+
       if (!newWindow) {
         // If popup blocked, try downloading instead
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'Account_Opening_Booklet.pdf';
+        a.download = 'KYC_Account_Opening_Kit.pdf';
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-        toast.success('Account Opening Kit PDF downloaded successfully');
+        toast.success('KYC Account Opening Kit PDF downloaded successfully');
       } else {
-        toast.success('Account Opening Kit PDF opened in new tab');
+        toast.success('KYC Account Opening Kit PDF opened in new tab');
       }
-      
+
       // Cleanup after a delay
       setTimeout(() => {
         window.URL.revokeObjectURL(url);
       }, 5000);
-      
+
     } catch (error: any) {
-      console.error('[Account Opening Kit PDF] Error:', error);
-      toast.error(error.message || 'Failed to generate Account Opening Kit PDF. Please try again.');
+      console.error('[KYC Form PDF] Error:', error);
+      toast.error(error.message || 'Failed to generate KYC Account Opening Kit PDF. Please try again.');
     }
   };
 
