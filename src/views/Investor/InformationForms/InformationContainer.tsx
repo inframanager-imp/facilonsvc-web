@@ -131,16 +131,29 @@ export const InformationContainer: React.FC = () => {
   // Progress bar - Your Journey section
   const renderProgressBar = () => {
     const progress = dashboardData?.progress;
+    const accountSummary = dashboardData?.accountSummary;
 
-    const isCompleted = (key: string) => progress?.sections?.[key]?.completed || false;
-
+    // `personalInfo` completion comes from progress.sections (backend-computed flag).
+    // Everything downstream comes from accountSummary counts/flags — same source the
+    // working pages (OnboardingDocuments, DocumentUpload, etc.) use. This keeps the
+    // "Your Journey" widget consistent across routes.
     const isDoneFor = (key: string) => {
-      if (key === 'information') return isCompleted('personalInfo');
-      if (key === 'documents') return isCompleted('kycDocuments');
-      if (key === 'onboarding') return isCompleted('onboardingForms');
-      if (key === 'verification') return isCompleted('inPersonVerification');
-      if (key === 'physical') return isCompleted('physicalSubmission');
-      if (key === 'account') return isCompleted('accountDetails');
+      if (key === 'information') {
+        return progress?.sections?.personalInfo?.completed || false;
+      }
+      if (key === 'documents') {
+        return accountSummary
+          ? accountSummary.kycDocumentsUploaded >= accountSummary.kycDocumentsRequired
+          : false;
+      }
+      if (key === 'onboarding') {
+        return accountSummary
+          ? accountSummary.onboardingDocumentsUploaded >= accountSummary.onboardingDocumentsRequired
+          : false;
+      }
+      if (key === 'verification') return accountSummary?.verificationDone || false;
+      if (key === 'physical') return accountSummary?.physicalSubmissionDone || false;
+      if (key === 'account') return accountSummary?.accountOpeningStatus || false;
       return false;
     };
 
