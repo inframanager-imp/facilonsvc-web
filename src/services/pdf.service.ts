@@ -26,28 +26,6 @@ class PdfService {
     }
 
     /**
-     * Download comprehensive Account Opening Kit PDF (Complete version)
-     * Aligned with Laravel: pdf.blade.php (13k+ lines with all forms)
-     */
-    async downloadAccountOpeningKit(): Promise<Blob> {
-        const response = await apiClient.get<Blob>(`${this.baseUrl}/account-opening-kit`, {
-            responseType: 'blob'
-        });
-        return response.data;
-    }
-
-    /**
-     * Get Account Opening Kit print preview HTML (Complete version)
-     * Aligned with Laravel: pdf.blade.php preview
-     */
-    async getAccountOpeningKitPreviewHtml(): Promise<string> {
-        const response = await apiClient.get<string>(`${this.baseUrl}/account-opening-kit/preview`, {
-            responseType: 'text'
-        });
-        return response.data;
-    }
-
-    /**
      * Helper to trigger PDF download in browser (Summary version)
      */
     async downloadPdfFile(filename?: string): Promise<void> {
@@ -63,37 +41,10 @@ class PdfService {
     }
 
     /**
-     * Helper to trigger Account Opening Kit PDF download (Complete version)
-     */
-    async downloadAccountOpeningKitFile(filename?: string): Promise<void> {
-        const blob = await this.downloadAccountOpeningKit();
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = filename || 'Account_Opening_Kit.pdf';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-    }
-
-    /**
      * Helper to open print preview in new window (Summary version)
      */
     async openPrintPreview(): Promise<void> {
         const html = await this.getPrintPreviewHtml();
-        const printWindow = window.open('', '_blank');
-        if (printWindow) {
-            printWindow.document.write(html);
-            printWindow.document.close();
-        }
-    }
-
-    /**
-     * Helper to open Account Opening Kit preview in new window (Complete version)
-     */
-    async openAccountOpeningKitPreview(): Promise<void> {
-        const html = await this.getAccountOpeningKitPreviewHtml();
         const printWindow = window.open('', '_blank');
         if (printWindow) {
             printWindow.document.write(html);

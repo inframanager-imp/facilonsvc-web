@@ -879,7 +879,7 @@ export const InvestorProfile: React.FC = () => {
 
   const handleAccountOpeningKitPreview = async () => {
     try {
-      await pdfService.openAccountOpeningKitPreview();
+      await pdfService.openKycFormPreview();
     } catch (err: any) {
       const permissionError = getPermissionErrorMessage(err);
       if (permissionError) {
