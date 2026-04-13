@@ -37,9 +37,15 @@ export const PhysicalSubmission: React.FC = () => {
       ]);
       
       setDashboardData(dashboard);
-      
-      // Check if in-person verification is completed (matching Laravel logic)
-      const isVerified = verificationStatus?.currentStatus === 'completed';
+
+      // Check if in-person verification is completed.
+      // Trust either the verification endpoint's currentStatus OR the dashboard's
+      // accountSummary.verificationDone flag — they read the same backing column
+      // (ss_verification_done) but go through different services, and a stale
+      // Dataverse sync in one path shouldn't lock the form.
+      const isVerified =
+        verificationStatus?.currentStatus === 'completed' ||
+        dashboard?.accountSummary?.verificationDone === true;
       setVerificationCompleted(isVerified);
       
       if (!isVerified) {
@@ -268,7 +274,7 @@ export const PhysicalSubmission: React.FC = () => {
                     </center>
 
                     <div className="tab-content tabs">
-                      <div role="tabpanel" className="tab-pane fade in active" id="Section1">
+                      <div role="tabpanel" className="tab-pane fade show active" id="Section1">
                         <center>
                           <p style={{ marginTop: '20px' }}>
                             Please download the checklist and send the documents by courier to the address of the service provider indicated in the checklist.
@@ -325,7 +331,6 @@ export const PhysicalSubmission: React.FC = () => {
                                       value="inperson"
                                       checked={submissionType === 'inperson'}
                                       onChange={(e) => setSubmissionType('inperson')}
-                                      disabled={!verificationCompleted}
                                       style={{ marginRight: '5px' }}
                                     />
                                     In Person
@@ -337,7 +342,6 @@ export const PhysicalSubmission: React.FC = () => {
                                       value="courier"
                                       checked={submissionType === 'courier'}
                                       onChange={(e) => setSubmissionType('courier')}
-                                      disabled={!verificationCompleted}
                                       style={{ marginRight: '5px' }}
                                     />
                                     Courier
@@ -358,7 +362,6 @@ export const PhysicalSubmission: React.FC = () => {
                                       id="courier_name"
                                       value={formData.courierName}
                                       onChange={(e) => handleInputChange('courierName', e.target.value)}
-                                      disabled={!verificationCompleted}
                                       placeholder="e.g., DHL, BlueDart"
                                       required={submissionType === 'courier'}
                                       maxLength={100}
@@ -375,7 +378,6 @@ export const PhysicalSubmission: React.FC = () => {
                                       id="dispatch_date"
                                       value={formData.dispatchDate}
                                       onChange={(e) => handleInputChange('dispatchDate', e.target.value)}
-                                      disabled={!verificationCompleted}
                                       required={submissionType === 'courier'}
                                     />
                                   </div>
@@ -390,7 +392,6 @@ export const PhysicalSubmission: React.FC = () => {
                                       id="awb_number"
                                       value={formData.awbNumber}
                                       onChange={(e) => handleInputChange('awbNumber', e.target.value)}
-                                      disabled={!verificationCompleted}
                                       placeholder="Tracking Number"
                                       required={submissionType === 'courier'}
                                       maxLength={50}

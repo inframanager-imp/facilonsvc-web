@@ -192,7 +192,7 @@ export const AccountDetails: React.FC = () => {
 
                     {/* Tab panes */}
                     <div className="tab-content tabs">
-                      <div role="tabpanel" className="tab-pane fade in active" id="Section2">
+                      <div role="tabpanel" className="tab-pane fade show active" id="Section2">
                         <h2 className="p-detail">Investor Account Details</h2>
                         <form action="#" method="post">
                           {/* Row 1: Bank Name, Bank Address, Account Number */}
