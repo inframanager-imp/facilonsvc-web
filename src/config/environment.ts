@@ -6,6 +6,6 @@ export interface Environment {
 
 export const environment: Environment = {
   production: false,
-  apiBaseUrl: 'http://localhost:8082/facilon',
+  apiBaseUrl: process.env.REACT_APP_API_URL || 'http://localhost:8080/facilon',
   applicationName: 'Facilon Platform',
 };

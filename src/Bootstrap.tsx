@@ -4,13 +4,17 @@ import { MsalProvider } from '@azure/msal-react';
 import { environment } from './config/environment';
 import {
   buildMsalConfigFromApi,
-  getFallbackMsalConfig,
   B2CConfigFromApi,
 } from './config/authConfig';
 import App from './App';
 
+type BootState =
+  | { status: 'loading' }
+  | { status: 'ready'; instance: PublicClientApplication }
+  | { status: 'error'; message: string };
+
 export default function Bootstrap() {
-  const [msalInstance, setMsalInstance] = useState<PublicClientApplication | null>(null);
+  const [state, setState] = useState<BootState>({ status: 'loading' });
 
   useEffect(() => {
     let cancelled = false;
@@ -23,33 +27,34 @@ export default function Bootstrap() {
         });
         if (cancelled) return;
 
-        if (res.ok) {
-          const data: B2CConfigFromApi = await res.json();
-          if (!data.enabled) {
-            const fallback = getFallbackMsalConfig();
-            const instance = new PublicClientApplication(fallback.msalConfig);
-            await instance.initialize();
-            if (!cancelled) setMsalInstance(instance);
-            return;
-          }
-          const { msalConfig: config } = buildMsalConfigFromApi(data);
-          const instance = new PublicClientApplication(config);
-          await instance.initialize();
-          if (!cancelled) setMsalInstance(instance);
+        if (!res.ok) {
+          setState({
+            status: 'error',
+            message: `Failed to load B2C configuration from backend (HTTP ${res.status}).`,
+          });
           return;
         }
 
-        const fallback = getFallbackMsalConfig();
-        const instance = new PublicClientApplication(fallback.msalConfig);
+        const data: B2CConfigFromApi = await res.json();
+        if (!data.enabled) {
+          setState({
+            status: 'error',
+            message: 'B2C authentication is disabled in backend configuration.',
+          });
+          return;
+        }
+
+        const { msalConfig } = buildMsalConfigFromApi(data);
+        const instance = new PublicClientApplication(msalConfig);
         await instance.initialize();
-        if (!cancelled) setMsalInstance(instance);
+        if (!cancelled) setState({ status: 'ready', instance });
       } catch (e) {
         if (cancelled) return;
-        console.warn('[Bootstrap] Failed to load B2C config from API, using fallback:', e);
-        const fallback = getFallbackMsalConfig();
-        const instance = new PublicClientApplication(fallback.msalConfig);
-        await instance.initialize();
-        if (!cancelled) setMsalInstance(instance);
+        console.error('[Bootstrap] Failed to load B2C config from API:', e);
+        setState({
+          status: 'error',
+          message: 'Unable to reach backend to load authentication configuration.',
+        });
       }
     }
 
@@ -57,11 +62,22 @@ export default function Bootstrap() {
     return () => { cancelled = true; };
   }, []);
 
-  if (msalInstance) {
+  if (state.status === 'ready') {
     return (
-      <MsalProvider instance={msalInstance}>
+      <MsalProvider instance={state.instance}>
         <App />
       </MsalProvider>
+    );
+  }
+
+  if (state.status === 'error') {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', padding: '2rem' }}>
+        <div style={{ maxWidth: 480, textAlign: 'center' }}>
+          <h3>Authentication unavailable</h3>
+          <p>{state.message}</p>
+        </div>
+      </div>
     );
   }
 
