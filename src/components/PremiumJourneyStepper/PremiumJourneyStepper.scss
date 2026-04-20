@@ -14,10 +14,10 @@
   margin-bottom: 15px;
   width: 100%;
 
-  &:hover {
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.06);
-    transform: translateY(-2px);
-  }
+  // &:hover {
+  //   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.06);
+  //   transform: translateY(-2px);
+  // }
 
   .journey-header-modern {
     display: flex;
@@ -124,10 +124,10 @@
 
         .step-connector-line {
           position: absolute;
-          height: 3px;
+          height: 2px;
           background: var(--facilon-grey-200);
           width: 100%;
-          left: 50%;
+          left: 0;
           top: 50%;
           transform: translateY(-50%);
           // z-index: -1;
@@ -154,6 +154,10 @@
             display: flex;
             align-items: center;
             justify-content: center;
+
+            i {
+              color: #afafaf
+            }
           }
         }
       }
@@ -222,7 +226,8 @@
       // Modifier: Final Item
       &:last-child {
         .step-connector-line {
-          display: none;
+          // display: none;
+          left: -30px !important;
         }
       }
 
@@ -240,6 +245,10 @@
 
           .circle-inner {
             color: white;
+
+            i {
+              color: white;
+            }
           }
         }
 
@@ -266,6 +275,10 @@
           .circle-inner {
             color: var(--facilon-primary);
             font-weight: 800;
+
+            i {
+              color: var(--facilon-primary);
+            }
           }
         }
 
@@ -317,11 +330,14 @@
 // Responsive Logic
 @media (max-width: 991px) {
   .facilon-premium-journey-card {
-    padding: 2rem;
+    // padding: 2rem;
+    padding: 10px;
+    flex-direction: column;
+    gap: 15px;
 
     .journey-stepper-horizontal {
-      flex-direction: column;
-      gap: 1.5rem;
+      // flex-direction: column;
+      gap: 0;
       padding: 0;
 
       .journey-step-item {
@@ -334,18 +350,18 @@
           width: auto;
           margin-bottom: 0;
 
-          .step-connector-line {
-            width: 2px;
-            height: 100%;
-            left: 50%;
-            top: 50%;
-            display: block;
-          }
+          // .step-connector-line {
+          //   width: 2px;
+          //   height: 100%;
+          //   left: 50%;
+          //   top: 50%;
+          //   display: block;
+          // }
         }
 
         .step-caption-container {
-          text-align: left;
-          align-items: flex-start;
+          // text-align: left;
+          // align-items: flex-start;
         }
       }
     }
