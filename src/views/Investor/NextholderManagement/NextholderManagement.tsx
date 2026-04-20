@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 import Header from '../../../components/Header/Header';
+import Footer from '../../../components/Footer/Footer';
 import { NextholderList } from './NextholderList/NextholderList';
 import { NextholderForm } from './NextholderForm/NextholderForm';
 import { InvitationManager } from './InvitationManager/InvitationManager';
 import { NextholderDto } from '../../../services/nextholder.service';
+import { useSAProxyNavigation } from '../../../hooks/useSAProxyNavigation';
+import '../InvestorProfile/InvestorProfile.scss';
 import './NextholderManagement.scss';
 
 export const NextholderManagement: React.FC = () => {
+    const { isProxyMode } = useSAProxyNavigation();
     const [activeTab, setActiveTab] = useState<'nextholders' | 'invitations'>('nextholders');
     const [viewMode, setViewMode] = useState<'list' | 'add' | 'edit'>('list');
     const [selectedNextholder, setSelectedNextholder] = useState<NextholderDto | undefined>(undefined);
@@ -32,11 +36,11 @@ export const NextholderManagement: React.FC = () => {
     };
 
     return (
-        <div className="dashboard-layout">
-            <Header />
-            <div className="dashboard-main-content">
+        <div className="facilon-dashboard-wrapper">
+            {!isProxyMode && <Header />}
+            <main className="container-fluid dashboard-container-main">
                 <div className="nextholder-management">
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                    <div className="profile-header">
                         <h1>Manage Nextholders</h1>
                     </div>
 
@@ -82,7 +86,8 @@ export const NextholderManagement: React.FC = () => {
                         <InvitationManager />
                     )}
                 </div>
-            </div>
+            </main>
+            {!isProxyMode && <Footer />}
         </div>
     );
 };

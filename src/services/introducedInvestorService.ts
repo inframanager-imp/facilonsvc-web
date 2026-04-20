@@ -54,6 +54,7 @@ export interface Step4CompletionDto {
   agreeForWhatsapp?: boolean;
   agreeForMarketing?: boolean;
   whatsappNumber?: string;
+  whatsappCountryCode?: string;
 }
 
 export interface ApiResponseDto {

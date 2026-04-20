@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../../../components/Header/Header';
+import Footer from '../../../components/Footer/Footer';
 import { investorService, DsrCaseCreateDto, DsrCaseResponseDto } from '../../../services/investor.service';
 import { LoadingSpinner } from '../../../components/LoadingSpinner/LoadingSpinner';
+import { PremiumSelect } from '../../../components/PremiumSelect/PremiumSelect';
+import { useSAProxyNavigation } from '../../../hooks/useSAProxyNavigation';
+import '../InvestorProfile/InvestorProfile.scss';
+import './DsrCenter.scss';
 
 const REQUEST_TYPES = [
   'ACCESS',
@@ -15,6 +20,7 @@ const REQUEST_TYPES = [
 const JURISDICTIONS = ['INDIA', 'CANADA', 'UK', 'UAE', 'HONG_KONG', 'SINGAPORE'];
 
 export const DsrCenter: React.FC = () => {
+  const { isProxyMode } = useSAProxyNavigation();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [cases, setCases] = useState<DsrCaseResponseDto[]>([]);
@@ -69,19 +75,13 @@ export const DsrCenter: React.FC = () => {
   if (loading) return <LoadingSpinner />;
 
   return (
-    <div className="dashboard-layout investor-dashboard-layout">
-      <Header />
-      <div className="dashboard-main-content" style={{ marginLeft: 0 }}>
-        <div className="container-fluid">
-          <div className="row mb-3">
-            <div className="col-md-12">
-              <h2 style={{ color: '#be1717', fontWeight: 500, fontSize: '34px', marginTop: '3%' }}>
-                Data Subject Rights Center
-              </h2>
-              <p className="text-muted mb-0">
-                Submit rights requests (access, correction, deletion, consent withdrawal, objection, complaint).
-              </p>
-            </div>
+    <div className="facilon-dashboard-wrapper">
+      {!isProxyMode && <Header />}
+      <main className="container-fluid dashboard-container-main">
+        <div className="dsr-center">
+          <div className="dsr-center__header mb-3">
+            <h1 className="dashboard-title-modern">Data Subject Rights Center</h1>
+            <p className="dashboard-subtitle text-muted">Submit and track your data privacy and rights requests here.</p>
           </div>
 
           <div className="card p-3 mb-3">
@@ -90,29 +90,21 @@ export const DsrCenter: React.FC = () => {
               <div className="row g-3">
                 <div className="col-md-4">
                   <label className="form-label" htmlFor="dsr-request-type">Right Exercised</label>
-                  <select
-                    id="dsr-request-type"
-                    className="form-select"
+                  <PremiumSelect
                     value={form.requestType}
-                    onChange={(e) => setForm({ ...form, requestType: e.target.value })}
-                  >
-                    {REQUEST_TYPES.map((type) => (
-                      <option key={type} value={type}>{type}</option>
-                    ))}
-                  </select>
+                    onChange={(val) => setForm({ ...form, requestType: val })}
+                    options={REQUEST_TYPES.map((type) => ({ value: type, label: type }))}
+                    placeholder="Select Right"
+                  />
                 </div>
                 <div className="col-md-4">
                   <label className="form-label" htmlFor="dsr-jurisdiction">Jurisdiction</label>
-                  <select
-                    id="dsr-jurisdiction"
-                    className="form-select"
+                  <PremiumSelect
                     value={form.jurisdiction}
-                    onChange={(e) => setForm({ ...form, jurisdiction: e.target.value })}
-                  >
-                    {JURISDICTIONS.map((jurisdiction) => (
-                      <option key={jurisdiction} value={jurisdiction}>{jurisdiction}</option>
-                    ))}
-                  </select>
+                    onChange={(val) => setForm({ ...form, jurisdiction: val })}
+                    options={JURISDICTIONS.map((jurisdiction) => ({ value: jurisdiction, label: jurisdiction }))}
+                    placeholder="Select Jurisdiction"
+                  />
                 </div>
                 <div className="col-md-4">
                   <label className="form-label" htmlFor="dsr-role">Role</label>
@@ -167,13 +159,18 @@ export const DsrCenter: React.FC = () => {
                 </div>
                 <div className="col-md-6">
                   <label className="form-label" htmlFor="dsr-supporting-file">Supporting Evidence (PDF/JPG/JPEG, max 5MB)</label>
-                  <input
-                    id="dsr-supporting-file"
-                    type="file"
-                    className="form-control"
-                    accept=".pdf,.jpg,.jpeg"
-                    onChange={(e) => setSupportingFile(e.target.files?.[0])}
-                  />
+                  <div className="custom-file-upload">
+                    <input
+                      id="dsr-supporting-file"
+                      type="file"
+                      className="d-none"
+                      accept=".pdf,.jpg,.jpeg"
+                      onChange={(e) => setSupportingFile(e.target.files?.[0])}
+                    />
+                    <label htmlFor="dsr-supporting-file" className="btn btn-outline-primary custom-file-label">
+                      {supportingFile ? supportingFile.name : 'Choose File'}
+                    </label>
+                  </div>
                 </div>
                 <div className="col-md-12">
                   <button type="submit" className="btn btn-primary" disabled={saving}>
@@ -219,7 +216,8 @@ export const DsrCenter: React.FC = () => {
             </div>
           </div>
         </div>
-      </div>
+      </main>
+      {!isProxyMode && <Footer />}
     </div>
   );
 };

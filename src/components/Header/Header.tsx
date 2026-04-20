@@ -1,12 +1,12 @@
-import React, { useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useRef, useEffect, useState } from 'react';
+import { useNavigate, Link, NavLink } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTranslation } from 'react-i18next';
 import './Header.scss';
 
 const Header: React.FC = () => {
   const { logout, userName } = useAuth();
-  const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLLIElement>(null);
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -25,70 +25,52 @@ const Header: React.FC = () => {
   }, []);
 
   const handleLogout = () => {
-    console.log('[Header] handleLogout called');
     logout();
-    // Note: logout() handles navigation via window.location.replace
   };
 
   return (
-    <header className="app-header header_style_01">
-      <div className="header-content container">
-        <div className="header-title">
-          {/* Using style from Laravel */}
-          <a className="navbar-brand" href="#" style={{ padding: 0 }}>
-            <img src="/assets/images/facilon-main-logo.png" alt="image" style={{ height: '80px' }} />
-          </a>
+    <header className="facilon-header">
+      <div className="container-fluid header-container">
+        <div className="header-brand">
+          <Link to="/investor/dashboard" className="navbar-brand">
+            <img src="/assets/images/facilon-main-logo.png" alt="Facilon Services" />
+          </Link>
         </div>
 
-        {/* Laravel Top Nav Links & Dropdown */}
-        <div className="header-nav hidden-xs">
-          <ul className="nav navbar-nav navbar-right" style={{ display: 'flex', flexDirection: 'row', listStyle: 'none', margin: 0, alignItems: 'center' }}>
-            <li style={{ margin: '0 10px' }}><a href="#" onClick={(e) => { e.preventDefault(); navigate('/investor/dashboard') }} style={{ color: '#fff', textDecoration: 'none', fontSize: '18px', fontWeight: 500 }}>Home</a></li>
-            <li style={{ margin: '0 10px' }}><a href="#" onClick={(e) => { e.preventDefault(); navigate('/investor/profile') }} style={{ color: '#fff', textDecoration: 'none', fontSize: '18px', fontWeight: 500 }}>My Profile</a></li>
-            <li style={{ margin: '0 10px' }}><a href="#" onClick={(e) => { e.preventDefault(); navigate('/investor/progress') }} style={{ color: '#fff', textDecoration: 'none', fontSize: '18px', fontWeight: 500 }}>My Progress</a></li>
-            <li style={{ margin: '0 10px' }}><a href="#" onClick={(e) => { e.preventDefault(); navigate('/investor/delegations') }} style={{ color: '#fff', textDecoration: 'none', fontSize: '18px', fontWeight: 500 }}>Service Agent</a></li>
+        <nav className="header-nav">
+          <ul className="nav-links">
+            <li><NavLink to="/investor/dashboard" className="nav-link-item">Home</NavLink></li>
+            <li><NavLink to="/investor/profile" className="nav-link-item">My Profile</NavLink></li>
+            <li><NavLink to="/investor/progress" className="nav-link-item">My Progress</NavLink></li>
+            <li><NavLink to="/investor/delegations" className="nav-link-item">Service Agent</NavLink></li>
 
-            <li ref={dropdownRef} className={`dropdown ${isDropdownOpen ? 'open' : ''}`} style={{ margin: '0 10px', position: 'relative' }}>
-              <a
-                href="#"
-                className="dropdown-toggle"
-                onClick={(e) => { e.preventDefault(); setIsDropdownOpen(!isDropdownOpen); }}
-                style={{ color: '#fff', textDecoration: 'none', fontSize: '18px', fontWeight: 500, display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+            <li ref={dropdownRef} className={`nav-dropdown ${isDropdownOpen ? 'active' : ''}`}>
+              <button
+                className="dropdown-trigger"
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 aria-haspopup="true"
                 aria-expanded={isDropdownOpen}
               >
-                Welcome {userName || ''}
-              </a>
+                <i className="bi bi-person-circle me-2"></i>
+                <span className="user-name">Welcome, {userName || 'User'}</span>
+                <i className={`bi bi-chevron-down ms-2 ${isDropdownOpen ? 'rotate' : ''}`}></i>
+              </button>
 
               {isDropdownOpen && (
-                <ul className="dropdown-menu" style={{ display: 'block', position: 'absolute', right: 0, left: 'auto', minWidth: '160px', padding: '5px 0', margin: '2px 0 0', fontSize: '14px', textAlign: 'left', listStyle: 'none', backgroundColor: '#fff', backgroundClip: 'padding-box', border: '1px solid #ccc', borderRadius: '4px', boxShadow: '0 6px 12px rgba(0,0,0,.175)', zIndex: 1000 }}>
-                  <li>
-                    <a
-                      href="#"
-                      onClick={(e) => { e.preventDefault(); navigate('/change-password'); setIsDropdownOpen(false); }}
-                      style={{ display: 'block', padding: '3px 20px', clear: 'both', fontWeight: 400, lineHeight: 1.42857143, color: '#333', whiteSpace: 'nowrap', textDecoration: 'none' }}
-                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f5f5f5'}
-                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-                    >
-                      Change Password
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      onClick={(e) => { e.preventDefault(); handleLogout(); }}
-                      style={{ display: 'block', padding: '3px 20px', clear: 'both', fontWeight: 400, lineHeight: 1.42857143, color: '#333', whiteSpace: 'nowrap', textDecoration: 'none' }}
-                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f5f5f5'}
-                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-                    >
-                      {t('logout')}
-                    </a>
-                  </li>
-                </ul>
+                <div className="dropdown-menu-custom">
+                  <Link to="/change-password" onClick={() => setIsDropdownOpen(false)} className="dropdown-item">
+                    <i className="bi bi-shield-lock me-2"></i>
+                    Change Password
+                  </Link>
+                  <button onClick={handleLogout} className="dropdown-item logout-btn">
+                    <i className="bi bi-box-arrow-right me-2"></i>
+                    {t('logout')}
+                  </button>
+                </div>
               )}
             </li>
           </ul>
-        </div>
+        </nav>
       </div>
     </header>
   );

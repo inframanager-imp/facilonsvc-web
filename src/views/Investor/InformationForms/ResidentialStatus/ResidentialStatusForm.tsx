@@ -5,6 +5,34 @@ import { validateResidentialStatus } from '../../../../utils/investorValidation'
 import { SharedFormContext } from '../shared/types';
 import { useDelegationPermissions } from '../../../../contexts/DelegationPermissionsContext';
 import { getPermissionErrorMessage } from '../../../../utils/apiClient';
+import { PremiumSelect } from '../../../../components/PremiumSelect/PremiumSelect';
+
+const RESIDENTIAL_STATUS_OPTIONS = [
+  { value: 'Resident Indian', label: 'Resident Indian' },
+  { value: 'NRI', label: 'NRI' },
+  { value: 'OCI', label: 'OCI' },
+  { value: 'PIO', label: 'PIO' },
+  { value: 'Foreign National', label: 'Foreign National' },
+];
+
+const YES_NO_OPTIONS = [
+  { value: 'yes', label: 'Yes' },
+  { value: 'no', label: 'No' },
+];
+
+const PROOF_OF_ADDRESS_OPTIONS = [
+  { value: 'Passport', label: 'Passport' },
+  { value: 'Driving License', label: 'Driving License' },
+  { value: 'Aadhaar', label: 'Aadhaar' },
+  { value: 'Voter ID', label: 'Voter ID' },
+  { value: 'Utility Bill issued within 2 months', label: 'Utility Bill (within 2 months)' },
+  { value: 'Bank Statement', label: 'Bank Statement' },
+];
+
+const TYPE_OF_PROOF_OPTIONS = [
+  { value: 'Visa', label: 'Visa' },
+  { value: 'Resident Proof', label: 'Resident Card' },
+];
 
 interface ResidentialStatusFormProps {
   initialData: UserResidentialStatusDto | null;
@@ -71,66 +99,45 @@ export const ResidentialStatusForm: React.FC<ResidentialStatusFormProps> = ({
         {/* Residential Status selector */}
         <div className="form-group">
           <label>Residential Status<span className="text-danger">*</span></label>
-          <select
-            className={errors.residentialStatus ? 'form-control is-invalid' : 'form-control'}
+          <PremiumSelect
             value={formData.residentialStatus ?? ''}
-            onChange={(e) => setFormData({ ...formData, residentialStatus: e.target.value })}
-          >
-            <option value="">Select</option>
-            <option value="Resident Indian">Resident Indian</option>
-            <option value="NRI">NRI</option>
-            <option value="OCI">OCI</option>
-            <option value="PIO">PIO</option>
-            <option value="Foreign National">Foreign National</option>
-          </select>
+            onChange={(val) => setFormData({ ...formData, residentialStatus: val })}
+            options={RESIDENTIAL_STATUS_OPTIONS}
+            error={errors.residentialStatus}
+          />
           {errors.residentialStatus && <div className="invalid-feedback">{errors.residentialStatus}</div>}
         </div>
 
         {/* Person of Indian Origin */}
         <div className="form-group">
           <label>Person of Indian Origin</label>
-          <select
-            className="form-control"
+          <PremiumSelect
             value={formData.personOrigin ?? ''}
-            onChange={(e) => setFormData({ ...formData, personOrigin: e.target.value })}
-          >
-            <option value="">Select</option>
-            <option value="yes">Yes</option>
-            <option value="no">No</option>
-          </select>
+            onChange={(val) => setFormData({ ...formData, personOrigin: val })}
+            options={YES_NO_OPTIONS}
+          />
         </div>
 
         {/* Proof of Address */}
         <div className="form-group">
           <label>Proof of Address<span className="text-danger">*</span></label>
-          <select
-            className={errors.proofOfAddress ? 'form-control is-invalid' : 'form-control'}
+          <PremiumSelect
             value={formData.proofOfAddress ?? ''}
-            onChange={(e) => setFormData({ ...formData, proofOfAddress: e.target.value })}
-          >
-            <option value="">Select</option>
-            <option value="Passport">Passport</option>
-            <option value="Driving License">Driving License</option>
-            <option value="Aadhaar">Aadhaar</option>
-            <option value="Voter ID">Voter ID</option>
-            <option value="Utility Bill issued within 2 months">Utility Bill (within 2 months)</option>
-            <option value="Bank Statement">Bank Statement</option>
-          </select>
+            onChange={(val) => setFormData({ ...formData, proofOfAddress: val })}
+            options={PROOF_OF_ADDRESS_OPTIONS}
+            error={errors.proofOfAddress}
+          />
           {errors.proofOfAddress && <div className="invalid-feedback">{errors.proofOfAddress}</div>}
         </div>
 
         {/* Aadhaar availability */}
         <div className="form-group">
           <label>Do you have an Aadhaar?</label>
-          <select
-            className="form-control"
+          <PremiumSelect
             value={formData.aadharNumberOption ?? ''}
-            onChange={(e) => setFormData({ ...formData, aadharNumberOption: e.target.value })}
-          >
-            <option value="">Select</option>
-            <option value="yes">Yes</option>
-            <option value="no">No</option>
-          </select>
+            onChange={(val) => setFormData({ ...formData, aadharNumberOption: val })}
+            options={YES_NO_OPTIONS}
+          />
         </div>
 
         {/* Aadhaar number (shown if aadharNumberOption = yes) */}
@@ -163,15 +170,11 @@ export const ResidentialStatusForm: React.FC<ResidentialStatusFormProps> = ({
         {/* OCI availability */}
         <div className="form-group">
           <label>Do you have OCI?</label>
-          <select
-            className="form-control"
+          <PremiumSelect
             value={formData.ociAvailable ?? ''}
-            onChange={(e) => setFormData({ ...formData, ociAvailable: e.target.value })}
-          >
-            <option value="">Select</option>
-            <option value="yes">Yes</option>
-            <option value="no">No</option>
-          </select>
+            onChange={(val) => setFormData({ ...formData, ociAvailable: val })}
+            options={YES_NO_OPTIONS}
+          />
         </div>
 
         {/* Date of OCI (shown if ociAvailable = yes) */}
@@ -223,15 +226,12 @@ export const ResidentialStatusForm: React.FC<ResidentialStatusFormProps> = ({
         {/* Type of Proof - For Foreign Nationals */}
         <div className="form-group">
           <label>Type of Proof<span className="text-danger">*</span></label>
-          <select
-            className={errors.userTypeOfProof ? 'form-control is-invalid' : 'form-control'}
+          <PremiumSelect
             value={formData.userTypeOfProof ?? ''}
-            onChange={(e) => setFormData({ ...formData, userTypeOfProof: e.target.value })}
-          >
-            <option value="">Select</option>
-            <option value="Visa">Visa</option>
-            <option value="Resident Proof">Resident Card</option>
-          </select>
+            onChange={(val) => setFormData({ ...formData, userTypeOfProof: val })}
+            options={TYPE_OF_PROOF_OPTIONS}
+            error={errors.userTypeOfProof}
+          />
           {errors.userTypeOfProof && <div className="invalid-feedback">{errors.userTypeOfProof}</div>}
         </div>
 

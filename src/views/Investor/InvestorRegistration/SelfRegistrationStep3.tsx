@@ -13,6 +13,7 @@ import type {
 } from '../../../services/content.service';
 import TermsModal from '../IntroducedRegistration/TermsModal';
 import { toast } from 'react-toastify';
+import { PremiumSelect } from '../../../components/PremiumSelect/PremiumSelect';
 import '../IntroducedRegistration/IntroducedInvestorRegistration.scss';
 
 /**
@@ -277,24 +278,20 @@ export const SelfRegistrationStep3: React.FC = () => {
                         {/* Title */}
                         <div className="single-field">
                           <label htmlFor="title">Title <span className="star-color">*</span></label>
-                          <select
-                            id="title"
-                            value={individualData.title ?? ''}
-                            onChange={(e) => {
-                              const v = e.target.value;
+                          <PremiumSelect
+                            value={individualData.title?.toString() ?? ''}
+                            onChange={(val) => {
                               setIndividualData((p) => ({
                                 ...p,
-                                title: v === '' ? undefined : Number.parseInt(v, 10),
+                                title: val === '' ? undefined : Number.parseInt(val, 10),
                               }));
                             }}
-                          >
-                            <option value="">Select Title</option>
-                            {titles.map((t) => (
-                              <option key={t.myRowId ?? t.id} value={t.id}>
-                                {t.ssName}
-                              </option>
-                            ))}
-                          </select>
+                            options={titles.map((t) => ({
+                              value: String(t.id),
+                              label: t.ssName || ''
+                            }))}
+                            placeholder="Select Title"
+                          />
                           {errors.title && <span role="alert">{errors.title}</span>}
                         </div>
 
@@ -392,32 +389,30 @@ export const SelfRegistrationStep3: React.FC = () => {
                         {/* Nationality */}
                         <div className="single-field">
                           <label htmlFor="nationality">Nationality <span className="star-color">*</span></label>
-                          <select
-                            id="nationality"
-                            value={individualData.nationality}
-                            onChange={(e) => setIndividualData(p => ({ ...p, nationality: parseInt(e.target.value) }))}
-                          >
-                            <option value="0">Select Nationality</option>
-                            {nationalities.map(n => (
-                              <option key={n.id} value={n.id}>{n.name}</option>
-                            ))}
-                          </select>
+                          <PremiumSelect
+                            value={individualData.nationality?.toString() ?? '0'}
+                            onChange={(val) => setIndividualData(p => ({ ...p, nationality: parseInt(val) }))}
+                            options={nationalities.map(n => ({
+                              value: String(n.id),
+                              label: n.name || ''
+                            }))}
+                            placeholder="Select Nationality"
+                          />
                           {errors.nationality && <span role="alert">{errors.nationality}</span>}
                         </div>
 
                         {/* Country of Residence */}
                         <div className="single-field">
                           <label htmlFor="countryOfResidence">Country of Residence <span className="star-color">*</span></label>
-                          <select
-                            id="countryOfResidence"
-                            value={individualData.countryOfResidence}
-                            onChange={(e) => setIndividualData(p => ({ ...p, countryOfResidence: parseInt(e.target.value) }))}
-                          >
-                            <option value="0">Select Country</option>
-                            {countries.map(c => (
-                              <option key={c.id} value={c.id}>{c.ssName}</option>
-                            ))}
-                          </select>
+                          <PremiumSelect
+                            value={individualData.countryOfResidence?.toString() ?? '0'}
+                            onChange={(val) => setIndividualData(p => ({ ...p, countryOfResidence: parseInt(val) }))}
+                            options={countries.map(c => ({
+                              value: String(c.id),
+                              label: c.ssName || ''
+                            }))}
+                            placeholder="Select Country"
+                          />
                           {errors.countryOfResidence && <span role="alert">{errors.countryOfResidence}</span>}
                         </div>
 
@@ -622,16 +617,15 @@ export const SelfRegistrationStep3: React.FC = () => {
                         {/* Country of Incorporation */}
                         <div className="single-field">
                           <label htmlFor="countryOfIncorporation">Country of Incorporation <span className="star-color">*</span></label>
-                          <select
-                            id="countryOfIncorporation"
-                            value={legalEntityData.countryOfIncorporation}
-                            onChange={(e) => setLegalEntityData(p => ({ ...p, countryOfIncorporation: parseInt(e.target.value) }))}
-                          >
-                            <option value="0">Select Country</option>
-                            {countries.map(c => (
-                              <option key={c.id} value={c.id}>{c.ssName}</option>
-                            ))}
-                          </select>
+                          <PremiumSelect
+                            value={legalEntityData.countryOfIncorporation?.toString() ?? '0'}
+                            onChange={(val) => setLegalEntityData(p => ({ ...p, countryOfIncorporation: parseInt(val) }))}
+                            options={countries.map(c => ({
+                              value: String(c.id),
+                              label: c.ssName || ''
+                            }))}
+                            placeholder="Select Country"
+                          />
                           {errors.countryOfIncorporation && <span role="alert">{errors.countryOfIncorporation}</span>}
                         </div>
 

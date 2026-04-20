@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { serviceAgentService, AuditLogDto } from '../../../services/serviceAgent.service';
 import { LoadingSpinner } from '../../../components/LoadingSpinner/LoadingSpinner';
-import PostLoginHeader from '../../../components/PostLoginHeader/PostLoginHeader';
+import Header from '../../../components/Header/Header';
 import './ServiceAgentActivity.scss';
 
 export const ServiceAgentActivity: React.FC = () => {
@@ -36,12 +36,12 @@ export const ServiceAgentActivity: React.FC = () => {
 
   return (
     <div className="layout-wrapper">
-      <PostLoginHeader />
-      <div className="main-content">
+      <Header />
+      <main className="container-fluid dashboard-container-main">
         <div className="sa-activity">
           <div className="sa-activity__header">
-            <h2>Service Agent Activity</h2>
-            <p>All actions performed by Service Agents on your account.</p>
+            <h1 className="dashboard-title-modern">Service Agent Activity</h1>
+            <p className="dashboard-subtitle text-muted">All actions performed by Service Agents on your account.</p>
           </div>
 
           {loading ? (
@@ -111,7 +111,7 @@ export const ServiceAgentActivity: React.FC = () => {
             </>
           )}
         </div>
-      </div>
+      </main>
     </div>
   );
 };

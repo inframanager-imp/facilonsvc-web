@@ -15,7 +15,8 @@
         border-radius: 8px;
         padding: 20px;
         margin-bottom: 30px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        border: 1.5px solid #dee2e6;
+  box-shadow: none;
 
         h3 {
             margin: 0 0 15px 0;
@@ -43,7 +44,8 @@
             border: 1px solid #ddd;
             border-radius: 8px;
             padding: 25px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border: 1.5px solid #dee2e6;
+  box-shadow: none;
 
             h4 {
                 margin: 0 0 10px 0;

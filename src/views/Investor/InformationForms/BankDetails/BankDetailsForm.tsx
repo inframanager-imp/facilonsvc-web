@@ -5,6 +5,18 @@ import { validateBankDetails } from '../../../../utils/investorValidation';
 import { SharedFormContext } from '../shared/types';
 import { useDelegationPermissions } from '../../../../contexts/DelegationPermissionsContext';
 import { getPermissionErrorMessage } from '../../../../utils/apiClient';
+import { PremiumSelect } from '../../../../components/PremiumSelect/PremiumSelect';
+
+const ACCOUNT_TYPE_OPTIONS = [
+  { value: 'savings', label: 'Savings' },
+  { value: 'current', label: 'Current' },
+  { value: 'nro', label: 'NRO' },
+  { value: 'nre', label: 'NRE' },
+];
+
+const COUNTRY_OPTIONS = [
+  { value: 'India', label: 'INDIA' },
+];
 
 /** Indian states & UTs — Laravel populates this from master_states filtered to India. */
 const INDIAN_STATES = [
@@ -16,6 +28,8 @@ const INDIAN_STATES = [
   'Andaman and Nicobar Islands', 'Chandigarh', 'Dadra and Nagar Haveli and Daman and Diu',
   'Delhi', 'Jammu and Kashmir', 'Ladakh', 'Lakshadweep', 'Puducherry',
 ];
+
+const STATE_OPTIONS = INDIAN_STATES.map(s => ({ value: s, label: s.toUpperCase() }));
 
 interface BankDetailsFormProps {
   initialData: UserBankDetailsDto | null;
@@ -159,17 +173,12 @@ export const BankDetailsForm: React.FC<BankDetailsFormProps> = ({
 
         <div className="form-group">
           <label>Account Type <span className="text-danger">*</span></label>
-          <select
+          <PremiumSelect
             value={formData.accountType ?? ''}
-            onChange={(e) => setFormData({ ...formData, accountType: e.target.value })}
-            className={errors.accountType ? 'form-control is-invalid' : ''}
-          >
-            <option value="">Select</option>
-            <option value="savings">Savings</option>
-            <option value="current">Current</option>
-            <option value="nro">NRO</option>
-            <option value="nre">NRE</option>
-          </select>
+            onChange={(val) => setFormData({ ...formData, accountType: val })}
+            options={ACCOUNT_TYPE_OPTIONS}
+            error={errors.accountType}
+          />
           {errors.accountType && <div className="invalid-feedback">{errors.accountType}</div>}
         </div>
 
@@ -291,28 +300,21 @@ export const BankDetailsForm: React.FC<BankDetailsFormProps> = ({
 
         <div className="form-group">
           <label>Country <span className="text-danger">*</span></label>
-          <select
-            className="form-control"
+          <PremiumSelect
             value={formData.bankDetailsCountry ?? 'India'}
-            onChange={(e) => setFormData({ ...formData, bankDetailsCountry: e.target.value })}
-          >
-            {/* Laravel defaults to India from master_countries */}
-            <option value="India">INDIA</option>
-          </select>
+            onChange={(val) => setFormData({ ...formData, bankDetailsCountry: val })}
+            options={COUNTRY_OPTIONS}
+          />
         </div>
 
         <div className="form-group">
           <label>State <span className="text-danger">*</span></label>
-          <select
-            className={errors.bankDetailsState ? 'form-control is-invalid' : 'form-control'}
+          <PremiumSelect
             value={formData.bankDetailsState ?? ''}
-            onChange={(e) => setFormData({ ...formData, bankDetailsState: e.target.value })}
-          >
-            <option value="">Select State</option>
-            {INDIAN_STATES.map((s) => (
-              <option key={s} value={s}>{s.toUpperCase()}</option>
-            ))}
-          </select>
+            onChange={(val) => setFormData({ ...formData, bankDetailsState: val })}
+            options={STATE_OPTIONS}
+            error={errors.bankDetailsState}
+          />
           {errors.bankDetailsState && <div className="invalid-feedback">{errors.bankDetailsState}</div>}
         </div>
 

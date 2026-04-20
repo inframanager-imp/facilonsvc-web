@@ -10,6 +10,13 @@ import type {
 import type { MasterCountryDto, MasterLookupDto } from '../../../services/content.service';
 import { toast } from 'react-toastify';
 import './InvestorRegistration.scss';
+import { PremiumSelect } from '../../../components/PremiumSelect/PremiumSelect';
+
+const GENDER_OPTIONS = [
+  { value: 'Male', label: 'Male' },
+  { value: 'Female', label: 'Female' },
+  { value: 'Transgender', label: 'Transgender' },
+];
 
 export const InvestorRegistration: React.FC = () => {
   const navigate = useNavigate();
@@ -570,55 +577,46 @@ export const InvestorRegistration: React.FC = () => {
 
                 <div className="form-group">
                   <label>Gender *</label>
-                  <select
-                    value={individualData.gender}
-                    onChange={(e) => {
-                      setIndividualData((p) => ({ ...p, gender: e.target.value }));
+                  <PremiumSelect
+                    value={individualData.gender ?? ''}
+                    onChange={(val) => {
+                      setIndividualData((p) => ({ ...p, gender: val }));
                       if (errors.gender) setErrors((p) => ({ ...p, gender: undefined }));
                     }}
-                    className={errors.gender ? 'has-error' : ''}
-                  >
-                    <option value="">Select Gender</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Transgender">Transgender</option>
-                  </select>
+                    options={GENDER_OPTIONS}
+                    placeholder="Select Gender"
+                    error={errors.gender}
+                  />
                   {errors.gender && <span className="field-error">{errors.gender}</span>}
                 </div>
 
                 <div className="form-group">
                   <label>Nationality *</label>
-                  <select
-                    value={individualData.nationality}
-                    onChange={(e) => {
-                      setIndividualData((p) => ({ ...p, nationality: +e.target.value }));
+                  <PremiumSelect
+                    value={individualData.nationality?.toString() ?? '0'}
+                    onChange={(val) => {
+                      setIndividualData((p) => ({ ...p, nationality: +val }));
                       if (errors.nationality) setErrors((p) => ({ ...p, nationality: undefined }));
                     }}
-                    className={errors.nationality ? 'has-error' : ''}
-                  >
-                    <option value={0}>Select Nationality</option>
-                    {nationalities.map((n) => (
-                      <option key={n.myRowId} value={n.id}>{n.name}</option>
-                    ))}
-                  </select>
+                    options={nationalities.map(n => ({ value: (n.id ?? '').toString(), label: n.name ?? '' }))}
+                    placeholder="Select Nationality"
+                    error={errors.nationality}
+                  />
                   {errors.nationality && <span className="field-error">{errors.nationality}</span>}
                 </div>
 
                 <div className="form-group">
                   <label>Country of Residence *</label>
-                  <select
-                    value={individualData.countryOfResidence}
-                    onChange={(e) => {
-                      setIndividualData((p) => ({ ...p, countryOfResidence: +e.target.value }));
+                  <PremiumSelect
+                    value={individualData.countryOfResidence?.toString() ?? '0'}
+                    onChange={(val) => {
+                      setIndividualData((p) => ({ ...p, countryOfResidence: +val }));
                       if (errors.countryOfResidence) setErrors((p) => ({ ...p, countryOfResidence: undefined }));
                     }}
-                    className={errors.countryOfResidence ? 'has-error' : ''}
-                  >
-                    <option value={0}>Select Country</option>
-                    {countries.map((c) => (
-                      <option key={c.myRowId} value={c.id}>{c.ssName}</option>
-                    ))}
-                  </select>
+                    options={countries.map(c => ({ value: (c.id ?? '').toString(), label: c.ssName ?? '' }))}
+                    placeholder="Select Country"
+                    error={errors.countryOfResidence}
+                  />
                   {errors.countryOfResidence && <span className="field-error">{errors.countryOfResidence}</span>}
                 </div>
 
@@ -798,19 +796,16 @@ export const InvestorRegistration: React.FC = () => {
 
             <div className="form-group">
               <label>Country of Incorporation/Formation *</label>
-              <select
-                value={legalEntityData.countryOfIncorporation}
-                onChange={(e) => {
-                  setLegalEntityData((p) => ({ ...p, countryOfIncorporation: +e.target.value }));
+              <PremiumSelect
+                value={legalEntityData.countryOfIncorporation?.toString() ?? '0'}
+                onChange={(val) => {
+                  setLegalEntityData((p) => ({ ...p, countryOfIncorporation: +val }));
                   if (errors.countryOfIncorporation) setErrors((p) => ({ ...p, countryOfIncorporation: undefined }));
                 }}
-                className={errors.countryOfIncorporation ? 'has-error' : ''}
-              >
-                <option value={0}>Select Country</option>
-                {countries.map((c) => (
-                  <option key={c.myRowId} value={c.id}>{c.ssName}</option>
-                ))}
-              </select>
+                options={countries.map(c => ({ value: (c.id ?? '').toString(), label: c.ssName ?? '' }))}
+                placeholder="Select Country"
+                error={errors.countryOfIncorporation}
+              />
               {errors.countryOfIncorporation && <span className="field-error">{errors.countryOfIncorporation}</span>}
             </div>
 

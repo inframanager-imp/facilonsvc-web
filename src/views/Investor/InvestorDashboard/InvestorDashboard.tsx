@@ -40,7 +40,6 @@ export const InvestorDashboard: React.FC = () => {
     fetchDashboardData();
     fetchPendingDelegations();
 
-    // Set active tab from URL parameter
     const tabParam = searchParams.get('tab');
     if (tabParam && Object.values(TAB_KEYS).includes(tabParam as any)) {
       setActiveTab(tabParam);
@@ -50,8 +49,6 @@ export const InvestorDashboard: React.FC = () => {
   const fetchDashboardData = async () => {
     try {
       const data = await investorService.getDashboard();
-      console.log('[InvestorDashboard] Full Dashboard Data from API:', data);
-      console.log('[InvestorDashboard] Product Assignment from API:', data?.productAssignment);
       setDashboardData(data);
     } catch (error) {
       console.error('[InvestorDashboard] Error fetching dashboard data:', error);
@@ -78,7 +75,7 @@ export const InvestorDashboard: React.FC = () => {
     setProcessingDelegation(delegationId);
     try {
       await delegationService.acceptDelegation(delegationId, customizations);
-      toast.success('Service Agent access accepted with your custom permissions');
+      toast.success('Service Agent access accepted');
       setShowAcceptModal(false);
       fetchPendingDelegations();
       fetchDashboardData();
@@ -91,11 +88,10 @@ export const InvestorDashboard: React.FC = () => {
 
   const handleRejectDelegation = async (delegation: DelegationDto) => {
     if (!window.confirm(`Reject access for ${delegation.serviceAgentName}?`)) return;
-    
     setProcessingDelegation(delegation.id);
     try {
       await delegationService.rejectDelegation(delegation.id, 'Rejected by investor');
-      toast.info(`Service Agent access rejected: ${delegation.serviceAgentName}`);
+      toast.info(`Access rejected: ${delegation.serviceAgentName}`);
       fetchPendingDelegations();
     } catch (error: any) {
       toast.error(error?.response?.data?.message || 'Failed to reject delegation');
@@ -115,13 +111,11 @@ export const InvestorDashboard: React.FC = () => {
 
   if (!dashboardData) {
     return (
-      <div className="dashboard-layout investor-dashboard-layout">
+      <div className="facilon-dashboard-wrapper">
         <Header />
-        <div className="dashboard-main-content" style={{ marginLeft: 0 }}>
-          <div className="container-fluid">
-            <div className="alert alert-warning mt-4">
-              Unable to load dashboard data. Please try refreshing the page.
-            </div>
+        <div className="container dashboard-container-main">
+          <div className="alert alert-warning mt-4">
+            Unable to load dashboard data. Please refresh.
           </div>
         </div>
       </div>
@@ -131,87 +125,100 @@ export const InvestorDashboard: React.FC = () => {
   const pendingCount = pendingDelegations.length;
 
   return (
-    <div className="dashboard-layout investor-dashboard-layout">
+    <div className="facilon-dashboard-wrapper">
       <Header />
-      <div className="dashboard-main-content" style={{ marginLeft: 0 }}>
-        <div className="container-fluid">
-          <div className="row mb-4">
-            <div className="col-md-12">
-              <h2 style={{ color: '#be1717', fontWeight: 500, fontSize: '34px', marginTop: '3%' }}>
-                Investor Account Console
-              </h2>
+
+      <main className="container-fluid dashboard-container-main">
+        <div className="dashboard-header-section">
+          <div className="d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div>
+              <h1 className="dashboard-title-modern">Investor Console</h1>
+              <p className="dashboard-subtitle text-muted">Manage your profile, applications, and delegations.</p>
+            </div>
+            <div className="dashboard-actions">
+              {/* Future actions like 'New Application' could go here */}
             </div>
           </div>
+        </div>
 
-          <div className="investor-dashboard-tabs">
-            <Tabs
-              activeKey={activeTab}
-              onSelect={handleTabChange}
-              id="investor-dashboard-tabs"
-              className="mb-4"
+        <div className="facilon-tabs-wrapper card-premium">
+          <Tabs
+            activeKey={activeTab}
+            onSelect={handleTabChange}
+            id="investor-dashboard-tabs"
+            className="modern-tabs mb-2"
+          >
+            <Tab
+              eventKey={TAB_KEYS.PROFILE}
+              title={
+                <span className="tab-title-content">
+                  <i className="bi bi-person-fill me-2"></i>
+                  Profile
+                </span>
+              }
             >
-              <Tab
-                eventKey={TAB_KEYS.PROFILE}
-                title={
-                  <span>
-                    <i className="bi bi-person-circle me-2"></i>
-                    Profile
-                  </span>
-                }
-              >
+              <div className="tab-pane-padding">
                 <ProfileTab dashboardData={dashboardData} />
-              </Tab>
+              </div>
+            </Tab>
 
-              <Tab
-                eventKey={TAB_KEYS.SERVICE_PROVIDER}
-                title={
-                  <span>
-                    <i className="bi bi-building me-2"></i>
-                    Service Provider
-                  </span>
-                }
-              >
+            <Tab
+              eventKey={TAB_KEYS.SERVICE_PROVIDER}
+              title={
+                <span className="tab-title-content">
+                  <i className="bi bi-building-fill me-2"></i>
+                  Service Provider
+                </span>
+              }
+            >
+              <div className="tab-pane-padding">
                 <ServiceProviderTab dashboardData={dashboardData} />
-              </Tab>
+              </div>
+            </Tab>
 
-              <Tab
-                eventKey={TAB_KEYS.APPLICATIONS}
-                title={
-                  <span>
-                    <i className="bi bi-grid-3x3-gap me-2"></i>
-                    Applications
-                  </span>
-                }
-              >
+            <Tab
+              eventKey={TAB_KEYS.APPLICATIONS}
+              title={
+                <span className="tab-title-content">
+                  <i className="bi bi-grid-3x3-gap-fill me-2"></i>
+                  Applications
+                </span>
+              }
+            >
+              <div className="tab-pane-padding">
                 <ApplicationsTab dashboardData={dashboardData} />
-              </Tab>
+              </div>
+            </Tab>
 
-              <Tab
-                eventKey={TAB_KEYS.DSR}
-                title={
-                  <span>
-                    <i className="bi bi-shield-lock me-2"></i>
-                    DSR
-                  </span>
-                }
-              >
+            <Tab
+              eventKey={TAB_KEYS.DSR}
+              title={
+                <span className="tab-title-content">
+                  <i className="bi bi-shield-lock-fill me-2"></i>
+                  DSR
+                </span>
+              }
+            >
+              <div className="tab-pane-padding">
                 <DSRTab />
-              </Tab>
+              </div>
+            </Tab>
 
-              <Tab
-                eventKey={TAB_KEYS.CONSENT}
-                title={
-                  <span>
-                    <i className="bi bi-check2-square me-2"></i>
-                    Consent Centre
-                    {pendingCount > 0 && (
-                      <span className="badge bg-danger ms-2 tab-alert-badge">
-                        {pendingCount}
-                      </span>
-                    )}
-                  </span>
-                }
-              >
+            <Tab
+              eventKey={TAB_KEYS.CONSENT}
+              title={
+                <span className="tab-title-content">
+                  <i className="bi bi-check-circle-fill me-2"></i>
+                  Consent Centre
+                  {pendingCount > 0 && (
+                    <span className="badge-notification ms-2">
+                      {pendingCount}
+                    </span>
+                  )}
+                </span>
+              }
+            >
+              <div className="tab-pane-padding">
                 <ConsentCentreTab
                   dashboardData={dashboardData}
                   pendingDelegations={pendingDelegations}
@@ -219,26 +226,28 @@ export const InvestorDashboard: React.FC = () => {
                   onRejectDelegation={handleRejectDelegation}
                   processingDelegation={processingDelegation}
                 />
-              </Tab>
+              </div>
+            </Tab>
 
-              <Tab
-                eventKey={TAB_KEYS.SMART_UPLOAD}
-                title={
-                  <span>
-                    <i className="bi bi-cloud-upload me-2"></i>
-                    Smart Upload
-                    <span className="badge bg-gradient-purple ms-2 coming-soon-badge">
-                      Coming Soon
-                    </span>
+            <Tab
+              eventKey={TAB_KEYS.SMART_UPLOAD}
+              title={
+                <span className="tab-title-content">
+                  <i className="bi bi-cloud-arrow-up-fill me-2"></i>
+                  Smart Upload
+                  <span className="badge-coming-soon ms-2">
+                    Soon
                   </span>
-                }
-              >
+                </span>
+              }
+            >
+              <div className="tab-pane-padding">
                 <SmartUploadTab />
-              </Tab>
-            </Tabs>
-          </div>
+              </div>
+            </Tab>
+          </Tabs>
         </div>
-      </div>
+      </main>
 
       {selectedDelegation && (
         <AcceptDelegationModal

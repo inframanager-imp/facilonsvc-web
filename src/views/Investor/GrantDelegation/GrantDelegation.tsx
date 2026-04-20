@@ -3,7 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { serviceAgentService, DelegationCreateDto } from '../../../services/serviceAgent.service';
-import PostLoginHeader from '../../../components/PostLoginHeader/PostLoginHeader';
+import Header from '../../../components/Header/Header';
+import Footer from '../../../components/Footer/Footer';
+import { useSAProxyNavigation } from '../../../hooks/useSAProxyNavigation';
+import '../InvestorProfile/InvestorProfile.scss';
 import './GrantDelegation.scss';
 
 interface FormData {
@@ -26,6 +29,7 @@ const SCOPES = [
 ];
 
 export const GrantDelegation: React.FC = () => {
+  const { isProxyMode } = useSAProxyNavigation();
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
 
@@ -71,13 +75,13 @@ export const GrantDelegation: React.FC = () => {
   };
 
   return (
-    <div className="layout-wrapper">
-      <PostLoginHeader />
-      <div className="main-content">
+    <div className="facilon-dashboard-wrapper">
+      {!isProxyMode && <Header />}
+      <main className="container-fluid dashboard-container-main">
         <div className="grant-delegation">
-          <div className="grant-delegation__title">Grant Service Agent Access</div>
-          <div className="grant-delegation__subtitle">
-            Authorise a Service Agent to assist you with your onboarding journey.
+          <div className="grant-delegation__header mb-3">
+            <h1 className="dashboard-title-modern">Grant Service Agent Access</h1>
+            <p className="dashboard-subtitle text-muted">Authorise a Service Agent to assist you with your onboarding journey.</p>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -228,7 +232,8 @@ export const GrantDelegation: React.FC = () => {
             </div>
           </form>
         </div>
-      </div>
+      </main>
+      {!isProxyMode && <Footer />}
     </div>
   );
 };

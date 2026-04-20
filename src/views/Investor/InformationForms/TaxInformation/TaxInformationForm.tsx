@@ -6,6 +6,39 @@ import { getTaxResidencyCountrySelectValue } from '../../../../utils/formHelpers
 import { SharedFormContext } from '../shared/types';
 import { useDelegationPermissions } from '../../../../contexts/DelegationPermissionsContext';
 import { getPermissionErrorMessage } from '../../../../utils/apiClient';
+import { PremiumSelect } from '../../../../components/PremiumSelect/PremiumSelect';
+
+const YES_NO_OPTIONS = [
+  { value: 'yes', label: 'Yes' },
+  { value: 'no', label: 'No' },
+];
+
+const TIN_TYPE_OPTIONS = [
+  { value: 'pan', label: 'PAN' },
+  { value: 'tan', label: 'TAN' },
+  { value: 'tin', label: 'TIN' },
+  { value: 'other', label: 'Other' },
+];
+
+const CRS_DECLARATION_OPTIONS = [
+  { value: 'yes', label: 'Yes' },
+  { value: 'no', label: 'No' },
+  { value: 'not-applicable', label: 'Not Applicable' },
+];
+
+const RESIDENCY_STATUS_OPTIONS = [
+  { value: 'resident', label: 'Resident' },
+  { value: 'non-resident', label: 'Non-Resident' },
+];
+
+const ANNUAL_INCOME_OPTIONS = [
+  { value: 'below-5lakh', label: 'Below ₹5 Lakh' },
+  { value: '5-10lakh', label: '₹5-10 Lakh' },
+  { value: '10-25lakh', label: '₹10-25 Lakh' },
+  { value: '25-50lakh', label: '₹25-50 Lakh' },
+  { value: '50lakh-1cr', label: '₹50 Lakh - 1 Crore' },
+  { value: 'above-1cr', label: 'Above ₹1 Crore' },
+];
 
 interface TaxInformationFormProps {
   initialData: UserTaxInfoDto | null;
@@ -93,28 +126,20 @@ export const TaxInformationForm: React.FC<TaxInformationFormProps> = ({
       <div className="investor-profile__grid">
         <div className="form-group">
           <label>Tax Info</label>
-          <select
+          <PremiumSelect
             value={formData.taxInfo ?? ''}
-            onChange={(e) => setFormData({ ...formData, taxInfo: e.target.value })}
-            className="form-control"
-          >
-            <option value="">Select</option>
-            <option value="yes">Yes</option>
-            <option value="no">No</option>
-          </select>
+            onChange={(val) => setFormData({ ...formData, taxInfo: val })}
+            options={YES_NO_OPTIONS}
+          />
         </div>
 
         <div className="form-group">
           <label>Are you a US Person (FATCA)?</label>
-          <select
+          <PremiumSelect
             value={formData.usPersonFatca ?? ''}
-            onChange={(e) => setFormData({ ...formData, usPersonFatca: e.target.value })}
-            className="form-control"
-          >
-            <option value="">Select</option>
-            <option value="yes">Yes</option>
-            <option value="no">No</option>
-          </select>
+            onChange={(val) => setFormData({ ...formData, usPersonFatca: val })}
+            options={YES_NO_OPTIONS}
+          />
         </div>
 
         <div className="form-group">
@@ -155,30 +180,23 @@ export const TaxInformationForm: React.FC<TaxInformationFormProps> = ({
           <label htmlFor="investor-tax-residency-country">
             Current Country of Residence for TAX <span className="text-danger">*</span>
           </label>
-          <select
+          <PremiumSelect
             id="investor-tax-residency-country"
             value={taxResidencyCountrySelectValue}
-            onChange={(e) => {
-              const v = e.target.value;
+            onChange={(val) => {
               setFormData({
                 ...formData,
-                taxResidencyCountry: v || undefined,
-                taxResidencyCountryId: v ? Number(v) : undefined,
+                taxResidencyCountry: val || undefined,
+                taxResidencyCountryId: val ? Number(val) : undefined,
               });
             }}
-            className={errors.taxResidencyCountry ? 'form-control is-invalid' : 'form-control'}
-          >
-            <option value="">Select country</option>
-            {sharedContext.taxResidencyCountries.map((c) => {
-              const cid = c.id ?? c.myRowId;
-              if (cid == null) return null;
-              return (
-                <option key={cid} value={String(cid)}>
-                  {c.ssName ?? c.ssCountry ?? `Country ${cid}`}
-                </option>
-              );
-            })}
-          </select>
+            options={sharedContext.taxResidencyCountries.map((c) => ({
+              value: String(c.id ?? c.myRowId ?? ''),
+              label: c.ssName ?? c.ssCountry ?? `Country ${c.id}`
+            }))}
+            error={errors.taxResidencyCountry}
+            placeholder="Select country"
+          />
           {errors.taxResidencyCountry && <div className="invalid-feedback">{errors.taxResidencyCountry}</div>}
         </div>
         
@@ -194,59 +212,44 @@ export const TaxInformationForm: React.FC<TaxInformationFormProps> = ({
         
         <div className="form-group">
           <label>Taxpayer Identification Number type <span className="text-danger">*</span></label>
-          <select
+          <PremiumSelect
             value={formData.taxIdentificationNumberType ?? ''}
-            onChange={(e) => setFormData({ ...formData, taxIdentificationNumberType: e.target.value })}
-            className={errors.taxIdentificationNumberType ? 'form-control is-invalid' : ''}
-          >
-            <option value="">Select</option>
-            <option value="pan">PAN</option>
-            <option value="tan">TAN</option>
-            <option value="tin">TIN</option>
-            <option value="other">Other</option>
-          </select>
+            onChange={(val) => setFormData({ ...formData, taxIdentificationNumberType: val })}
+            options={TIN_TYPE_OPTIONS}
+            error={errors.taxIdentificationNumberType}
+          />
           {errors.taxIdentificationNumberType && <div className="invalid-feedback">{errors.taxIdentificationNumberType}</div>}
         </div>
         
         <div className="form-group form-group--full">
           <label>Are you a US Person as defined under FATCA? <span className="text-danger">*</span></label>
-          <select
+          <PremiumSelect
             value={formData.fatcaStatus ?? ''}
-            onChange={(e) => setFormData({ ...formData, fatcaStatus: e.target.value })}
-            className={errors.fatcaStatus ? 'form-control is-invalid' : 'form-control'}
-          >
-            <option value="">Select</option>
-            <option value="yes">Yes</option>
-            <option value="no">No</option>
-          </select>
+            onChange={(val) => setFormData({ ...formData, fatcaStatus: val })}
+            options={YES_NO_OPTIONS}
+            error={errors.fatcaStatus}
+          />
           {errors.fatcaStatus && <div className="invalid-feedback">{errors.fatcaStatus}</div>}
         </div>
         
         <div className="form-group">
           <label>CRS Declaration <span className="text-danger">*</span></label>
-          <select
+          <PremiumSelect
             value={formData.crsDeclaration ?? ''}
-            onChange={(e) => setFormData({ ...formData, crsDeclaration: e.target.value })}
-            className={errors.crsDeclaration ? 'form-control is-invalid' : ''}
-          >
-            <option value="">Select</option>
-            <option value="yes">Yes</option>
-            <option value="no">No</option>
-            <option value="not-applicable">Not Applicable</option>
-          </select>
+            onChange={(val) => setFormData({ ...formData, crsDeclaration: val })}
+            options={CRS_DECLARATION_OPTIONS}
+            error={errors.crsDeclaration}
+          />
           {errors.crsDeclaration && <div className="invalid-feedback">{errors.crsDeclaration}</div>}
         </div>
         
         <div className="form-group">
           <label>Tax Residency Status</label>
-          <select
+          <PremiumSelect
             value={formData.taxResidencyStatus ?? ''}
-            onChange={(e) => setFormData({ ...formData, taxResidencyStatus: e.target.value })}
-          >
-            <option value="">Select</option>
-            <option value="resident">Resident</option>
-            <option value="non-resident">Non-Resident</option>
-          </select>
+            onChange={(val) => setFormData({ ...formData, taxResidencyStatus: val })}
+            options={RESIDENCY_STATUS_OPTIONS}
+          />
         </div>
         
         <div className="form-group">
@@ -285,18 +288,11 @@ export const TaxInformationForm: React.FC<TaxInformationFormProps> = ({
         
         <div className="form-group form-group--full">
           <label>Annual Income Range</label>
-          <select
+          <PremiumSelect
             value={formData.annualIncome ?? ''}
-            onChange={(e) => setFormData({ ...formData, annualIncome: e.target.value })}
-          >
-            <option value="">Select</option>
-            <option value="below-5lakh">Below ₹5 Lakh</option>
-            <option value="5-10lakh">₹5-10 Lakh</option>
-            <option value="10-25lakh">₹10-25 Lakh</option>
-            <option value="25-50lakh">₹25-50 Lakh</option>
-            <option value="50lakh-1cr">₹50 Lakh - 1 Crore</option>
-            <option value="above-1cr">Above ₹1 Crore</option>
-          </select>
+            onChange={(val) => setFormData({ ...formData, annualIncome: val })}
+            options={ANNUAL_INCOME_OPTIONS}
+          />
         </div>
       </div>
       

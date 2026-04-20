@@ -1,25 +1,45 @@
-.grant-delegation {
-  padding: 24px;
-  max-width: 680px;
-  margin: 0 auto;
+@import '../../../styles/design-system';
 
-  &__title {
-    font-size: 1.4rem;
-    font-weight: 600;
-    margin-bottom: 6px;
-    color: #1a1a2e;
+.grant-delegation {
+  padding: 0 0 2rem;
+  background-color: var(--facilon-bg);
+  min-height: calc(100vh - 80px);
+
+  @media (max-width: 1200px) {
+    padding: 0 0 2rem;
+  }
+  
+  @media (max-width: 768px) {
+    padding: 0 0 2rem;
   }
 
-  &__subtitle {
-    color: #6c757d;
-    margin-bottom: 28px;
-    font-size: 0.9rem;
+  &__header {
+    padding-top: 1.5rem;
+    .dashboard-title-modern {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--facilon-slate);
+      margin-bottom: 0.5rem;
+      letter-spacing: -1px;
+    }
   }
 
   .card {
-    border-radius: 10px;
-    border: 1px solid #e9ecef;
-    margin-bottom: 20px;
+    @include card-premium;
+    padding: 1.5rem !important;
+    margin-bottom: 1.5rem;
+    
+    .card-body {
+      padding: 0;
+    }
+    
+    .card-title {
+      font-weight: 800;
+      color: var(--facilon-primary);
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      letter-spacing: 0.5px;
+    }
   }
 
   .consent-box {
@@ -57,12 +77,12 @@
     transition: border-color 0.15s;
 
     &:hover {
-      border-color: #0d6efd;
+      border-color: var(--facilon-primary);
     }
 
     &.selected {
-      border-color: #0d6efd;
-      background: #eff6ff;
+      border-color: var(--facilon-primary);
+      background: rgba(190, 23, 23, 0.03);
     }
 
     input[type="checkbox"] {

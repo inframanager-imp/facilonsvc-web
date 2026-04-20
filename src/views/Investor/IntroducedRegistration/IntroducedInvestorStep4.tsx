@@ -4,6 +4,7 @@ import introducedInvestorService, { Step4CompletionDto } from '../../../services
 import PrivacyPolicyModal from './PrivacyPolicyModal';
 import TermsModal from './TermsModal';
 import './IntroducedInvestorRegistration.scss';
+import { PremiumSelect } from '../../../components/PremiumSelect/PremiumSelect';
 
 /**
  * Step 4: Final Registration Details (Nationality-specific fields)
@@ -198,17 +199,16 @@ const IntroducedInvestorStep4: React.FC = () => {
                                         <img src="/frontend/images/information-button.png" alt="info" />
                                       </a>
                                     </label>
-                                    <select
-                                      name="countryOfResidence"
-                                      id="countryOfResidence"
-                                      value={formData.countryOfResidence}
-                                      onChange={handleChange}
-                                    >
-                                      <option value="">Select Country</option>
-                                      <option value="1">India</option>
-                                      <option value="2">USA</option>
-                                      <option value="3">UK</option>
-                                    </select>
+                                    <PremiumSelect
+                                      value={formData.countryOfResidence ?? ''}
+                                      onChange={(val) => setFormData(prev => ({ ...prev, countryOfResidence: val }))}
+                                      options={[
+                                        { value: '1', label: 'India' },
+                                        { value: '2', label: 'USA' },
+                                        { value: '3', label: 'UK' },
+                                      ]}
+                                      placeholder="Select Country"
+                                    />
                                   </div>
                                 </div>
 
@@ -260,17 +260,16 @@ const IntroducedInvestorStep4: React.FC = () => {
                                         <img src="/frontend/images/information-button.png" alt="info" />
                                       </a>
                                     </label>
-                                    <select
-                                      name="countryOfResidence"
-                                      id="countryOfResidence"
-                                      value={formData.countryOfResidence}
-                                      onChange={handleChange}
-                                    >
-                                      <option value="">Select Country</option>
-                                      <option value="1">India</option>
-                                      <option value="2">USA</option>
-                                      <option value="3">UK</option>
-                                    </select>
+                                    <PremiumSelect
+                                      value={formData.countryOfResidence ?? ''}
+                                      onChange={(val) => setFormData(prev => ({ ...prev, countryOfResidence: val }))}
+                                      options={[
+                                        { value: '1', label: 'India' },
+                                        { value: '2', label: 'USA' },
+                                        { value: '3', label: 'UK' },
+                                      ]}
+                                      placeholder="Select Country"
+                                    />
                                   </div>
                                 </div>
 
@@ -485,11 +484,16 @@ const IntroducedInvestorStep4: React.FC = () => {
                             {showDiffWhatsappDiv && (
                               <div className="single-field mobile-no" id="second_mob_div">
                                 <label htmlFor="whatsappNumber">Please enter WhatsApp Mobile No:</label>
-                                <select name="whatsappCountryCode" id="whatsappCountryCode">
-                                  <option value="+91">+91 (India)</option>
-                                  <option value="+1">+1 (USA)</option>
-                                  <option value="+44">+44 (UK)</option>
-                                </select>
+                                <PremiumSelect
+                                  value={formData.whatsappCountryCode || '+91'}
+                                  onChange={(val) => setFormData(prev => ({ ...prev, whatsappCountryCode: val }))}
+                                  style={{ marginBottom: '10px' }}
+                                  options={[
+                                    { value: '+91', label: '+91 (India)' },
+                                    { value: '+1', label: '+1 (USA)' },
+                                    { value: '+44', label: '+44 (UK)' },
+                                  ]}
+                                />
                                 <input
                                   type="text"
                                   name="whatsappNumber"

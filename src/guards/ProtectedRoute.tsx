@@ -1,5 +1,5 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { authenticationService } from '../services/authentication.service';
 import { LoadingSpinner } from '../components/LoadingSpinner/LoadingSpinner';

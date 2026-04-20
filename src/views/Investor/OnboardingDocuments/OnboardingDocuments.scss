@@ -1,7 +1,16 @@
 @import '../../../styles/investor-theme';
 
 .onboarding-documents {
-  padding: 20px 0;
+  padding: 0 0 2rem;
+  background-color: var(--facilon-bg);
+
+  @media (max-width: 1200px) {
+    padding: 0 0 2rem;
+  }
+  
+  @media (max-width: 768px) {
+    padding: 0 0 2rem;
+  }
 
   .loading, .error {
     text-align: center;

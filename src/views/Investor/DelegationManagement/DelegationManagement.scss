@@ -1,19 +1,26 @@
+@import '../../../styles/design-system';
+
 .delegation-management {
-  padding: 24px;
+  padding: 0 0 2rem;
+  background-color: var(--facilon-bg);
+  min-height: calc(100vh - 80px);
+
+  @media (max-width: 1200px) {
+    padding: 0 0 2rem;
+  }
+  
+  @media (max-width: 768px) {
+    padding: 0 0 2rem;
+  }
 
   &__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 24px;
-    flex-wrap: wrap;
-    gap: 12px;
-
-    h2 {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: #1a1a2e;
-      margin: 0;
+    padding-top: 1.5rem;
+    .dashboard-title-modern {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--facilon-slate);
+      margin-bottom: 0.5rem;
+      letter-spacing: -1px;
     }
   }
 
@@ -28,15 +35,14 @@
   }
 
   .delegation-card {
-    background: #fff;
-    border: 1px solid #e9ecef;
-    border-radius: 10px;
-    margin-bottom: 16px;
+    @include card-premium;
+    padding: 1.5rem !important;
+    margin-bottom: 1.5rem;
     overflow: hidden;
 
     &--pending {
-      border: 2px solid #ffc107;
-      background: #fffbf0;
+      border-left: 4px solid #ffc107 !important;
+      border: 1px solid var(--facilon-border-light);
     }
 
     &__top {
@@ -50,8 +56,9 @@
     }
 
     &__agent {
-      font-weight: 600;
-      font-size: 1rem;
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: var(--facilon-primary);
     }
 
     &__code {

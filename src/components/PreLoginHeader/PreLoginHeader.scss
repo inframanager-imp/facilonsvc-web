@@ -1,6 +1,7 @@
 .pre-login-header {
   background-color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1.5px solid #dee2e6;
+  box-shadow: none;
   padding: 1rem 0;
 }
 
@@ -47,3 +48,4 @@
     }
   }
 }
+

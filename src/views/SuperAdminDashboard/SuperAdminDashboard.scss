@@ -16,7 +16,8 @@
   background-color: #343a40;
   color: white;
   padding: 1rem 2rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1.5px solid #dee2e6;
+  box-shadow: none;
 
   .header-content {
     display: flex;
@@ -106,7 +107,8 @@
   background: white;
   padding: 1.5rem;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1.5px solid #dee2e6;
+  box-shadow: none;
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -153,7 +155,8 @@
   background: white;
   padding: 2rem;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1.5px solid #dee2e6;
+  box-shadow: none;
 
   h3 {
     margin-bottom: 1.5rem;
@@ -191,3 +194,4 @@
   min-height: 400px;
   gap: 1rem;
 }
+

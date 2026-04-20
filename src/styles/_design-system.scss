@@ -1,0 +1,82 @@
+// Facilon Design System - Premium Red
+// High-end Red, Deep Slate, and Clean White
+
+:root {
+  // Brand Colors
+  --facilon-red: #be1717;
+  --facilon-red-dark: #9a1212;
+  --facilon-red-light: #e02424;
+  --facilon-slate: #2d2d2d;
+  --facilon-slate-light: #4b4b4b;
+  
+  // Semantic Layout Colors
+  --facilon-primary: var(--facilon-red);
+  --facilon-secondary: var(--facilon-slate);
+  --facilon-bg: #fcfcfc;
+  --facilon-card-bg: #ffffff;
+  --facilon-border: rgba(0, 0, 0, 0.06);
+  --facilon-border-light: rgba(0, 0, 0, 0.03);
+  
+  // Text Colors
+  --facilon-text-main: #1a1a1a;
+  --facilon-text-heading: var(--facilon-slate);
+  --facilon-text-muted: #71717a;
+  --facilon-text-white: #ffffff;
+  
+  // Grey scale
+  --facilon-grey-50: #f9fafb;
+  --facilon-grey-100: #f3f4f6;
+  --facilon-grey-200: #e5e7eb;
+  
+  // Shadows & Effects (Neutralized for Flat Design)
+  --facilon-shadow-premium: none;
+  --facilon-shadow-sm: none;
+  --facilon-shadow-btn: none;
+  
+  // Border Radius (Soft-Crisp Refinement)
+  --facilon-radius-xl: 16px;
+  --facilon-radius-lg: 12px;
+  --facilon-radius-md: 8px;
+  --facilon-radius-sm: 4px;
+  --facilon-radius-pill: 500px;
+  
+  // Transitions
+  --facilon-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+// Mixins for Image-based effects
+@mixin card-premium {
+  background: var(--facilon-card-bg);
+  border-radius: var(--facilon-radius-lg);
+  box-shadow: none;
+  border: 1.5px solid var(--facilon-grey-200); // More defined border for flat look
+  padding: 1.5rem;
+  transition: var(--facilon-transition);
+}
+
+@mixin btn-premium-red {
+  background-color: var(--facilon-primary);
+  color: white;
+  border-radius: var(--facilon-radius-md);
+  padding: 0.45rem 1rem;
+  font-weight: 700;
+  font-size: 0.9rem;
+  border: none;
+  transition: var(--facilon-transition);
+  box-shadow: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  
+  &:hover:not(:disabled) {
+    background-color: var(--facilon-red-dark);
+    transform: translateY(-1px);
+    box-shadow: none;
+  }
+  
+  &:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+}

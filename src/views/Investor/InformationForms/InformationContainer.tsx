@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { profileService, InvestorConsentsDto, InvestorExperienceDto, UserPersonalInformationDto, UserPassportDetailsDto, UserResidentialStatusDto, UserTaxInfoDto, UserBankDetailsDto, UserContactDetailsDto, UserNominationDto, UserRiskProfileDto } from '../../../services/profile.service';
 import { investorService, InvestorDashboardDto } from '../../../services/investor.service';
 import { contentService, type MasterCountryDto, type IsdCodeValuesDto } from '../../../services/content.service';
@@ -19,6 +19,7 @@ import { PassportDetailsForm } from './PassportDetails/PassportDetailsForm';
 import { ResidentialStatusForm } from './ResidentialStatus/ResidentialStatusForm';
 import { RiskProfileForm } from './RiskProfile/RiskProfileForm';
 import { FinalSubmissionForm } from './FinalSubmission/FinalSubmissionForm';
+import { PremiumJourneyStepper } from '../../../components/PremiumJourneyStepper/PremiumJourneyStepper';
 import '../InvestorProfile/InvestorProfile.scss';
 
 /**
@@ -128,117 +129,25 @@ export const InformationContainer: React.FC = () => {
     reloadData: loadData,
   };
 
-  // Progress bar - Your Journey section
-  const renderProgressBar = () => {
-    const progress = dashboardData?.progress;
-    const accountSummary = dashboardData?.accountSummary;
-
-    // `personalInfo` completion comes from progress.sections (backend-computed flag).
-    // Everything downstream comes from accountSummary counts/flags — same source the
-    // working pages (OnboardingDocuments, DocumentUpload, etc.) use. This keeps the
-    // "Your Journey" widget consistent across routes.
-    const isDoneFor = (key: string) => {
-      if (key === 'information') {
-        return progress?.sections?.personalInfo?.completed || false;
-      }
-      if (key === 'documents') {
-        return accountSummary
-          ? accountSummary.kycDocumentsUploaded >= accountSummary.kycDocumentsRequired
-          : false;
-      }
-      if (key === 'onboarding') {
-        return accountSummary
-          ? accountSummary.onboardingDocumentsUploaded >= accountSummary.onboardingDocumentsRequired
-          : false;
-      }
-      if (key === 'verification') return accountSummary?.verificationDone || false;
-      if (key === 'physical') return accountSummary?.physicalSubmissionDone || false;
-      if (key === 'account') return accountSummary?.accountOpeningStatus || false;
-      return false;
-    };
-
-    const stepKeys = ['information', 'documents', 'onboarding', 'verification', 'physical', 'account'] as const;
-    const currentStepKey = stepKeys.find((k) => !isDoneFor(k)) ?? 'information';
-    const isCurrent = (key: string) => currentStepKey === key;
-
-    const renderStep = (label: string, route: string, stepKey: string, percent: string = "20%") => {
-      const isDone = isDoneFor(stepKey);
-
-      const handleStepClick = (e: React.MouseEvent) => {
-        e.preventDefault();
-        if (isProxyMode) {
-          saNavigate(route);
-        } else {
-          navigate(route);
-        }
-      };
-
-      return (
-        <div key={stepKey} className="step">
-          {isDone ? (
-            <div className="circle-chart active-one">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M20 6L9 17L4 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </div>
-          ) : (
-            <button type="button" onClick={handleStepClick} style={{ textDecoration: 'none', background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
-              <div className={`circle-chart ${isCurrent(stepKey) ? 'active-three' : ''}`}>
-                {isCurrent(stepKey) ? percent : 'Start'}
-              </div>
-            </button>
-          )}
-          <p>
-            <button type="button" onClick={handleStepClick} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', color: 'inherit', textDecoration: 'underline' }}>
-              {label}
-            </button>
-          </p>
-        </div>
-      );
-    };
-
-    return (
-      <div className="investor-profile__progress-section">
-        <div className="container-fluid">
-          <center>
-            <strong>
-              <h2 style={{ fontSize: '36px', color: '#be1717', fontWeight: 500, marginBottom: '1.5rem', marginTop: '1.5rem' }}>
-                Your Journey
-              </h2>
-            </strong>
-          </center>
-          <div className="step-progress">
-            {renderStep('Submit Information', '/investor/profile', 'information', '90%')}
-            {renderStep('KYC Documents', '/investor/documents', 'documents', '50%')}
-            {renderStep('Onboarding Forms', '/investor/documents', 'onboarding', '20%')}
-            {renderStep('In-person Verification', '/investor/verification', 'verification', '0%')}
-            {renderStep('Physical Submission', '/investor/physical-submission', 'physical', '0%')}
-            {renderStep('Account Details', '/investor/account-details', 'account', '0%')}
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   if (loading) {
     return (
-      <div className="dashboard-layout">
-        <Header />
-        <div className="dashboard-main-content" style={{ marginLeft: 0 }}>
-          <div className="loading-container">
+      <div className="facilon-dashboard-wrapper">
+        {!delegationPerms.isProxyMode && <Header />}
+        <main className="container-fluid dashboard-container-main">
+          <div className="loading-container" style={{ textAlign: 'center', padding: '100px 0' }}>
             <div className="spinner"></div>
             <p>Loading investor information...</p>
           </div>
-        </div>
-        <Footer />
+        </main>
+        {!delegationPerms.isProxyMode && <Footer />}
       </div>
     );
   }
 
   return (
-    <div className="dashboard-layout">
-      <Header />
-      <div className="dashboard-main-content" style={{ marginLeft: 0 }}>
+    <div className="facilon-dashboard-wrapper">
+      {!delegationPerms.isProxyMode && <Header />}
+      <main className="container-fluid dashboard-container-main">
         <div className="investor-profile">
           <div className="profile-header">
             <h1>Investor Information</h1>
@@ -259,7 +168,7 @@ export const InformationContainer: React.FC = () => {
           )}
 
           {/* Your Journey Progress Section */}
-          {renderProgressBar()}
+          <PremiumJourneyStepper dashboardData={dashboardData} />
 
           <div className="investor-profile__tabs">
             <button
@@ -424,8 +333,8 @@ export const InformationContainer: React.FC = () => {
             />
           )}
         </div>
-      </div>
-      <Footer />
+      </main>
+      {!delegationPerms.isProxyMode && <Footer />}
     </div>
   );
 };

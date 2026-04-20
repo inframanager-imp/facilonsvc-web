@@ -10,6 +10,7 @@ import type {
 import PrivacyPolicyModal from '../IntroducedRegistration/PrivacyPolicyModal';
 import TermsModal from '../IntroducedRegistration/TermsModal';
 import { toast } from 'react-toastify';
+import { PremiumSelect } from '../../../components/PremiumSelect/PremiumSelect';
 import './PmsInvestorWizard.scss';
 
 /**
@@ -553,18 +554,18 @@ export const PmsInvestorWizard: React.FC = () => {
                           Country of Incorporation/Formation/Establishment
                           <span className="star-color">*</span>
                         </label>
-                        <select
-                          value={step1Form.countryOfIncorporation}
-                          onChange={(e) => setStep1Form((p) => ({
+                        <PremiumSelect
+                          value={step1Form.countryOfIncorporation?.toString() ?? ''}
+                          onChange={(val) => setStep1Form((p) => ({
                             ...p,
-                            countryOfIncorporation: e.target.value,
+                            countryOfIncorporation: val,
                           }))}
-                        >
-                          <option value="">Select Country</option>
-                          {countries.map((c) => (
-                            <option key={c.myRowId ?? c.id} value={c.id}>{c.ssName}</option>
-                          ))}
-                        </select>
+                          options={countries.map((c) => ({
+                            value: String(c.id),
+                            label: c.ssName || ''
+                          }))}
+                          placeholder="Select Country"
+                        />
                       </div>
 
                       <div className="single-field">
@@ -637,18 +638,18 @@ export const PmsInvestorWizard: React.FC = () => {
                     />
                   </div>
 
-                  <div className="single-field">
+                   <div className="single-field">
                     <label>Gender: <span className="star-color">*</span></label>
-                    <select
+                    <PremiumSelect
                       value={step2Form.gender}
-                      onChange={(e) => setStep2Form((p) => ({ ...p, gender: e.target.value as any }))}
-                      style={{ textTransform: 'uppercase' }}
-                    >
-                      <option value="">Select Gender</option>
-                      <option value="Male">Male</option>
-                      <option value="Female">Female</option>
-                      <option value="Transgender">Transgender</option>
-                    </select>
+                      onChange={(val) => setStep2Form((p) => ({ ...p, gender: val as any }))}
+                      options={[
+                        { value: 'Male', label: 'Male' },
+                        { value: 'Female', label: 'Female' },
+                        { value: 'Transgender', label: 'Transgender' },
+                      ]}
+                      placeholder="Select Gender"
+                    />
                   </div>
 
                   <div className="single-field">
@@ -664,20 +665,19 @@ export const PmsInvestorWizard: React.FC = () => {
                     <label style={{ width: '100%' }}>
                       Please enter your Mobile No: <span className="star-color">*</span>
                     </label>
-                    <select
-                      value={step2Form.countryCode || ''}
-                      onChange={(e) => setStep2Form((p) => ({
+                    <PremiumSelect
+                      value={step2Form.countryCode?.toString() ?? ''}
+                      onChange={(val) => setStep2Form((p) => ({
                         ...p,
-                        countryCode: e.target.value ? Number(e.target.value) : undefined,
+                        countryCode: val ? Number(val) : undefined,
                       }))}
-                    >
-                      {isdCodes.map((i) => (
-                        <option key={i.myRowId ?? i.id} value={i.id}>
-                          +{i.codeValue} ({i.countryName})
-                        </option>
-                      ))}
-                      {isdCodes.length === 0 && <option value={240}>+91 (India)</option>}
-                    </select>
+                      options={isdCodes.map((i) => ({
+                        value: String(i.id),
+                        label: `+${i.codeValue} (${i.countryName})`
+                      }))}
+                      placeholder="Select Code"
+                      style={{ marginBottom: '10px' }}
+                    />
                     <input
                       type="tel"
                       value={step2Form.mobileNumber}
@@ -785,10 +785,10 @@ export const PmsInvestorWizard: React.FC = () => {
                     <>
                       <div className="single-field">
                         <label>Nationality <span className="star-color">*</span></label>
-                        <select
-                          value={step4Form.nationalityId ?? ''}
-                          onChange={(e) => {
-                            const id = e.target.value ? Number(e.target.value) : undefined;
+                        <PremiumSelect
+                          value={step4Form.nationalityId?.toString() ?? ''}
+                          onChange={(val) => {
+                            const id = val ? Number(val) : undefined;
                             const nat = nationalities.find((n) => n.id === id);
                             setStep4Form((p) => ({
                               ...p,
@@ -799,12 +799,12 @@ export const PmsInvestorWizard: React.FC = () => {
                               indianOrigin: '',
                             }));
                           }}
-                        >
-                          <option value="">Select Nationality</option>
-                          {nationalities.map((n) => (
-                            <option key={n.id} value={n.id}>{n.name}</option>
-                          ))}
-                        </select>
+                          options={nationalities.map((n) => ({
+                            value: String(n.id),
+                            label: n.name || ''
+                          }))}
+                          placeholder="Select Nationality"
+                        />
                       </div>
 
                       {/* Indian path: Country of Residence + PAN */}
@@ -812,18 +812,18 @@ export const PmsInvestorWizard: React.FC = () => {
                         <>
                           <div className="single-field">
                             <label>Country of Residency: <span className="star-color">*</span></label>
-                            <select
-                              value={step4Form.legalCountryId ?? ''}
-                              onChange={(e) => setStep4Form((p) => ({
+                            <PremiumSelect
+                              value={step4Form.legalCountryId?.toString() ?? ''}
+                              onChange={(val) => setStep4Form((p) => ({
                                 ...p,
-                                legalCountryId: e.target.value ? Number(e.target.value) : undefined,
+                                legalCountryId: val ? Number(val) : undefined,
                               }))}
-                            >
-                              <option value="">Select Country</option>
-                              {countries.map((c) => (
-                                <option key={c.myRowId ?? c.id} value={c.id}>{c.ssName}</option>
-                              ))}
-                            </select>
+                              options={countries.map((c) => ({
+                                value: String(c.id),
+                                label: c.ssName || ''
+                              }))}
+                              placeholder="Select Country"
+                            />
                           </div>
 
                           <div className="single-field self-sec1">
@@ -859,18 +859,18 @@ export const PmsInvestorWizard: React.FC = () => {
                         <>
                           <div className="single-field">
                             <label>Country of Residency: <span className="star-color">*</span></label>
-                            <select
-                              value={step4Form.legalCountry2Id ?? ''}
-                              onChange={(e) => setStep4Form((p) => ({
+                            <PremiumSelect
+                              value={step4Form.legalCountry2Id?.toString() ?? ''}
+                              onChange={(val) => setStep4Form((p) => ({
                                 ...p,
-                                legalCountry2Id: e.target.value ? Number(e.target.value) : undefined,
+                                legalCountry2Id: val ? Number(val) : undefined,
                               }))}
-                            >
-                              <option value="">Select Country</option>
-                              {countries.map((c) => (
-                                <option key={c.myRowId ?? c.id} value={c.id}>{c.ssName}</option>
-                              ))}
-                            </select>
+                              options={countries.map((c) => ({
+                                value: String(c.id),
+                                label: c.ssName || ''
+                              }))}
+                              placeholder="Select Country"
+                            />
                           </div>
 
                           <div className="single-field self-sec1">
@@ -1071,17 +1071,16 @@ export const PmsInvestorWizard: React.FC = () => {
                       {step4Form.sameWhatsapp === 'No' && (
                         <div className="single-field mobile-no">
                           <label style={{ width: '100%' }}>Please enter WhatsApp Mobile No:</label>
-                          <select
-                            value={step2Form.countryCode || ''}
+                          <PremiumSelect
+                            value={step2Form.countryCode?.toString() ?? ''}
                             disabled
-                          >
-                            {isdCodes.map((i) => (
-                              <option key={i.myRowId ?? i.id} value={i.id}>
-                                +{i.codeValue} ({i.countryName})
-                              </option>
-                            ))}
-                            {isdCodes.length === 0 && <option value={240}>+91 (India)</option>}
-                          </select>
+                            options={isdCodes.map((i) => ({
+                              value: String(i.id),
+                              label: `+${i.codeValue} (${i.countryName})`
+                            }))}
+                            placeholder="Code"
+                            style={{ marginBottom: '10px' }}
+                          />
                           <input
                             type="tel"
                             value={step4Form.diffMobWhatsapp}

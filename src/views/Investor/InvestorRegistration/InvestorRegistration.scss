@@ -147,7 +147,7 @@
     .consent-section {
       background-color: #fafafa;
       border: 1px solid #e0e0e0;
-      border-radius: 8px;
+      border-radius: var(--facilon-radius-md); // Standardized to 8px
       padding: 20px;
       margin-top: 24px;
       margin-bottom: 24px;
@@ -162,7 +162,7 @@
       .consent-box {
         background-color: #fff;
         border: 1px solid #d0d0d0;
-        border-radius: 6px;
+        border-radius: var(--facilon-radius-lg); // Softer 12px for nested boxes
         padding: 16px;
         margin-bottom: 20px;
         max-height: 300px;
@@ -234,7 +234,7 @@
     .info-message {
       background-color: #e8f5e9;
       border: 1px solid #4caf50;
-      border-radius: 6px;
+      border-radius: var(--facilon-radius-lg); // Standardized to 12px
       padding: 16px;
       margin: 20px 0;
 
@@ -247,7 +247,7 @@
     .warning-message {
       background-color: #fff3cd;
       border: 1px solid #ffc107;
-      border-radius: 6px;
+      border-radius: var(--facilon-radius-lg); // Standardized to 12px
       padding: 16px;
       margin: 20px 0;
 

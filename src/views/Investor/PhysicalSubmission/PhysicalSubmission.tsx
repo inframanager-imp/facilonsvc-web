@@ -3,8 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Header from '../../../components/Header/Header';
 import Footer from '../../../components/Footer/Footer';
-import { investorService, PhysicalSubmissionFormData } from '../../../services/investor.service';
+import { investorService, PhysicalSubmissionFormData, InvestorDashboardDto } from '../../../services/investor.service';
 import { useSAProxyNavigation } from '../../../hooks/useSAProxyNavigation';
+import { PremiumJourneyStepper } from '../../../components/PremiumJourneyStepper/PremiumJourneyStepper';
+import '../InvestorProfile/InvestorProfile.scss';
 import './PhysicalSubmission.scss';
 
 export const PhysicalSubmission: React.FC = () => {
@@ -12,7 +14,7 @@ export const PhysicalSubmission: React.FC = () => {
   const { navigate: saNavigate, isProxyMode } = useSAProxyNavigation();
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
-  const [dashboardData, setDashboardData] = useState<any>(null);
+  const [dashboardData, setDashboardData] = useState<InvestorDashboardDto | null>(null);
   const [verificationCompleted, setVerificationCompleted] = useState(false);
   const [submissionType, setSubmissionType] = useState<'inperson' | 'courier'>('inperson');
   const [formData, setFormData] = useState<PhysicalSubmissionFormData>({
@@ -140,132 +142,44 @@ export const PhysicalSubmission: React.FC = () => {
   };
 
   const renderProgressBar = () => {
-    if (!dashboardData) return null;
-
-    const progress = dashboardData.progress;
-    const accountSummary = dashboardData.accountSummary;
-
-    const isCompleted = (key: string) => {
-      return progress?.sections?.[key]?.completed || false;
-    };
-
-    const steps = [
-      { 
-        label: 'Submit Information', 
-        route: '/investor/profile', 
-        key: 'information',
-        percent: isCompleted('personalInfo') ? '100%' : '50%',
-        isComplete: isCompleted('personalInfo')
-      },
-      { 
-        label: 'KYC Documents', 
-        route: '/investor/documents', 
-        key: 'documents',
-        percent: accountSummary ? `${Math.min(100, Math.round((accountSummary.kycDocumentsUploaded / accountSummary.kycDocumentsRequired) * 100))}%` : '0%',
-        isComplete: accountSummary ? accountSummary.kycDocumentsUploaded >= accountSummary.kycDocumentsRequired : false
-      },
-      { 
-        label: 'Onboarding Forms', 
-        route: '/investor/onboarding', 
-        key: 'onboarding',
-        percent: accountSummary ? `${Math.min(100, Math.round((accountSummary.onboardingDocumentsUploaded / accountSummary.onboardingDocumentsRequired) * 100))}%` : '0%',
-        isComplete: accountSummary ? accountSummary.onboardingDocumentsUploaded >= accountSummary.onboardingDocumentsRequired : false
-      },
-      { 
-        label: 'In-person Verification', 
-        route: '/investor/verification', 
-        key: 'verification',
-        percent: accountSummary?.verificationDone ? '100%' : '0%',
-        isComplete: accountSummary?.verificationDone || false
-      },
-      { 
-        label: 'Physical Submission', 
-        route: '/investor/physical-submission', 
-        key: 'physical',
-        percent: accountSummary?.physicalSubmissionDone ? '100%' : '0%',
-        isComplete: accountSummary?.physicalSubmissionDone || false
-      },
-      { 
-        label: 'Account Details', 
-        route: '/investor/account-details', 
-        key: 'account',
-        percent: accountSummary?.accountOpeningStatus ? '100%' : '0%',
-        isComplete: accountSummary?.accountOpeningStatus || false
-      }
-    ];
-
-    return (
-      <div className="physical__progress-section">
-        <div className="container-fluid">
-          <center>
-            <strong>
-              <h2 style={{ fontSize: '36px', color: '#be1717', fontWeight: 500, marginBottom: '1.5rem', marginTop: '1.5rem' }}>
-                Your Journey
-              </h2>
-            </strong>
-          </center>
-          <div className="step-progress">
-            {steps.map((step) => (
-              <div
-                key={step.key}
-                className="step"
-                onClick={() => isProxyMode ? saNavigate(step.route) : regularNavigate(step.route)}
-                style={{ cursor: 'pointer' }}
-              >
-                <div className={`circle-chart ${step.isComplete ? 'active-one' : ''}`}>
-                  {step.isComplete ? (
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M20 6L9 17L4 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  ) : (
-                    'Start'
-                  )}
-                </div>
-                <p>{step.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
+    return <PremiumJourneyStepper dashboardData={dashboardData} />;
   };
 
   if (loading) {
     return (
-      <div className="dashboard-layout">
-        <Header />
-        <div className="dashboard-main-content" style={{ marginLeft: 0 }}>
-          <div className="physical-submission-container">
+      <div className="facilon-dashboard-wrapper">
+        {!isProxyMode && <Header />}
+        <main className="container-fluid dashboard-container-main">
+          <div className="physical-submission-container" style={{ textAlign: 'center', padding: '100px 0' }}>
             <div className="loading">Loading physical submission...</div>
           </div>
-          <Footer />
-        </div>
+        </main>
+        {!isProxyMode && <Footer />}
       </div>
     );
   }
 
   return (
-    <div className="dashboard-layout">
-      <Header />
-      <div className="dashboard-main-content" style={{ marginLeft: 0 }}>
+    <div className="facilon-dashboard-wrapper">
+      {!isProxyMode && <Header />}
+      <main className="container-fluid dashboard-container-main">
         <div className="physical-submission-container">
           {/* Progress Bar */}
           {renderProgressBar()}
 
           {/* Main Content */}
           <div className="section derivatives-wrap trading-sec-1">
-            <div className="container">
+            <div className="container-fluid">
               <div className="row">
                 <div className="col-md-12">
                   <div className="tab" role="tabpanel">
                     <center>
                       <a
                         href="#"
-                        className="btn btn-primary px-5"
+                        className="btn btn-primary"
                         style={{
                           backgroundColor: '#be1717 !important',
                           borderColor: '#be1717 !important',
-                          fontSize: '21px !important',
                           pointerEvents: 'none'
                         }}
                       >
@@ -276,7 +190,7 @@ export const PhysicalSubmission: React.FC = () => {
                     <div className="tab-content tabs">
                       <div role="tabpanel" className="tab-pane fade show active" id="Section1">
                         <center>
-                          <p style={{ marginTop: '20px' }}>
+                          <p style={{ marginTop: '10px' }}>
                             Please download the checklist and send the documents by courier to the address of the service provider indicated in the checklist.
                           </p>
                         </center>
@@ -285,8 +199,8 @@ export const PhysicalSubmission: React.FC = () => {
                         <center>
                           <p>
                             <button
-                              className="btn btn-primary px-5"
-                              style={{ height: 'auto', marginTop: '20px', marginBottom: '20px' }}
+                              className="btn btn-primary"
+                              style={{ height: 'auto', marginTop: '10px', marginBottom: '10px' }}
                               onClick={handleDownloadChecklist}
                             >
                               Download checklist of documents to be submitted
@@ -426,8 +340,8 @@ export const PhysicalSubmission: React.FC = () => {
             </div>
           </div>
         </div>
-        <Footer />
-      </div>
+      </main>
+      {!isProxyMode && <Footer />}
     </div>
   );
 };

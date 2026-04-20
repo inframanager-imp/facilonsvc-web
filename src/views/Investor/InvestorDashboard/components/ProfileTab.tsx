@@ -65,7 +65,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({ dashboardData }) => {
             <p className="mb-3">
               <strong>Restrictions:</strong> {dashboardData?.actionsAlerts?.restrictions || '-'}
             </p>
-            <div className="d-flex gap-2 flex-wrap">
+            <div className="dashboard-action-buttons">
               <button
                 className="btn btn-outline-primary btn-sm"
                 onClick={() => navigate('/investor/profile')}

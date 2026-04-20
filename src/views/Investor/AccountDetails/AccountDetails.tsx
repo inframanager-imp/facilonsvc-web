@@ -7,177 +7,96 @@ import { toast } from 'react-toastify';
 import { useSAProxyNavigation } from '../../../hooks/useSAProxyNavigation';
 import './AccountDetails.scss';
 
+import { PremiumJourneyStepper } from '../../../components/PremiumJourneyStepper/PremiumJourneyStepper';
+import '../InvestorProfile/InvestorProfile.scss';
+import './AccountDetails.scss';
+
 export const AccountDetails: React.FC = () => {
-  const regularNavigate = useNavigate();
-  const { navigate: saNavigate, isProxyMode } = useSAProxyNavigation();
-  const [loading, setLoading] = useState(true);
-  const [accountDetails, setAccountDetails] = useState<AccountDetailsDto | null>(null);
+    const regularNavigate = useNavigate();
+    const { navigate: saNavigate, isProxyMode } = useSAProxyNavigation();
+    const [loading, setLoading] = useState(true);
+    const [accountDetails, setAccountDetails] = useState<AccountDetailsDto | null>(null);
 
-  useEffect(() => {
-    loadAccountDetails();
-  }, []);
+    useEffect(() => {
+        loadAccountDetails();
+    }, []);
 
-  const loadAccountDetails = async () => {
-    try {
-      setLoading(true);
-      const data = await investorService.getAccountDetails();
-      setAccountDetails(data);
-    } catch (err: any) {
-      console.error('Failed to load account details:', err);
-      toast.error(err.response?.data?.message || 'Failed to load account details');
-    } finally {
-      setLoading(false);
-    }
-  };
+    const loadAccountDetails = async () => {
+        try {
+            setLoading(true);
+            const data = await investorService.getAccountDetails();
+            setAccountDetails(data);
+        } catch (err: any) {
+            console.error('Failed to load account details:', err);
+            toast.error(err.response?.data?.message || 'Failed to load account details');
+        } finally {
+            setLoading(false);
+        }
+    };
 
-  const renderProgressBar = () => {
-    if (!accountDetails) return null;
+    const renderProgressBar = () => {
+        // Map AccountDetails.progress to the expected InvestorDashboardDto.progress structure if needed
+        // or just pass accountDetails directly if we adjust the component to be flexible.
+        // Actually, AccountDetailsDto contains progress in a slightly different shape.
+        // I should probably ensure the component can handle both or adapt it here.
+        
+        // For simplicity, let's cast or map it. 
+        // Component expects { progress, accountSummary }
+        const mockDashboardData: any = {
+            progress: accountDetails?.progress,
+            accountSummary: {
+                kycDocumentsUploaded: accountDetails?.progress.kycDocumentsUploaded,
+                kycDocumentsRequired: accountDetails?.progress.kycDocumentsRequired,
+                onboardingDocumentsUploaded: accountDetails?.progress.onboardingDocumentsUploaded,
+                onboardingDocumentsRequired: accountDetails?.progress.onboardingDocumentsRequired,
+                verificationDone: accountDetails?.progress.verificationDone,
+                physicalSubmissionDone: accountDetails?.progress.physicalSubmissionDone,
+                accountOpeningStatus: accountDetails?.accountOpeningStatus
+            }
+        };
 
-    // Match Laravel getProgressSteps logic (line 5372-5376)
-    // Account Details should only be accessible ('start') if Physical Submission is done
-    const physicalDone = accountDetails.progress.physicalSubmissionDone || false;
-    const accountDetailsStatus = accountDetails.accountOpeningStatus 
-      ? 'done' 
-      : (physicalDone ? 'start' : 'pending');
-
-    const steps = [
-      { 
-        label: 'Submit Information', 
-        route: '/investor/profile', 
-        key: 'information',
-        percent: accountDetails.progress.personalInfoComplete ? '100%' : '50%',
-        isComplete: accountDetails.progress.personalInfoComplete,
-        isPending: false,
-        isActive: false
-      },
-      { 
-        label: 'KYC Documents', 
-        route: '/investor/documents', 
-        key: 'documents',
-        percent: `${Math.min(100, Math.round((accountDetails.progress.kycDocumentsUploaded / accountDetails.progress.kycDocumentsRequired) * 100))}%`,
-        isComplete: accountDetails.progress.kycDocumentsUploaded >= accountDetails.progress.kycDocumentsRequired,
-        isPending: false,
-        isActive: false
-      },
-      { 
-        label: 'Onboarding Forms', 
-        route: '/investor/onboarding', 
-        key: 'onboarding',
-        percent: `${Math.min(100, Math.round((accountDetails.progress.onboardingDocumentsUploaded / accountDetails.progress.onboardingDocumentsRequired) * 100))}%`,
-        isComplete: accountDetails.progress.onboardingDocumentsUploaded >= accountDetails.progress.onboardingDocumentsRequired,
-        isPending: false,
-        isActive: false
-      },
-      { 
-        label: 'In-person Verification', 
-        route: '/investor/verification', 
-        key: 'verification',
-        percent: accountDetails.progress.verificationDone ? '100%' : '0%',
-        isComplete: accountDetails.progress.verificationDone || false,
-        isPending: false,
-        isActive: false
-      },
-      { 
-        label: 'Physical Submission', 
-        route: '/investor/physical-submission', 
-        key: 'physical',
-        percent: accountDetails.progress.physicalSubmissionDone ? '100%' : '0%',
-        isComplete: accountDetails.progress.physicalSubmissionDone || false,
-        isPending: false,
-        isActive: false
-      },
-      { 
-        label: 'Account Details', 
-        route: '/investor/account-details', 
-        key: 'account',
-        percent: accountDetails.accountOpeningStatus ? '100%' : '0%',
-        isComplete: accountDetails.accountOpeningStatus,
-        isPending: accountDetailsStatus === 'pending',  // Matches Laravel logic
-        isActive: true  // This is the current page
-      }
-    ];
-
-    return (
-      <div className="account-details__progress-section">
-        <div className="container-fluid">
-          <center>
-            <strong>
-              <h2 style={{ fontSize: '36px', color: '#be1717', fontWeight: 500, marginBottom: '1.5rem', marginTop: '1.5rem' }}>
-                Your Journey
-              </h2>
-            </strong>
-          </center>
-          <div className="step-progress">
-            {steps.map((step, index) => (
-              <div
-                key={step.key}
-                className={`step ${step.isPending ? 'step-pending' : ''} ${step.isActive ? 'active-stage' : ''} ${step.isComplete ? 'step-completed' : ''}`}
-                onClick={() => !step.isPending && (isProxyMode ? saNavigate(step.route) : regularNavigate(step.route))}
-                style={{ cursor: step.isPending ? 'not-allowed' : 'pointer', opacity: step.isPending ? 0.5 : 1 }}
-              >
-                <div className={`circle-chart ${step.isComplete ? 'active-one' : ''} ${step.isPending ? 'pending' : ''} ${step.isActive && !step.isComplete ? 'active-current' : ''}`}>
-                  {step.isComplete ? (
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M20 6L9 17L4 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  ) : step.isPending ? (
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <circle cx="12" cy="12" r="1.5" fill="#999" />
-                      <circle cx="6" cy="12" r="1.5" fill="#999" />
-                      <circle cx="18" cy="12" r="1.5" fill="#999" />
-                    </svg>
-                  ) : (
-                    'Start'
-                  )}
-                </div>
-                <p>{step.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  };
+        return <PremiumJourneyStepper dashboardData={mockDashboardData} />;
+    };
 
   if (loading) {
     return (
-      <div className="dashboard-layout">
+      <div className="facilon-dashboard-wrapper">
         <Header />
-        <div className="dashboard-main-content" style={{ marginLeft: 0 }}>
+        <main className="container-fluid dashboard-container-main">
           <div className="account-details">
             <div className="loading">Loading account details...</div>
           </div>
-          <Footer />
-        </div>
+        </main>
+        <Footer />
       </div>
     );
   }
 
   if (!accountDetails) {
     return (
-      <div className="dashboard-layout">
+      <div className="facilon-dashboard-wrapper">
         <Header />
-        <div className="dashboard-main-content" style={{ marginLeft: 0 }}>
+        <main className="container-fluid dashboard-container-main">
           <div className="account-details">
             <div className="error">Failed to load account details.</div>
           </div>
-          <Footer />
-        </div>
+        </main>
+        <Footer />
       </div>
     );
   }
 
   return (
-    <div className="dashboard-layout">
+    <div className="facilon-dashboard-wrapper">
       <Header />
-      <div className="dashboard-main-content" style={{ marginLeft: 0 }}>
+      <main className="container-fluid dashboard-container-main">
         <div className="account-details">
           {/* Progress Bar - same as My Profile */}
           {renderProgressBar()}
 
           {/* Laravel-style form layout */}
           <div id="section0" className="section derivatives-wrap trading-sec-1">
-            <div className="container">
+            <div className="container-fluid">
               <div className="row">
                 <div className="col-md-12">
                   <div className="tab" role="tabpanel">
@@ -375,8 +294,8 @@ export const AccountDetails: React.FC = () => {
             </div>
           </div>
         </div>
-        <Footer />
-      </div>
+      </main>
+      <Footer />
     </div>
   );
 };

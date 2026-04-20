@@ -12,14 +12,15 @@
 body {
     background-color: var(--bg-color);
     color: var(--text-color);
-    font-family: 'Roboto Condensed', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 /* Header Alignment */
 .header_style_01 {
     background-color: var(--header-bg);
     padding: 0;
-    box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.30);
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+    box-shadow: none;
     z-index: 111;
 }
 
@@ -67,7 +68,7 @@ body {
     text-align: center;
     text-transform: capitalize;
     padding: 11px 30px;
-    border-radius: 100px;
+    border-radius: 8px;
     display: inline-block;
     transition: background 0.3s ease;
     border: none;
@@ -86,7 +87,7 @@ body {
     background-color: var(--primary-red);
     border: none;
     color: white;
-    border-radius: 100px;
+    border-radius: 8px;
     /* Consistent with other buttons */
 }
 
@@ -246,9 +247,10 @@ body {
     border-radius: 12px;
     width: 90%;
     max-width: 420px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    border: 2px solid #dee2e6;
+    box-shadow: none;
     text-align: center;
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .modal-content-custom p {

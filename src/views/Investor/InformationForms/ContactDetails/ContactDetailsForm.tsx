@@ -5,6 +5,28 @@ import { validateContactDetails } from '../../../../utils/investorValidation';
 import { SharedFormContext } from '../shared/types';
 import { useDelegationPermissions } from '../../../../contexts/DelegationPermissionsContext';
 import { getPermissionErrorMessage } from '../../../../utils/apiClient';
+import { PremiumSelect } from '../../../../components/PremiumSelect/PremiumSelect';
+
+const CONTACT_PROOF_OPTIONS = [
+  { value: 'Passport', label: 'Passport' },
+  { value: 'Driving License', label: 'Driving License' },
+  { value: 'Utility Bill issued within 2 months', label: 'Utility Bill issued within 2 months' },
+  { value: 'Bank Statement issued within 2 months', label: 'Bank Statement issued within 2 months' },
+];
+
+const ADDRESS_TYPE_OPTIONS = [
+  { value: 'Office', label: 'Office' },
+  { value: 'Business', label: 'Business' },
+  { value: 'Residential/Business', label: 'Residential/Business' },
+  { value: 'Unspecified', label: 'Unspecified' },
+];
+
+const CONTACT_METHOD_OPTIONS = [
+  { value: 'email', label: 'Email' },
+  { value: 'mobile', label: 'Mobile' },
+  { value: 'whatsapp', label: 'WhatsApp' },
+  { value: 'landline', label: 'Landline' },
+];
 
 interface ContactDetailsFormProps {
   initialData: UserContactDetailsDto | null;
@@ -69,16 +91,11 @@ export const ContactDetailsForm: React.FC<ContactDetailsFormProps> = ({
       <div className="investor-profile__grid">
         <div className="form-group">
           <label>Proof of Address <span className="text-danger">*</span></label>
-          <select
+          <PremiumSelect
             value={formData.proofOfAddress ?? ''}
-            onChange={(e) => setFormData({ ...formData, proofOfAddress: e.target.value })}
-          >
-            <option value="">Select</option>
-            <option value="Passport">Passport</option>
-            <option value="Driving License">Driving License</option>
-            <option value="Utility Bill issued within 2 months">Utility Bill issued within 2 months</option>
-            <option value="Bank Statement issued within 2 months">Bank Statement issued within 2 months</option>
-          </select>
+            onChange={(val) => setFormData({ ...formData, proofOfAddress: val })}
+            options={CONTACT_PROOF_OPTIONS}
+          />
         </div>
         
         <div className="form-group form-group--full">
@@ -161,16 +178,11 @@ export const ContactDetailsForm: React.FC<ContactDetailsFormProps> = ({
           <>
             <div className="form-group">
               <label>Address Type <span className="text-danger">*</span></label>
-              <select
+              <PremiumSelect
                 value={formData.addressType ?? ''}
-                onChange={(e) => setFormData({ ...formData, addressType: e.target.value })}
-              >
-                <option value="">Select</option>
-                <option value="Office">Office</option>
-                <option value="Business">Business</option>
-                <option value="Residential/Business">Residential/Business</option>
-                <option value="Unspecified">Unspecified</option>
-              </select>
+                onChange={(val) => setFormData({ ...formData, addressType: val })}
+                options={ADDRESS_TYPE_OPTIONS}
+              />
             </div>
             <div className="form-group form-group--full">
               <label>Address Line 1 <span className="text-danger">*</span></label>
@@ -285,17 +297,12 @@ export const ContactDetailsForm: React.FC<ContactDetailsFormProps> = ({
         
         <div className="form-group">
           <label>Preferred Contact Method <span className="text-danger">*</span></label>
-          <select
+          <PremiumSelect
             value={formData.preferredContactMethod ?? ''}
-            onChange={(e) => setFormData({ ...formData, preferredContactMethod: e.target.value })}
-            className={errors.preferredContactMethod ? 'form-control is-invalid' : ''}
-          >
-            <option value="">Select</option>
-            <option value="email">Email</option>
-            <option value="mobile">Mobile</option>
-            <option value="whatsapp">WhatsApp</option>
-            <option value="landline">Landline</option>
-          </select>
+            onChange={(val) => setFormData({ ...formData, preferredContactMethod: val })}
+            options={CONTACT_METHOD_OPTIONS}
+            error={errors.preferredContactMethod}
+          />
           {errors.preferredContactMethod && <div className="invalid-feedback">{errors.preferredContactMethod}</div>}
         </div>
         

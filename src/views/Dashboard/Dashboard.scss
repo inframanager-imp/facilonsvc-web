@@ -6,10 +6,18 @@
 
 .dashboard-main-content {
   margin-left: 0;
-  padding-top: 60px;
+  padding: 1.25rem 2.5rem 0;
   min-height: calc(100vh - 60px);
   display: flex;
   flex-direction: column;
+
+  @media (max-width: 1200px) {
+    padding: 1.25rem 2rem 0;
+  }
+  
+  @media (max-width: 768px) {
+    padding: 1.25rem 1rem 0;
+  }
 }
 
 .dashboard-container {

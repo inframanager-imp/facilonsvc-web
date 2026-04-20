@@ -14,6 +14,7 @@ import {
 } from '../shared/constants';
 import { useDelegationPermissions } from '../../../../contexts/DelegationPermissionsContext';
 import { getPermissionErrorMessage } from '../../../../utils/apiClient';
+import { PremiumSelect } from '../../../../components/PremiumSelect/PremiumSelect';
 
 interface RiskProfileFormProps {
   initialData: InvestorExperienceDto | null;
@@ -78,15 +79,12 @@ export const RiskProfileForm: React.FC<RiskProfileFormProps> = ({
       <div className="investor-profile__grid">
         <div className="form-group">
           <label>Source of Funds <span className="text-danger">*</span></label>
-          <select
+          <PremiumSelect
             value={formData.sourceOfFunds ?? ''}
-            onChange={(e) => setFormData({ ...formData, sourceOfFunds: e.target.value })}
-            className={errors.sourceOfFunds ? 'form-control is-invalid' : 'form-control'}
-          >
-            {OTHER_SOURCE_OF_FUNDS_OPTIONS.map((o) => (
-              <option key={o.value || 'empty'} value={o.value}>{o.label}</option>
-            ))}
-          </select>
+            onChange={(val) => setFormData({ ...formData, sourceOfFunds: val })}
+            options={OTHER_SOURCE_OF_FUNDS_OPTIONS}
+            error={errors.sourceOfFunds}
+          />
           {errors.sourceOfFunds && <div className="invalid-feedback">{errors.sourceOfFunds}</div>}
         </div>
         
@@ -101,57 +99,45 @@ export const RiskProfileForm: React.FC<RiskProfileFormProps> = ({
         
         <div className="form-group">
           <label>Education Qualification <span className="text-danger">*</span></label>
-          <select
+          <PremiumSelect
             value={formData.educationalQualification ?? ''}
-            onChange={(e) => setFormData({ ...formData, educationalQualification: e.target.value })}
-            className={errors.educationalQualification ? 'form-control is-invalid' : 'form-control'}
-          >
-            {OTHER_EDUCATION_OPTIONS.map((o) => (
-              <option key={o.value || 'empty'} value={o.value}>{o.label}</option>
-            ))}
-          </select>
+            onChange={(val) => setFormData({ ...formData, educationalQualification: val })}
+            options={OTHER_EDUCATION_OPTIONS}
+            error={errors.educationalQualification}
+          />
           {errors.educationalQualification && <div className="invalid-feedback">{errors.educationalQualification}</div>}
         </div>
 
         <div className="form-group">
           <label>Gross Annual Income (In INR) <span className="text-danger">*</span></label>
-          <select
+          <PremiumSelect
             value={formData.grossIncome ?? ''}
-            onChange={(e) => setFormData({ ...formData, grossIncome: e.target.value })}
-            className={errors.grossIncome ? 'form-control is-invalid' : 'form-control'}
-          >
-            {OTHER_GROSS_INCOME_OPTIONS.map((o) => (
-              <option key={o.value || 'empty'} value={o.value}>{o.label}</option>
-            ))}
-          </select>
+            onChange={(val) => setFormData({ ...formData, grossIncome: val })}
+            options={OTHER_GROSS_INCOME_OPTIONS}
+            error={errors.grossIncome}
+          />
           {errors.grossIncome && <div className="invalid-feedback">{errors.grossIncome}</div>}
         </div>
         
         <div className="form-group">
           <label>Net Worth <span className="text-danger">*</span></label>
-          <select
+          <PremiumSelect
             value={formData.netWorth ?? ''}
-            onChange={(e) => setFormData({ ...formData, netWorth: e.target.value })}
-            className={errors.netWorth ? 'form-control is-invalid' : 'form-control'}
-          >
-            {OTHER_NET_WORTH_OPTIONS.map((o) => (
-              <option key={o.value || 'empty'} value={o.value}>{o.label}</option>
-            ))}
-          </select>
+            onChange={(val) => setFormData({ ...formData, netWorth: val })}
+            options={OTHER_NET_WORTH_OPTIONS}
+            error={errors.netWorth}
+          />
           {errors.netWorth && <div className="invalid-feedback">{errors.netWorth}</div>}
         </div>
         
         <div className="form-group">
           <label>Occupation <span className="text-danger">*</span></label>
-          <select
+          <PremiumSelect
             value={formData.occupation ?? ''}
-            onChange={(e) => setFormData({ ...formData, occupation: e.target.value })}
-            className={errors.occupation ? 'form-control is-invalid' : 'form-control'}
-          >
-            {OTHER_OCCUPATION_OPTIONS.map((o) => (
-              <option key={o.value || 'empty'} value={o.value}>{o.label}</option>
-            ))}
-          </select>
+            onChange={(val) => setFormData({ ...formData, occupation: val })}
+            options={OTHER_OCCUPATION_OPTIONS}
+            error={errors.occupation}
+          />
           {errors.occupation && <div className="invalid-feedback">{errors.occupation}</div>}
         </div>
 
@@ -338,21 +324,18 @@ export const RiskProfileForm: React.FC<RiskProfileFormProps> = ({
 
         <div className="form-group">
           <label>No of Years of Investment Experience <span className="text-danger">*</span></label>
-          <select
+          <PremiumSelect
             value={formData.investmentExperienceYears ?? ''}
-            onChange={(e) =>
+            onChange={(val) =>
               setFormData({
                 ...formData,
-                investmentExperienceYears: e.target.value || undefined,
+                investmentExperienceYears: val || undefined,
                 yearsOfInvestmentExperience: undefined,
               })
             }
-            className={errors.investmentExperienceYears ? 'form-control is-invalid' : 'form-control'}
-          >
-            {OTHER_INVESTMENT_EXPERIENCE_YEARS_OPTIONS.map((o) => (
-              <option key={o.value || 'empty'} value={o.value}>{o.label}</option>
-            ))}
-          </select>
+            options={OTHER_INVESTMENT_EXPERIENCE_YEARS_OPTIONS}
+            error={errors.investmentExperienceYears}
+          />
           {errors.investmentExperienceYears && <div className="invalid-feedback">{errors.investmentExperienceYears}</div>}
         </div>
         

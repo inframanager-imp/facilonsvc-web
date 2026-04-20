@@ -1,11 +1,25 @@
 import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { investorService } from '../../../../services/investor.service';
 import { toast } from 'react-toastify';
 import Header from '../../../../components/Header/Header';
 import Footer from '../../../../components/Footer/Footer';
+import { PremiumSelect } from '../../../../components/PremiumSelect/PremiumSelect';
 import './PersonalInformation.scss';
+
+const GENDER_OPTIONS = [
+    { value: '1', label: 'Male' },
+    { value: '2', label: 'Female' },
+    { value: '3', label: 'Transgender' },
+];
+
+const MARITAL_STATUS_OPTIONS = [
+    { value: '1', label: 'Single' },
+    { value: '2', label: 'Married' },
+    { value: '3', label: 'Divorced' },
+    { value: '4', label: 'Widowed' },
+];
 
 interface PersonalInformationFormData {
     fullName: string;
@@ -24,7 +38,7 @@ interface PersonalInformationFormData {
 export const PersonalInformation: React.FC = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
-    const { register, handleSubmit, watch, formState: { errors } } = useForm<PersonalInformationFormData>();
+    const { control, handleSubmit, watch, formState: { errors } } = useForm<PersonalInformationFormData>();
 
     const maritalStatus = watch('maritalStatus');
 
@@ -59,22 +73,36 @@ export const PersonalInformation: React.FC = () => {
                             <div className="form-row">
                                 <div className="form-group">
                                     <label htmlFor="fullName">Full Name (as per ID) *</label>
-                                    <input
-                                        type="text"
-                                        id="fullName"
-                                        {...register('fullName', { required: 'Full name is required' })}
-                                        className={errors.fullName ? 'error' : ''}
+                                    <Controller
+                                        name="fullName"
+                                        control={control}
+                                        rules={{ required: 'Full name is required' }}
+                                        render={({ field }) => (
+                                            <input
+                                                {...field}
+                                                type="text"
+                                                id="fullName"
+                                                className={errors.fullName ? 'error' : ''}
+                                            />
+                                        )}
                                     />
                                     {errors.fullName && <span className="error-message">{errors.fullName.message}</span>}
                                 </div>
 
                                 <div className="form-group">
                                     <label htmlFor="dateOfBirth">Date of Birth *</label>
-                                    <input
-                                        type="date"
-                                        id="dateOfBirth"
-                                        {...register('dateOfBirth', { required: 'Date of birth is required' })}
-                                        className={errors.dateOfBirth ? 'error' : ''}
+                                    <Controller
+                                        name="dateOfBirth"
+                                        control={control}
+                                        rules={{ required: 'Date of birth is required' }}
+                                        render={({ field }) => (
+                                            <input
+                                                {...field}
+                                                type="date"
+                                                id="dateOfBirth"
+                                                className={errors.dateOfBirth ? 'error' : ''}
+                                            />
+                                        )}
                                     />
                                     {errors.dateOfBirth && <span className="error-message">{errors.dateOfBirth.message}</span>}
                                 </div>
@@ -82,33 +110,38 @@ export const PersonalInformation: React.FC = () => {
 
                             <div className="form-row">
                                 <div className="form-group">
-                                    <label htmlFor="gender">Gender *</label>
-                                    <select
-                                        id="gender"
-                                        {...register('gender', { required: 'Gender is required', valueAsNumber: true })}
-                                        className={errors.gender ? 'error' : ''}
-                                    >
-                                        <option value="">Select Gender</option>
-                                        <option value="1">Male</option>
-                                        <option value="2">Female</option>
-                                        <option value="3">Transgender</option>
-                                    </select>
+                                    <Controller
+                                        name="gender"
+                                        control={control}
+                                        rules={{ required: 'Gender is required' }}
+                                        render={({ field }) => (
+                                            <PremiumSelect
+                                                value={field.value?.toString() ?? ''}
+                                                onChange={(val) => field.onChange(val ? Number(val) : '')}
+                                                options={GENDER_OPTIONS}
+                                                placeholder="Select Gender"
+                                                error={errors.gender?.message}
+                                            />
+                                        )}
+                                    />
                                     {errors.gender && <span className="error-message">{errors.gender.message}</span>}
                                 </div>
 
                                 <div className="form-group">
-                                    <label htmlFor="maritalStatus">Marital Status *</label>
-                                    <select
-                                        id="maritalStatus"
-                                        {...register('maritalStatus', { required: 'Marital status is required', valueAsNumber: true })}
-                                        className={errors.maritalStatus ? 'error' : ''}
-                                    >
-                                        <option value="">Select Marital Status</option>
-                                        <option value="1">Single</option>
-                                        <option value="2">Married</option>
-                                        <option value="3">Divorced</option>
-                                        <option value="4">Widowed</option>
-                                    </select>
+                                    <Controller
+                                        name="maritalStatus"
+                                        control={control}
+                                        rules={{ required: 'Marital status is required' }}
+                                        render={({ field }) => (
+                                            <PremiumSelect
+                                                value={field.value?.toString() ?? ''}
+                                                onChange={(val) => field.onChange(val ? Number(val) : '')}
+                                                options={MARITAL_STATUS_OPTIONS}
+                                                placeholder="Select Marital Status"
+                                                error={errors.maritalStatus?.message}
+                                            />
+                                        )}
+                                    />
                                     {errors.maritalStatus && <span className="error-message">{errors.maritalStatus.message}</span>}
                                 </div>
                             </div>
@@ -120,22 +153,36 @@ export const PersonalInformation: React.FC = () => {
                             <div className="form-row">
                                 <div className="form-group">
                                     <label htmlFor="fatherName">Father's Name *</label>
-                                    <input
-                                        type="text"
-                                        id="fatherName"
-                                        {...register('fatherName', { required: "Father's name is required" })}
-                                        className={errors.fatherName ? 'error' : ''}
+                                    <Controller
+                                        name="fatherName"
+                                        control={control}
+                                        rules={{ required: "Father's name is required" }}
+                                        render={({ field }) => (
+                                            <input
+                                                {...field}
+                                                type="text"
+                                                id="fatherName"
+                                                className={errors.fatherName ? 'error' : ''}
+                                            />
+                                        )}
                                     />
                                     {errors.fatherName && <span className="error-message">{errors.fatherName.message}</span>}
                                 </div>
 
                                 <div className="form-group">
                                     <label htmlFor="motherName">Mother's Name *</label>
-                                    <input
-                                        type="text"
-                                        id="motherName"
-                                        {...register('motherName', { required: "Mother's name is required" })}
-                                        className={errors.motherName ? 'error' : ''}
+                                    <Controller
+                                        name="motherName"
+                                        control={control}
+                                        rules={{ required: "Mother's name is required" }}
+                                        render={({ field }) => (
+                                            <input
+                                                {...field}
+                                                type="text"
+                                                id="motherName"
+                                                className={errors.motherName ? 'error' : ''}
+                                            />
+                                        )}
                                     />
                                     {errors.motherName && <span className="error-message">{errors.motherName.message}</span>}
                                 </div>
@@ -145,10 +192,16 @@ export const PersonalInformation: React.FC = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label htmlFor="spouseName">Spouse Name</label>
-                                        <input
-                                            type="text"
-                                            id="spouseName"
-                                            {...register('spouseName')}
+                                        <Controller
+                                            name="spouseName"
+                                            control={control}
+                                            render={({ field }) => (
+                                                <input
+                                                    {...field}
+                                                    type="text"
+                                                    id="spouseName"
+                                                />
+                                            )}
                                         />
                                     </div>
                                 </div>
@@ -161,27 +214,41 @@ export const PersonalInformation: React.FC = () => {
                             <div className="form-row">
                                 <div className="form-group">
                                     <label htmlFor="occupation">Occupation *</label>
-                                    <input
-                                        type="text"
-                                        id="occupation"
-                                        {...register('occupation', { required: 'Occupation is required' })}
-                                        className={errors.occupation ? 'error' : ''}
+                                    <Controller
+                                        name="occupation"
+                                        control={control}
+                                        rules={{ required: 'Occupation is required' }}
+                                        render={({ field }) => (
+                                            <input
+                                                {...field}
+                                                type="text"
+                                                id="occupation"
+                                                className={errors.occupation ? 'error' : ''}
+                                            />
+                                        )}
                                     />
                                     {errors.occupation && <span className="error-message">{errors.occupation.message}</span>}
                                 </div>
 
                                 <div className="form-group">
                                     <label htmlFor="annualIncome">Annual Income (USD) *</label>
-                                    <input
-                                        type="number"
-                                        id="annualIncome"
-                                        step="0.01"
-                                        {...register('annualIncome', {
+                                    <Controller
+                                        name="annualIncome"
+                                        control={control}
+                                        rules={{
                                             required: 'Annual income is required',
-                                            valueAsNumber: true,
                                             min: { value: 0, message: 'Income must be positive' }
-                                        })}
-                                        className={errors.annualIncome ? 'error' : ''}
+                                        }}
+                                        render={({ field }) => (
+                                            <input
+                                                {...field}
+                                                type="number"
+                                                id="annualIncome"
+                                                step="0.01"
+                                                onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : '')}
+                                                className={errors.annualIncome ? 'error' : ''}
+                                            />
+                                        )}
                                     />
                                     {errors.annualIncome && <span className="error-message">{errors.annualIncome.message}</span>}
                                 </div>
@@ -190,19 +257,31 @@ export const PersonalInformation: React.FC = () => {
                             <div className="form-row">
                                 <div className="form-group">
                                     <label htmlFor="employerName">Employer Name</label>
-                                    <input
-                                        type="text"
-                                        id="employerName"
-                                        {...register('employerName')}
+                                    <Controller
+                                        name="employerName"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <input
+                                                {...field}
+                                                type="text"
+                                                id="employerName"
+                                            />
+                                        )}
                                     />
                                 </div>
 
                                 <div className="form-group">
                                     <label htmlFor="employerAddress">Employer Address</label>
-                                    <input
-                                        type="text"
-                                        id="employerAddress"
-                                        {...register('employerAddress')}
+                                    <Controller
+                                        name="employerAddress"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <input
+                                                {...field}
+                                                type="text"
+                                                id="employerAddress"
+                                            />
+                                        )}
                                     />
                                 </div>
                             </div>
