@@ -3,156 +3,71 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Header from '../../../components/Header/Header';
 import Footer from '../../../components/Footer/Footer';
-import { investorService, VerificationStatusDto, AccountDetailsDto } from '../../../services/investor.service';
+import { investorService, VerificationStatusDto, AccountDetailsDto, InvestorDashboardDto } from '../../../services/investor.service';
 import { useSAProxyNavigation } from '../../../hooks/useSAProxyNavigation';
+import { PremiumJourneyStepper } from '../../../components/PremiumJourneyStepper/PremiumJourneyStepper';
+import '../InvestorProfile/InvestorProfile.scss';
 import './InPersonVerification.scss';
 
 export const InPersonVerification: React.FC = () => {
-  const regularNavigate = useNavigate();
-  const { navigate: saNavigate, isProxyMode } = useSAProxyNavigation();
-  const [loading, setLoading] = useState(true);
-  const [verificationStatus, setVerificationStatus] = useState<VerificationStatusDto | null>(null);
-  const [dashboardData, setDashboardData] = useState<any>(null);
+    const regularNavigate = useNavigate();
+    const { navigate: saNavigate, isProxyMode } = useSAProxyNavigation();
+    const [loading, setLoading] = useState(true);
+    const [verificationStatus, setVerificationStatus] = useState<VerificationStatusDto | null>(null);
+    const [dashboardData, setDashboardData] = useState<InvestorDashboardDto | null>(null);
 
-  useEffect(() => {
-    loadData();
-  }, []);
+    useEffect(() => {
+        loadData();
+    }, []);
 
-  const loadData = async () => {
-    try {
-      setLoading(true);
-      const [status, dashboard] = await Promise.all([
-        investorService.getVerificationStatus(),
-        investorService.getDashboard()
-      ]);
-      setVerificationStatus(status);
-      setDashboardData(dashboard);
-    } catch (error: any) {
-      console.error('Error loading verification data:', error);
-      toast.error(error.response?.data?.message || 'Failed to load verification status');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const renderProgressBar = () => {
-    if (!dashboardData) return null;
-
-    const progress = dashboardData.progress;
-    const accountSummary = dashboardData.accountSummary;
-
-    const isCompleted = (key: string) => {
-      return progress?.sections?.[key]?.completed || false;
+    const loadData = async () => {
+        try {
+            setLoading(true);
+            const [status, dashboard] = await Promise.all([
+                investorService.getVerificationStatus(),
+                investorService.getDashboard()
+            ]);
+            setVerificationStatus(status);
+            setDashboardData(dashboard);
+        } catch (error: any) {
+            console.error('Error loading verification data:', error);
+            toast.error(error.response?.data?.message || 'Failed to load verification status');
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const steps = [
-      {
-        label: 'Submit Information',
-        route: '/investor/profile',
-        key: 'information',
-        percent: isCompleted('personalInfo') ? '100%' : '50%',
-        isComplete: isCompleted('personalInfo')
-      },
-      {
-        label: 'KYC Documents',
-        route: '/investor/documents',
-        key: 'documents',
-        percent: accountSummary ? `${Math.min(100, (accountSummary.kycDocumentsUploaded / accountSummary.kycDocumentsRequired) * 100)}%` : '0%',
-        isComplete: accountSummary ? accountSummary.kycDocumentsUploaded >= accountSummary.kycDocumentsRequired : false
-      },
-      {
-        label: 'Onboarding Forms',
-        route: '/investor/onboarding',
-        key: 'onboarding',
-        percent: accountSummary ? `${Math.min(100, (accountSummary.onboardingDocumentsUploaded / accountSummary.onboardingDocumentsRequired) * 100)}%` : '0%',
-        isComplete: accountSummary ? accountSummary.onboardingDocumentsUploaded >= accountSummary.onboardingDocumentsRequired : false
-      },
-      {
-        label: 'In-person Verification',
-        route: '/investor/verification',
-        key: 'verification',
-        percent: verificationStatus?.currentStatus === 'completed' ? '100%' : '0%',
-        isComplete: verificationStatus?.currentStatus === 'completed'
-      },
-      {
-        label: 'Physical Submission',
-        route: '/investor/physical-submission',
-        key: 'physical',
-        percent: verificationStatus?.physicalSubmission?.submitted ? '100%' : '0%',
-        isComplete: verificationStatus?.physicalSubmission?.submitted || false
-      },
-      {
-        label: 'Account Details',
-        route: '/investor/account-details',
-        key: 'account',
-        percent: accountSummary?.accountOpeningStatus ? '100%' : '0%',
-        isComplete: accountSummary?.accountOpeningStatus || false
-      }
-    ];
-
-    return (
-      <div className="verification__progress-section">
-        <div className="container-fluid">
-          <center>
-            <strong>
-              <h2 style={{ fontSize: '36px', color: '#be1717', fontWeight: 500, marginBottom: '1.5rem', marginTop: '1.5rem' }}>
-                Your Journey
-              </h2>
-            </strong>
-          </center>
-          <div className="step-progress">
-            {steps.map((step) => (
-              <div
-                key={step.key}
-                className="step"
-                onClick={() => isProxyMode ? saNavigate(step.route) : regularNavigate(step.route)}
-                style={{ cursor: 'pointer' }}
-              >
-                <div className={`circle-chart ${step.isComplete ? 'active-one' : ''}`}>
-                  {step.isComplete ? (
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M20 6L9 17L4 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  ) : (
-                    'Start'
-                  )}
-                </div>
-                <p>{step.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  };
+    const renderProgressBar = () => {
+        return <PremiumJourneyStepper dashboardData={dashboardData} />;
+    };
 
   const isVerified = verificationStatus?.currentStatus === 'completed';
   const isPending = !isVerified;
 
   if (loading) {
     return (
-      <div className="dashboard-layout">
+      <div className="facilon-dashboard-wrapper">
         <Header />
-        <div className="dashboard-main-content" style={{ marginLeft: 0 }}>
+        <main className="container-fluid dashboard-container-main">
           <div className="in-person-verification">
             <div className="loading">Loading verification status...</div>
           </div>
-          <Footer />
-        </div>
+        </main>
+        <Footer />
       </div>
     );
   }
 
   return (
-    <div className="dashboard-layout">
+    <div className="facilon-dashboard-wrapper">
       <Header />
-      <div className="dashboard-main-content" style={{ marginLeft: 0 }}>
+      <main className="container-fluid dashboard-container-main">
         <div className="in-person-verification">
           {/* Progress Bar */}
           {renderProgressBar()}
 
           <div className="derivatives-wrap trading-sec-1">
-            <div className="container">
+            <div className="container-fluid">
               <div className="row">
                 <div className="col-md-12">
                   <div className="tab" role="tabpanel">
@@ -209,7 +124,7 @@ export const InPersonVerification: React.FC = () => {
                                     type="text"
                                     className="form-control"
                                     id="verification-by"
-                                    value={verificationStatus.verifiedBy || ''}
+                                    value={verificationStatus?.verifiedBy || ''}
                                     disabled
                                   />
                                 </div>
@@ -222,8 +137,8 @@ export const InPersonVerification: React.FC = () => {
                                     className="form-control"
                                     id="verification-date-time"
                                     value={
-                                      verificationStatus.verifiedAt
-                                        ? new Date(verificationStatus.verifiedAt).toLocaleString('en-GB')
+                                      verificationStatus?.verifiedAt
+                                        ? new Date(verificationStatus.verifiedAt!).toLocaleString('en-GB')
                                         : ''
                                     }
                                     disabled
@@ -259,8 +174,8 @@ export const InPersonVerification: React.FC = () => {
             </div>
           </div>
         </div>
-        <Footer />
-      </div>
+      </main>
+      <Footer />
     </div>
   );
 };

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { journeyService, JourneyDiscontinueDto, AbandonJourneyDto } from '../../../services/journey.service';
 import { toast } from 'react-toastify';
 import Header from '../../../components/Header/Header';
+import { PremiumSelect } from '../../../components/PremiumSelect/PremiumSelect';
 import './JourneyManagement.scss';
 
 interface JourneyManagementProps {
@@ -144,18 +145,17 @@ export const JourneyManagement: React.FC<JourneyManagementProps> = ({
                                 <h3>Discontinue Journey</h3>
                                 <div className="form-group">
                                     <label>Reason *</label>
-                                    <select
+                                    <PremiumSelect
                                         value={discontinueReason}
-                                        onChange={(e) => setDiscontinueReason(e.target.value)}
-                                        className="form-control"
-                                    >
-                                        <option value="">Select a reason</option>
-                                        <option value="Need more time">Need more time</option>
-                                        <option value="Missing documents">Missing documents</option>
-                                        <option value="Changed mind">Changed my mind</option>
-                                        <option value="Technical issues">Technical issues</option>
-                                        <option value="Transgender">Transgender</option>
-                                    </select>
+                                        onChange={(val) => setDiscontinueReason(val)}
+                                        options={[
+                                            { value: 'Need more time', label: 'Need more time' },
+                                            { value: 'Missing documents', label: 'Missing documents' },
+                                            { value: 'Changed mind', label: 'Changed my mind' },
+                                            { value: 'Technical issues', label: 'Technical issues' },
+                                        ]}
+                                        placeholder="Select a reason"
+                                    />
                                 </div>
                                 <div className="form-group">
                                     <label>Additional Comments</label>

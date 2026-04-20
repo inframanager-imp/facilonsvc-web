@@ -2,7 +2,7 @@
     display: block;
     background: #ffffff;
     border: 2px solid #e5e7eb;
-    border-radius: 12px;
+    border-radius: var(--facilon-radius-lg); // Reduced from 12px
     padding: 20px;
     text-decoration: none;
     color: inherit;
@@ -11,8 +11,8 @@
 
     &:hover {
         border-color: #2563eb;
-        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
-        transform: translateY(-2px);
+        box-shadow: none;
+        transform: translateY(-1px);
     }
 
     &--completed {
@@ -51,7 +51,7 @@
         align-items: center;
         gap: 4px;
         padding: 4px 10px;
-        border-radius: 12px;
+        border-radius: var(--facilon-radius-sm); // Reduced from 12px
         font-size: 0.75rem;
         font-weight: 600;
         text-transform: uppercase;

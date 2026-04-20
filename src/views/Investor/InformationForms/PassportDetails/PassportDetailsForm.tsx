@@ -6,6 +6,16 @@ import { normalizeDateForInput } from '../../../../utils/formHelpers';
 import { SharedFormContext } from '../shared/types';
 import { useDelegationPermissions } from '../../../../contexts/DelegationPermissionsContext';
 import { getPermissionErrorMessage } from '../../../../utils/apiClient';
+import { PremiumSelect } from '../../../../components/PremiumSelect/PremiumSelect';
+
+const DOCUMENT_TYPE_OPTIONS = [
+  { value: 'Aadhaar', label: 'Aadhaar' },
+  { value: 'PAN', label: 'PAN' },
+  { value: 'Passport', label: 'Passport' },
+  { value: 'Voter ID', label: 'Voter ID' },
+  { value: 'Driving License', label: 'Driving License' },
+  { value: 'OCI Card', label: 'OCI Card' },
+];
 
 interface PassportDetailsFormProps {
   initialData: UserPassportDetailsDto | null;
@@ -87,19 +97,11 @@ export const PassportDetailsForm: React.FC<PassportDetailsFormProps> = ({
       <div className="investor-profile__grid">
         <div className="form-group form-group--full">
           <label>Document Type <span className="text-danger">*</span></label>
-          <select
+          <PremiumSelect
             value={(formData as any).documentType ?? ''}
-            onChange={(e) => setFormData({ ...formData, documentType: e.target.value } as any)}
-            className="form-control"
-          >
-            <option value="">Select Document Type</option>
-            <option value="Aadhaar">Aadhaar</option>
-            <option value="PAN">PAN</option>
-            <option value="Passport">Passport</option>
-            <option value="Voter ID">Voter ID</option>
-            <option value="Driving License">Driving License</option>
-            <option value="OCI Card">OCI Card</option>
-          </select>
+            onChange={(val) => setFormData({ ...formData, documentType: val } as any)}
+            options={DOCUMENT_TYPE_OPTIONS}
+          />
         </div>
         
         <div className="form-group form-group--full">

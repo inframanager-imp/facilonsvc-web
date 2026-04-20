@@ -5,6 +5,8 @@ import Header from '../../../components/Header/Header';
 import Footer from '../../../components/Footer/Footer';
 import { investorService, KycDocumentRequirementDto } from '../../../services/investor.service';
 import { pdfService } from '../../../services/pdf.service';
+import { PremiumJourneyStepper } from '../../../components/PremiumJourneyStepper/PremiumJourneyStepper';
+import '../InvestorProfile/InvestorProfile.scss';
 import './OnboardingDocuments.scss';
 
 interface FileSelection {
@@ -256,94 +258,7 @@ export const OnboardingDocuments: React.FC = () => {
   };
 
   const renderProgressBar = () => {
-    if (!dashboardData) return null;
-
-    const progress = dashboardData.progress;
-    const accountSummary = dashboardData.accountSummary;
-
-    const isCompleted = (key: string) => {
-      return progress?.sections?.[key]?.completed || false;
-    };
-
-    const steps = [
-      { 
-        label: 'Submit Information', 
-        route: '/investor/profile', 
-        key: 'information',
-        percent: isCompleted('personalInfo') ? '100%' : '50%',
-        isComplete: isCompleted('personalInfo')
-      },
-      { 
-        label: 'KYC Documents', 
-        route: '/investor/documents', 
-        key: 'documents',
-        percent: accountSummary ? `${Math.min(100, Math.round((accountSummary.kycDocumentsUploaded / accountSummary.kycDocumentsRequired) * 100))}%` : '0%',
-        isComplete: accountSummary ? accountSummary.kycDocumentsUploaded >= accountSummary.kycDocumentsRequired : false
-      },
-      { 
-        label: 'Onboarding Forms', 
-        route: '/investor/onboarding', 
-        key: 'onboarding',
-        percent: accountSummary ? `${Math.min(100, Math.round((accountSummary.onboardingDocumentsUploaded / accountSummary.onboardingDocumentsRequired) * 100))}%` : '0%',
-        isComplete: accountSummary ? accountSummary.onboardingDocumentsUploaded >= accountSummary.onboardingDocumentsRequired : false
-      },
-      { 
-        label: 'In-person Verification', 
-        route: '/investor/verification', 
-        key: 'verification',
-        percent: accountSummary?.verificationDone ? '100%' : '0%',
-        isComplete: accountSummary?.verificationDone || false
-      },
-      { 
-        label: 'Physical Submission', 
-        route: '/investor/physical-submission', 
-        key: 'physical',
-        percent: accountSummary?.physicalSubmissionDone ? '100%' : '0%',
-        isComplete: accountSummary?.physicalSubmissionDone || false
-      },
-      { 
-        label: 'Account Details', 
-        route: '/investor/account-details', 
-        key: 'account',
-        percent: accountSummary?.accountOpeningStatus ? '100%' : '0%',
-        isComplete: accountSummary?.accountOpeningStatus || false
-      }
-    ];
-
-    return (
-      <div className="onboarding__progress-section">
-        <div className="container-fluid">
-          <center>
-            <strong>
-              <h2 style={{ fontSize: '36px', color: '#be1717', fontWeight: 500, marginBottom: '1.5rem', marginTop: '1.5rem' }}>
-                Your Journey
-              </h2>
-            </strong>
-          </center>
-          <div className="step-progress">
-            {steps.map((step) => (
-              <div
-                key={step.key}
-                className="step"
-                onClick={() => navigate(step.route)}
-                style={{ cursor: 'pointer' }}
-              >
-                <div className={`circle-chart ${step.isComplete ? 'active-one' : ''}`}>
-                  {step.isComplete ? (
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M20 6L9 17L4 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  ) : (
-                    'Start'
-                  )}
-                </div>
-                <p>{step.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
+    return <PremiumJourneyStepper dashboardData={dashboardData} />;
   };
 
   if (loading) {
@@ -372,7 +287,7 @@ export const OnboardingDocuments: React.FC = () => {
 
           {/* Main Content */}
           <div className="section derivatives-wrap trading-sec-1" style={{ display: 'block', opacity: 1, visibility: 'visible' }}>
-            <div className="container">
+            <div className="container-fluid">
               <div className="row">
                 <div className="col-md-12">
                   <div className="tab-content tabs onboarding-submission">
@@ -457,7 +372,7 @@ export const OnboardingDocuments: React.FC = () => {
                           {requirements && (
                             <div className="onboarding-documents-section mt-4">
                               {!kycComplete && (
-                                <div className="alert alert-warning" style={{ margin: '20px 55px', backgroundColor: '#fff3cd', border: '1px solid #ffc107', borderRadius: '5px', padding: '15px' }}>
+                                <div className="alert alert-warning" style={{ margin: '10px 2rem', backgroundColor: '#fff3cd', border: '1px solid #ffc107', borderRadius: '5px', padding: '10px' }}>
                                   <strong style={{ color: '#856404' }}>⚠️ Please complete KYC documents first!</strong>
                                   <p style={{ marginBottom: 10, color: '#856404' }}>You need to upload all required KYC documents before you can upload onboarding forms.</p>
                                   <button className="btn btn-primary" onClick={() => navigate('/investor/documents')} style={{ backgroundColor: '#be1717', border: 'none' }}>
@@ -466,14 +381,14 @@ export const OnboardingDocuments: React.FC = () => {
                                 </div>
                               )}
                               
-                              <h3 style={{ marginLeft: '55px' }}>
+                              <h3 style={{ marginLeft: '1.5rem' }}>
                                 <strong>Account Opening</strong>
                               </h3>
-                              <span style={{ color: '#be1717', marginLeft: '55px' }}>
+                              <span style={{ color: '#be1717', marginLeft: '1.5rem' }}>
                                 Please provide self-attested copies of the requested documents (Allowed formats: PDF, JPG, JPEG | Max size: 10 MB per file).
                               </span>
 
-                              <div className="row" style={{ borderBottom: '2px solid #BE1717', marginTop: '10px', marginLeft: '37px', paddingBottom: '20px' }}>
+                              <div className="row" style={{ borderBottom: '2px solid #BE1717', marginTop: '10px', marginLeft: '1rem', paddingBottom: '10px' }}>
                                 {requirements.documents.length === 0 ? (
                                   <div className="col-md-12">
                                     <p>No onboarding documents required at this time.</p>

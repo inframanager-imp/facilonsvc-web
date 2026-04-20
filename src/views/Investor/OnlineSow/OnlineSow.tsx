@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { sowService, SowTemplateDto, InvestorSowDto, SowSection, SowField } from '../../../services/sow.service';
 import { toast } from 'react-toastify';
 import Header from '../../../components/Header/Header';
+import { PremiumSelect } from '../../../components/PremiumSelect/PremiumSelect';
 import './OnlineSow.scss';
 
 interface OnlineSowProps {
@@ -197,18 +198,13 @@ export const OnlineSow: React.FC<OnlineSowProps> = ({ investorId, applicableFor 
 
             case 'select':
                 return (
-                    <select
+                    <PremiumSelect
                         value={value}
-                        onChange={(e) => handleFieldChange(field.name, e.target.value)}
-                        required={field.required}
+                        onChange={(val) => handleFieldChange(field.name, val)}
+                        options={field.options?.map(opt => ({ value: opt, label: opt })) || []}
+                        placeholder="Select..."
                         disabled={field.readonly}
-                        className="form-control"
-                    >
-                        <option value="">Select...</option>
-                        {field.options?.map(opt => (
-                            <option key={opt} value={opt}>{opt}</option>
-                        ))}
-                    </select>
+                    />
                 );
 
             case 'checkbox':

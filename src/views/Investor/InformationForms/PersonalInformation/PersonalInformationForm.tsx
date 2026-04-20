@@ -6,6 +6,54 @@ import { normalizeDateForInput, normalizeCountryOfResidenceForForm } from '../..
 import { SharedFormContext } from '../shared/types';
 import { useDelegationPermissions } from '../../../../contexts/DelegationPermissionsContext';
 import { getPermissionErrorMessage } from '../../../../utils/apiClient';
+import { PremiumSelect } from '../../../../components/PremiumSelect/PremiumSelect';
+
+const TITLE_OPTIONS = [
+  { value: 'Mr', label: 'Mr' },
+  { value: 'Mrs', label: 'Mrs' },
+  { value: 'Miss', label: 'Miss' },
+  { value: 'Ms', label: 'Ms' },
+  { value: 'Dr', label: 'Dr' },
+];
+
+const GENDER_OPTIONS = [
+  { value: 'Male', label: 'Male' },
+  { value: 'Female', label: 'Female' },
+  { value: 'Transgender', label: 'Transgender' },
+];
+
+const MARITAL_STATUS_OPTIONS = [
+  { value: '1', label: 'Single' },
+  { value: '2', label: 'Married' },
+  { value: '3', label: 'Widowed' },
+  { value: '5', label: 'Seperated' },
+  { value: '4', label: 'Divorced' },
+];
+
+const MAIDEN_TITLE_OPTIONS = [
+  { value: 'Mr', label: 'Mr' },
+  { value: 'Mrs', label: 'Mrs' },
+  { value: 'Miss', label: 'Miss' },
+];
+
+const FATHER_TITLE_OPTIONS = [
+  { value: 'Mr', label: 'Mr' },
+  { value: 'Shri', label: 'Shri' },
+  { value: 'Late', label: 'Late' },
+];
+
+const MOTHER_TITLE_OPTIONS = [
+  { value: 'Mrs', label: 'Mrs' },
+  { value: 'Miss', label: 'Miss' },
+  { value: 'Shrimati', label: 'Shrimati' },
+  { value: 'Late', label: 'Late' },
+];
+
+const SPOUSE_TITLE_OPTIONS = [
+  { value: 'Mr', label: 'Mr' },
+  { value: 'Mrs', label: 'Mrs' },
+  { value: 'Miss', label: 'Miss' },
+];
 
 interface PersonalInformationFormProps {
   initialData: UserPersonalInformationDto | null;
@@ -74,18 +122,12 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProps> = (
       <div className="investor-profile__grid">
         <div className="form-group">
           <label>Title <span className="text-danger">*</span></label>
-          <select
+          <PremiumSelect
             value={formData.nameTitle ?? ''}
-            onChange={(e) => setFormData({ ...formData, nameTitle: e.target.value })}
-            className={errors.nameTitle ? 'form-control is-invalid' : ''}
-          >
-            <option value="">Select</option>
-            <option value="Mr">Mr</option>
-            <option value="Mrs">Mrs</option>
-            <option value="Miss">Miss</option>
-            <option value="Ms">Ms</option>
-            <option value="Dr">Dr</option>
-          </select>
+            onChange={(val) => setFormData({ ...formData, nameTitle: val })}
+            options={TITLE_OPTIONS}
+            error={errors.nameTitle}
+          />
           {errors.nameTitle && <div className="invalid-feedback">{errors.nameTitle}</div>}
         </div>
         <div className="form-group">
@@ -129,33 +171,23 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProps> = (
 
         <div className="form-group">
           <label>Gender <span className="text-danger">*</span></label>
-          <select
+          <PremiumSelect
             value={formData.gender ?? ''}
-            onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
-            className={errors.gender ? 'form-control is-invalid' : ''}
-          >
-            <option value="">Select</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Transgender">Transgender</option>
-          </select>
+            onChange={(val) => setFormData({ ...formData, gender: val })}
+            options={GENDER_OPTIONS}
+            error={errors.gender}
+          />
           {errors.gender && <div className="invalid-feedback">{errors.gender}</div>}
         </div>
         
         <div className="form-group">
           <label>Marital Status <span className="text-danger">*</span></label>
-          <select
+          <PremiumSelect
             value={formData.maritalStatus ?? ''}
-            onChange={(e) => setFormData({ ...formData, maritalStatus: e.target.value })}
-            className={errors.maritalStatus ? 'form-control is-invalid' : ''}
-          >
-            <option value="">Select</option>
-            <option value="1">Single</option>
-            <option value="2">Married</option>
-            <option value="3">Widowed</option>
-            <option value="5">Seperated</option>
-            <option value="4">Divorced</option>
-          </select>
+            onChange={(val) => setFormData({ ...formData, maritalStatus: val })}
+            options={MARITAL_STATUS_OPTIONS}
+            error={errors.maritalStatus}
+          />
           {errors.maritalStatus && <div className="invalid-feedback">{errors.maritalStatus}</div>}
         </div>
 
@@ -167,15 +199,11 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProps> = (
             </div>
             <div className="form-group">
               <label>Title <span className="text-danger">*</span></label>
-              <select
+              <PremiumSelect
                 value={formData.maidenTitle ?? ''}
-                onChange={(e) => setFormData({ ...formData, maidenTitle: e.target.value })}
-              >
-                <option value="">Select</option>
-                <option value="Mr">Mr</option>
-                <option value="Mrs">Mrs</option>
-                <option value="Miss">Miss</option>
-              </select>
+                onChange={(val) => setFormData({ ...formData, maidenTitle: val })}
+                options={MAIDEN_TITLE_OPTIONS}
+              />
             </div>
             <div className="form-group">
               <label>Maiden First Name <span className="text-danger">*</span></label>
@@ -257,15 +285,11 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProps> = (
         </div>
         <div className="form-group">
           <label>Title</label>
-          <select
+          <PremiumSelect
             value={formData.fatherNameTitle ?? ''}
-            onChange={(e) => setFormData({ ...formData, fatherNameTitle: e.target.value })}
-          >
-            <option value="">Select</option>
-            <option value="Mr">Mr</option>
-            <option value="Shri">Shri</option>
-            <option value="Late">Late</option>
-          </select>
+            onChange={(val) => setFormData({ ...formData, fatherNameTitle: val })}
+            options={FATHER_TITLE_OPTIONS}
+          />
         </div>
         <div className="form-group">
           <label>Father's First Name <span className="text-danger">*</span></label>
@@ -299,16 +323,11 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProps> = (
         </div>
         <div className="form-group">
           <label>Title</label>
-          <select
+          <PremiumSelect
             value={formData.motherNameTitle ?? ''}
-            onChange={(e) => setFormData({ ...formData, motherNameTitle: e.target.value })}
-          >
-            <option value="">Select</option>
-            <option value="Mrs">Mrs</option>
-            <option value="Miss">Miss</option>
-            <option value="Shrimati">Shrimati</option>
-            <option value="Late">Late</option>
-          </select>
+            onChange={(val) => setFormData({ ...formData, motherNameTitle: val })}
+            options={MOTHER_TITLE_OPTIONS}
+          />
         </div>
         <div className="form-group">
           <label>Mother's First Name <span className="text-danger">*</span></label>
@@ -344,15 +363,11 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProps> = (
             </div>
             <div className="form-group">
               <label>Title</label>
-              <select
+              <PremiumSelect
                 value={formData.spouseNameTitle ?? ''}
-                onChange={(e) => setFormData({ ...formData, spouseNameTitle: e.target.value })}
-              >
-                <option value="">Select</option>
-                <option value="Mr">Mr</option>
-                <option value="Mrs">Mrs</option>
-                <option value="Miss">Miss</option>
-              </select>
+                onChange={(val) => setFormData({ ...formData, spouseNameTitle: val })}
+                options={SPOUSE_TITLE_OPTIONS}
+              />
             </div>
             <div className="form-group">
               <label>Spouse First Name</label>

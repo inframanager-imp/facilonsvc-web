@@ -9,6 +9,7 @@ import type {
 } from '../../../services/introducedInvestor.service';
 import type { MasterCountryDto, IsdCodeValuesDto } from '../../../services/content.service';
 import { toast } from 'react-toastify';
+import { PremiumSelect } from '../../../components/PremiumSelect/PremiumSelect';
 import './IntroducedInvestorWizard.scss';
 
 /**
@@ -223,16 +224,15 @@ export const IntroducedInvestorWizard: React.FC = () => {
                 </div>
                 <div className="form-group">
                   <label>Country of Incorporation/Formation/Establishment *</label>
-                  <select
-                    value={step1Form.countryOfIncorporation || ''}
-                    onChange={(e) => setStep1Form((p) => ({ ...p, countryOfIncorporation: e.target.value ? Number(e.target.value) : undefined }))}
-                    required
-                  >
-                    <option value="">Select Country</option>
-                    {countries.map((c) => (
-                      <option key={c.myRowId} value={c.id}>{c.ssName}</option>
-                    ))}
-                  </select>
+                  <PremiumSelect
+                    value={step1Form.countryOfIncorporation?.toString() ?? ''}
+                    onChange={(val) => setStep1Form((p) => ({ ...p, countryOfIncorporation: val ? Number(val) : undefined }))}
+                    options={countries.map((c) => ({
+                      value: String(c.id),
+                      label: c.ssName || ''
+                    }))}
+                    placeholder="Select Country"
+                  />
                 </div>
                 <div className="form-group">
                   <label>Legal Entity Website *</label>
@@ -287,14 +287,16 @@ export const IntroducedInvestorWizard: React.FC = () => {
             </div>
             <div className="form-group">
               <label>Gender</label>
-              <select
+              <PremiumSelect
                 value={step2Form.gender || ''}
-                onChange={(e) => setStep2Form((p) => ({ ...p, gender: e.target.value }))}
-              >
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Transgender">Transgender</option>
-              </select>
+                onChange={(val) => setStep2Form((p) => ({ ...p, gender: val }))}
+                options={[
+                  { value: 'Male', label: 'Male' },
+                  { value: 'Female', label: 'Female' },
+                  { value: 'Transgender', label: 'Transgender' },
+                ]}
+                placeholder="Select Gender"
+              />
             </div>
             <div className="form-group">
               <label>Email *</label>
@@ -308,15 +310,16 @@ export const IntroducedInvestorWizard: React.FC = () => {
             <div className="form-row form-row--mobile">
               <div className="form-group">
                 <label>Country Code</label>
-                <select
-                  value={step2Form.countryCode || ''}
-                  onChange={(e) => setStep2Form((p) => ({ ...p, countryCode: e.target.value ? Number(e.target.value) : undefined }))}
-                >
-                  {isdCodes.map((i) => (
-                    <option key={i.myRowId} value={i.id}>+{i.codeValue} ({i.countryName})</option>
-                  ))}
-                  {isdCodes.length === 0 && <option value={240}>+91 (India)</option>}
-                </select>
+                <PremiumSelect
+                  value={step2Form.countryCode?.toString() ?? ''}
+                  onChange={(val) => setStep2Form((p) => ({ ...p, countryCode: val ? Number(val) : undefined }))}
+                  options={isdCodes.map((i) => ({
+                    value: String(i.id),
+                    label: `+${i.codeValue} (${i.countryName})`
+                  }))}
+                  placeholder="Select Code"
+                  style={{ marginBottom: '10px' }}
+                />
               </div>
               <div className="form-group">
                 <label>Mobile Number *</label>

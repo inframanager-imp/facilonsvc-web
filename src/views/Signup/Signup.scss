@@ -8,12 +8,12 @@
   flex: 1;
   display: flex;
   align-items: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--facilon-bg);
 }
 
 .signup-left-side {
   position: relative;
-  background: rgba(0, 0, 0, 0.3);
+  background: var(--facilon-slate);
   color: white;
   padding: 3rem;
 }
@@ -131,8 +131,9 @@
     border-radius: 4px;
 
     &:focus {
-      border-color: #667eea;
-      box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+      border-color: var(--facilon-primary);
+      box-shadow: none;
+      outline: 2px solid rgba(190, 23, 23, 0.2);
     }
   }
 

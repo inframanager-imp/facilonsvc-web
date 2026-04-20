@@ -7,6 +7,7 @@ import { SharedFormContext } from '../shared/types';
 import { NOMINATION_RELATIONSHIP_OPTIONS, NOMINATION_DOC_TYPE_OPTIONS } from '../shared/constants';
 import { useDelegationPermissions } from '../../../../contexts/DelegationPermissionsContext';
 import { getPermissionErrorMessage } from '../../../../utils/apiClient';
+import { PremiumSelect } from '../../../../components/PremiumSelect/PremiumSelect';
 
 interface NominationFormProps {
   initialData: UserNominationDto | null;
@@ -143,15 +144,12 @@ export const NominationForm: React.FC<NominationFormProps> = ({
         </div>
         <div className="form-group">
           <label>Relationship with Applicant <span className="text-danger">*</span></label>
-          <select
+          <PremiumSelect
             value={formData.nomineeRelation1 ?? ''}
-            onChange={(e) => setFormData({ ...formData, nomineeRelation1: e.target.value })}
-            className={errors.nomineeRelation1 ? 'form-control is-invalid' : 'form-control'}
-          >
-            {NOMINATION_RELATIONSHIP_OPTIONS.map((o) => (
-              <option key={o.value || 'empty'} value={o.value}>{o.label}</option>
-            ))}
-          </select>
+            onChange={(val) => setFormData({ ...formData, nomineeRelation1: val })}
+            options={NOMINATION_RELATIONSHIP_OPTIONS}
+            error={errors.nomineeRelation1}
+          />
           {errors.nomineeRelation1 && <div className="invalid-feedback">{errors.nomineeRelation1}</div>}
         </div>
         <div className="form-group">
@@ -175,28 +173,15 @@ export const NominationForm: React.FC<NominationFormProps> = ({
         </div>
         <div className="form-group">
           <label>ISD Code</label>
-          <select
-            value={formData.nomineeCountrycode1 ?? ''}
-            onChange={(e) =>
-              setFormData({
-                ...formData,
-                nomineeCountrycode1: e.target.value ? Number(e.target.value) : undefined,
-              })
-            }
-            className="form-control"
-          >
-            <option value="">Select ISD</option>
-            {sharedContext.isdCodes.map((c) => {
-              const cid = c.id ?? c.myRowId;
-              if (cid == null) return null;
-              return (
-                <option key={cid} value={cid}>
-                  {c.countryName ?? c.nationality ?? '—'}
-                  {c.codeValue != null ? ` (+${c.codeValue})` : ''}
-                </option>
-              );
-            })}
-          </select>
+          <PremiumSelect
+            value={formData.nomineeCountrycode1?.toString() ?? ''}
+            onChange={(val) => setFormData({ ...formData, nomineeCountrycode1: val ? Number(val) : undefined })}
+            options={sharedContext.isdCodes.map(c => ({
+              value: (c.id ?? c.myRowId)?.toString() ?? '',
+              label: `${c.countryName ?? c.nationality ?? '—'} (${c.codeValue != null ? `+${c.codeValue}` : ''})`
+            }))}
+            placeholder="Select ISD"
+          />
         </div>
         <div className="form-group">
           <label>Mobile Number of Nominee</label>
@@ -209,15 +194,11 @@ export const NominationForm: React.FC<NominationFormProps> = ({
         </div>
         <div className="form-group">
           <label>Nominee Document Type</label>
-          <select
+          <PremiumSelect
             value={formData.nomineeDocType1 ?? ''}
-            onChange={(e) => setFormData({ ...formData, nomineeDocType1: e.target.value })}
-            className="form-control"
-          >
-            {NOMINATION_DOC_TYPE_OPTIONS.map((o) => (
-              <option key={`d1-${o.value || 'x'}`} value={o.value}>{o.label}</option>
-            ))}
-          </select>
+            onChange={(val) => setFormData({ ...formData, nomineeDocType1: val })}
+            options={NOMINATION_DOC_TYPE_OPTIONS}
+          />
         </div>
         <div className="form-group">
           <label>Document Number</label>
@@ -298,15 +279,12 @@ export const NominationForm: React.FC<NominationFormProps> = ({
         </div>
         <div className="form-group">
           <label>Relationship</label>
-          <select
-            className={errors.nomineeRelation2 ? 'form-control is-invalid' : 'form-control'}
+          <PremiumSelect
             value={formData.nomineeRelation2 ?? ''}
-            onChange={(e) => setFormData({ ...formData, nomineeRelation2: e.target.value })}
-          >
-            {NOMINATION_RELATIONSHIP_OPTIONS.map((o) => (
-              <option key={`n2-${o.value || 'empty'}`} value={o.value}>{o.label}</option>
-            ))}
-          </select>
+            onChange={(val) => setFormData({ ...formData, nomineeRelation2: val })}
+            options={NOMINATION_RELATIONSHIP_OPTIONS}
+            error={errors.nomineeRelation2}
+          />
           {errors.nomineeRelation2 && <div className="invalid-feedback">{errors.nomineeRelation2}</div>}
         </div>
         <div className="form-group">
@@ -330,28 +308,20 @@ export const NominationForm: React.FC<NominationFormProps> = ({
         </div>
         <div className="form-group">
           <label>ISD</label>
-          <select
-            className="form-control"
-            value={formData.nomineeCountrycode2 ?? ''}
-            onChange={(e) =>
+          <PremiumSelect
+            value={formData.nomineeCountrycode2?.toString() ?? ''}
+            onChange={(val) =>
               setFormData({
                 ...formData,
-                nomineeCountrycode2: e.target.value ? Number(e.target.value) : undefined,
+                nomineeCountrycode2: val ? Number(val) : undefined,
               })
             }
-          >
-            <option value="">Select ISD</option>
-            {sharedContext.isdCodes.map((c) => {
-              const cid = c.id ?? c.myRowId;
-              if (cid == null) return null;
-              return (
-                <option key={`n2isd-${cid}`} value={cid}>
-                  {c.countryName ?? c.nationality ?? '—'}
-                  {c.codeValue != null ? ` (+${c.codeValue})` : ''}
-                </option>
-              );
-            })}
-          </select>
+            options={sharedContext.isdCodes.map((c) => ({
+              value: (c.id ?? c.myRowId)?.toString() ?? '',
+              label: `${c.countryName ?? c.nationality ?? '—'} (${c.codeValue != null ? `+${c.codeValue}` : ''})`
+            }))}
+            placeholder="Select ISD"
+          />
         </div>
         <div className="form-group">
           <label>Mobile</label>
@@ -364,15 +334,11 @@ export const NominationForm: React.FC<NominationFormProps> = ({
         </div>
         <div className="form-group">
           <label>Document Type</label>
-          <select
-            className="form-control"
+          <PremiumSelect
             value={formData.nomineeDocType2 ?? ''}
-            onChange={(e) => setFormData({ ...formData, nomineeDocType2: e.target.value })}
-          >
-            {NOMINATION_DOC_TYPE_OPTIONS.map((o) => (
-              <option key={`d2-${o.value || 'x'}`} value={o.value}>{o.label}</option>
-            ))}
-          </select>
+            onChange={(val) => setFormData({ ...formData, nomineeDocType2: val })}
+            options={NOMINATION_DOC_TYPE_OPTIONS}
+          />
         </div>
         <div className="form-group">
           <label>Document Number</label>
@@ -455,15 +421,12 @@ export const NominationForm: React.FC<NominationFormProps> = ({
         </div>
         <div className="form-group">
           <label>Relationship</label>
-          <select
-            className={errors.nomineeRelation3 ? 'form-control is-invalid' : 'form-control'}
+          <PremiumSelect
             value={formData.nomineeRelation3 ?? ''}
-            onChange={(e) => setFormData({ ...formData, nomineeRelation3: e.target.value })}
-          >
-            {NOMINATION_RELATIONSHIP_OPTIONS.map((o) => (
-              <option key={`n3-${o.value || 'empty'}`} value={o.value}>{o.label}</option>
-            ))}
-          </select>
+            onChange={(val) => setFormData({ ...formData, nomineeRelation3: val })}
+            options={NOMINATION_RELATIONSHIP_OPTIONS}
+            error={errors.nomineeRelation3}
+          />
           {errors.nomineeRelation3 && <div className="invalid-feedback">{errors.nomineeRelation3}</div>}
         </div>
         <div className="form-group">
@@ -487,28 +450,15 @@ export const NominationForm: React.FC<NominationFormProps> = ({
         </div>
         <div className="form-group">
           <label>ISD</label>
-          <select
-            className="form-control"
-            value={formData.nomineeCountrycode3 ?? ''}
-            onChange={(e) =>
-              setFormData({
-                ...formData,
-                nomineeCountrycode3: e.target.value ? Number(e.target.value) : undefined,
-              })
-            }
-          >
-            <option value="">Select ISD</option>
-            {sharedContext.isdCodes.map((c) => {
-              const cid = c.id ?? c.myRowId;
-              if (cid == null) return null;
-              return (
-                <option key={`n3isd-${cid}`} value={cid}>
-                  {c.countryName ?? c.nationality ?? '—'}
-                  {c.codeValue != null ? ` (+${c.codeValue})` : ''}
-                </option>
-              );
-            })}
-          </select>
+          <PremiumSelect
+            value={formData.nomineeCountrycode3?.toString() ?? ''}
+            onChange={(val) => setFormData({ ...formData, nomineeCountrycode3: val ? Number(val) : undefined })}
+            options={sharedContext.isdCodes.map(c => ({
+              value: (c.id ?? c.myRowId)?.toString() ?? '',
+              label: `${c.countryName ?? c.nationality ?? '—'} (${c.codeValue != null ? `+${c.codeValue}` : ''})`
+            }))}
+            placeholder="Select ISD"
+          />
         </div>
         <div className="form-group">
           <label>Mobile</label>
@@ -521,15 +471,11 @@ export const NominationForm: React.FC<NominationFormProps> = ({
         </div>
         <div className="form-group">
           <label>Document Type</label>
-          <select
-            className="form-control"
+          <PremiumSelect
             value={formData.nomineeDocType3 ?? ''}
-            onChange={(e) => setFormData({ ...formData, nomineeDocType3: e.target.value })}
-          >
-            {NOMINATION_DOC_TYPE_OPTIONS.map((o) => (
-              <option key={`d3-${o.value || 'x'}`} value={o.value}>{o.label}</option>
-            ))}
-          </select>
+            onChange={(val) => setFormData({ ...formData, nomineeDocType3: val })}
+            options={NOMINATION_DOC_TYPE_OPTIONS}
+          />
         </div>
         <div className="form-group">
           <label>Document Number</label>
@@ -626,28 +572,21 @@ export const NominationForm: React.FC<NominationFormProps> = ({
             </div>
             <div className="form-group">
               <label>Relationship of Guardian to Nominee <span className="text-danger">*</span></label>
-              <select
-                className={errors.guardianRelationship ? 'form-control is-invalid' : 'form-control'}
+              <PremiumSelect
                 value={formData.guardianRelationship ?? ''}
-                onChange={(e) => setFormData({ ...formData, guardianRelationship: e.target.value })}
-              >
-                {NOMINATION_RELATIONSHIP_OPTIONS.map((o) => (
-                  <option key={`gr-${o.value || 'empty'}`} value={o.value}>{o.label}</option>
-                ))}
-              </select>
+                onChange={(val) => setFormData({ ...formData, guardianRelationship: val })}
+                options={NOMINATION_RELATIONSHIP_OPTIONS}
+                error={errors.guardianRelationship}
+              />
               {errors.guardianRelationship && <div className="invalid-feedback">{errors.guardianRelationship}</div>}
             </div>
             <div className="form-group">
               <label>Guardian Identification Document Type</label>
-              <select
-                className="form-control"
+              <PremiumSelect
                 value={formData.guardianDocType1 ?? ''}
-                onChange={(e) => setFormData({ ...formData, guardianDocType1: e.target.value })}
-              >
-                {NOMINATION_DOC_TYPE_OPTIONS.map((o) => (
-                  <option key={`gdt-${o.value || 'x'}`} value={o.value}>{o.label}</option>
-                ))}
-              </select>
+                onChange={(val) => setFormData({ ...formData, guardianDocType1: val })}
+                options={NOMINATION_DOC_TYPE_OPTIONS}
+              />
             </div>
             <div className="form-group">
               <label>Document Number</label>
@@ -659,28 +598,15 @@ export const NominationForm: React.FC<NominationFormProps> = ({
             </div>
             <div className="form-group">
               <label>ISD Code</label>
-              <select
-                className="form-control"
-                value={formData.guardianCountrycode1 ?? ''}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    guardianCountrycode1: e.target.value ? Number(e.target.value) : undefined,
-                  })
-                }
-              >
-                <option value="">Select ISD</option>
-                {sharedContext.isdCodes.map((c) => {
-                  const cid = c.id ?? c.myRowId;
-                  if (cid == null) return null;
-                  return (
-                    <option key={`gisd-${cid}`} value={cid}>
-                      {c.countryName ?? c.nationality ?? '—'}
-                      {c.codeValue != null ? ` (+${c.codeValue})` : ''}
-                    </option>
-                  );
-                })}
-              </select>
+              <PremiumSelect
+                value={formData.guardianCountrycode1?.toString() ?? ''}
+                onChange={(val) => setFormData({ ...formData, guardianCountrycode1: val ? Number(val) : undefined })}
+                options={sharedContext.isdCodes.map(c => ({
+                  value: (c.id ?? c.myRowId)?.toString() ?? '',
+                  label: `${c.countryName ?? c.nationality ?? '—'} (${c.codeValue != null ? `+${c.codeValue}` : ''})`
+                }))}
+                placeholder="Select ISD"
+              />
             </div>
             <div className="form-group">
               <label>Mobile</label>
@@ -736,15 +662,11 @@ export const NominationForm: React.FC<NominationFormProps> = ({
                 </div>
                 <div className="form-group">
                   <label>Guardian Document Type</label>
-                  <select
-                    className="form-control"
+                  <PremiumSelect
                     value={formData.guardianDocType2 ?? ''}
-                    onChange={(e) => setFormData({ ...formData, guardianDocType2: e.target.value })}
-                  >
-                    {NOMINATION_DOC_TYPE_OPTIONS.map((o) => (
-                      <option key={`g2dt-${o.value || 'x'}`} value={o.value}>{o.label}</option>
-                    ))}
-                  </select>
+                    onChange={(val) => setFormData({ ...formData, guardianDocType2: val })}
+                    options={NOMINATION_DOC_TYPE_OPTIONS}
+                  />
                 </div>
                 <div className="form-group">
                   <label>Document Number</label>
@@ -756,28 +678,20 @@ export const NominationForm: React.FC<NominationFormProps> = ({
                 </div>
                 <div className="form-group">
                   <label>ISD Code</label>
-                  <select
-                    className="form-control"
-                    value={formData.guardianCountrycode2 ?? ''}
-                    onChange={(e) =>
+                  <PremiumSelect
+                    value={formData.guardianCountrycode2?.toString() ?? ''}
+                    onChange={(val) =>
                       setFormData({
                         ...formData,
-                        guardianCountrycode2: e.target.value ? Number(e.target.value) : undefined,
+                        guardianCountrycode2: val ? Number(val) : undefined,
                       })
                     }
-                  >
-                    <option value="">Select ISD</option>
-                    {sharedContext.isdCodes.map((c) => {
-                      const cid = c.id ?? c.myRowId;
-                      if (cid == null) return null;
-                      return (
-                        <option key={`g2isd-${cid}`} value={cid}>
-                          {c.countryName ?? c.nationality ?? '—'}
-                          {c.codeValue != null ? ` (+${c.codeValue})` : ''}
-                        </option>
-                      );
-                    })}
-                  </select>
+                    options={sharedContext.isdCodes.map((c) => ({
+                      value: (c.id ?? c.myRowId)?.toString() ?? '',
+                      label: `${c.countryName ?? c.nationality ?? '—'} (${c.codeValue != null ? `+${c.codeValue}` : ''})`
+                    }))}
+                    placeholder="Select ISD"
+                  />
                 </div>
                 <div className="form-group">
                   <label>Mobile</label>
@@ -835,15 +749,11 @@ export const NominationForm: React.FC<NominationFormProps> = ({
                 </div>
                 <div className="form-group">
                   <label>Guardian Document Type</label>
-                  <select
-                    className="form-control"
+                  <PremiumSelect
                     value={formData.guardianDocType3 ?? ''}
-                    onChange={(e) => setFormData({ ...formData, guardianDocType3: e.target.value })}
-                  >
-                    {NOMINATION_DOC_TYPE_OPTIONS.map((o) => (
-                      <option key={`g3dt-${o.value || 'x'}`} value={o.value}>{o.label}</option>
-                    ))}
-                  </select>
+                    onChange={(val) => setFormData({ ...formData, guardianDocType3: val })}
+                    options={NOMINATION_DOC_TYPE_OPTIONS}
+                  />
                 </div>
                 <div className="form-group">
                   <label>Document Number</label>
@@ -855,28 +765,20 @@ export const NominationForm: React.FC<NominationFormProps> = ({
                 </div>
                 <div className="form-group">
                   <label>ISD Code</label>
-                  <select
-                    className="form-control"
-                    value={formData.guardianCountrycode3 ?? ''}
-                    onChange={(e) =>
+                  <PremiumSelect
+                    value={formData.guardianCountrycode3?.toString() ?? ''}
+                    onChange={(val) =>
                       setFormData({
                         ...formData,
-                        guardianCountrycode3: e.target.value ? Number(e.target.value) : undefined,
+                        guardianCountrycode3: val ? Number(val) : undefined,
                       })
                     }
-                  >
-                    <option value="">Select ISD</option>
-                    {sharedContext.isdCodes.map((c) => {
-                      const cid = c.id ?? c.myRowId;
-                      if (cid == null) return null;
-                      return (
-                        <option key={`g3isd-${cid}`} value={cid}>
-                          {c.countryName ?? c.nationality ?? '—'}
-                          {c.codeValue != null ? ` (+${c.codeValue})` : ''}
-                        </option>
-                      );
-                    })}
-                  </select>
+                    options={sharedContext.isdCodes.map((c) => ({
+                      value: (c.id ?? c.myRowId)?.toString() ?? '',
+                      label: `${c.countryName ?? c.nationality ?? '—'} (${c.codeValue != null ? `+${c.codeValue}` : ''})`
+                    }))}
+                    placeholder="Select ISD"
+                  />
                 </div>
                 <div className="form-group">
                   <label>Mobile</label>

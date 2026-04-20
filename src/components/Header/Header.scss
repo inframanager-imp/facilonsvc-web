@@ -1,27 +1,195 @@
-.app-header {
-  background-color: #343a40;
-  color: white;
-  padding: 1rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+@import '../../styles/design-system';
 
-.header-content {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
+.facilon-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: white;
+  padding: 1rem 0;
+  border-bottom: 1.5px solid var(--facilon-grey-100);
+  box-shadow: none;
+  transition: var(--facilon-transition);
 
-.header-title {
-  flex: 1;
-  
-  h3 {
-    margin: 0;
-    font-size: 1.25rem;
+  .header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .header-brand {
+    .navbar-brand img {
+      height: 52px;
+      width: auto;
+      transition: var(--facilon-transition);
+
+      &:hover {
+        transform: scale(1.02);
+      }
+    }
+  }
+
+  .header-nav {
+    flex-grow: 1;
+    margin-left: 4rem;
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      justify-content: flex-end;
+      gap: 1.5rem;
+
+      li {
+        position: relative;
+      }
+
+      .nav-link-item {
+        color: var(--facilon-slate);
+        font-weight: 500;
+        font-size: 14px;
+        padding: 0.5rem 0;
+        transition: var(--facilon-transition);
+
+        &:hover,
+        &.active {
+          color: var(--facilon-primary);
+          font-size: 16px;
+          font-weight: 600;
+        }
+
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 0;
+          height: 2px;
+          background-color: var(--facilon-primary);
+          transition: var(--facilon-transition);
+        }
+
+        &:hover::after,
+        &.active::after {
+          width: 100%;
+        }
+      }
+    }
+
+    .nav-dropdown {
+      .dropdown-trigger {
+        background: rgba(190, 23, 23, 0.05);
+        border: none;
+        color: var(--facilon-primary);
+        padding: 0.65rem 1.4rem;
+        border-radius: var(--facilon-radius-md); // Reduced from 14px
+        display: flex;
+        align-items: center;
+        font-weight: 500;
+        cursor: pointer;
+        transition: var(--facilon-transition);
+
+        &:hover {
+          background: rgba(190, 23, 23, 0.1);
+          transform: translateY(-1px);
+        }
+
+        .user-name {
+          max-width: 160px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .bi-chevron-down {
+          font-size: 0.8rem;
+          transition: transform 0.3s ease;
+
+          &.rotate {
+            transform: rotate(180deg);
+          }
+        }
+      }
+
+      .dropdown-menu-custom {
+        position: absolute;
+        top: calc(100% + 15px);
+        right: 0;
+        width: 250px;
+        background: white;
+        border-radius: var(--facilon-radius-lg); // Reduced from 18px
+        border: 1.5px solid var(--facilon-grey-200);
+        box-shadow: none;
+        padding: 0.75rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        animation: slideIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+
+        .dropdown-item {
+          padding: 0.9rem 1.1rem;
+          border-radius: var(--facilon-radius-md); // Reduced from 12px
+          color: var(--facilon-slate);
+          font-weight: 700;
+          transition: var(--facilon-transition);
+          display: flex;
+          align-items: center;
+          background: transparent;
+          border: none;
+          width: 100%;
+          text-align: left;
+          font-size: 0.95rem;
+
+          &:hover {
+            background: rgba(190, 23, 23, 0.04);
+            color: var(--facilon-primary);
+            padding-left: 1.3rem;
+          }
+
+          &.logout-btn {
+            color: #dc3545;
+            margin-top: 0.25rem;
+            border-top: 1px solid var(--facilon-grey-100);
+            border-radius: 0 0 12px 12px;
+
+            &:hover {
+              background: #fff5f5;
+            }
+          }
+        }
+      }
+    }
   }
 }
 
-.header-actions {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 991px) {
+  .facilon-header {
+    .header-nav {
+      .nav-links {
+        gap: 1.25rem;
+
+        .nav-link-item {
+          font-size: 14px;
+        }
+
+        .user-name {
+          display: none;
+        }
+      }
+    }
+  }
 }

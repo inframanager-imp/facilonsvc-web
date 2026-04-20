@@ -25,18 +25,22 @@
 .accept-delegation-modal {
   .sa-details {
     padding: 1rem;
-    background: #f8f9fa;
-    border-radius: 8px;
+    background: var(--facilon-grey-50);
+    border-radius: var(--facilon-radius-md);
+    border: 1px solid var(--facilon-border-light);
 
     h6 {
-      font-weight: 600;
-      margin-bottom: 0.75rem;
-      color: #495057;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--facilon-primary);
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      letter-spacing: 0.5px;
     }
 
     p {
-      font-size: 0.9rem;
-      color: #6c757d;
+      font-size: 0.95rem;
+      color: var(--facilon-text-main);
     }
   }
 
@@ -44,22 +48,25 @@
   .permissions-selection,
   .validity-info {
     h6 {
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      color: #495057;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      color: var(--facilon-slate);
+      font-size: 1rem;
     }
   }
 
   .consent-section {
     padding: 1rem;
-    background: #fff3cd;
-    border: 1px solid #ffc107;
-    border-radius: 8px;
-    margin-top: 1.5rem;
+    background: rgba(190, 23, 23, 0.03);
+    border: 1.5px dashed var(--facilon-primary);
+    border-radius: var(--facilon-radius-md);
+    margin-top: 1rem;
 
     .form-check-label {
-      font-size: 0.9rem;
-      line-height: 1.5;
+      font-size: 0.95rem;
+      font-weight: 500;
+      line-height: 1.6;
+      color: var(--facilon-text-main);
     }
   }
 

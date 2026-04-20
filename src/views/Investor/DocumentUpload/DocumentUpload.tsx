@@ -5,6 +5,8 @@ import Header from '../../../components/Header/Header';
 import Footer from '../../../components/Footer/Footer';
 import { investorService, type KycDocumentRequirementDto, type RequiredDocument, type InvestorDashboardDto, type DocumentResponseDto } from '../../../services/investor.service';
 import { useSAProxyNavigation } from '../../../hooks/useSAProxyNavigation';
+import { PremiumJourneyStepper } from '../../../components/PremiumJourneyStepper/PremiumJourneyStepper';
+import '../InvestorProfile/InvestorProfile.scss';
 import './DocumentUpload.scss';
 
 export const DocumentUpload: React.FC = () => {
@@ -136,82 +138,7 @@ export const DocumentUpload: React.FC = () => {
   };
 
   const renderProgressBar = () => {
-    if (!dashboardData) return null;
-
-    const progress = dashboardData.progress;
-    const accountSummary = dashboardData.accountSummary;
-
-    const isCompleted = (key: string) => progress?.sections?.[key]?.completed || false;
-
-    const isDoneFor = (key: string) => {
-      if (key === 'information') return isCompleted('personalInfo');
-      if (key === 'documents') return requirements?.completionPercentage === 100 || (accountSummary ? accountSummary.kycDocumentsUploaded >= accountSummary.kycDocumentsRequired : false);
-      if (key === 'onboarding') return accountSummary ? accountSummary.onboardingDocumentsUploaded >= accountSummary.onboardingDocumentsRequired : false;
-      if (key === 'verification') return accountSummary?.verificationDone || false;
-      if (key === 'physical') return accountSummary?.physicalSubmissionDone || false;
-      if (key === 'account') return accountSummary?.accountOpeningStatus || false;
-      return false;
-    };
-
-    const stepKeys = ['information', 'documents', 'onboarding', 'verification', 'physical', 'account'] as const;
-    const currentStepKey = stepKeys.find((k) => !isDoneFor(k)) ?? 'account';
-    const isCurrent = (key: string) => currentStepKey === key;
-
-    const renderStep = (label: string, route: string, stepKey: string) => {
-      const isDone = isDoneFor(stepKey);
-      
-      const handleStepClick = (e: React.MouseEvent) => {
-        e.preventDefault();
-        if (isProxyMode) {
-          saNavigate(route);
-        } else {
-          regularNavigate(route);
-        }
-      };
-
-      return (
-        <div key={stepKey} className="step">
-          {isDone ? (
-            <div className="circle-chart active-one">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M20 6L9 17L4 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </div>
-          ) : (
-            <a href="#" onClick={handleStepClick} style={{ textDecoration: 'none' }}>
-              <div className={`circle-chart ${isCurrent(stepKey) ? 'active-three' : ''}`}>
-                Start
-              </div>
-            </a>
-          )}
-          <p>
-            <a href="#" onClick={handleStepClick}>{label}</a>
-          </p>
-        </div>
-      );
-    };
-
-    return (
-      <div className="document-upload__progress-section">
-        <div className="container-fluid">
-          <center>
-            <strong>
-              <h2 style={{ fontSize: '36px', color: '#be1717', fontWeight: 500, marginBottom: '1.5rem', marginTop: '1.5rem' }}>
-                Your Journey
-              </h2>
-            </strong>
-          </center>
-          <div className="step-progress">
-            {renderStep('Submit Information', '/investor/profile', 'information')}
-            {renderStep('KYC Documents', '/investor/documents', 'documents')}
-            {renderStep('Onboarding Forms', '/investor/onboarding', 'onboarding')}
-            {renderStep('In-person Verification', '/investor/verification', 'verification')}
-            {renderStep('Physical Submission', '/investor/physical-submission', 'physical')}
-            {renderStep('Account Details', '/investor/account-details', 'account')}
-          </div>
-        </div>
-      </div>
-    );
+    return <PremiumJourneyStepper dashboardData={dashboardData} />;
   };
 
   const allDocumentsSubmitted = () => {
@@ -227,30 +154,30 @@ export const DocumentUpload: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="dashboard-layout">
-        <Header />
-        <div className="dashboard-main-content" style={{ marginLeft: 0 }}>
-          <div className="loading-container">
+      <div className="facilon-dashboard-wrapper">
+        {!isProxyMode && <Header />}
+        <main className="container-fluid dashboard-container-main">
+          <div className="loading-container" style={{ textAlign: 'center', padding: '100px 0' }}>
             <div className="spinner"></div>
             <p>Loading KYC document requirements...</p>
           </div>
-        </div>
-        <Footer />
+        </main>
+        {!isProxyMode && <Footer />}
       </div>
     );
   }
 
   if (!requirements) {
     return (
-      <div className="dashboard-layout">
-        <Header />
-        <div className="dashboard-main-content" style={{ marginLeft: 0 }}>
+      <div className="facilon-dashboard-wrapper">
+        {!isProxyMode && <Header />}
+        <main className="container-fluid dashboard-container-main">
           <div className="error-container">
             <p>Failed to load document requirements. Please try again later.</p>
             <button onClick={loadData} className="btn-retry">Retry</button>
           </div>
-        </div>
-        <Footer />
+        </main>
+        {!isProxyMode && <Footer />}
       </div>
     );
   }
@@ -258,9 +185,9 @@ export const DocumentUpload: React.FC = () => {
   const rejectedDocs = getRejectedDocuments();
 
   return (
-    <div className="dashboard-layout">
-      <Header />
-      <div className="dashboard-main-content" style={{ marginLeft: 0 }}>
+    <div className="facilon-dashboard-wrapper">
+      {!isProxyMode && <Header />}
+      <main className="container-fluid dashboard-container-main">
         <div className="document-upload">
           <div className="profile-header">
             <h1>KYC Documents</h1>
@@ -366,7 +293,7 @@ export const DocumentUpload: React.FC = () => {
                         onChange={(e) => handleFileSelect(`${doc.dynamicsId}|${doc.description}`, e.target.files?.[0] || null)}
                         disabled={uploading}
                       />
-                      <label htmlFor={`file-${doc.dynamicsId}`} className="file-input-label">
+                      <label htmlFor={`file-${doc.dynamicsId}`} className="btn btn-outline-primary file-input-label-custom">
                         {selectedFiles.has(`${doc.dynamicsId}|${doc.description}`)
                           ? selectedFiles.get(`${doc.dynamicsId}|${doc.description}`)?.name
                           : 'Choose File'}
@@ -399,10 +326,10 @@ export const DocumentUpload: React.FC = () => {
               {uploading ? 'Uploading...' : 'Upload Documents'}
             </button>
           </div>
-          </div>
         </div>
       </div>
-      <Footer />
+    </main>
+      {!isProxyMode && <Footer />}
 
       {/* Rejection Reasons Modal */}
       {showReasonsModal && (

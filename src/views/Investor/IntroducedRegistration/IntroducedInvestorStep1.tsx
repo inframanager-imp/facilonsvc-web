@@ -2,6 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import introducedInvestorService, { Step1RequestDto } from '../../../services/introducedInvestorService';
 import './IntroducedInvestorRegistration.scss';
+import { PremiumSelect } from '../../../components/PremiumSelect/PremiumSelect';
+
+const GENDER_OPTIONS = [
+  { value: 'Male', label: 'Male' },
+  { value: 'Female', label: 'Female' },
+  { value: 'Transgender', label: 'Transgender' },
+];
+
+const COUNTRY_CODE_OPTIONS = [
+  { value: '+91', label: '+91 (India)' },
+  { value: '+1', label: '+1 (USA)' },
+  { value: '+44', label: '+44 (UK)' },
+  { value: '+971', label: '+971 (UAE)' },
+];
 
 /**
  * Step 2: Personal Details Form + Send OTP
@@ -182,19 +196,12 @@ const IntroducedInvestorStep1: React.FC = () => {
                         <label htmlFor="gender">
                           Gender: <span className="star-color">*</span>
                         </label>
-                        <select
-                          name="gender"
-                          id="gender"
+                        <PremiumSelect
                           value={formData.gender}
-                          onChange={handleChange}
-                          style={{ textTransform: 'uppercase' }}
-                          required
-                        >
-                          <option value="">Select Gender</option>
-                          <option value="Male">Male</option>
-                          <option value="Female">Female</option>
-                          <option value="Transgender">Transgender</option>
-                        </select>
+                          onChange={(val) => setFormData(prev => ({ ...prev, gender: val }))}
+                          options={GENDER_OPTIONS}
+                          placeholder="Select Gender"
+                        />
                       </div>
 
                       <div className="single-field">
@@ -216,17 +223,12 @@ const IntroducedInvestorStep1: React.FC = () => {
                           Please enter your Mobile No: <span className="star-color">*</span>
                         </label>
                         <div className="mobile-input-row">
-                          <select
-                            name="countryCode"
-                            id="countryCode"
+                          <PremiumSelect
                             value={formData.countryCode}
-                            onChange={handleChange}
-                          >
-                            <option value="+91">+91 (India)</option>
-                            <option value="+1">+1 (USA)</option>
-                            <option value="+44">+44 (UK)</option>
-                            <option value="+971">+971 (UAE)</option>
-                          </select>
+                            onChange={(val) => setFormData(prev => ({ ...prev, countryCode: val }))}
+                            options={COUNTRY_CODE_OPTIONS}
+                            className="country-code-select"
+                          />
                           <input
                             type="text"
                             name="mobileNumber"

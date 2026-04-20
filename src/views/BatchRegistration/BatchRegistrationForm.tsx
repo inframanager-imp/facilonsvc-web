@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
 import { batchRegistrationService, type BatchInvestorDto, type BatchRegistrationResponseDto } from '../../services/batchRegistration.service';
 import { contentService } from '../../services/content.service';
 import { toast } from 'react-toastify';
+import { PremiumSelect } from '../../components/PremiumSelect/PremiumSelect';
 import './BatchRegistrationForm.scss';
 
 const emptyInvestor: BatchInvestorDto = {
@@ -154,27 +155,28 @@ export const BatchRegistrationForm: React.FC = () => {
                     </div>
                     <div className="form-group">
                       <label>Register As</label>
-                      <select
-                        value={inv.registerAs}
-                        onChange={(e) => updateInvestor(index, 'registerAs', Number(e.target.value))}
-                      >
-                        <option value={1}>Self</option>
-                        <option value={2}>Legal Entity</option>
-                      </select>
+                      <PremiumSelect
+                        value={String(inv.registerAs)}
+                        onChange={(val) => updateInvestor(index, 'registerAs', Number(val))}
+                        options={[
+                          { value: '1', label: 'Self' },
+                          { value: '2', label: 'Legal Entity' },
+                        ]}
+                      />
                     </div>
                     <div className="form-group">
                       <label>Nationality</label>
-                      <select
-                        value={inv.nationality || 0}
-                        onChange={(e) => updateInvestor(index, 'nationality', Number(e.target.value))}
-                      >
-                        <option value={0}>Select</option>
-                        {nationalities.map((n) => (
-                          <option key={n.id} value={n.id ?? 0}>
-                            {n.name}
-                          </option>
-                        ))}
-                      </select>
+                      <PremiumSelect
+                        value={String(inv.nationality || 0)}
+                        onChange={(val) => updateInvestor(index, 'nationality', Number(val))}
+                        options={[
+                          { value: '0', label: 'Select' },
+                          ...nationalities.map((n) => ({
+                            value: String(n.id ?? 0),
+                            label: n.name ?? ''
+                          }))
+                        ]}
+                      />
                     </div>
                     <div className="form-group form-group--action">
                       <button

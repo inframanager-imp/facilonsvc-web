@@ -28,68 +28,6 @@
       padding: 0 15px;
     }
 
-    h2 {
-      font-size: 36px !important;
-      color: #be1717 !important;
-      font-weight: 500 !important;
-      margin-bottom: 1.5rem !important;
-      margin-top: 1.5rem !important;
-    }
-
-    .step-progress {
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: nowrap;
-      gap: 20px;
-      padding: 1rem 0;
-
-      @media (max-width: 768px) {
-        flex-direction: column;
-        align-items: center;
-
-        .step:not(:last-child)::after {
-          content: '';
-          position: absolute;
-          width: 2px;
-          height: 60px;
-          top: 100px;
-          left: 50%;
-          transform: translateX(-50%);
-          background: #4bb543 !important;
-        }
-      }
-    }
-
-    .step {
-      margin-bottom: 10px;
-      position: relative;
-      flex: 1;
-      min-width: 100px;
-      text-align: center;
-
-      &:not(:last-child)::after {
-        content: '';
-        position: absolute;
-        top: 40px;
-        left: 50%;
-        right: -50%;
-        height: 3px;
-        background: #28a745 !important;
-        z-index: 1;
-      }
-
-      p {
-        margin-top: 10px;
-        font-size: 14px;
-        font-weight: 500;
-        color: $investor-text-heading;
-
-        @media (max-width: 768px) {
-          font-size: 12px;
-        }
-      }
-    }
-
     // Completed step indicator - shows green tick above ALL completed steps
     .step-completed {
       position: relative;

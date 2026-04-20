@@ -1,8 +1,9 @@
 .progress-tracker {
   background: #ffffff;
-  border-radius: 12px;
+  border-radius: var(--facilon-radius-lg); // Reduced from 12px
   padding: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: none;
+  border: 1.5px solid var(--facilon-grey-200);
   margin-bottom: 24px;
 
   &__header {
@@ -105,7 +106,7 @@
       .step-indicator {
         background: #2563eb;
         color: #fff;
-        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        box-shadow: none;
       }
 
       .step-label {
@@ -122,7 +123,7 @@
         background: #fff;
         border: 3px solid #2563eb;
         color: #2563eb;
-        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        box-shadow: none;
       }
 
       .step-label {

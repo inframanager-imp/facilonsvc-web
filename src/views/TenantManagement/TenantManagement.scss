@@ -22,7 +22,8 @@
   background: white;
   padding: 1.5rem;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1.5px solid #dee2e6;
+  box-shadow: none;
   margin-bottom: 1.5rem;
 
   .header-content {
@@ -62,7 +63,8 @@
   background: white;
   padding: 1rem;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1.5px solid #dee2e6;
+  box-shadow: none;
   margin-bottom: 1.5rem;
 
   .search-box {
@@ -80,7 +82,8 @@
   background: white;
   padding: 1.5rem;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1.5px solid #dee2e6;
+  box-shadow: none;
 }
 
 .table {
@@ -118,3 +121,4 @@
   min-height: 400px;
   gap: 1rem;
 }
+

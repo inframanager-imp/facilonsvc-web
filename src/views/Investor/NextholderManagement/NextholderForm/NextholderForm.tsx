@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NextholderDto, nextholderService } from '../../../../services/nextholder.service';
 import { toast } from 'react-toastify';
+import { PremiumSelect } from '../../../../components/PremiumSelect/PremiumSelect';
 import './../NextholderManagement.scss';
 
 interface NextholderFormProps {
@@ -126,18 +127,18 @@ export const NextholderForm: React.FC<NextholderFormProps> = ({ initialData, onS
                     </div>
                     <div className="form-group">
                         <label>Relationship *</label>
-                        <select
-                            name="relationship"
+                        <PremiumSelect
                             value={formData.relationship}
-                            onChange={handleChange}
-                            required
-                        >
-                            <option value="Spouse">Spouse</option>
-                            <option value="Child">Child</option>
-                            <option value="Parent">Parent</option>
-                            <option value="Sibling">Sibling</option>
-                            <option value="Transgender">Transgender</option>
-                        </select>
+                            onChange={(val) => setFormData(prev => ({ ...prev, relationship: val }))}
+                            options={[
+                                { value: 'Spouse', label: 'Spouse' },
+                                { value: 'Child', label: 'Child' },
+                                { value: 'Parent', label: 'Parent' },
+                                { value: 'Sibling', label: 'Sibling' },
+                                { value: 'Transgender', label: 'Transgender' },
+                            ]}
+                            placeholder="Select Relationship"
+                        />
                     </div>
                     <div className="form-group">
                         <label>Email</label>

@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import { serviceAgentService, DelegationDto } from '../../../services/serviceAgent.service';
 import { delegationService } from '../../../services/delegation.service';
 import { LoadingSpinner } from '../../../components/LoadingSpinner/LoadingSpinner';
-import PostLoginHeader from '../../../components/PostLoginHeader/PostLoginHeader';
+import Header from '../../../components/Header/Header';
 import { AcceptDelegationModal, ConsentCustomization } from '../../../components/AcceptDelegationModal/AcceptDelegationModal';
 import './DelegationManagement.scss';
 
@@ -106,12 +106,12 @@ export const DelegationManagement: React.FC = () => {
 
   return (
     <div className="layout-wrapper">
-      <PostLoginHeader />
-      <div className="main-content">
+      <Header />
+      <main className="container-fluid dashboard-container-main">
         <div className="delegation-management">
-          <div className="delegation-management__header">
-            <h2>Service Agent Access</h2>
-            <p className="text-muted">Service Agents are assigned by your Service Provider. You can accept, reject, or revoke access here.</p>
+          <div className="delegation-management__header mb-3">
+            <h1 className="dashboard-title-modern">Service Agent Access</h1>
+            <p className="dashboard-subtitle text-muted">Manage your service agent assignments and permissions here.</p>
           </div>
 
           {delegations.length === 0 && (
@@ -150,7 +150,7 @@ export const DelegationManagement: React.FC = () => {
             </div>
           )}
         </div>
-      </div>
+      </main>
 
       {selectedDelegation && (
         <AcceptDelegationModal

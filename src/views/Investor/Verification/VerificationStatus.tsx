@@ -64,22 +64,22 @@ export const VerificationStatus: React.FC = () => {
 
     if (loading) {
         return (
-            <div className="dashboard-layout">
+            <div className="facilon-dashboard-wrapper">
                 <Header />
-                <div className="dashboard-main-content" style={{ marginLeft: 0 }}>
+                <main className="container-fluid dashboard-container-main">
                     <div className="verification-status">
                         <p>Loading verification status...</p>
                     </div>
-                    <Footer />
-                </div>
+                </main>
+                <Footer />
             </div>
         );
     }
 
     return (
-        <div className="dashboard-layout">
+        <div className="facilon-dashboard-wrapper">
             <Header />
-            <div className="dashboard-main-content" style={{ marginLeft: 0 }}>
+            <main className="container-fluid dashboard-container-main">
                 <div className="verification-status">
                     <div className="verification-status__header">
                         <h1>Verification Status</h1>
@@ -212,7 +212,7 @@ export const VerificationStatus: React.FC = () => {
                     )}
                 </div>
                 <Footer />
-            </div>
+            </main>
         </div>
     );
 };

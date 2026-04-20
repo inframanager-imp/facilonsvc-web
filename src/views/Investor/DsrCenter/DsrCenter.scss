@@ -1,0 +1,71 @@
+@import '../../../styles/design-system';
+
+.dsr-center {
+  padding: 0 0 2rem;
+  background-color: var(--facilon-bg);
+  min-height: calc(100vh - 80px);
+
+  @media (max-width: 1200px) {
+    padding: 0 0 2rem;
+  }
+  
+  @media (max-width: 768px) {
+    padding: 0 0 2rem;
+  }
+
+  &__header {
+    padding-top: 1.5rem;
+    .dashboard-title-modern {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--facilon-slate);
+      margin-bottom: 0.5rem;
+      letter-spacing: -1px;
+    }
+  }
+
+  .card {
+    @include card-premium;
+    padding: 1.5rem !important;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--facilon-border-light);
+  }
+
+  .table {
+    margin-bottom: 0;
+    th {
+      border-top: none;
+      color: var(--facilon-primary);
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.5px;
+      font-weight: 700;
+    }
+    td {
+      font-size: 0.95rem;
+      vertical-align: middle;
+      color: var(--facilon-text-main);
+    }
+  }
+  .custom-file-upload {
+    margin-top: 5px;
+    
+    .custom-file-label {
+      background: transparent !important;
+      color: var(--facilon-primary) !important;
+      border: 2px solid var(--facilon-primary) !important;
+      border-radius: var(--facilon-radius-md) !important;
+      padding: 0.6rem 1.25rem !important;
+      font-weight: 700 !important;
+      transition: var(--facilon-transition);
+      cursor: pointer;
+      display: inline-block;
+      box-shadow: none !important;
+
+      &:hover {
+        background: var(--facilon-primary) !important;
+        color: white !important;
+      }
+    }
+  }
+}

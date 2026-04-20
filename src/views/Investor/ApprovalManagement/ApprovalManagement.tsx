@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { approvalService, ApprovalRequestDto, ApprovalResponseDto } from '../../../services/approval.service';
 import { toast } from 'react-toastify';
 import Header from '../../../components/Header/Header';
+import { PremiumSelect } from '../../../components/PremiumSelect/PremiumSelect';
 import './ApprovalManagement.scss';
 
 interface ApprovalManagementProps {
@@ -247,15 +248,16 @@ export const ApprovalManagement: React.FC<ApprovalManagementProps> = ({
 
                                 <div className="form-group">
                                     <label>Request Type *</label>
-                                    <select
-                                        value={newRequest.requestType}
-                                        onChange={(e) => setNewRequest({ ...newRequest, requestType: e.target.value })}
-                                        className="form-control"
-                                    >
-                                        <option value="status_change">Status Change</option>
-                                        <option value="document_approval">Document Approval</option>
-                                        <option value="profile_update">Profile Update</option>
-                                    </select>
+                                    <PremiumSelect
+                                        value={newRequest.requestType ?? ''}
+                                        onChange={(val) => setNewRequest({ ...newRequest, requestType: val })}
+                                        options={[
+                                            { value: 'status_change', label: 'Status Change' },
+                                            { value: 'document_approval', label: 'Document Approval' },
+                                            { value: 'profile_update', label: 'Profile Update' },
+                                        ]}
+                                        placeholder="Select Type"
+                                    />
                                 </div>
 
                                 <div className="form-group">
