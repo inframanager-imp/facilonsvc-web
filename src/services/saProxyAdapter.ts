@@ -2,12 +2,28 @@ import { apiClient } from '../utils/apiClient';
 
 let saProxyInvestorId: number | null = null;
 
+/** Optional boot-out callback set by the ServiceAgentProxyWrapper — invoked when
+ *  the server returns 403 on a proxied request, indicating the delegation was
+ *  revoked or expired mid-session.  The wrapper uses this to navigate away
+ *  from the proxy screen and show an inline toast. */
+let proxyRevokedCallback: (() => void) | null = null;
+
 export const setSAProxyMode = (investorId: number | null) => {
   saProxyInvestorId = investorId;
 };
 
 export const getSAProxyInvestorId = (): number | null => {
   return saProxyInvestorId;
+};
+
+/**
+ * Register a callback that fires when a proxied request returns 403.
+ * The ServiceAgentProxyWrapper registers this on mount so that a revoke /
+ * expiry taking effect mid-session causes the SA to be evicted from the
+ * investor view instead of hammering the server with forbidden calls.
+ */
+export const setProxyRevokedCallback = (fn: (() => void) | null) => {
+  proxyRevokedCallback = fn;
 };
 
 export const adaptUrl = (originalUrl: string): string => {
@@ -66,28 +82,73 @@ export const adaptUrl = (originalUrl: string): string => {
   return originalUrl;
 };
 
+/**
+ * Shared handler for proxy-mode responses.  When the server returns 403 on a
+ * request that was actually proxied (i.e. the URL was adapted), we treat it
+ * as revocation-in-progress: fire the boot-out callback, clear proxy mode,
+ * and re-throw so the caller still sees the error.
+ *
+ * <p>This is the client-side half of "revocation session invalidation" —
+ * the server-side half is the per-request check in
+ * {@code ServiceAgentAccessControlService} which already refuses forbidden
+ * requests the moment {@code isActive = false} is written.  The SA's JWT
+ * itself stays valid (we do not maintain a server-side blacklist), but
+ * every subsequent proxy call will 403, so the SA's effective access
+ * window after revocation is one request, not the JWT lifetime.
+ */
+function handleProxyError(err: any, wasProxied: boolean): never {
+  const status = err?.response?.status;
+  if (wasProxied && status === 403 && saProxyInvestorId !== null) {
+    saProxyInvestorId = null;
+    if (proxyRevokedCallback) {
+      try { proxyRevokedCallback(); } catch { /* swallow callback errors */ }
+    }
+  }
+  throw err;
+}
+
 export const saProxyApiClient = {
   async get<T = any>(url: string, config?: any): Promise<{ data: T; status: number }> {
     const adaptedUrl = adaptUrl(url);
+    const wasProxied = adaptedUrl !== url;
     console.log('[SAProxy] GET:', url, '→', adaptedUrl);
-    return apiClient.get<T>(adaptedUrl, config);
+    try {
+      return await apiClient.get<T>(adaptedUrl, config);
+    } catch (err) {
+      handleProxyError(err, wasProxied);
+    }
   },
 
   async post<T = any>(url: string, data?: any, config?: any): Promise<{ data: T; status: number }> {
     const adaptedUrl = adaptUrl(url);
+    const wasProxied = adaptedUrl !== url;
     console.log('[SAProxy] POST:', url, '→', adaptedUrl);
-    return apiClient.post<T>(adaptedUrl, data, config);
+    try {
+      return await apiClient.post<T>(adaptedUrl, data, config);
+    } catch (err) {
+      handleProxyError(err, wasProxied);
+    }
   },
 
   async put<T = any>(url: string, data?: any, config?: any): Promise<{ data: T; status: number }> {
     const adaptedUrl = adaptUrl(url);
+    const wasProxied = adaptedUrl !== url;
     console.log('[SAProxy] PUT:', url, '→', adaptedUrl);
-    return apiClient.put<T>(adaptedUrl, data, config);
+    try {
+      return await apiClient.put<T>(adaptedUrl, data, config);
+    } catch (err) {
+      handleProxyError(err, wasProxied);
+    }
   },
 
   async delete<T = any>(url: string, config?: any): Promise<{ data: T; status: number }> {
     const adaptedUrl = adaptUrl(url);
+    const wasProxied = adaptedUrl !== url;
     console.log('[SAProxy] DELETE:', url, '→', adaptedUrl);
-    return apiClient.delete<T>(adaptedUrl, config);
+    try {
+      return await apiClient.delete<T>(adaptedUrl, config);
+    } catch (err) {
+      handleProxyError(err, wasProxied);
+    }
   },
 };
