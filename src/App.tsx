@@ -41,6 +41,7 @@ import { BatchRegistrationForm } from './views/BatchRegistration/BatchRegistrati
 import { AdminInvestorList } from './views/Admin/AdminInvestorList/AdminInvestorList';
 import { AdminInvestorDetails } from './views/Admin/AdminInvestorDetails/AdminInvestorDetails';
 import { BrokerDashboard } from './views/Broker/BrokerDashboard/BrokerDashboard';
+import { MyAgents } from './views/Broker/MyAgents/MyAgents';
 import { InvestorDashboard } from './views/Investor/InvestorDashboard/InvestorDashboard';
 import { InvestorProgress } from './views/Investor/InvestorProgress/InvestorProgress';
 import { InformationContainer } from './views/Investor/InformationForms/InformationContainer';
@@ -476,6 +477,14 @@ const App: React.FC = () => {
             element={
               <ProtectedRoute requiredRoles={['ADMIN', 'PLATFORM_SUPER_ADMIN', 'BROKER']}>
                 <BrokerDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/broker/my-agents"
+            element={
+              <ProtectedRoute requiredRoles={['ADMIN', 'PLATFORM_SUPER_ADMIN', 'BROKER']}>
+                <MyAgents />
               </ProtectedRoute>
             }
           />

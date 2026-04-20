@@ -6,7 +6,7 @@ import PostLoginHeader from '../PostLoginHeader/PostLoginHeader';
 import DelegationBanner from '../DelegationBanner/DelegationBanner';
 import { serviceAgentService } from '../../services/serviceAgent.service';
 import { ServiceAgentInvestorDto } from '../../models/ServiceAgentDto';
-import { setSAProxyMode } from '../../services/saProxyAdapter';
+import { setSAProxyMode, setProxyRevokedCallback } from '../../services/saProxyAdapter';
 import { getPermissionErrorMessage } from '../../utils/apiClient';
 import { DelegationPermissionsProvider } from '../../contexts/DelegationPermissionsContext';
 import './ServiceAgentProxyWrapper.scss';
@@ -25,9 +25,20 @@ export const ServiceAgentProxyWrapper: React.FC<Props> = ({ children }) => {
 
   useEffect(() => {
     loadDelegation();
-    
+
+    // Boot out of proxy mode if a server-side 403 arrives mid-session — handles
+    // the case where the investor revokes or the delegation expires while the
+    // SA has the investor screen open.  saProxyAdapter fires this callback
+    // from its shared error handler, ensuring we always react to the first
+    // forbidden proxy call rather than looping until the SA notices.
+    setProxyRevokedCallback(() => {
+      toast.warn('Your delegation for this investor has been revoked or expired.');
+      navigate('/service-agent/investors');
+    });
+
     return () => {
       setSAProxyMode(null);
+      setProxyRevokedCallback(null);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);

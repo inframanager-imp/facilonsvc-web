@@ -7,6 +7,22 @@ export type { ServiceAgentDto, ServiceAgentInvestorDto };
 export type { DelegationDto, DelegationCreateDto };
 export type { AuditLogDto, PageResponse };
 
+/**
+ * Mirrors Java ServiceAgentProfileUpdateDto — fields an SA is allowed to edit
+ * themselves.  All fields are optional; null means "do not change".
+ */
+export interface ServiceAgentProfileUpdateDto {
+  fullName?: string;
+  mobile?: string;
+  assignedRegion?: string;
+  assignedSegment?: string;
+  photoUrl?: string;
+  panNumber?: string;
+  addressProofUrl?: string;
+  registrationNumber?: string;
+  agentType?: string;
+}
+
 class ServiceAgentService {
   private readonly saBase = '/api/service-agents/me';
 
@@ -14,6 +30,11 @@ class ServiceAgentService {
 
   async getMyProfile(): Promise<ServiceAgentDto> {
     const res = await apiClient.get<ServiceAgentDto>(`${this.saBase}/profile`);
+    return res.data;
+  }
+
+  async updateMyProfile(dto: ServiceAgentProfileUpdateDto): Promise<ServiceAgentDto> {
+    const res = await apiClient.put<ServiceAgentDto>(`${this.saBase}/profile`, dto);
     return res.data;
   }
 

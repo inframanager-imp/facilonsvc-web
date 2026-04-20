@@ -1,19 +1,5 @@
 import { apiClient } from '../utils/apiClient';
 
-export interface PmsNextholderInitDto {
-  registerAs: number; // 1=Self, 2=Legal Entity
-  legalEntityFullName?: string;
-  countryOfIncorporation?: number;
-  pmsManagerId: number;
-  pmsPlanId: number;
-  /**
-   * Optional. {@code master_pms_banks} can be empty in dev / pre-Dataverse-sync
-   * environments — in that case the wizard auto-derives the bank from the
-   * selected plan's preferred bank and the backend accepts a null pmsBankId.
-   */
-  pmsBankId?: number;
-}
-
 export interface PmsNextholderPersonalDto {
   firstName: string;
   middleName?: string;
@@ -34,28 +20,11 @@ export interface IntroNextholderVerifyOtpDto {
   smsOtp: string;
 }
 
-export interface PmsNextholderCompleteDto {
-  password: string;
-  agreeToWhatsapp?: boolean;
-  agreeToMarketing?: boolean;
-  agreePrivacy?: boolean;
-  agreeTerms?: boolean;
-}
-
 export interface IntroInvestorResponseDto {
   uniqueCode: string;
   step?: number;
   message?: string;
   investorId?: number;
-}
-
-export interface PmsStep2PrefillDto {
-  firstName?: string;
-  middleName?: string;
-  lastName?: string;
-  email?: string;
-  mobile?: string;
-  registerAs?: string;
 }
 
 export interface OtpResponseDto {
@@ -173,12 +142,6 @@ export interface PmsOtpVerifyDto {
 class PmsInvestorService {
   private readonly baseUrl = '/api/clients/pms-investor';
 
-  // Step 1: Local validation only, returns Success
-  async step1(data: PmsNextholderInitDto): Promise<IntroInvestorResponseDto> {
-    // No backend call needed for step 1 as per new flow
-    return { uniqueCode: 'TEMP', step: 1, message: 'Success' };
-  }
-
   // Step 2: Send OTP (real Graph email + SMS delivery, rate-limited server-side)
   async step2(code: string, data: PmsNextholderPersonalDto): Promise<PmsOtpResponseDto> {
     const req: PmsOtpRequestDto & { firstName?: string } = {
@@ -208,19 +171,6 @@ class PmsInvestorService {
     return response.data; // returns VerificationResponseDto with uniqueCode
   }
 
-  // Legacy step4 (for reference, but we use register now)
-  async step4(code: string, data: PmsNextholderCompleteDto): Promise<IntroInvestorResponseDto> {
-    // This was for setting password. Now included in register.
-    return { uniqueCode: code, step: 4, message: 'Deprecated' };
-  }
-
-  async getStep2Prefill(code: string): Promise<PmsStep2PrefillDto | null> {
-    // This endpoint likely doesn't exist in my new controller yet or I need to add it.
-    // For now, return null.
-    return null;
-  }
-
-  // New methods
   async submitRegistrationDetails(uniqueCode: string, data: PmsRegistrationDto): Promise<PmsRegistrationDto> {
     const response = await apiClient.put<PmsRegistrationDto>(`${this.baseUrl}/registration/${uniqueCode}`, data);
     return response.data;
