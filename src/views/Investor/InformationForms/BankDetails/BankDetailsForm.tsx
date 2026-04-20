@@ -82,7 +82,7 @@ export const BankDetailsForm: React.FC<BankDetailsFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // settlementAccountType is now an explicit radio the user answers (Laravel parity).
     // Require it before submit.
     if (!formData.settlementAccountType) {
@@ -91,7 +91,7 @@ export const BankDetailsForm: React.FC<BankDetailsFormProps> = ({
       return;
     }
     const payload = { ...formData } as UserBankDetailsDto;
-    
+
     const newErrors = validateBankDetails(payload);
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -99,10 +99,10 @@ export const BankDetailsForm: React.FC<BankDetailsFormProps> = ({
       toast.error(firstError ? `Please fix: ${firstError}` : 'Please fix the errors in the form');
       return;
     }
-    
+
     setErrors({});
     setSaving(true);
-    
+
     try {
       await profileService.updateBankDetails(payload);
       toast.success('Bank details updated');
@@ -121,7 +121,7 @@ export const BankDetailsForm: React.FC<BankDetailsFormProps> = ({
 
   return (
     <form className="investor-profile__card" onSubmit={handleSubmit}>
-      <h3>Bank Details</h3>
+      {/* <h3>Bank Details</h3> */}
       <div className="investor-profile__grid">
         {/* Laravel parity: settlement_account_type — gate the bank fields on this answer.
             When the broker has a preferred bank configured, the question names the bank
@@ -160,184 +160,184 @@ export const BankDetailsForm: React.FC<BankDetailsFormProps> = ({
       {/* Laravel equivalent of #show_account_type_div — show the remaining bank fields
           only once the settlement-account question has been answered. */}
       {(formData.settlementAccountType === 'yes' || formData.settlementAccountType === 'no') && (
-      <div className="investor-profile__grid">
-        <div className="form-group">
-          <label>Bank Name <span className="text-danger">*</span></label>
-          <input
-            value={formData.bankName ?? ''}
-            onChange={(e) => setFormData({ ...formData, bankName: e.target.value })}
-            className={errors.bankName ? 'form-control is-invalid' : ''}
-          />
-          {errors.bankName && <div className="invalid-feedback">{errors.bankName}</div>}
-        </div>
+        <div className="investor-profile__grid">
+          <div className="form-group">
+            <label>Bank Name <span className="text-danger">*</span></label>
+            <input
+              value={formData.bankName ?? ''}
+              onChange={(e) => setFormData({ ...formData, bankName: e.target.value })}
+              className={errors.bankName ? 'form-control is-invalid' : ''}
+            />
+            {errors.bankName && <div className="invalid-feedback">{errors.bankName}</div>}
+          </div>
 
-        <div className="form-group">
-          <label>Account Type <span className="text-danger">*</span></label>
-          <PremiumSelect
-            value={formData.accountType ?? ''}
-            onChange={(val) => setFormData({ ...formData, accountType: val })}
-            options={ACCOUNT_TYPE_OPTIONS}
-            error={errors.accountType}
-          />
-          {errors.accountType && <div className="invalid-feedback">{errors.accountType}</div>}
-        </div>
+          <div className="form-group">
+            <label>Account Type <span className="text-danger">*</span></label>
+            <PremiumSelect
+              value={formData.accountType ?? ''}
+              onChange={(val) => setFormData({ ...formData, accountType: val })}
+              options={ACCOUNT_TYPE_OPTIONS}
+              error={errors.accountType}
+            />
+            {errors.accountType && <div className="invalid-feedback">{errors.accountType}</div>}
+          </div>
 
-        {/* PIS fields — Laravel shows only for NRE (line 1922) */}
-        {formData.accountType === 'nre' && (
-          <>
-            <div className="form-group form-group--full">
-              <label>Do you have PIS Approval? <span className="text-danger">*</span></label>
-              <div style={{ display: 'flex', gap: '1.5rem', marginTop: '0.4rem' }}>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 'normal' }}>
-                  <input
-                    type="radio"
-                    name="rbiApproval"
-                    value="yes"
-                    checked={formData.rbiApproval === 'yes'}
-                    onChange={() => setFormData({ ...formData, rbiApproval: 'yes' })}
-                  /> Yes
-                </label>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 'normal' }}>
-                  <input
-                    type="radio"
-                    name="rbiApproval"
-                    value="no"
-                    checked={formData.rbiApproval === 'no'}
-                    onChange={() => setFormData({ ...formData, rbiApproval: 'no' })}
-                  /> No
-                </label>
+          {/* PIS fields — Laravel shows only for NRE (line 1922) */}
+          {formData.accountType === 'nre' && (
+            <>
+              <div className="form-group form-group--full">
+                <label>Do you have PIS Approval? <span className="text-danger">*</span></label>
+                <div style={{ display: 'flex', gap: '1.5rem', marginTop: '0.4rem' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 'normal' }}>
+                    <input
+                      type="radio"
+                      name="rbiApproval"
+                      value="yes"
+                      checked={formData.rbiApproval === 'yes'}
+                      onChange={() => setFormData({ ...formData, rbiApproval: 'yes' })}
+                    /> Yes
+                  </label>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 'normal' }}>
+                    <input
+                      type="radio"
+                      name="rbiApproval"
+                      value="no"
+                      checked={formData.rbiApproval === 'no'}
+                      onChange={() => setFormData({ ...formData, rbiApproval: 'no' })}
+                    /> No
+                  </label>
+                </div>
               </div>
-            </div>
 
-            {formData.rbiApproval === 'yes' && (
-              <>
-                <div className="form-group">
-                  <label>PIS Approval No <span className="text-danger">*</span></label>
-                  <input
-                    value={formData.rbiApprovalOrderNumber ?? ''}
-                    onChange={(e) => setFormData({ ...formData, rbiApprovalOrderNumber: e.target.value })}
-                    placeholder="e.g., PIS/2024/001"
-                  />
-                </div>
-                <div className="form-group">
-                  <label>PIS Approval Date <span className="text-danger">*</span></label>
-                  <input
-                    type="date"
-                    value={formData.rbiApprovalDate ?? ''}
-                    onChange={(e) => setFormData({ ...formData, rbiApprovalDate: e.target.value })}
-                  />
-                </div>
-              </>
-            )}
-          </>
-        )}
-        
-        <div className="form-group">
-          <label>Beneficiary Name <span className="text-danger">*</span></label>
-          <input
-            value={formData.beneficiaryName ?? ''}
-            onChange={(e) => setFormData({ ...formData, beneficiaryName: e.target.value })}
-            className={errors.beneficiaryName ? 'form-control is-invalid' : ''}
-          />
-          {errors.beneficiaryName && <div className="invalid-feedback">{errors.beneficiaryName}</div>}
-        </div>
-        
-        <div className="form-group">
-          <label>Bank Account Number <span className="text-danger">*</span></label>
-          <input
-            value={formData.bankAccountNumber ?? ''}
-            onChange={(e) => setFormData({ ...formData, bankAccountNumber: e.target.value })}
-            className={errors.bankAccountNumber ? 'form-control is-invalid' : ''}
-          />
-          {errors.bankAccountNumber && <div className="invalid-feedback">{errors.bankAccountNumber}</div>}
-        </div>
-        
-        <div className="form-group">
-          <label>IFSC Code <span className="text-danger">*</span></label>
-          <input
-            value={formData.bankIfscCode ?? ''}
-            onChange={(e) => setFormData({ ...formData, bankIfscCode: e.target.value })}
-            placeholder="e.g., SBIN0001234"
-            className={errors.bankIfscCode ? 'form-control is-invalid' : ''}
-          />
-          {errors.bankIfscCode && <div className="invalid-feedback">{errors.bankIfscCode}</div>}
-        </div>
-        
-        <div className="form-group">
-          <label>Branch name <span className="text-danger">*</span></label>
-          <input
-            value={formData.branchName ?? ''}
-            onChange={(e) => setFormData({ ...formData, branchName: e.target.value })}
-            className={errors.branchName ? 'form-control is-invalid' : ''}
-          />
-          {errors.branchName && <div className="invalid-feedback">{errors.branchName}</div>}
-        </div>
-        
-        <div className="form-group form-group--full">
-          <label>Bank Address (Branch Address)</label>
-          <input
-            value={formData.bankBranchAddress ?? ''}
-            onChange={(e) => setFormData({ ...formData, bankBranchAddress: e.target.value })}
-          />
-        </div>
+              {formData.rbiApproval === 'yes' && (
+                <>
+                  <div className="form-group">
+                    <label>PIS Approval No <span className="text-danger">*</span></label>
+                    <input
+                      value={formData.rbiApprovalOrderNumber ?? ''}
+                      onChange={(e) => setFormData({ ...formData, rbiApprovalOrderNumber: e.target.value })}
+                      placeholder="e.g., PIS/2024/001"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>PIS Approval Date <span className="text-danger">*</span></label>
+                    <input
+                      type="date"
+                      value={formData.rbiApprovalDate ?? ''}
+                      onChange={(e) => setFormData({ ...formData, rbiApprovalDate: e.target.value })}
+                    />
+                  </div>
+                </>
+              )}
+            </>
+          )}
 
-        <div className="form-group">
-          <label>MICR No. <span className="text-danger">*</span></label>
-          <input
-            value={formData.bankDetailsMicr ?? ''}
-            onChange={(e) => {
-              const v = e.target.value.replace(/\D/g, '').slice(0, 9);
-              setFormData({ ...formData, bankDetailsMicr: v });
-            }}
-            placeholder="Enter 9-digit MICR Number"
-            maxLength={9}
-            pattern="\d{9}"
-            inputMode="numeric"
-            className={errors.bankDetailsMicr ? 'form-control is-invalid' : 'form-control'}
-          />
-          {errors.bankDetailsMicr && <div className="invalid-feedback">{errors.bankDetailsMicr}</div>}
-        </div>
+          <div className="form-group">
+            <label>Beneficiary Name <span className="text-danger">*</span></label>
+            <input
+              value={formData.beneficiaryName ?? ''}
+              onChange={(e) => setFormData({ ...formData, beneficiaryName: e.target.value })}
+              className={errors.beneficiaryName ? 'form-control is-invalid' : ''}
+            />
+            {errors.beneficiaryName && <div className="invalid-feedback">{errors.beneficiaryName}</div>}
+          </div>
 
-        <div className="form-group">
-          <label>Country <span className="text-danger">*</span></label>
-          <PremiumSelect
-            value={formData.bankDetailsCountry ?? 'India'}
-            onChange={(val) => setFormData({ ...formData, bankDetailsCountry: val })}
-            options={COUNTRY_OPTIONS}
-          />
-        </div>
+          <div className="form-group">
+            <label>Bank Account Number <span className="text-danger">*</span></label>
+            <input
+              value={formData.bankAccountNumber ?? ''}
+              onChange={(e) => setFormData({ ...formData, bankAccountNumber: e.target.value })}
+              className={errors.bankAccountNumber ? 'form-control is-invalid' : ''}
+            />
+            {errors.bankAccountNumber && <div className="invalid-feedback">{errors.bankAccountNumber}</div>}
+          </div>
 
-        <div className="form-group">
-          <label>State <span className="text-danger">*</span></label>
-          <PremiumSelect
-            value={formData.bankDetailsState ?? ''}
-            onChange={(val) => setFormData({ ...formData, bankDetailsState: val })}
-            options={STATE_OPTIONS}
-            error={errors.bankDetailsState}
-          />
-          {errors.bankDetailsState && <div className="invalid-feedback">{errors.bankDetailsState}</div>}
-        </div>
+          <div className="form-group">
+            <label>IFSC Code <span className="text-danger">*</span></label>
+            <input
+              value={formData.bankIfscCode ?? ''}
+              onChange={(e) => setFormData({ ...formData, bankIfscCode: e.target.value })}
+              placeholder="e.g., SBIN0001234"
+              className={errors.bankIfscCode ? 'form-control is-invalid' : ''}
+            />
+            {errors.bankIfscCode && <div className="invalid-feedback">{errors.bankIfscCode}</div>}
+          </div>
 
-        <div className="form-group">
-          <label>City <span className="text-danger">*</span></label>
-          <input
-            value={formData.bankDetailsCity ?? ''}
-            onChange={(e) => setFormData({ ...formData, bankDetailsCity: e.target.value })}
-            className={errors.bankDetailsCity ? 'form-control is-invalid' : 'form-control'}
-          />
-          {errors.bankDetailsCity && <div className="invalid-feedback">{errors.bankDetailsCity}</div>}
-        </div>
+          <div className="form-group">
+            <label>Branch name <span className="text-danger">*</span></label>
+            <input
+              value={formData.branchName ?? ''}
+              onChange={(e) => setFormData({ ...formData, branchName: e.target.value })}
+              className={errors.branchName ? 'form-control is-invalid' : ''}
+            />
+            {errors.branchName && <div className="invalid-feedback">{errors.branchName}</div>}
+          </div>
 
-        <div className="form-group">
-          <label>Postal / Zip code <span className="text-danger">*</span></label>
-          <input
-            value={formData.bankDetailsZipCode ?? ''}
-            onChange={(e) => setFormData({ ...formData, bankDetailsZipCode: e.target.value })}
-            className={errors.bankDetailsZipCode ? 'form-control is-invalid' : 'form-control'}
-          />
-          {errors.bankDetailsZipCode && <div className="invalid-feedback">{errors.bankDetailsZipCode}</div>}
+          <div className="form-group form-group--full">
+            <label>Bank Address (Branch Address)</label>
+            <input
+              value={formData.bankBranchAddress ?? ''}
+              onChange={(e) => setFormData({ ...formData, bankBranchAddress: e.target.value })}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>MICR No. <span className="text-danger">*</span></label>
+            <input
+              value={formData.bankDetailsMicr ?? ''}
+              onChange={(e) => {
+                const v = e.target.value.replace(/\D/g, '').slice(0, 9);
+                setFormData({ ...formData, bankDetailsMicr: v });
+              }}
+              placeholder="Enter 9-digit MICR Number"
+              maxLength={9}
+              pattern="\d{9}"
+              inputMode="numeric"
+              className={errors.bankDetailsMicr ? 'form-control is-invalid' : 'form-control'}
+            />
+            {errors.bankDetailsMicr && <div className="invalid-feedback">{errors.bankDetailsMicr}</div>}
+          </div>
+
+          <div className="form-group">
+            <label>Country <span className="text-danger">*</span></label>
+            <PremiumSelect
+              value={formData.bankDetailsCountry ?? 'India'}
+              onChange={(val) => setFormData({ ...formData, bankDetailsCountry: val })}
+              options={COUNTRY_OPTIONS}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>State <span className="text-danger">*</span></label>
+            <PremiumSelect
+              value={formData.bankDetailsState ?? ''}
+              onChange={(val) => setFormData({ ...formData, bankDetailsState: val })}
+              options={STATE_OPTIONS}
+              error={errors.bankDetailsState}
+            />
+            {errors.bankDetailsState && <div className="invalid-feedback">{errors.bankDetailsState}</div>}
+          </div>
+
+          <div className="form-group">
+            <label>City <span className="text-danger">*</span></label>
+            <input
+              value={formData.bankDetailsCity ?? ''}
+              onChange={(e) => setFormData({ ...formData, bankDetailsCity: e.target.value })}
+              className={errors.bankDetailsCity ? 'form-control is-invalid' : 'form-control'}
+            />
+            {errors.bankDetailsCity && <div className="invalid-feedback">{errors.bankDetailsCity}</div>}
+          </div>
+
+          <div className="form-group">
+            <label>Postal / Zip code <span className="text-danger">*</span></label>
+            <input
+              value={formData.bankDetailsZipCode ?? ''}
+              onChange={(e) => setFormData({ ...formData, bankDetailsZipCode: e.target.value })}
+              className={errors.bankDetailsZipCode ? 'form-control is-invalid' : 'form-control'}
+            />
+            {errors.bankDetailsZipCode && <div className="invalid-feedback">{errors.bankDetailsZipCode}</div>}
+          </div>
         </div>
-      </div>
       )}
 
       <button type="submit" className="btn-save" disabled={saving || !canEdit}>

@@ -63,7 +63,7 @@ export const ResidentialStatusForm: React.FC<ResidentialStatusFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const newErrors = validateResidentialStatus(formData as UserResidentialStatusDto);
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -71,10 +71,10 @@ export const ResidentialStatusForm: React.FC<ResidentialStatusFormProps> = ({
       toast.error(firstError ? `Please fix: ${firstError}` : 'Please fix the errors in the form');
       return;
     }
-    
+
     setErrors({});
     setSaving(true);
-    
+
     try {
       await profileService.updateResidentialStatus(formData as UserResidentialStatusDto);
       toast.success('Residential status updated');
@@ -93,7 +93,7 @@ export const ResidentialStatusForm: React.FC<ResidentialStatusFormProps> = ({
 
   return (
     <form className="investor-profile__card" onSubmit={handleSubmit}>
-      <h3>Residential Status &amp; Proof of Address</h3>
+      {/* <h3>Residential Status &amp; Proof of Address</h3> */}
       <div className="investor-profile__grid">
 
         {/* Residential Status selector */}
@@ -201,7 +201,7 @@ export const ResidentialStatusForm: React.FC<ResidentialStatusFormProps> = ({
           />
           {errors.userOciCardNo && <div className="invalid-feedback">{errors.userOciCardNo}</div>}
         </div>
-        
+
         <div className="form-group">
           <label>Issue Date<span className="text-danger">*</span></label>
           <input
@@ -212,7 +212,7 @@ export const ResidentialStatusForm: React.FC<ResidentialStatusFormProps> = ({
           />
           {errors.userOciIssueDate && <div className="invalid-feedback">{errors.userOciIssueDate}</div>}
         </div>
-        
+
         <div className="form-group">
           <label>Valid Upto</label>
           <input
@@ -248,7 +248,7 @@ export const ResidentialStatusForm: React.FC<ResidentialStatusFormProps> = ({
               />
               {errors.userVisaType && <div className="invalid-feedback">{errors.userVisaType}</div>}
             </div>
-            
+
             <div className="form-group">
               <label>Visa Number<span className="text-danger">*</span></label>
               <input
@@ -259,7 +259,7 @@ export const ResidentialStatusForm: React.FC<ResidentialStatusFormProps> = ({
               />
               {errors.userVisaNumber && <div className="invalid-feedback">{errors.userVisaNumber}</div>}
             </div>
-            
+
             <div className="form-group">
               <label>Visa Issuer Date<span className="text-danger">*</span></label>
               <input
@@ -270,7 +270,7 @@ export const ResidentialStatusForm: React.FC<ResidentialStatusFormProps> = ({
               />
               {errors.userVisaIssuerDate && <div className="invalid-feedback">{errors.userVisaIssuerDate}</div>}
             </div>
-            
+
             <div className="form-group">
               <label>Visa Expiry Date<span className="text-danger">*</span></label>
               <input
@@ -297,7 +297,7 @@ export const ResidentialStatusForm: React.FC<ResidentialStatusFormProps> = ({
               />
               {errors.userVisaDateOfIssue && <div className="invalid-feedback">{errors.userVisaDateOfIssue}</div>}
             </div>
-            
+
             <div className="form-group">
               <label>Valid Upto</label>
               <input
@@ -310,7 +310,7 @@ export const ResidentialStatusForm: React.FC<ResidentialStatusFormProps> = ({
           </>
         )}
       </div>
-      
+
       <button type="submit" className="btn-save" disabled={saving || !canEdit}>
         {saving ? 'Saving...' : 'Save'}
       </button>

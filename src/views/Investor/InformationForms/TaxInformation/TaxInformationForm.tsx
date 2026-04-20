@@ -69,7 +69,7 @@ export const TaxInformationForm: React.FC<TaxInformationFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Map form fields to DTO for validation
     const validationData = {
       ...formData,
@@ -86,10 +86,10 @@ export const TaxInformationForm: React.FC<TaxInformationFormProps> = ({
       toast.error(firstError ? `Please fix: ${firstError}` : 'Please fix the errors in the form');
       return;
     }
-    
+
     setErrors({});
     setSaving(true);
-    
+
     try {
       const trimmedCountry =
         formData.taxResidencyCountry !== undefined && formData.taxResidencyCountry !== null
@@ -122,7 +122,7 @@ export const TaxInformationForm: React.FC<TaxInformationFormProps> = ({
 
   return (
     <form className="investor-profile__card" onSubmit={handleSubmit}>
-      <h3>Tax Information</h3>
+      {/* <h3>Tax Information</h3> */}
       <div className="investor-profile__grid">
         <div className="form-group">
           <label>Tax Info</label>
@@ -159,7 +159,7 @@ export const TaxInformationForm: React.FC<TaxInformationFormProps> = ({
             placeholder="Tax PAN (if different)"
           />
         </div>
-        
+
         <div className="form-group">
           <label>Name as per PAN Card</label>
           <input
@@ -167,7 +167,7 @@ export const TaxInformationForm: React.FC<TaxInformationFormProps> = ({
             onChange={(e) => setFormData({ ...formData, taxPanFirstName: e.target.value })}
           />
         </div>
-        
+
         <div className="form-group">
           <label>Father name as per PAN Card</label>
           <input
@@ -175,7 +175,7 @@ export const TaxInformationForm: React.FC<TaxInformationFormProps> = ({
             onChange={(e) => setFormData({ ...formData, taxPanFatherName: e.target.value })}
           />
         </div>
-        
+
         <div className="form-group">
           <label htmlFor="investor-tax-residency-country">
             Current Country of Residence for TAX <span className="text-danger">*</span>
@@ -199,7 +199,7 @@ export const TaxInformationForm: React.FC<TaxInformationFormProps> = ({
           />
           {errors.taxResidencyCountry && <div className="invalid-feedback">{errors.taxResidencyCountry}</div>}
         </div>
-        
+
         <div className="form-group">
           <label>Taxpayer Identification Number in the country <span className="text-danger">*</span></label>
           <input
@@ -209,7 +209,7 @@ export const TaxInformationForm: React.FC<TaxInformationFormProps> = ({
           />
           {errors.tinNumber && <div className="invalid-feedback">{errors.tinNumber}</div>}
         </div>
-        
+
         <div className="form-group">
           <label>Taxpayer Identification Number type <span className="text-danger">*</span></label>
           <PremiumSelect
@@ -220,8 +220,8 @@ export const TaxInformationForm: React.FC<TaxInformationFormProps> = ({
           />
           {errors.taxIdentificationNumberType && <div className="invalid-feedback">{errors.taxIdentificationNumberType}</div>}
         </div>
-        
-        <div className="form-group form-group--full">
+
+        <div className="form-group">
           <label>Are you a US Person as defined under FATCA? <span className="text-danger">*</span></label>
           <PremiumSelect
             value={formData.fatcaStatus ?? ''}
@@ -231,7 +231,7 @@ export const TaxInformationForm: React.FC<TaxInformationFormProps> = ({
           />
           {errors.fatcaStatus && <div className="invalid-feedback">{errors.fatcaStatus}</div>}
         </div>
-        
+
         <div className="form-group">
           <label>CRS Declaration <span className="text-danger">*</span></label>
           <PremiumSelect
@@ -242,7 +242,7 @@ export const TaxInformationForm: React.FC<TaxInformationFormProps> = ({
           />
           {errors.crsDeclaration && <div className="invalid-feedback">{errors.crsDeclaration}</div>}
         </div>
-        
+
         <div className="form-group">
           <label>Tax Residency Status</label>
           <PremiumSelect
@@ -251,7 +251,7 @@ export const TaxInformationForm: React.FC<TaxInformationFormProps> = ({
             options={RESIDENCY_STATUS_OPTIONS}
           />
         </div>
-        
+
         <div className="form-group">
           <label>GST Number</label>
           <input
@@ -259,7 +259,7 @@ export const TaxInformationForm: React.FC<TaxInformationFormProps> = ({
             onChange={(e) => setFormData({ ...formData, gstNumber: e.target.value })}
           />
         </div>
-        
+
         <div className="form-group">
           <label>Income Source</label>
           <input
@@ -268,7 +268,7 @@ export const TaxInformationForm: React.FC<TaxInformationFormProps> = ({
             placeholder="e.g., Salary, Business, Investment"
           />
         </div>
-        
+
         <div className="form-group">
           <label>Tax Residency Certificate Number (If Available)</label>
           <input
@@ -276,7 +276,7 @@ export const TaxInformationForm: React.FC<TaxInformationFormProps> = ({
             onChange={(e) => setFormData({ ...formData, taxResidencyCertificateNo: e.target.value })}
           />
         </div>
-        
+
         <div className="form-group">
           <label>Tax Residency Certificate Date</label>
           <input
@@ -285,8 +285,8 @@ export const TaxInformationForm: React.FC<TaxInformationFormProps> = ({
             onChange={(e) => setFormData({ ...formData, taxResidencyCertificateDate: e.target.value })}
           />
         </div>
-        
-        <div className="form-group form-group--full">
+
+        <div className="form-group">
           <label>Annual Income Range</label>
           <PremiumSelect
             value={formData.annualIncome ?? ''}
@@ -295,7 +295,7 @@ export const TaxInformationForm: React.FC<TaxInformationFormProps> = ({
           />
         </div>
       </div>
-      
+
       <button type="submit" className="btn-save" disabled={saving || !canEdit}>
         {saving ? 'Saving...' : 'Save'}
       </button>

@@ -88,7 +88,7 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProps> = (
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const newErrors = validatePersonalInformation(formData as UserPersonalInformationDto);
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -96,10 +96,10 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProps> = (
       toast.error(firstError ? `Please fix: ${firstError}` : 'Please fix the errors in the form');
       return;
     }
-    
+
     setErrors({});
     setSaving(true);
-    
+
     try {
       await profileService.updatePersonalInfo(formData as UserPersonalInformationDto);
       toast.success('Personal information updated');
@@ -118,7 +118,10 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProps> = (
 
   return (
     <form className="investor-profile__card" onSubmit={handleSubmit}>
-      <h3>Personal Information</h3>
+      {/* Personal Information */}
+      <div className="form-group form-group--full">
+        <h3 style={{ marginBottom: '10px' }}>Personal Information</h3>
+      </div>
       <div className="investor-profile__grid">
         <div className="form-group">
           <label>Title <span className="text-danger">*</span></label>
@@ -139,7 +142,7 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProps> = (
           />
           {errors.investorFirstName && <div className="invalid-feedback">{errors.investorFirstName}</div>}
         </div>
-        
+
         <div className="form-group">
           <label>Middle Name</label>
           <input
@@ -147,7 +150,7 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProps> = (
             onChange={(e) => setFormData({ ...formData, investorMiddleName: e.target.value })}
           />
         </div>
-        
+
         <div className="form-group">
           <label>Last Name <span className="text-danger">*</span></label>
           <input
@@ -157,7 +160,7 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProps> = (
           />
           {errors.investorLastName && <div className="invalid-feedback">{errors.investorLastName}</div>}
         </div>
-        
+
         <div className="form-group">
           <label>Date Of Birth <span className="text-danger">*</span></label>
           <input
@@ -179,7 +182,7 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProps> = (
           />
           {errors.gender && <div className="invalid-feedback">{errors.gender}</div>}
         </div>
-        
+
         <div className="form-group">
           <label>Marital Status <span className="text-danger">*</span></label>
           <PremiumSelect
@@ -194,8 +197,9 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProps> = (
         {/* Maiden Name - Show if Female or Married */}
         {(formData.gender === 'Female' || formData.maritalStatus === '2') && (
           <>
+            {/* Maiden Name (if applicable) */}
             <div className="form-group form-group--full">
-              <h4 style={{ margin: '0.5rem 0', color: '#666', fontSize: '0.95rem' }}>Maiden Name (if applicable)</h4>
+              <h3 style={{ marginTop: '1.5rem' }}>Maiden Name (if applicable)</h3>
             </div>
             <div className="form-group">
               <label>Title <span className="text-danger">*</span></label>
@@ -238,7 +242,7 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProps> = (
           />
           {errors.cityOfDob && <div className="invalid-feedback">{errors.cityOfDob}</div>}
         </div>
-        
+
         <div className="form-group">
           <label>Country Of Birth <span className="text-danger">*</span></label>
           <input
@@ -248,7 +252,7 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProps> = (
           />
           {errors.countryDob && <div className="invalid-feedback">{errors.countryDob}</div>}
         </div>
-        
+
         <div className="form-group">
           <label>Citizenship <span className="text-danger">*</span></label>
           <input
@@ -259,7 +263,7 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProps> = (
           />
           {errors.citizenship && <div className="invalid-feedback">{errors.citizenship}</div>}
         </div>
-        
+
         <div className="form-group">
           <label>Country of Residence <span className="text-danger">*</span></label>
           <input
@@ -270,7 +274,7 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProps> = (
           />
           {errors.countryOfResidence && <div className="invalid-feedback">{errors.countryOfResidence}</div>}
         </div>
-        
+
         <div className="form-group">
           <label>PAN Number <span className="text-danger">*</span></label>
           <input
@@ -281,7 +285,7 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProps> = (
 
         {/* Father's Details */}
         <div className="form-group form-group--full">
-          <h4 style={{ margin: '1.5rem 0 0.5rem 0', color: '#333', fontSize: '1rem' }}>Father's Details</h4>
+          <h3 style={{ marginTop: '1.5rem' }}>Father's Details</h3>
         </div>
         <div className="form-group">
           <label>Title</label>
@@ -319,7 +323,7 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProps> = (
 
         {/* Mother's Details */}
         <div className="form-group form-group--full">
-          <h4 style={{ margin: '1.5rem 0 0.5rem 0', color: '#333', fontSize: '1rem' }}>Mother's Details</h4>
+          <h3 style={{ marginTop: '1.5rem' }}>Mother's Details</h3>
         </div>
         <div className="form-group">
           <label>Title</label>
@@ -358,8 +362,9 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProps> = (
         {/* Spouse Details - Show only if married */}
         {formData.maritalStatus === '2' && (
           <>
+            {/* Spouse Details */}
             <div className="form-group form-group--full">
-              <h4 style={{ margin: '1.5rem 0 0.5rem 0', color: '#333', fontSize: '1rem' }}>Spouse Details</h4>
+              <h3 style={{ marginTop: '1.5rem' }}>Spouse Details</h3>
             </div>
             <div className="form-group">
               <label>Title</label>
@@ -400,11 +405,11 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProps> = (
           </>
         )}
 
-        {/* Address Section */}
+        {/* Address */}
         <div className="form-group form-group--full">
-          <h4 style={{ margin: '1.5rem 0 0.5rem 0', color: '#333', fontSize: '1rem' }}>Address</h4>
+          <h3 style={{ marginTop: '1.5rem' }}>Address</h3>
         </div>
-        <div className="form-group form-group--full">
+        <div className="form-group">
           <label>Address Line 1 <span className="text-danger">*</span></label>
           <input
             value={formData.addressLine1 ?? ''}
@@ -413,21 +418,21 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProps> = (
           />
           {errors.addressLine1 && <div className="invalid-feedback">{errors.addressLine1}</div>}
         </div>
-        <div className="form-group form-group--full">
+        <div className="form-group">
           <label>Address Line 2</label>
           <input
             value={formData.addressLine2 ?? ''}
             onChange={(e) => setFormData({ ...formData, addressLine2: e.target.value })}
           />
         </div>
-        <div className="form-group form-group--full">
+        <div className="form-group">
           <label>Address Line 3</label>
           <input
             value={formData.addressLine3 ?? ''}
             onChange={(e) => setFormData({ ...formData, addressLine3: e.target.value })}
           />
         </div>
-        <div className="form-group form-group--full">
+        <div className="form-group">
           <label>City <span className="text-danger">*</span></label>
           <input
             value={formData.userCity ?? ''}
@@ -465,8 +470,8 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProps> = (
           {errors.userCountry && <div className="invalid-feedback">{errors.userCountry}</div>}
         </div>
       </div>
-      
-      <button type="submit" className="btn-save" disabled={saving || !canEdit}>
+
+      <button type="submit" className="btn-save mt-3" disabled={saving || !canEdit}>
         {saving ? 'Saving...' : 'Save'}
       </button>
       {!canEdit && delegationPerms.isProxyMode && (

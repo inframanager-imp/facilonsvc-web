@@ -39,41 +39,24 @@ export const PremiumJourneyStepper: React.FC<Props> = ({ dashboardData }) => {
   ];
 
   return (
-    <div className="facilon-premium-journey-card card-ventura border-0">
-      <div className="journey-header-modern">
-        <div className="journey-title-group">
-          <h2 className="journey-label-accent">YOUR JOURNEY</h2>
-        </div>
-        
-        <div className="journey-total-progress">
-          <span className="progress-label">FULL PROGRESS</span>
-          <div className="progress-mini">
-            <div 
-              className="fill" 
-              style={{ width: `${progress?.progressPercentage || 0}%` }}
-            ></div>
-          </div>
-          <span className="value">{progress?.progressPercentage || 0}%</span>
-        </div>
-      </div>
-      
+    <div className="facilon-premium-journey-card card-ventura">
       <div className="journey-stepper-horizontal">
         {journeySteps.map((step, idx) => {
           const isDone = isDoneFor(step.key);
           const isCurrent = currentStepKey === step.key;
           const isPending = !isDone && !isCurrent;
-          
+
           let statusText = "Pending";
           if (isDone) statusText = "Completed";
           else if (isCurrent) statusText = "In Progress";
 
           return (
-            <div 
-              key={step.key} 
+            <div
+              key={step.key}
               className={`journey-step-item ${isDone ? 'is-complete' : ''} ${isCurrent ? 'is-active' : ''} ${isPending ? 'is-pending' : ''}`}
             >
-              <div 
-                className="step-node-container" 
+              <div
+                className="step-node-container"
                 onClick={() => saNavigate(step.path)}
                 style={{ cursor: 'pointer' }}
               >
@@ -87,22 +70,39 @@ export const PremiumJourneyStepper: React.FC<Props> = ({ dashboardData }) => {
               </div>
 
               <div className="step-caption-container">
-                <span className="step-number-label">STEP {idx + 1}</span>
-                <button 
+                {/*<span className="step-number-label">STEP {idx + 1}</span>*/}
+                <button
                   type="button"
                   className="step-title-link"
                   onClick={() => saNavigate(step.path)}
                 >
                   {step.label}
                 </button>
-                <div className={`status-pill pill-${statusText.toLowerCase().replace(' ', '-')}`}>
+                {/* <div className={`status-pill pill-${statusText.toLowerCase().replace(' ', '-')}`}>
                   {statusText}
-                </div>
+                </div> */}
               </div>
             </div>
           );
         })}
       </div>
+      <div className="journey-header-modern">
+        <div className="journey-title-group">
+          <h2 className="journey-label-accent">Your Journey</h2>
+        </div>
+
+        <div className="journey-total-progress">
+          {/* <span className="progress-label">FULL PROGRESS</span> */}
+          <div className="progress-mini">
+            <div
+              className="fill"
+              style={{ width: `${progress?.progressPercentage || 0}%` }}
+            ></div>
+          </div>
+          <span className="value">{progress?.progressPercentage || 0}%</span>
+        </div>
+      </div>
+
     </div>
   );
 };

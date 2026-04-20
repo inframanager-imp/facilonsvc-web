@@ -45,7 +45,7 @@ export const RiskProfileForm: React.FC<RiskProfileFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const newErrors = validateRiskProfile(formData as InvestorExperienceDto);
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -53,10 +53,10 @@ export const RiskProfileForm: React.FC<RiskProfileFormProps> = ({
       toast.error(firstError ? `Please fix: ${firstError}` : 'Please fix the errors in the form');
       return;
     }
-    
+
     setErrors({});
     setSaving(true);
-    
+
     try {
       await profileService.updateExperience(formData as InvestorExperienceDto);
       toast.success('Risk profile updated');
@@ -75,7 +75,7 @@ export const RiskProfileForm: React.FC<RiskProfileFormProps> = ({
 
   return (
     <form className="investor-profile__card" onSubmit={handleSubmit}>
-      <h3>Other Information</h3>
+      {/* <h3>Other Information</h3> */}
       <div className="investor-profile__grid">
         <div className="form-group">
           <label>Source of Funds <span className="text-danger">*</span></label>
@@ -87,7 +87,7 @@ export const RiskProfileForm: React.FC<RiskProfileFormProps> = ({
           />
           {errors.sourceOfFunds && <div className="invalid-feedback">{errors.sourceOfFunds}</div>}
         </div>
-        
+
         <div className="form-group">
           <label>Source of Wealth</label>
           <input
@@ -96,7 +96,7 @@ export const RiskProfileForm: React.FC<RiskProfileFormProps> = ({
             onChange={(e) => setFormData({ ...formData, sourceOfWealth: e.target.value })}
           />
         </div>
-        
+
         <div className="form-group">
           <label>Education Qualification <span className="text-danger">*</span></label>
           <PremiumSelect
@@ -118,7 +118,7 @@ export const RiskProfileForm: React.FC<RiskProfileFormProps> = ({
           />
           {errors.grossIncome && <div className="invalid-feedback">{errors.grossIncome}</div>}
         </div>
-        
+
         <div className="form-group">
           <label>Net Worth <span className="text-danger">*</span></label>
           <PremiumSelect
@@ -129,7 +129,7 @@ export const RiskProfileForm: React.FC<RiskProfileFormProps> = ({
           />
           {errors.netWorth && <div className="invalid-feedback">{errors.netWorth}</div>}
         </div>
-        
+
         <div className="form-group">
           <label>Occupation <span className="text-danger">*</span></label>
           <PremiumSelect
@@ -149,7 +149,7 @@ export const RiskProfileForm: React.FC<RiskProfileFormProps> = ({
             onChange={(e) => setFormData({ ...formData, lineOfBusiness: e.target.value })}
           />
         </div>
-        
+
         <div className="form-group">
           <label>Name of Organisation</label>
           <input
@@ -183,7 +183,7 @@ export const RiskProfileForm: React.FC<RiskProfileFormProps> = ({
           </div>
           {errors.polExposed && <div className="invalid-feedback d-block">{errors.polExposed}</div>}
         </div>
-        
+
         <div className="form-group">
           <label>Are you related to a politically exposed person? <span className="text-danger">*</span></label>
           <div>
@@ -206,7 +206,7 @@ export const RiskProfileForm: React.FC<RiskProfileFormProps> = ({
           </div>
           {errors.polExposedRelated && <div className="invalid-feedback d-block">{errors.polExposedRelated}</div>}
         </div>
-        
+
         <div className="form-group">
           <label>Are you involved in any of the following activities? <span className="text-danger">*</span></label>
           <div>
@@ -252,7 +252,7 @@ export const RiskProfileForm: React.FC<RiskProfileFormProps> = ({
           </div>
           {errors.moneyChangeService && <div className="invalid-feedback d-block">{errors.moneyChangeService}</div>}
         </div>
-        
+
         <div className="form-group">
           <label>Gaming / Gambling / Lottery Services <span className="text-danger">*</span></label>
           <div>
@@ -275,7 +275,7 @@ export const RiskProfileForm: React.FC<RiskProfileFormProps> = ({
           </div>
           {errors.gamblingService && <div className="invalid-feedback d-block">{errors.gamblingService}</div>}
         </div>
-        
+
         <div className="form-group">
           <label>Money Lending / Pawning Services <span className="text-danger">*</span></label>
           <div>
@@ -338,7 +338,7 @@ export const RiskProfileForm: React.FC<RiskProfileFormProps> = ({
           />
           {errors.investmentExperienceYears && <div className="invalid-feedback">{errors.investmentExperienceYears}</div>}
         </div>
-        
+
         <div className="form-group form-group--full">
           <label htmlFor="investment_experience_in">Investment Experience in <span className="text-danger">*</span></label>
           <select
@@ -359,7 +359,7 @@ export const RiskProfileForm: React.FC<RiskProfileFormProps> = ({
           {errors.investmentExperienceIn && <div className="invalid-feedback d-block">{errors.investmentExperienceIn}</div>}
         </div>
       </div>
-      
+
       <button type="submit" className="btn-save" disabled={saving || !canEdit}>
         {saving ? 'Saving...' : 'Save'}
       </button>

@@ -40,7 +40,7 @@ export const FinalSubmissionForm: React.FC<FinalSubmissionFormProps> = ({
             agreementModification: consents.modificationAwarenessConsent || false,
           });
         }
-        
+
         // Backend maps investor.verifyStatus to InvestorBasicInfo.status
         const dashboardData = sharedContext.dashboardData;
         if (dashboardData?.investor?.status === 1) {
@@ -52,7 +52,7 @@ export const FinalSubmissionForm: React.FC<FinalSubmissionFormProps> = ({
         setLoading(false);
       }
     };
-    
+
     loadConsents();
   }, [sharedContext.dashboardData]);
 
@@ -62,14 +62,14 @@ export const FinalSubmissionForm: React.FC<FinalSubmissionFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.agreementComplete || !formData.agreementLegal || !formData.agreementModification) {
       toast.error('Please check all agreement boxes to submit');
       return;
     }
-    
+
     setSaving(true);
-    
+
     try {
       const consents: InvestorConsentsDto = {
         informationCorrectConsent: formData.agreementComplete,
@@ -102,15 +102,15 @@ export const FinalSubmissionForm: React.FC<FinalSubmissionFormProps> = ({
 
   return (
     <form className="investor-profile__card" onSubmit={handleSubmit}>
-      <h3>Final Submit</h3>
-      
+      {/* <h3>Final Submit</h3> */}
+
       {alreadySubmitted ? (
         <>
           <div className="alert alert-success" style={{ margin: '1rem 0', padding: '1rem', backgroundColor: '#d4edda', border: '1px solid #c3e6cb', borderRadius: '5px', color: '#155724' }}>
             <strong>✓ Profile Already Submitted</strong>
             <p style={{ marginBottom: 0, marginTop: '0.5rem' }}>Your profile has been successfully submitted. Any modifications will require a Request for Change.</p>
           </div>
-          
+
           <div className="investor-profile__grid investor-profile__final-submit">
             <div className="form-group form-group--checkbox form-group--full">
               <label>
@@ -161,7 +161,7 @@ export const FinalSubmissionForm: React.FC<FinalSubmissionFormProps> = ({
             <strong>Step 2:</strong> After reviewing, check the boxes below and click "Submit Profile".<br />
             You can also submit directly from the preview window.
           </p>
-          
+
           <div className="investor-profile__grid investor-profile__final-submit">
             <div className="form-group form-group--checkbox form-group--full">
               <label>
@@ -195,10 +195,10 @@ export const FinalSubmissionForm: React.FC<FinalSubmissionFormProps> = ({
             </div>
           </div>
 
-          <div className="investor-profile__buttons">
+          <div className="investor-profile__buttons mt-2">
             <button
               type="button"
-              className="btn-preview"
+              className="btn-outline-primary py-1 px-3 me-2"
               onClick={handlePrintPreview}
               disabled={saving}
             >

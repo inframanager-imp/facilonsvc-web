@@ -51,7 +51,7 @@ export const PassportDetailsForm: React.FC<PassportDetailsFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const newErrors = validatePassportInformation(formData as UserPassportDetailsDto);
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -59,10 +59,10 @@ export const PassportDetailsForm: React.FC<PassportDetailsFormProps> = ({
       toast.error(firstError ? `Please fix: ${firstError}` : 'Please fix the errors in the form');
       return;
     }
-    
+
     setErrors({});
     setSaving(true);
-    
+
     try {
       const payload: UserPassportDetailsDto = {
         ...(formData as UserPassportDetailsDto),
@@ -93,9 +93,9 @@ export const PassportDetailsForm: React.FC<PassportDetailsFormProps> = ({
 
   return (
     <form className="investor-profile__card" onSubmit={handleSubmit}>
-      <h3>Proof of Identity</h3>
+      {/* <h3>Proof of Identity</h3> */}
       <div className="investor-profile__grid">
-        <div className="form-group form-group--full">
+        <div className="form-group">
           <label>Document Type <span className="text-danger">*</span></label>
           <PremiumSelect
             value={(formData as any).documentType ?? ''}
@@ -103,8 +103,8 @@ export const PassportDetailsForm: React.FC<PassportDetailsFormProps> = ({
             options={DOCUMENT_TYPE_OPTIONS}
           />
         </div>
-        
-        <div className="form-group form-group--full">
+
+        <div className="form-group">
           <label>Document Number <span className="text-danger">*</span></label>
           <input
             value={formData.passportNumber ?? ''}
@@ -113,7 +113,7 @@ export const PassportDetailsForm: React.FC<PassportDetailsFormProps> = ({
           />
           {errors.passportNumber && <div className="invalid-feedback">{errors.passportNumber}</div>}
         </div>
-        
+
         <div className="form-group">
           <label>Date of Issue <span className="text-danger">*</span></label>
           <input
@@ -124,7 +124,7 @@ export const PassportDetailsForm: React.FC<PassportDetailsFormProps> = ({
           />
           {errors.passportIssueDate && <div className="invalid-feedback">{errors.passportIssueDate}</div>}
         </div>
-        
+
         <div className="form-group">
           <label>Valid upto <span className="text-danger">*</span></label>
           <input
@@ -135,8 +135,8 @@ export const PassportDetailsForm: React.FC<PassportDetailsFormProps> = ({
           />
           {errors.passportExpiryDate && <div className="invalid-feedback">{errors.passportExpiryDate}</div>}
         </div>
-        
-        <div className="form-group form-group--full">
+
+        <div className="form-group">
           <label>Place of Issue <span className="text-danger">*</span></label>
           <input
             value={formData.passportPlaceOfIssue ?? ''}
@@ -145,8 +145,8 @@ export const PassportDetailsForm: React.FC<PassportDetailsFormProps> = ({
           />
           {errors.passportPlaceOfIssue && <div className="invalid-feedback">{errors.passportPlaceOfIssue}</div>}
         </div>
-        
-        <div className="form-group form-group--full">
+
+        <div className="form-group">
           <label>Country of Issue <span className="text-danger">*</span></label>
           <input
             value={formData.passportCountryOfIssue ?? ''}
@@ -166,7 +166,7 @@ export const PassportDetailsForm: React.FC<PassportDetailsFormProps> = ({
           />
           {errors.passportNationality && <div className="invalid-feedback">{errors.passportNationality}</div>}
         </div>
-        
+
         <div className="form-group">
           <label>Date of Becoming Non Resident <span className="text-danger">*</span></label>
           <input
@@ -175,7 +175,7 @@ export const PassportDetailsForm: React.FC<PassportDetailsFormProps> = ({
             onChange={(e) => setFormData({ ...formData, passportDateNonResident: e.target.value })}
           />
         </div>
-        
+
         <div className="form-group">
           <label>No of Years Abroad <span className="text-danger">*</span></label>
           <input
@@ -186,7 +186,7 @@ export const PassportDetailsForm: React.FC<PassportDetailsFormProps> = ({
           />
         </div>
       </div>
-      
+
       <button type="submit" className="btn-save" disabled={saving || !canEdit}>
         {saving ? 'Saving...' : 'Save'}
       </button>

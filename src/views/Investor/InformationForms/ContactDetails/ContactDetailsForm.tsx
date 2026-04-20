@@ -57,7 +57,7 @@ export const ContactDetailsForm: React.FC<ContactDetailsFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const newErrors = validateContactDetails(formData as UserContactDetailsDto);
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -65,10 +65,10 @@ export const ContactDetailsForm: React.FC<ContactDetailsFormProps> = ({
       toast.error(firstError ? `Please fix: ${firstError}` : 'Please fix the errors in the form');
       return;
     }
-    
+
     setErrors({});
     setSaving(true);
-    
+
     try {
       await profileService.updateContactDetails(formData as UserContactDetailsDto);
       toast.success('Contact details updated');
@@ -87,9 +87,9 @@ export const ContactDetailsForm: React.FC<ContactDetailsFormProps> = ({
 
   return (
     <form className="investor-profile__card" onSubmit={handleSubmit}>
-      <h3>Contact Details</h3>
+      {/* <h3>Contact Details</h3> */}
       <div className="investor-profile__grid">
-        <div className="form-group">
+        <div className="form-group form-group--full">
           <label>Proof of Address <span className="text-danger">*</span></label>
           <PremiumSelect
             value={formData.proofOfAddress ?? ''}
@@ -97,8 +97,8 @@ export const ContactDetailsForm: React.FC<ContactDetailsFormProps> = ({
             options={CONTACT_PROOF_OPTIONS}
           />
         </div>
-        
-        <div className="form-group form-group--full">
+
+        <div className="form-group">
           <label>Address Line 1 <span className="text-danger">*</span></label>
           <input
             value={formData.addressLine1 ?? ''}
@@ -108,7 +108,7 @@ export const ContactDetailsForm: React.FC<ContactDetailsFormProps> = ({
           {errors.addressLine1 && <div className="invalid-feedback">{errors.addressLine1}</div>}
         </div>
 
-        <div className="form-group form-group--full">
+        <div className="form-group">
           <label>Address Line 2</label>
           <input
             value={formData.addressLine2 ?? ''}
@@ -116,7 +116,7 @@ export const ContactDetailsForm: React.FC<ContactDetailsFormProps> = ({
           />
         </div>
 
-        <div className="form-group form-group--full">
+        <div className="form-group">
           <label>Address Line 3</label>
           <input
             value={formData.addressLine3 ?? ''}
@@ -133,7 +133,7 @@ export const ContactDetailsForm: React.FC<ContactDetailsFormProps> = ({
           />
           {errors.userCity && <div className="invalid-feedback">{errors.userCity}</div>}
         </div>
-        
+
         <div className="form-group">
           <label>State <span className="text-danger">*</span></label>
           <input
@@ -143,7 +143,7 @@ export const ContactDetailsForm: React.FC<ContactDetailsFormProps> = ({
           />
           {errors.userState && <div className="invalid-feedback">{errors.userState}</div>}
         </div>
-        
+
         <div className="form-group">
           <label>Postal/ Zip code <span className="text-danger">*</span></label>
           <input
@@ -153,7 +153,7 @@ export const ContactDetailsForm: React.FC<ContactDetailsFormProps> = ({
           />
           {errors.userZipCode && <div className="invalid-feedback">{errors.userZipCode}</div>}
         </div>
-        
+
         <div className="form-group">
           <label>Country <span className="text-danger">*</span></label>
           <input
@@ -161,7 +161,7 @@ export const ContactDetailsForm: React.FC<ContactDetailsFormProps> = ({
             onChange={(e) => setFormData({ ...formData, userCountry: e.target.value })}
           />
         </div>
-        
+
         <div className="form-group form-group--checkbox form-group--full">
           <label>
             <input
@@ -184,7 +184,7 @@ export const ContactDetailsForm: React.FC<ContactDetailsFormProps> = ({
                 options={ADDRESS_TYPE_OPTIONS}
               />
             </div>
-            <div className="form-group form-group--full">
+            <div className="form-group">
               <label>Address Line 1 <span className="text-danger">*</span></label>
               <input
                 value={formData.corrAddressLine1 ?? ''}
@@ -193,14 +193,14 @@ export const ContactDetailsForm: React.FC<ContactDetailsFormProps> = ({
               />
               {errors.corrAddressLine1 && <div className="invalid-feedback">{errors.corrAddressLine1}</div>}
             </div>
-            <div className="form-group form-group--full">
+            <div className="form-group">
               <label>Address Line 2</label>
               <input
                 value={formData.corrAddressLine2 ?? ''}
                 onChange={(e) => setFormData({ ...formData, corrAddressLine2: e.target.value })}
               />
             </div>
-            <div className="form-group form-group--full">
+            <div className="form-group">
               <label>Address Line 3</label>
               <input
                 value={formData.corrAddressLine3 ?? ''}
@@ -257,7 +257,7 @@ export const ContactDetailsForm: React.FC<ContactDetailsFormProps> = ({
           />
           {errors.email && <div className="invalid-feedback">{errors.email}</div>}
         </div>
-        
+
         <div className="form-group">
           <label>Country Code <span className="text-danger">*</span></label>
           <input
@@ -265,7 +265,7 @@ export const ContactDetailsForm: React.FC<ContactDetailsFormProps> = ({
             onChange={(e) => setFormData({ ...formData, isdCode: e.target.value })}
           />
         </div>
-        
+
         <div className="form-group">
           <label>Phone No <span className="text-danger">*</span></label>
           <input
@@ -276,7 +276,7 @@ export const ContactDetailsForm: React.FC<ContactDetailsFormProps> = ({
           />
           {errors.primaryPhone && <div className="invalid-feedback">{errors.primaryPhone}</div>}
         </div>
-        
+
         <div className="form-group">
           <label>Secondary Mobile</label>
           <input
@@ -285,7 +285,7 @@ export const ContactDetailsForm: React.FC<ContactDetailsFormProps> = ({
             onChange={(e) => setFormData({ ...formData, secondaryPhone: e.target.value })}
           />
         </div>
-        
+
         <div className="form-group">
           <label>WhatsApp Number</label>
           <input
@@ -294,7 +294,7 @@ export const ContactDetailsForm: React.FC<ContactDetailsFormProps> = ({
             onChange={(e) => setFormData({ ...formData, whatsappNumber: e.target.value })}
           />
         </div>
-        
+
         <div className="form-group">
           <label>Preferred Contact Method <span className="text-danger">*</span></label>
           <PremiumSelect
@@ -305,7 +305,7 @@ export const ContactDetailsForm: React.FC<ContactDetailsFormProps> = ({
           />
           {errors.preferredContactMethod && <div className="invalid-feedback">{errors.preferredContactMethod}</div>}
         </div>
-        
+
         <div className="form-group">
           <label>Preferred Contact Time</label>
           <input
@@ -315,7 +315,7 @@ export const ContactDetailsForm: React.FC<ContactDetailsFormProps> = ({
           />
         </div>
       </div>
-      
+
       <button type="submit" className="btn-save" disabled={saving || !canEdit}>
         {saving ? 'Saving...' : 'Save'}
       </button>
