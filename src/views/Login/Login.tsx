@@ -155,20 +155,20 @@ const Login: React.FC = () => {
             <div className="brand-logo-large">
               <img src="/assets/images/facilon-main-logo.png" alt="Facilon Services" />
             </div>
-            <h1>The smarter way to <br/><span>manage your investments</span></h1>
-            <p>Access your professional console to track progress, submit documents, and engage with service providers.</p>
+            <h1 className="text-neutral-800">The smarter way to <br/><span className="text-primary-500">manage your investments</span></h1>
+            <p className="text-neutral-500">Access your professional console to track progress, submit documents, and engage with service providers.</p>
           </div>
 
           <div className="login-form-section">
-            <div className="premium-login-card">
+            <div className="premium-login-card bg-surface rounded-xl border border-neutral-200">
               <div className="card-header-modern">
-                <span className="welcome-label">Ready to get started?</span>
-                <h2>Investor Login</h2>
+                <span className="welcome-label text-primary-500">Ready to get started?</span>
+                <h2 className="text-neutral-900">Investor Login</h2>
               </div>
 
               <form onSubmit={handleSubmit} className="modern-form">
                 <div className="form-group mb-4">
-                  <label className="custom-label" htmlFor="loginId">Email or Username</label>
+                  <label className="custom-label text-neutral-800" htmlFor="loginId">Email or Username</label>
                   <input
                     type="text"
                     className="form-control"
@@ -182,7 +182,7 @@ const Login: React.FC = () => {
                 </div>
 
                 <div className="form-group mb-4">
-                  <label className="custom-label" htmlFor="password">Password</label>
+                  <label className="custom-label text-neutral-800" htmlFor="password">Password</label>
                   <input
                     type="password"
                     className="form-control"
@@ -203,18 +203,18 @@ const Login: React.FC = () => {
                       checked={rememberMe}
                       onChange={(e) => setRememberMe(e.target.checked)}
                     />
-                    <label className="form-check-label" htmlFor="remember">Keep me logged in</label>
+                    <label className="form-check-label text-neutral-500" htmlFor="remember">Keep me logged in</label>
                   </div>
-                  <Link to="/forgot-password" id="forgot-password-link">Forgot?</Link>
+                  <Link to="/forgot-password" id="forgot-password-link" className="text-primary-500 hover:text-primary-600">Forgot?</Link>
                 </div>
 
-                <button className="btn w-100 mb-4" type="submit" disabled={loading}>
+                <button className="btn w-100 mb-4 bg-primary-500 hover:bg-primary-600 text-white font-bold transition-all" type="submit" disabled={loading}>
                   {loading ? 'Entering...' : 'Continue'}
                 </button>
 
-                <div className="login-footer-links">
+                <div className="login-footer-links text-neutral-500">
                   <span>New to Facilon?</span>
-                  <Link to="/investor/register" className="register-link ms-2">Register Now</Link>
+                  <Link to="/investor/register" className="register-link ms-2 text-primary-500 hover:text-primary-700 font-extrabold">Register Now</Link>
                 </div>
               </form>
             </div>

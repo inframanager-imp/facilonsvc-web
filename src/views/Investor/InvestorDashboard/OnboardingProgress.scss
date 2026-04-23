@@ -24,7 +24,7 @@
     .journey-label-accent {
       font-size: 1.1rem;
       font-weight: 700;
-      color: var(--facilon-primary);
+      /* color moved to Tailwind */
       margin: 0;
       letter-spacing: -1px;
       font-family: 'Montserrat', sans-serif;
@@ -43,20 +43,20 @@
       .progress-label {
         font-size: 0.75rem;
         font-weight: 800;
-        color: var(--facilon-text-muted);
+        /* color moved to Tailwind */
         letter-spacing: 1.5px;
       }
 
       .progress-track-bg {
         width: 140px;
         height: 6px;
-        background: var(--facilon-grey-200);
+        /* background moved to Tailwind */
         border-radius: 10px;
         overflow: hidden;
 
         .progress-track-fill {
           height: 100%;
-          background: linear-gradient(90deg, var(--facilon-primary), var(--facilon-red-light));
+          /* background moved to Tailwind */
           border-radius: 10px;
           transition: width 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
@@ -65,7 +65,7 @@
       .progress-percentage {
         font-size: 1rem;
         font-weight: 800;
-        color: var(--facilon-primary);
+        /* color moved to Tailwind */
         min-width: 45px;
         text-align: right;
       }
@@ -278,26 +278,11 @@
     .footer-status-text {
       font-size: 1.05rem;
       font-weight: 600;
-      color: var(--facilon-text-muted);
+      /* color moved to Tailwind */
     }
 
     .btn-journey-continue {
-      background: var(--facilon-primary);
-      color: white;
-      padding: 0.85rem 2rem;
-      border-radius: var(--facilon-radius-lg);
-      font-weight: 800;
-      font-size: 1rem;
-      display: flex;
-      align-items: center;
-      transition: var(--facilon-transition);
-      box-shadow: 0 8px 20px rgba(190, 23, 23, 0.15);
-
-      &:hover {
-        background: var(--facilon-red-dark);
-        transform: translateY(-2px);
-        box-shadow: 0 12px 25px rgba(190, 23, 23, 0.25);
-      }
+      /* styles moved to Tailwind */
     }
   }
 }

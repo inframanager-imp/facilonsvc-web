@@ -53,13 +53,13 @@
       color: var(--facilon-slate);
       
       span {
-        color: var(--facilon-primary);
+        /* color moved to Tailwind */
       }
     }
 
     p {
       font-size: 1.25rem;
-      color: var(--facilon-text-muted);
+      /* color moved to Tailwind */
       max-width: 550px;
       line-height: 1.6;
       
@@ -83,18 +83,16 @@
   .premium-login-card {
     width: 100%;
     max-width: 480px;
-    background: white;
+    /* background, border-radius, border moved to Tailwind */
     padding: 3.5rem;
-    border-radius: var(--facilon-radius-xl);
     box-shadow: none;
-    border: 1.5px solid var(--facilon-grey-200);
 
     .card-header-modern {
       margin-bottom: 3rem;
       
       .welcome-label {
         display: block;
-        color: var(--facilon-primary);
+        /* color moved to Tailwind */
         font-weight: 800;
         font-size: 0.9rem;
         text-transform: uppercase;
@@ -105,7 +103,7 @@
       h2 {
         font-size: 2.25rem;
         font-weight: 800;
-        color: var(--facilon-slate);
+        /* color moved to Tailwind */
       }
     }
 
@@ -144,7 +142,7 @@
 
       #forgot-password-link {
         font-weight: 700;
-        color: var(--facilon-primary);
+        /* color moved to Tailwind */
         font-size: 0.95rem;
       }
 
@@ -161,8 +159,7 @@
         color: var(--facilon-text-muted);
 
         .register-link {
-          color: var(--facilon-primary);
-          font-weight: 800;
+          /* color and weight moved to Tailwind */
           
           &:hover {
             color: var(--facilon-red-dark);

@@ -87,21 +87,21 @@ export const OnboardingProgress: React.FC = () => {
   const activeStepKey = currentStepIndex !== -1 ? journeySteps[currentStepIndex].key : 'account';
 
   return (
-    <div className="facilon-premium-journey-card card-ventura border-0">
+    <div className="facilon-premium-journey-card card-ventura border-0 bg-surface rounded-xl border border-neutral-200 shadow-card">
       <div className="journey-header-modern">
         <div className="journey-title-group">
-          <h2 className="journey-label-accent">YOUR JOURNEY</h2>
+          <h2 className="journey-label-accent text-primary-500">YOUR JOURNEY</h2>
         </div>
         
         <div className="journey-full-progress">
-          <span className="progress-label">FULL PROGRESS</span>
-          <div className="progress-track-bg">
+          <span className="progress-label text-neutral-500">FULL PROGRESS</span>
+          <div className="progress-track-bg bg-neutral-100">
             <div 
-              className="progress-track-fill" 
+              className="progress-track-fill bg-primary-500" 
               style={{ width: `${status.percentageComplete}%` }}
             ></div>
           </div>
-          <span className="progress-percentage">{status.percentageComplete}%</span>
+          <span className="progress-percentage text-neutral-800">{status.percentageComplete}%</span>
         </div>
       </div>
 
@@ -125,8 +125,8 @@ export const OnboardingProgress: React.FC = () => {
                 onClick={() => isProxyMode ? saNavigate(step.path) : navigate(step.path)}
                 style={{ cursor: 'pointer' }}
               >
-                <div className="step-connector-line" />
-                <div className="step-circle">
+                <div className={`step-connector-line ${isComplete ? 'bg-primary-500' : 'bg-neutral-200'}`} />
+                <div className={`step-circle ${isComplete ? 'bg-primary-500 text-white' : isActive ? 'ring-2 ring-primary-500 bg-white text-primary-500' : 'bg-neutral-100 text-neutral-400'}`}>
                   <div className="circle-inner">
                     {isComplete ? (
                       <i className="bi bi-check-lg"></i>
@@ -134,16 +134,16 @@ export const OnboardingProgress: React.FC = () => {
                       <i className={`bi bi-${step.icon}`}></i>
                     )}
                   </div>
-                  {isActive && <div className="active-pulse-ring" />}
+                  {isActive && <div className="active-pulse-ring animate-ping bg-primary-500/20" />}
                 </div>
               </div>
 
               <div className="step-caption-container">
-                <span className="step-number-label">STEP {index + 1}</span>
-                <Link to={step.path} className="step-title-link">
+                <span className="step-number-label text-neutral-400">STEP {index + 1}</span>
+                <Link to={step.path} className={`step-title-link ${isActive ? 'text-primary-600 font-bold' : 'text-neutral-700 font-semibold'}`}>
                   {step.label}
                 </Link>
-                <div className={`status-pill pill-${statusText.toLowerCase().replace(' ', '-')}`}>
+                <div className={`status-pill ${isComplete ? 'bg-success-50 text-success-600' : isActive ? 'bg-primary-50 text-primary-600' : 'bg-neutral-100 text-neutral-500'}`}>
                   {statusText}
                 </div>
               </div>
@@ -154,12 +154,15 @@ export const OnboardingProgress: React.FC = () => {
 
       <div className="journey-action-footer mt-5">
         <div className="d-flex justify-content-between align-items-center">
-          <div className="footer-status-text">
+          <div className="footer-status-text text-neutral-600">
             {status.percentageComplete === 100 
               ? "Congratulations! Your journey is complete." 
               : `You are ${status.percentageComplete}% through the onboarding process.`}
           </div>
-          <Link to={journeySteps.find(s => !s.complete)?.path || '#'} className="btn btn-journey-continue">
+          <Link 
+            to={journeySteps.find(s => !s.complete)?.path || '#'} 
+            className="btn bg-primary-500 hover:bg-primary-600 text-white px-5 py-3 rounded-md font-bold shadow-sm transition-all"
+          >
             {status.percentageComplete === 100 ? 'Go to Dashboard' : 'Continue Journey'}
             <i className="bi bi-arrow-right ms-2"></i>
           </Link>

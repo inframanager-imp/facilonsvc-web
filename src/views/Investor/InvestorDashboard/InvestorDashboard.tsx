@@ -132,8 +132,8 @@ export const InvestorDashboard: React.FC = () => {
         <div className="dashboard-header-section">
           <div className="d-flex align-items-center justify-content-between flex-wrap gap-3">
             <div>
-              <h1 className="dashboard-title-modern">Investor Console</h1>
-              <p className="dashboard-subtitle text-muted">Manage your profile, applications, and delegations.</p>
+              <h1 className="dashboard-title-modern text-neutral-900">Investor Console</h1>
+              <p className="dashboard-subtitle text-neutral-500">Manage your profile, applications, and delegations.</p>
             </div>
             <div className="dashboard-actions">
               {/* Future actions like 'New Application' could go here */}
@@ -141,12 +141,12 @@ export const InvestorDashboard: React.FC = () => {
           </div>
         </div>
 
-        <div className="facilon-tabs-wrapper card-premium">
+        <div className="facilon-tabs-wrapper card-premium bg-surface rounded-xl border border-neutral-200 shadow-card">
           <Tabs
             activeKey={activeTab}
             onSelect={handleTabChange}
             id="investor-dashboard-tabs"
-            className="modern-tabs mb-2"
+            className="modern-tabs mb-2 bg-neutral-50 p-1 rounded-lg"
           >
             <Tab
               eventKey={TAB_KEYS.PROFILE}
@@ -211,7 +211,7 @@ export const InvestorDashboard: React.FC = () => {
                   <i className="bi bi-check-circle-fill me-2"></i>
                   Consent Centre
                   {pendingCount > 0 && (
-                    <span className="badge-notification ms-2">
+                    <span className="badge-notification ms-2 bg-primary-500 text-white ring-2 ring-white">
                       {pendingCount}
                     </span>
                   )}
@@ -235,7 +235,7 @@ export const InvestorDashboard: React.FC = () => {
                 <span className="tab-title-content">
                   <i className="bi bi-cloud-arrow-up-fill me-2"></i>
                   Smart Upload
-                  <span className="badge-coming-soon ms-2">
+                  <span className="badge-coming-soon ms-2 bg-neutral-200 text-neutral-500 text-[10px] uppercase font-bold px-2 py-0.5 rounded">
                     Soon
                   </span>
                 </span>
