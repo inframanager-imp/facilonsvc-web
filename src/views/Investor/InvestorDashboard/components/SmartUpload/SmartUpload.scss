@@ -1,0 +1,36 @@
+.smart-upload {
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+
+  &__progress {
+    display: flex;
+    align-items: center;
+  }
+
+  &__grid {
+    display: grid;
+    // auto-fit stretches the row to however many cards exist (3 -> 3 columns,
+    // 4 -> 4 columns) while still wrapping on narrow viewports. 260px min keeps
+    // the "Re-upload / View" buttons on one line.
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+  }
+}
+
+.requirement-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 170px;
+  border: 1px solid #dee2e6;
+  transition: box-shadow 0.15s ease-in-out;
+
+  &:hover {
+    box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
+  }
+}
