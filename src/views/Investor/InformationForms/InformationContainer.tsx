@@ -20,6 +20,7 @@ import { ResidentialStatusForm } from './ResidentialStatus/ResidentialStatusForm
 import { RiskProfileForm } from './RiskProfile/RiskProfileForm';
 import { FinalSubmissionForm } from './FinalSubmission/FinalSubmissionForm';
 import { PremiumJourneyStepper } from '../../../components/PremiumJourneyStepper/PremiumJourneyStepper';
+import { isSectionVisible, getSectionLabel } from '../../../config/profileVisibility';
 import '../InvestorProfile/InvestorProfile.scss';
 
 /**
@@ -129,6 +130,14 @@ export const InformationContainer: React.FC = () => {
     reloadData: loadData,
   };
 
+  // Investor type drives the per-type profile visibility rules (hide Passport
+  // tab for RI, rename Residential Status → Aadhaar Details, hide individual
+  // fields). Defaults to undefined → "show everything", so NRI/OCI/etc are
+  // unaffected.
+  const investorType = dashboardData?.investor?.investorType ?? undefined;
+  const showPassportTab = isSectionVisible(investorType, 'passport');
+  const residentialTabLabel = getSectionLabel(investorType, 'residential', 'Residential Status');
+
   if (loading) {
     return (
       <div className="facilon-dashboard-wrapper">
@@ -185,19 +194,21 @@ export const InformationContainer: React.FC = () => {
             >
               Bank Details
             </button>
-            <button
-              type="button"
-              className={activeTab === 'passport' ? 'active' : ''}
-              onClick={() => setActiveTab('passport')}
-            >
-              Passport Details
-            </button>
+            {showPassportTab && (
+              <button
+                type="button"
+                className={activeTab === 'passport' ? 'active' : ''}
+                onClick={() => setActiveTab('passport')}
+              >
+                Passport Details
+              </button>
+            )}
             <button
               type="button"
               className={activeTab === 'residential' ? 'active' : ''}
               onClick={() => setActiveTab('residential')}
             >
-              Residential Status
+              {residentialTabLabel}
             </button>
             <button
               type="button"
@@ -258,7 +269,7 @@ export const InformationContainer: React.FC = () => {
             />
           )}
 
-          {activeTab === 'passport' && (
+          {activeTab === 'passport' && showPassportTab && (
             <PassportDetailsForm
               initialData={passport}
               onSave={loadData}

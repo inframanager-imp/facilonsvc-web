@@ -335,6 +335,20 @@
       }
     }
 
+    // Visual uppercase for free-text profile fields. The actual stored value
+    // is uppercased server-side by KycInputNormalizer on save; this rule
+    // gives investors immediate feedback while typing. Emails, passwords,
+    // dates, numbers and tel inputs keep their natural case via their input
+    // type. Any other field that legitimately needs mixed case can opt out
+    // with data-keep-case on the element.
+    //
+    // Selector intentionally excludes specific types rather than requiring
+    // type="text" so bare <input> (which defaults to text) still matches.
+    input:not([type="email"]):not([type="password"]):not([type="date"]):not([type="datetime-local"]):not([type="number"]):not([type="tel"]):not([type="file"]):not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):not([data-keep-case]),
+    textarea:not([data-keep-case]) {
+      text-transform: uppercase;
+    }
+
     input {
       width: 100%;
       height: 42px;

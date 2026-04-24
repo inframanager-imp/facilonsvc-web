@@ -6,6 +6,7 @@ import { SharedFormContext } from '../shared/types';
 import { useDelegationPermissions } from '../../../../contexts/DelegationPermissionsContext';
 import { getPermissionErrorMessage } from '../../../../utils/apiClient';
 import { PremiumSelect } from '../../../../components/PremiumSelect/PremiumSelect';
+import { isResidentIndividual } from '../../../../config/profileVisibility';
 
 const RESIDENTIAL_STATUS_OPTIONS = [
   { value: 'Resident Indian', label: 'Resident Indian' },
@@ -34,6 +35,18 @@ const TYPE_OF_PROOF_OPTIONS = [
   { value: 'Resident Proof', label: 'Resident Card' },
 ];
 
+/** RI-only validation: Aadhaar Number is required and must be 12 digits. */
+function validateRiAadhaar(formData: Partial<UserResidentialStatusDto>): Record<string, string> {
+  const errors: Record<string, string> = {};
+  const aadhaar = (formData.aadharNumber ?? '').replace(/\s+/g, '');
+  if (!aadhaar) {
+    errors.aadharNumber = 'Aadhaar Number is required.';
+  } else if (!/^\d{12}$/.test(aadhaar)) {
+    errors.aadharNumber = 'Aadhaar Number must be 12 digits.';
+  }
+  return errors;
+}
+
 interface ResidentialStatusFormProps {
   initialData: UserResidentialStatusDto | null;
   onSave: () => void;
@@ -55,6 +68,12 @@ export const ResidentialStatusForm: React.FC<ResidentialStatusFormProps> = ({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
 
+  // RI renames this tab to "Aadhaar Details" and hides everything except
+  // Aadhaar Number and Name on Aadhaar. Residential-status value is stamped
+  // to "Resident Indian" server-side on save.
+  const investorType = sharedContext.dashboardData?.investor?.investorType ?? undefined;
+  const isRi = isResidentIndividual(investorType);
+
   useEffect(() => {
     if (initialData) {
       setFormData(initialData);
@@ -64,7 +83,12 @@ export const ResidentialStatusForm: React.FC<ResidentialStatusFormProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const newErrors = validateResidentialStatus(formData as UserResidentialStatusDto);
+    // RI bypasses the full residential-status validation because most of the
+    // fields it checks (Residential Status dropdown, proof type, visa details)
+    // are hidden and default-stamped server-side.
+    const newErrors = isRi
+      ? validateRiAadhaar(formData)
+      : validateResidentialStatus(formData as UserResidentialStatusDto);
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       const firstError = Object.values(newErrors)[0];
@@ -90,6 +114,48 @@ export const ResidentialStatusForm: React.FC<ResidentialStatusFormProps> = ({
       setSaving(false);
     }
   };
+
+  if (isRi) {
+    // RI Aadhaar Details — minimal form. Residential status, proof of
+    // address, OCI fields and visa block are all hidden; the backend stamps
+    // residentialStatus = "Resident Indian" on save.
+    return (
+      <form className="investor-profile__card" onSubmit={handleSubmit}>
+        <div className="investor-profile__grid">
+          <div className="form-group">
+            <label>Aadhaar Number<span className="text-danger">*</span></label>
+            <input
+              type="text"
+              maxLength={12}
+              className={errors.aadharNumber ? 'form-control is-invalid' : 'form-control'}
+              value={formData.aadharNumber ?? ''}
+              onChange={(e) => setFormData({ ...formData, aadharNumber: e.target.value })}
+              placeholder="12-digit Aadhaar number"
+            />
+            {errors.aadharNumber && <div className="invalid-feedback">{errors.aadharNumber}</div>}
+          </div>
+          <div className="form-group">
+            <label>Name on Aadhaar</label>
+            <input
+              type="text"
+              className="form-control"
+              value={formData.nameOnAadhaar ?? ''}
+              onChange={(e) => setFormData({ ...formData, nameOnAadhaar: e.target.value })}
+              placeholder="Name as printed on your Aadhaar card"
+            />
+          </div>
+        </div>
+        <button type="submit" className="btn-save" disabled={saving || !canEdit}>
+          {saving ? 'Saving...' : 'Save'}
+        </button>
+        {!canEdit && delegationPerms.isProxyMode && (
+          <small className="text-warning d-block mt-2">
+            You don't have permission to edit KYC information. Contact the investor to update delegation permissions.
+          </small>
+        )}
+      </form>
+    );
+  }
 
   return (
     <form className="investor-profile__card" onSubmit={handleSubmit}>

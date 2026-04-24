@@ -134,6 +134,8 @@ export interface UserResidentialStatusDto {
   aadharNumberOption?: string; // "yes" | "no" (has Aadhaar?)
   aadharNumber?: string;
   userAadharNo?: string;
+  /** Name as printed on the Aadhaar card (RI flow captures this). */
+  nameOnAadhaar?: string;
 
   // OCI availability + date-of-OCI (Laravel: oci_available, date_of_oci)
   ociAvailable?: string; // "yes" | "no"

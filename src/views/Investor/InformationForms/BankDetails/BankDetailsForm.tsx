@@ -6,6 +6,7 @@ import { SharedFormContext } from '../shared/types';
 import { useDelegationPermissions } from '../../../../contexts/DelegationPermissionsContext';
 import { getPermissionErrorMessage } from '../../../../utils/apiClient';
 import { PremiumSelect } from '../../../../components/PremiumSelect/PremiumSelect';
+import { isResidentIndividual, isFieldVisible } from '../../../../config/profileVisibility';
 
 const ACCOUNT_TYPE_OPTIONS = [
   { value: 'savings', label: 'Savings' },
@@ -53,11 +54,35 @@ export const BankDetailsForm: React.FC<BankDetailsFormProps> = ({
   const [saving, setSaving] = useState(false);
   const [preferredBank, setPreferredBank] = useState<PreferredBankDto | null>(null);
 
+  // RI profile rules: hide NRE/NRO/PIS block + Country, prefill beneficiary
+  // name from registration, and skip the settlement-account-type gate that
+  // otherwise blocks the rest of the form.
+  const investorType = sharedContext.dashboardData?.investor?.investorType ?? undefined;
+  const isRi = isResidentIndividual(investorType);
+  const showSettlementQuestion = isFieldVisible(investorType, 'bank.haveNreAccount');
+  const showSettlementAccountType = isFieldVisible(investorType, 'bank.settlementAccountType');
+  const showPisBlock = isFieldVisible(investorType, 'bank.rbiApproval');
+
   useEffect(() => {
     if (initialData) {
-      setFormData(initialData);
+      const hydrated: Partial<UserBankDetailsDto> = { ...initialData };
+      if (isRi) {
+        // Beneficiary name defaults to the registered name when empty.
+        const dash = sharedContext.dashboardData?.investor;
+        const full = [dash?.firstName, dash?.lastName]
+          .filter((s) => s && s.trim() !== '')
+          .join(' ')
+          .trim();
+        if ((!hydrated.beneficiaryName || hydrated.beneficiaryName.trim() === '') && full) {
+          hydrated.beneficiaryName = full;
+        }
+        if (!hydrated.bankDetailsCountry) {
+          hydrated.bankDetailsCountry = 'India';
+        }
+      }
+      setFormData(hydrated);
     }
-  }, [initialData]);
+  }, [initialData, isRi, sharedContext.dashboardData]);
 
   // Load broker's preferred bank (Laravel parity) and prefill bankName when empty
   useEffect(() => {
@@ -84,8 +109,9 @@ export const BankDetailsForm: React.FC<BankDetailsFormProps> = ({
     e.preventDefault();
 
     // settlementAccountType is now an explicit radio the user answers (Laravel parity).
-    // Require it before submit.
-    if (!formData.settlementAccountType) {
+    // Require it before submit — except for RI, where the question is hidden
+    // because NRE/NRO accounts don't apply.
+    if (!isRi && !formData.settlementAccountType) {
       setErrors({ settlementAccountType: 'Please answer the NRE-account question.' });
       toast.error('Please answer: Do you already have a NRE account?');
       return;
@@ -122,44 +148,50 @@ export const BankDetailsForm: React.FC<BankDetailsFormProps> = ({
   return (
     <form className="investor-profile__card" onSubmit={handleSubmit}>
       {/* <h3>Bank Details</h3> */}
-      <div className="investor-profile__grid">
-        {/* Laravel parity: settlement_account_type — gate the bank fields on this answer.
-            When the broker has a preferred bank configured, the question names the bank
-            (matches Laravel: "Do you already have a NRE account with {bank}?"). */}
-        <div className="form-group form-group--full">
-          <label>
-            {preferredBank?.isBroker && preferredBank.bankName
-              ? `Do you already have a NRE account with ${preferredBank.bankName}?`
-              : 'Do you already have a NRE account?'}
-            {' '}<span className="text-danger">*</span>
-          </label>
-          <div style={{ display: 'flex', gap: '1.5rem', marginTop: '0.4rem' }}>
-            <label style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 'normal' }}>
-              <input
-                type="radio"
-                name="settlementAccountType"
-                value="yes"
-                checked={formData.settlementAccountType === 'yes'}
-                onChange={() => setFormData({ ...formData, settlementAccountType: 'yes' })}
-              /> Yes
+      {showSettlementQuestion && (
+        <div className="investor-profile__grid">
+          {/* Laravel parity: settlement_account_type — gate the bank fields on this answer.
+              When the broker has a preferred bank configured, the question names the bank
+              (matches Laravel: "Do you already have a NRE account with {bank}?").
+              RI hides this entirely — NRE/NRO accounts don't apply. */}
+          <div className="form-group form-group--full">
+            <label>
+              {preferredBank?.isBroker && preferredBank.bankName
+                ? `Do you already have a NRE account with ${preferredBank.bankName}?`
+                : 'Do you already have a NRE account?'}
+              {' '}<span className="text-danger">*</span>
             </label>
-            <label style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 'normal' }}>
-              <input
-                type="radio"
-                name="settlementAccountType"
-                value="no"
-                checked={formData.settlementAccountType === 'no'}
-                onChange={() => setFormData({ ...formData, settlementAccountType: 'no' })}
-              /> No
-            </label>
+            <div style={{ display: 'flex', gap: '1.5rem', marginTop: '0.4rem' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 'normal' }}>
+                <input
+                  type="radio"
+                  name="settlementAccountType"
+                  value="yes"
+                  checked={formData.settlementAccountType === 'yes'}
+                  onChange={() => setFormData({ ...formData, settlementAccountType: 'yes' })}
+                /> Yes
+              </label>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 'normal' }}>
+                <input
+                  type="radio"
+                  name="settlementAccountType"
+                  value="no"
+                  checked={formData.settlementAccountType === 'no'}
+                  onChange={() => setFormData({ ...formData, settlementAccountType: 'no' })}
+                /> No
+              </label>
+            </div>
+            {errors.settlementAccountType && <div className="invalid-feedback">{errors.settlementAccountType}</div>}
           </div>
-          {errors.settlementAccountType && <div className="invalid-feedback">{errors.settlementAccountType}</div>}
         </div>
-      </div>
+      )}
 
       {/* Laravel equivalent of #show_account_type_div — show the remaining bank fields
-          only once the settlement-account question has been answered. */}
-      {(formData.settlementAccountType === 'yes' || formData.settlementAccountType === 'no') && (
+          only once the settlement-account question has been answered. For RI the
+          question is hidden, so the fields render unconditionally. */}
+      {(isRi
+        || formData.settlementAccountType === 'yes'
+        || formData.settlementAccountType === 'no') && (
         <div className="investor-profile__grid">
           <div className="form-group">
             <label>Bank Name <span className="text-danger">*</span></label>
@@ -176,14 +208,18 @@ export const BankDetailsForm: React.FC<BankDetailsFormProps> = ({
             <PremiumSelect
               value={formData.accountType ?? ''}
               onChange={(val) => setFormData({ ...formData, accountType: val })}
-              options={ACCOUNT_TYPE_OPTIONS}
+              // RI: only Savings / Current are valid account types; NRE/NRO options hidden.
+              options={showSettlementAccountType
+                ? ACCOUNT_TYPE_OPTIONS
+                : ACCOUNT_TYPE_OPTIONS.filter(o => o.value !== 'nre' && o.value !== 'nro')}
               error={errors.accountType}
             />
             {errors.accountType && <div className="invalid-feedback">{errors.accountType}</div>}
           </div>
 
-          {/* PIS fields — Laravel shows only for NRE (line 1922) */}
-          {formData.accountType === 'nre' && (
+          {/* PIS fields — Laravel shows only for NRE (line 1922); additionally
+              gated by the RI visibility rule so the block can never render. */}
+          {showPisBlock && formData.accountType === 'nre' && (
             <>
               <div className="form-group form-group--full">
                 <label>Do you have PIS Approval? <span className="text-danger">*</span></label>

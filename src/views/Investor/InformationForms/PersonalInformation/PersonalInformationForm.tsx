@@ -7,6 +7,7 @@ import { SharedFormContext } from '../shared/types';
 import { useDelegationPermissions } from '../../../../contexts/DelegationPermissionsContext';
 import { getPermissionErrorMessage } from '../../../../utils/apiClient';
 import { PremiumSelect } from '../../../../components/PremiumSelect/PremiumSelect';
+import { isResidentIndividual } from '../../../../config/profileVisibility';
 
 const TITLE_OPTIONS = [
   { value: 'Mr', label: 'Mr' },
@@ -76,15 +77,27 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProps> = (
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
 
+  // Per-type profile rules. RI tightens the maiden-name visibility to
+  // Female + Married (vs the default Female OR Married used elsewhere) and
+  // pre-fills Citizenship / Country of Residence to India so the hidden-for-
+  // RI inputs don't submit blanks.
+  const investorType = sharedContext.dashboardData?.investor?.investorType ?? undefined;
+  const isRi = isResidentIndividual(investorType);
+
   useEffect(() => {
     if (initialData) {
-      setFormData({
+      const hydrated: Partial<UserPersonalInformationDto> = {
         ...initialData,
         userDob: normalizeDateForInput(initialData.userDob),
         countryOfResidence: normalizeCountryOfResidenceForForm(initialData.countryOfResidence),
-      });
+      };
+      if (isRi) {
+        if (!hydrated.citizenship) hydrated.citizenship = 'India';
+        if (!hydrated.countryOfResidence) hydrated.countryOfResidence = 'India';
+      }
+      setFormData(hydrated);
     }
-  }, [initialData]);
+  }, [initialData, isRi]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -194,8 +207,11 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProps> = (
           {errors.maritalStatus && <div className="invalid-feedback">{errors.maritalStatus}</div>}
         </div>
 
-        {/* Maiden Name - Show if Female or Married */}
-        {(formData.gender === 'Female' || formData.maritalStatus === '2') && (
+        {/* Maiden Name — default rule is Female OR Married; RI tightens to
+            Female AND Married per the RI profile-visibility matrix. */}
+        {(isRi
+          ? formData.gender === 'Female' && formData.maritalStatus === '2'
+          : formData.gender === 'Female' || formData.maritalStatus === '2') && (
           <>
             {/* Maiden Name (if applicable) */}
             <div className="form-group form-group--full">
