@@ -8,36 +8,37 @@ import { useDelegationPermissions } from '../../../../contexts/DelegationPermiss
 import { getPermissionErrorMessage } from '../../../../utils/apiClient';
 import { PremiumSelect } from '../../../../components/PremiumSelect/PremiumSelect';
 
+// Dropdown values are UPPERCASE — see convention in shared/constants.ts.
 const YES_NO_OPTIONS = [
-  { value: 'yes', label: 'Yes' },
-  { value: 'no', label: 'No' },
+  { value: 'YES', label: 'Yes' },
+  { value: 'NO', label: 'No' },
 ];
 
 const TIN_TYPE_OPTIONS = [
-  { value: 'pan', label: 'PAN' },
-  { value: 'tan', label: 'TAN' },
-  { value: 'tin', label: 'TIN' },
-  { value: 'other', label: 'Other' },
+  { value: 'PAN', label: 'PAN' },
+  { value: 'TAN', label: 'TAN' },
+  { value: 'TIN', label: 'TIN' },
+  { value: 'OTHER', label: 'Other' },
 ];
 
 const CRS_DECLARATION_OPTIONS = [
-  { value: 'yes', label: 'Yes' },
-  { value: 'no', label: 'No' },
-  { value: 'not-applicable', label: 'Not Applicable' },
+  { value: 'YES', label: 'Yes' },
+  { value: 'NO', label: 'No' },
+  { value: 'NOT-APPLICABLE', label: 'Not Applicable' },
 ];
 
 const RESIDENCY_STATUS_OPTIONS = [
-  { value: 'resident', label: 'Resident' },
-  { value: 'non-resident', label: 'Non-Resident' },
+  { value: 'RESIDENT', label: 'Resident' },
+  { value: 'NON-RESIDENT', label: 'Non-Resident' },
 ];
 
 const ANNUAL_INCOME_OPTIONS = [
-  { value: 'below-5lakh', label: 'Below ₹5 Lakh' },
-  { value: '5-10lakh', label: '₹5-10 Lakh' },
-  { value: '10-25lakh', label: '₹10-25 Lakh' },
-  { value: '25-50lakh', label: '₹25-50 Lakh' },
-  { value: '50lakh-1cr', label: '₹50 Lakh - 1 Crore' },
-  { value: 'above-1cr', label: 'Above ₹1 Crore' },
+  { value: 'BELOW-5LAKH', label: 'Below ₹5 Lakh' },
+  { value: '5-10LAKH', label: '₹5-10 Lakh' },
+  { value: '10-25LAKH', label: '₹10-25 Lakh' },
+  { value: '25-50LAKH', label: '₹25-50 Lakh' },
+  { value: '50LAKH-1CR', label: '₹50 Lakh - 1 Crore' },
+  { value: 'ABOVE-1CR', label: 'Above ₹1 Crore' },
 ];
 
 interface TaxInformationFormProps {

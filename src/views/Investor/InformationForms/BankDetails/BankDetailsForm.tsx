@@ -8,15 +8,16 @@ import { getPermissionErrorMessage } from '../../../../utils/apiClient';
 import { PremiumSelect } from '../../../../components/PremiumSelect/PremiumSelect';
 import { isResidentIndividual, isFieldVisible } from '../../../../config/profileVisibility';
 
+// Dropdown values are UPPERCASE — see convention in shared/constants.ts.
 const ACCOUNT_TYPE_OPTIONS = [
-  { value: 'savings', label: 'Savings' },
-  { value: 'current', label: 'Current' },
-  { value: 'nro', label: 'NRO' },
-  { value: 'nre', label: 'NRE' },
+  { value: 'SAVINGS', label: 'Savings' },
+  { value: 'CURRENT', label: 'Current' },
+  { value: 'NRO', label: 'NRO' },
+  { value: 'NRE', label: 'NRE' },
 ];
 
 const COUNTRY_OPTIONS = [
-  { value: 'India', label: 'INDIA' },
+  { value: 'INDIA', label: 'INDIA' },
 ];
 
 /** Indian states & UTs — Laravel populates this from master_states filtered to India. */
@@ -77,7 +78,7 @@ export const BankDetailsForm: React.FC<BankDetailsFormProps> = ({
           hydrated.beneficiaryName = full;
         }
         if (!hydrated.bankDetailsCountry) {
-          hydrated.bankDetailsCountry = 'India';
+          hydrated.bankDetailsCountry = 'INDIA';
         }
       }
       setFormData(hydrated);
@@ -166,18 +167,18 @@ export const BankDetailsForm: React.FC<BankDetailsFormProps> = ({
                 <input
                   type="radio"
                   name="settlementAccountType"
-                  value="yes"
-                  checked={formData.settlementAccountType === 'yes'}
-                  onChange={() => setFormData({ ...formData, settlementAccountType: 'yes' })}
+                  value="YES"
+                  checked={formData.settlementAccountType === 'YES'}
+                  onChange={() => setFormData({ ...formData, settlementAccountType: 'YES' })}
                 /> Yes
               </label>
               <label style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 'normal' }}>
                 <input
                   type="radio"
                   name="settlementAccountType"
-                  value="no"
-                  checked={formData.settlementAccountType === 'no'}
-                  onChange={() => setFormData({ ...formData, settlementAccountType: 'no' })}
+                  value="NO"
+                  checked={formData.settlementAccountType === 'NO'}
+                  onChange={() => setFormData({ ...formData, settlementAccountType: 'NO' })}
                 /> No
               </label>
             </div>
@@ -190,8 +191,8 @@ export const BankDetailsForm: React.FC<BankDetailsFormProps> = ({
           only once the settlement-account question has been answered. For RI the
           question is hidden, so the fields render unconditionally. */}
       {(isRi
-        || formData.settlementAccountType === 'yes'
-        || formData.settlementAccountType === 'no') && (
+        || formData.settlementAccountType === 'YES'
+        || formData.settlementAccountType === 'NO') && (
         <div className="investor-profile__grid">
           <div className="form-group">
             <label>Bank Name <span className="text-danger">*</span></label>
@@ -211,7 +212,7 @@ export const BankDetailsForm: React.FC<BankDetailsFormProps> = ({
               // RI: only Savings / Current are valid account types; NRE/NRO options hidden.
               options={showSettlementAccountType
                 ? ACCOUNT_TYPE_OPTIONS
-                : ACCOUNT_TYPE_OPTIONS.filter(o => o.value !== 'nre' && o.value !== 'nro')}
+                : ACCOUNT_TYPE_OPTIONS.filter(o => o.value !== 'NRE' && o.value !== 'NRO')}
               error={errors.accountType}
             />
             {errors.accountType && <div className="invalid-feedback">{errors.accountType}</div>}
@@ -219,7 +220,7 @@ export const BankDetailsForm: React.FC<BankDetailsFormProps> = ({
 
           {/* PIS fields — Laravel shows only for NRE (line 1922); additionally
               gated by the RI visibility rule so the block can never render. */}
-          {showPisBlock && formData.accountType === 'nre' && (
+          {showPisBlock && formData.accountType === 'NRE' && (
             <>
               <div className="form-group form-group--full">
                 <label>Do you have PIS Approval? <span className="text-danger">*</span></label>
@@ -228,24 +229,24 @@ export const BankDetailsForm: React.FC<BankDetailsFormProps> = ({
                     <input
                       type="radio"
                       name="rbiApproval"
-                      value="yes"
-                      checked={formData.rbiApproval === 'yes'}
-                      onChange={() => setFormData({ ...formData, rbiApproval: 'yes' })}
+                      value="YES"
+                      checked={formData.rbiApproval === 'YES'}
+                      onChange={() => setFormData({ ...formData, rbiApproval: 'YES' })}
                     /> Yes
                   </label>
                   <label style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 'normal' }}>
                     <input
                       type="radio"
                       name="rbiApproval"
-                      value="no"
-                      checked={formData.rbiApproval === 'no'}
-                      onChange={() => setFormData({ ...formData, rbiApproval: 'no' })}
+                      value="NO"
+                      checked={formData.rbiApproval === 'NO'}
+                      onChange={() => setFormData({ ...formData, rbiApproval: 'NO' })}
                     /> No
                   </label>
                 </div>
               </div>
 
-              {formData.rbiApproval === 'yes' && (
+              {formData.rbiApproval === 'YES' && (
                 <>
                   <div className="form-group">
                     <label>PIS Approval No <span className="text-danger">*</span></label>
@@ -337,7 +338,7 @@ export const BankDetailsForm: React.FC<BankDetailsFormProps> = ({
           <div className="form-group">
             <label>Country <span className="text-danger">*</span></label>
             <PremiumSelect
-              value={formData.bankDetailsCountry ?? 'India'}
+              value={formData.bankDetailsCountry ?? 'INDIA'}
               onChange={(val) => setFormData({ ...formData, bankDetailsCountry: val })}
               options={COUNTRY_OPTIONS}
             />

@@ -9,18 +9,21 @@ import { getPermissionErrorMessage } from '../../../../utils/apiClient';
 import { PremiumSelect } from '../../../../components/PremiumSelect/PremiumSelect';
 import { isResidentIndividual } from '../../../../config/profileVisibility';
 
+// Dropdown values are UPPERCASE — see docs/convention in shared/constants.ts.
+// Labels stay in readable case for display. Marital status values stay
+// numeric because they're position codes, not language tokens.
 const TITLE_OPTIONS = [
-  { value: 'Mr', label: 'Mr' },
-  { value: 'Mrs', label: 'Mrs' },
-  { value: 'Miss', label: 'Miss' },
-  { value: 'Ms', label: 'Ms' },
-  { value: 'Dr', label: 'Dr' },
+  { value: 'MR', label: 'Mr' },
+  { value: 'MRS', label: 'Mrs' },
+  { value: 'MISS', label: 'Miss' },
+  { value: 'MS', label: 'Ms' },
+  { value: 'DR', label: 'Dr' },
 ];
 
 const GENDER_OPTIONS = [
-  { value: 'Male', label: 'Male' },
-  { value: 'Female', label: 'Female' },
-  { value: 'Transgender', label: 'Transgender' },
+  { value: 'MALE', label: 'Male' },
+  { value: 'FEMALE', label: 'Female' },
+  { value: 'TRANSGENDER', label: 'Transgender' },
 ];
 
 const MARITAL_STATUS_OPTIONS = [
@@ -32,28 +35,28 @@ const MARITAL_STATUS_OPTIONS = [
 ];
 
 const MAIDEN_TITLE_OPTIONS = [
-  { value: 'Mr', label: 'Mr' },
-  { value: 'Mrs', label: 'Mrs' },
-  { value: 'Miss', label: 'Miss' },
+  { value: 'MR', label: 'Mr' },
+  { value: 'MRS', label: 'Mrs' },
+  { value: 'MISS', label: 'Miss' },
 ];
 
 const FATHER_TITLE_OPTIONS = [
-  { value: 'Mr', label: 'Mr' },
-  { value: 'Shri', label: 'Shri' },
-  { value: 'Late', label: 'Late' },
+  { value: 'MR', label: 'Mr' },
+  { value: 'SHRI', label: 'Shri' },
+  { value: 'LATE', label: 'Late' },
 ];
 
 const MOTHER_TITLE_OPTIONS = [
-  { value: 'Mrs', label: 'Mrs' },
-  { value: 'Miss', label: 'Miss' },
-  { value: 'Shrimati', label: 'Shrimati' },
-  { value: 'Late', label: 'Late' },
+  { value: 'MRS', label: 'Mrs' },
+  { value: 'MISS', label: 'Miss' },
+  { value: 'SHRIMATI', label: 'Shrimati' },
+  { value: 'LATE', label: 'Late' },
 ];
 
 const SPOUSE_TITLE_OPTIONS = [
-  { value: 'Mr', label: 'Mr' },
-  { value: 'Mrs', label: 'Mrs' },
-  { value: 'Miss', label: 'Miss' },
+  { value: 'MR', label: 'Mr' },
+  { value: 'MRS', label: 'Mrs' },
+  { value: 'MISS', label: 'Miss' },
 ];
 
 interface PersonalInformationFormProps {
@@ -210,8 +213,8 @@ export const PersonalInformationForm: React.FC<PersonalInformationFormProps> = (
         {/* Maiden Name — default rule is Female OR Married; RI tightens to
             Female AND Married per the RI profile-visibility matrix. */}
         {(isRi
-          ? formData.gender === 'Female' && formData.maritalStatus === '2'
-          : formData.gender === 'Female' || formData.maritalStatus === '2') && (
+          ? formData.gender === 'FEMALE' && formData.maritalStatus === '2'
+          : formData.gender === 'FEMALE' || formData.maritalStatus === '2') && (
           <>
             {/* Maiden Name (if applicable) */}
             <div className="form-group form-group--full">

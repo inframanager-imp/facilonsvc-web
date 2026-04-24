@@ -7,25 +7,26 @@ import { useDelegationPermissions } from '../../../../contexts/DelegationPermiss
 import { getPermissionErrorMessage } from '../../../../utils/apiClient';
 import { PremiumSelect } from '../../../../components/PremiumSelect/PremiumSelect';
 
+// Dropdown values are UPPERCASE — see convention in shared/constants.ts.
 const CONTACT_PROOF_OPTIONS = [
-  { value: 'Passport', label: 'Passport' },
-  { value: 'Driving License', label: 'Driving License' },
-  { value: 'Utility Bill issued within 2 months', label: 'Utility Bill issued within 2 months' },
-  { value: 'Bank Statement issued within 2 months', label: 'Bank Statement issued within 2 months' },
+  { value: 'PASSPORT', label: 'Passport' },
+  { value: 'DRIVING LICENSE', label: 'Driving License' },
+  { value: 'UTILITY BILL ISSUED WITHIN 2 MONTHS', label: 'Utility Bill issued within 2 months' },
+  { value: 'BANK STATEMENT ISSUED WITHIN 2 MONTHS', label: 'Bank Statement issued within 2 months' },
 ];
 
 const ADDRESS_TYPE_OPTIONS = [
-  { value: 'Office', label: 'Office' },
-  { value: 'Business', label: 'Business' },
-  { value: 'Residential/Business', label: 'Residential/Business' },
-  { value: 'Unspecified', label: 'Unspecified' },
+  { value: 'OFFICE', label: 'Office' },
+  { value: 'BUSINESS', label: 'Business' },
+  { value: 'RESIDENTIAL/BUSINESS', label: 'Residential/Business' },
+  { value: 'UNSPECIFIED', label: 'Unspecified' },
 ];
 
 const CONTACT_METHOD_OPTIONS = [
-  { value: 'email', label: 'Email' },
-  { value: 'mobile', label: 'Mobile' },
-  { value: 'whatsapp', label: 'WhatsApp' },
-  { value: 'landline', label: 'Landline' },
+  { value: 'EMAIL', label: 'Email' },
+  { value: 'MOBILE', label: 'Mobile' },
+  { value: 'WHATSAPP', label: 'WhatsApp' },
+  { value: 'LANDLINE', label: 'Landline' },
 ];
 
 interface ContactDetailsFormProps {

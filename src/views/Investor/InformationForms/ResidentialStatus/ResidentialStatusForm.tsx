@@ -8,31 +8,32 @@ import { getPermissionErrorMessage } from '../../../../utils/apiClient';
 import { PremiumSelect } from '../../../../components/PremiumSelect/PremiumSelect';
 import { isResidentIndividual } from '../../../../config/profileVisibility';
 
+// Dropdown values are UPPERCASE — see convention in shared/constants.ts.
 const RESIDENTIAL_STATUS_OPTIONS = [
-  { value: 'Resident Indian', label: 'Resident Indian' },
+  { value: 'RESIDENT INDIAN', label: 'Resident Indian' },
   { value: 'NRI', label: 'NRI' },
   { value: 'OCI', label: 'OCI' },
   { value: 'PIO', label: 'PIO' },
-  { value: 'Foreign National', label: 'Foreign National' },
+  { value: 'FOREIGN NATIONAL', label: 'Foreign National' },
 ];
 
 const YES_NO_OPTIONS = [
-  { value: 'yes', label: 'Yes' },
-  { value: 'no', label: 'No' },
+  { value: 'YES', label: 'Yes' },
+  { value: 'NO', label: 'No' },
 ];
 
 const PROOF_OF_ADDRESS_OPTIONS = [
-  { value: 'Passport', label: 'Passport' },
-  { value: 'Driving License', label: 'Driving License' },
-  { value: 'Aadhaar', label: 'Aadhaar' },
-  { value: 'Voter ID', label: 'Voter ID' },
-  { value: 'Utility Bill issued within 2 months', label: 'Utility Bill (within 2 months)' },
-  { value: 'Bank Statement', label: 'Bank Statement' },
+  { value: 'PASSPORT', label: 'Passport' },
+  { value: 'DRIVING LICENSE', label: 'Driving License' },
+  { value: 'AADHAAR', label: 'Aadhaar' },
+  { value: 'VOTER ID', label: 'Voter ID' },
+  { value: 'UTILITY BILL ISSUED WITHIN 2 MONTHS', label: 'Utility Bill (within 2 months)' },
+  { value: 'BANK STATEMENT', label: 'Bank Statement' },
 ];
 
 const TYPE_OF_PROOF_OPTIONS = [
-  { value: 'Visa', label: 'Visa' },
-  { value: 'Resident Proof', label: 'Resident Card' },
+  { value: 'VISA', label: 'Visa' },
+  { value: 'RESIDENT PROOF', label: 'Resident Card' },
 ];
 
 /** RI-only validation: Aadhaar Number is required and must be 12 digits. */
@@ -207,7 +208,7 @@ export const ResidentialStatusForm: React.FC<ResidentialStatusFormProps> = ({
         </div>
 
         {/* Aadhaar number (shown if aadharNumberOption = yes) */}
-        {formData.aadharNumberOption === 'yes' && (
+        {formData.aadharNumberOption === 'YES' && (
           <>
             <div className="form-group">
               <label>Aadhaar Number<span className="text-danger">*</span></label>
@@ -244,7 +245,7 @@ export const ResidentialStatusForm: React.FC<ResidentialStatusFormProps> = ({
         </div>
 
         {/* Date of OCI (shown if ociAvailable = yes) */}
-        {formData.ociAvailable === 'yes' && (
+        {formData.ociAvailable === 'YES' && (
           <div className="form-group">
             <label>Date of OCI</label>
             <input
@@ -302,7 +303,7 @@ export const ResidentialStatusForm: React.FC<ResidentialStatusFormProps> = ({
         </div>
 
         {/* Visa Fields - Shown when Type of Proof = "Visa" */}
-        {formData.userTypeOfProof === 'Visa' && (
+        {formData.userTypeOfProof === 'VISA' && (
           <>
             <div className="form-group">
               <label>Visa Types<span className="text-danger">*</span></label>
@@ -351,7 +352,7 @@ export const ResidentialStatusForm: React.FC<ResidentialStatusFormProps> = ({
         )}
 
         {/* Resident Card Fields - Shown when Type of Proof = "Resident Proof" */}
-        {formData.userTypeOfProof === 'Resident Proof' && (
+        {formData.userTypeOfProof === 'RESIDENT PROOF' && (
           <>
             <div className="form-group">
               <label>Date Of Issue<span className="text-danger">*</span></label>

@@ -5,6 +5,17 @@
   background-color: var(--facilon-bg);
   min-height: calc(100vh - 80px);
 
+  // Force every PremiumSelect dropdown inside the profile page to render its
+  // trigger and options list in UPPERCASE, regardless of which tab or form
+  // the component lives in. Labels stay readable in source; this is a pure
+  // visual mirror of the "UPPERCASE everywhere" convention already applied
+  // to free-text inputs. Stored option `value`s are UPPERCASE per the
+  // shared/constants convention.
+  .premium-select-trigger .selected-value,
+  .premium-select-options .premium-select-option {
+    text-transform: uppercase;
+  }
+
   @media (max-width: 1200px) {
     padding: 0 0 2rem;
   }

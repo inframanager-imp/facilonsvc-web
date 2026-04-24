@@ -1,45 +1,51 @@
 /**
  * Shared constants for investor information forms
  * Extracted from InvestorProfile.tsx
+ *
+ * CONVENTION: dropdown `value`s are always stored UPPERCASE so the value
+ * persisted to the DB matches the UI state on round-trip without any
+ * case-normalisation layer. Labels stay in readable case for display.
+ * Numeric-only values (marital-status codes, income-bracket ids) stay as
+ * their original codes — they're not language tokens.
  */
 
 /** Nomination: relationship options (aligned with Laravel / investor nomination forms). */
 export const NOMINATION_RELATIONSHIP_OPTIONS: { value: string; label: string }[] = [
   { value: '', label: 'Select' },
-  { value: 'spouse', label: 'Spouse' },
-  { value: 'parent', label: 'Parent' },
-  { value: 'child', label: 'Child' },
-  { value: 'sibling', label: 'Sibling' },
-  { value: 'other', label: 'Other' },
+  { value: 'SPOUSE', label: 'Spouse' },
+  { value: 'PARENT', label: 'Parent' },
+  { value: 'CHILD', label: 'Child' },
+  { value: 'SIBLING', label: 'Sibling' },
+  { value: 'OTHER', label: 'Other' },
 ];
 
 export const NOMINATION_DOC_TYPE_OPTIONS: { value: string; label: string }[] = [
   { value: '', label: 'Select' },
   { value: 'PAN', label: 'PAN' },
-  { value: 'Aadhaar', label: 'Aadhaar' },
-  { value: 'Passport', label: 'Passport' },
-  { value: 'Driving License', label: 'Driving License' },
-  { value: 'Voter ID', label: 'Voter ID' },
-  { value: 'OCI Card', label: 'OCI Card' },
-  { value: 'other', label: 'Other' },
+  { value: 'AADHAAR', label: 'Aadhaar' },
+  { value: 'PASSPORT', label: 'Passport' },
+  { value: 'DRIVING LICENSE', label: 'Driving License' },
+  { value: 'VOTER ID', label: 'Voter ID' },
+  { value: 'OCI CARD', label: 'OCI Card' },
+  { value: 'OTHER', label: 'Other' },
 ];
 
 /** Aligned with `information-update.blade.php` Section8 (Other Information). */
 export const OTHER_SOURCE_OF_FUNDS_OPTIONS: { value: string; label: string }[] = [
   { value: '', label: 'Select' },
-  { value: 'Salary', label: 'Salary' },
-  { value: 'Business Income', label: 'Business Income' },
-  { value: 'Investment Income', label: 'Investment Income' },
-  { value: 'Agriculture', label: 'Agriculture' },
-  { value: 'Others', label: 'Others' },
+  { value: 'SALARY', label: 'Salary' },
+  { value: 'BUSINESS INCOME', label: 'Business Income' },
+  { value: 'INVESTMENT INCOME', label: 'Investment Income' },
+  { value: 'AGRICULTURE', label: 'Agriculture' },
+  { value: 'OTHERS', label: 'Others' },
 ];
 
 export const OTHER_EDUCATION_OPTIONS: { value: string; label: string }[] = [
   { value: '', label: 'Select' },
-  { value: 'Under Graduate', label: 'Under-Graduate' },
-  { value: 'Graduate', label: 'Graduate' },
-  { value: 'Post Graduate', label: 'Post Graduate' },
-  { value: 'Others', label: 'Others' },
+  { value: 'UNDER GRADUATE', label: 'Under-Graduate' },
+  { value: 'GRADUATE', label: 'Graduate' },
+  { value: 'POST GRADUATE', label: 'Post Graduate' },
+  { value: 'OTHERS', label: 'Others' },
 ];
 
 export const OTHER_GROSS_INCOME_OPTIONS: { value: string; label: string }[] = [
@@ -60,23 +66,23 @@ export const OTHER_NET_WORTH_OPTIONS: { value: string; label: string }[] = [
 
 export const OTHER_OCCUPATION_OPTIONS: { value: string; label: string }[] = [
   { value: '', label: 'Select' },
-  { value: 'Salaried - Pvt Sector', label: 'Salaried - Pvt Sector' },
-  { value: 'Salaried - Public Sector', label: 'Salaried - Public Sector' },
-  { value: 'Salaried - GOVT Service', label: 'Salaried - GOVT Service' },
-  { value: 'Student', label: 'Student' },
-  { value: 'Business', label: 'Business' },
-  { value: 'Professional', label: 'Professional' },
-  { value: 'Agriiculturist', label: 'Agriiculturist' },
-  { value: 'Retired', label: 'Retired' },
-  { value: 'Housewife', label: 'Housewife' },
-  { value: 'Others', label: 'Others' },
+  { value: 'SALARIED - PVT SECTOR', label: 'Salaried - Pvt Sector' },
+  { value: 'SALARIED - PUBLIC SECTOR', label: 'Salaried - Public Sector' },
+  { value: 'SALARIED - GOVT SERVICE', label: 'Salaried - GOVT Service' },
+  { value: 'STUDENT', label: 'Student' },
+  { value: 'BUSINESS', label: 'Business' },
+  { value: 'PROFESSIONAL', label: 'Professional' },
+  { value: 'AGRIICULTURIST', label: 'Agriiculturist' },
+  { value: 'RETIRED', label: 'Retired' },
+  { value: 'HOUSEWIFE', label: 'Housewife' },
+  { value: 'OTHERS', label: 'Others' },
 ];
 
 export const OTHER_INVESTMENT_EXPERIENCE_YEARS_OPTIONS: { value: string; label: string }[] = [
   { value: '', label: 'Select' },
-  { value: 'Less than 2 years', label: 'Less than 2 years' },
-  { value: '2-5 year', label: '2-5 years' },
-  { value: 'More than 5 year', label: 'More than 5 years' },
+  { value: 'LESS THAN 2 YEARS', label: 'Less than 2 years' },
+  { value: '2-5 YEAR', label: '2-5 years' },
+  { value: 'MORE THAN 5 YEAR', label: 'More than 5 years' },
 ];
 
-export const OTHER_INVESTMENT_EXPERIENCE_IN: readonly string[] = ['Equity', 'Debt', 'Derivative', 'Commodities', 'Others'];
+export const OTHER_INVESTMENT_EXPERIENCE_IN: readonly string[] = ['EQUITY', 'DEBT', 'DERIVATIVE', 'COMMODITIES', 'OTHERS'];

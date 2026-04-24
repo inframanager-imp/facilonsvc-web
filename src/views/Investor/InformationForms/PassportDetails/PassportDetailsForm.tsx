@@ -8,13 +8,14 @@ import { useDelegationPermissions } from '../../../../contexts/DelegationPermiss
 import { getPermissionErrorMessage } from '../../../../utils/apiClient';
 import { PremiumSelect } from '../../../../components/PremiumSelect/PremiumSelect';
 
+// Dropdown values are UPPERCASE — see convention in shared/constants.ts.
 const DOCUMENT_TYPE_OPTIONS = [
-  { value: 'Aadhaar', label: 'Aadhaar' },
+  { value: 'AADHAAR', label: 'Aadhaar' },
   { value: 'PAN', label: 'PAN' },
-  { value: 'Passport', label: 'Passport' },
-  { value: 'Voter ID', label: 'Voter ID' },
-  { value: 'Driving License', label: 'Driving License' },
-  { value: 'OCI Card', label: 'OCI Card' },
+  { value: 'PASSPORT', label: 'Passport' },
+  { value: 'VOTER ID', label: 'Voter ID' },
+  { value: 'DRIVING LICENSE', label: 'Driving License' },
+  { value: 'OCI CARD', label: 'OCI Card' },
 ];
 
 interface PassportDetailsFormProps {
