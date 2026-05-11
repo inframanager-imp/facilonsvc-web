@@ -233,6 +233,11 @@ export const SelfRegistrationStep3: React.FC = () => {
     return individualData.nationality === indianNat?.id;
   };
 
+  const isIndiaResidence = () => {
+    const indiaCountry = countries.find(c => c.ssName === 'India');
+    return individualData.countryOfResidence === indiaCountry?.id;
+  };
+
   const isIndiaIncorporation = () => {
     const indiaCountry = countries.find(c => c.ssName === 'India');
     return legalEntityData.countryOfIncorporation === indiaCountry?.id;
@@ -416,33 +421,37 @@ export const SelfRegistrationStep3: React.FC = () => {
                           {errors.countryOfResidence && <span role="alert">{errors.countryOfResidence}</span>}
                         </div>
 
-                        {/* Indian specific fields */}
-                        {isIndianNationality() && (
-                          <>
-                            <div className="single-field self-sec">
-                              <label>Do you have PAN Card? <span className="star-color">*</span></label>
-                              <div className="radio-box">
-                                <label className="radio">
-                                  <input
-                                    type="radio"
-                                    name="hasPanCard"
-                                    checked={individualData.hasPanCard === true}
-                                    onChange={() => setIndividualData(p => ({ ...p, hasPanCard: true }))}
-                                  />
-                                  <span>Yes</span>
-                                </label>
-                                <label className="radio">
-                                  <input
-                                    type="radio"
-                                    name="hasPanCard"
-                                    checked={individualData.hasPanCard === false}
-                                    onChange={() => setIndividualData(p => ({ ...p, hasPanCard: false }))}
-                                  />
-                                  <span>No</span>
-                                </label>
-                              </div>
+                        {/* PAN Card — asked for Indian nationals (any residence) and for non-Indians of Indian origin */}
+                        {(isIndianNationality() || individualData.isPersonOfIndianOrigin) && (
+                          <div className="single-field self-sec">
+                            <label>Do you have PAN Card? <span className="star-color">*</span></label>
+                            <div className="radio-box">
+                              <label className="radio">
+                                <input
+                                  type="radio"
+                                  name="hasPanCard"
+                                  checked={individualData.hasPanCard === true}
+                                  onChange={() => setIndividualData(p => ({ ...p, hasPanCard: true }))}
+                                />
+                                <span>Yes</span>
+                              </label>
+                              <label className="radio">
+                                <input
+                                  type="radio"
+                                  name="hasPanCard"
+                                  checked={individualData.hasPanCard === false}
+                                  onChange={() => setIndividualData(p => ({ ...p, hasPanCard: false }))}
+                                />
+                                <span>No</span>
+                              </label>
                             </div>
+                          </div>
+                        )}
 
+                        {/* Person of Indian Origin — only asked when nationality is non-Indian.
+                            Per investor-classification table, it discriminates OCI from Foreign-National-Non-OCI. */}
+                        {!isIndianNationality() && individualData.nationality !== 0 && individualData.nationality !== undefined && (
+                          <>
                             <div className="single-field self-sec">
                               <label>Are you a person of Indian Origin? <span className="star-color">*</span></label>
                               <div className="radio-box">
@@ -460,7 +469,7 @@ export const SelfRegistrationStep3: React.FC = () => {
                                     type="radio"
                                     name="isPersonOfIndianOrigin"
                                     checked={individualData.isPersonOfIndianOrigin === false}
-                                    onChange={() => setIndividualData(p => ({ ...p, isPersonOfIndianOrigin: false }))}
+                                    onChange={() => setIndividualData(p => ({ ...p, isPersonOfIndianOrigin: false, hasOciCard: undefined }))}
                                   />
                                   <span>No</span>
                                 </label>

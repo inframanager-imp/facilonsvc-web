@@ -73,6 +73,10 @@ import { DelegationManagement } from './views/Investor/DelegationManagement/Dele
 import { ServiceAgentActivity } from './views/Investor/ServiceAgentActivity/ServiceAgentActivity';
 import ServiceAgentProxyWrapper from './components/ServiceAgentProxyWrapper/ServiceAgentProxyWrapper';
 import { SAInvestorRedirect } from './views/ServiceAgent/InvestorRedirect';
+import SpLanding from './views/ServiceProvider/SpLanding';
+import SpUserConsent from './views/ServiceProvider/SpUserConsent';
+import SpUserRegister from './views/ServiceProvider/SpUserRegister';
+import SpThankYou from './views/ServiceProvider/SpThankYou';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { ToastContainer } from './components/ToastContainer';
@@ -154,6 +158,12 @@ const App: React.FC = () => {
               </ProtectedRoute>
             }
           />
+          {/* Service Provider Onboarding (Laravel parity — entry email links to /account/investor/step?status=) */}
+          <Route path="/account/investor/step" element={<SpLanding />} />
+          <Route path="/service-provider/user-consent" element={<SpUserConsent />} />
+          <Route path="/service-provider/user-register" element={<SpUserRegister />} />
+          <Route path="/service-provider/thank-you" element={<SpThankYou />} />
+
           <Route path="/service-agreement" element={<ServiceAgreement />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/contact-us" element={<ContactUs />} />

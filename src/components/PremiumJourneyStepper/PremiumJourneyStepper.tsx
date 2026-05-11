@@ -32,7 +32,7 @@ export const PremiumJourneyStepper: React.FC<Props> = ({ dashboardData }) => {
   const journeySteps = [
     { key: 'information', label: 'Information', icon: 'person-lines-fill', path: '/investor/profile' },
     { key: 'documents', label: 'KYC Docs', icon: 'file-earmark-lock-fill', path: '/investor/documents' },
-    { key: 'onboarding', label: 'Onboarding', icon: 'file-earmark-richtext-fill', path: '/investor/documents' },
+    { key: 'onboarding', label: 'Onboarding', icon: 'file-earmark-richtext-fill', path: '/investor/onboarding' },
     { key: 'verification', label: 'Verification', icon: 'person-video', path: '/investor/verification' },
     { key: 'physical', label: 'Physical', icon: 'send-check-fill', path: '/investor/physical-submission' },
     { key: 'account', label: 'Account', icon: 'bank2', path: '/investor/account-details' },
