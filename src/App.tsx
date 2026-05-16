@@ -16,7 +16,7 @@ import UserManagement from './views/UserManagement/UserManagement';
 import RoleManagement from './views/RoleManagement/RoleManagement';
 import UserGroupManagement from './views/UserGroupManagement/UserGroupManagement';
 import Unauthorized from './views/Unauthorized/Unauthorized';
-import { 
+import {
   InvestorRegistration,
   MarketInterestCheck,
   ThankYouMessage,
@@ -24,7 +24,8 @@ import {
   SelfRegistrationConsent,
   SelfRegistrationStep2,
   SelfRegistrationStep3,
-  SelfRegistrationSuccess
+  SelfRegistrationSuccess,
+  InvestorSetPassword
 } from './views/Investor/InvestorRegistration';
 import { IntroducedInvestorWizard } from './views/Investor/IntroducedInvestorWizard/IntroducedInvestorWizard';
 import { 
@@ -126,6 +127,10 @@ const App: React.FC = () => {
           <Route path="/investor/register/otp" element={<SelfRegistrationStep2 />} />
           <Route path="/investor/register/step3" element={<SelfRegistrationStep3 />} />
           <Route path="/investor/register/success" element={<SelfRegistrationSuccess />} />
+          {/* FISP-style first-login: email link lands here; component redirects to B2C reset/signin policy.
+              The reset policy issues sign-in tokens, so its redirect goes through the standard
+              /login/callback → backend JWT exchange → dashboard. No separate /done landing page. */}
+          <Route path="/investor/setpassword/:azureUserId" element={<InvestorSetPassword />} />
           {/* Legacy single-page registration (keep for backward compatibility) */}
           <Route path="/investor/register/legacy" element={<InvestorRegistration />} />
           

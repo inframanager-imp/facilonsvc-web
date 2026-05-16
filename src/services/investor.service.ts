@@ -419,6 +419,18 @@ export interface AccountDetailsDto {
   bankAccount?: BankAccountDetails;
 }
 
+export interface SetPasswordDetailsDto {
+  azureUserId: string;
+  b2cTenantName: string;
+  clientId: string;
+  signupSigninPolicy: string;
+  resetPasswordPolicy: string;
+  redirectUri: string;
+  scope: string;
+  hasLoggedInBefore: boolean;
+  displayName: string;
+}
+
 
 class InvestorService {
   private readonly baseUrl = '/api/clients';
@@ -464,6 +476,17 @@ class InvestorService {
     const response = await this.client.post<RegistrationCompletionResponseDto>(
       `${this.baseUrl}/onboarding/register/legal-entity/${uniqueCode}`,
       data
+    );
+    return response.data;
+  }
+
+  /**
+   * Returns the B2C config + sign-in history needed by the FISP-style setpassword page.
+   * The Azure object id comes from the first-login email link.
+   */
+  async getSetPasswordDetails(azureUserId: string): Promise<SetPasswordDetailsDto> {
+    const response = await this.client.get<SetPasswordDetailsDto>(
+      `${this.baseUrl}/onboarding/setpassword/details/${encodeURIComponent(azureUserId)}`
     );
     return response.data;
   }

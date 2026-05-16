@@ -6,6 +6,7 @@ export { default as SelfRegistrationConsent } from './SelfRegistrationConsent';
 export { default as SelfRegistrationStep2 } from './SelfRegistrationStep2';
 export { default as SelfRegistrationStep3 } from './SelfRegistrationStep3';
 export { default as SelfRegistrationSuccess } from './SelfRegistrationSuccess';
+export { default as InvestorSetPassword } from './InvestorSetPassword';
 
 // Legacy single-file component (keep for backward compatibility if needed)
 export { InvestorRegistration } from './InvestorRegistration';
