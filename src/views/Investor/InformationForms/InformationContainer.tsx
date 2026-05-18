@@ -141,26 +141,20 @@ export const InformationContainer: React.FC = () => {
   if (loading) {
     return (
       <div className="facilon-dashboard-wrapper">
-        {!delegationPerms.isProxyMode && <Header />}
         <main className="container-fluid dashboard-container-main">
           <div className="loading-container" style={{ textAlign: 'center', padding: '100px 0' }}>
             <div className="spinner"></div>
             <p>Loading investor information...</p>
           </div>
         </main>
-        {!delegationPerms.isProxyMode && <Footer />}
       </div>
     );
   }
 
   return (
     <div className="facilon-dashboard-wrapper">
-      {!delegationPerms.isProxyMode && <Header />}
       <main className="container-fluid dashboard-container-main">
         <div className="investor-profile">
-          <div className="profile-header">
-            <h1>Investor Information</h1>
-          </div>
 
           {delegationPerms.isProxyMode && !delegationPerms.canViewProfile && (
             <div className="alert alert-danger" role="alert" style={{ margin: '1rem 0' }}>
@@ -345,7 +339,6 @@ export const InformationContainer: React.FC = () => {
           )}
         </div>
       </main>
-      {!delegationPerms.isProxyMode && <Footer />}
     </div>
   );
 };

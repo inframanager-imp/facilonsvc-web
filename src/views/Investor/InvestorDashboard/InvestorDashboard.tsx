@@ -126,21 +126,7 @@ export const InvestorDashboard: React.FC = () => {
 
   return (
     <div className="facilon-dashboard-wrapper">
-      <Header />
-
       <main className="container-fluid dashboard-container-main">
-        <div className="dashboard-header-section">
-          <div className="d-flex align-items-center justify-content-between flex-wrap gap-3">
-            <div>
-              <h1 className="dashboard-title-modern text-neutral-900">Investor Console</h1>
-              <p className="dashboard-subtitle text-neutral-500">Manage your profile, applications, and delegations.</p>
-            </div>
-            <div className="dashboard-actions">
-              {/* Future actions like 'New Application' could go here */}
-            </div>
-          </div>
-        </div>
-
         <div className="facilon-tabs-wrapper card-premium bg-surface rounded-xl border border-neutral-200 shadow-card">
           <Tabs
             activeKey={activeTab}

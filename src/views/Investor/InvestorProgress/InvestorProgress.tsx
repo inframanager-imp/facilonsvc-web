@@ -29,8 +29,7 @@ export const InvestorProgress: React.FC = () => {
     if (loading) return <LoadingSpinner />;
 
     return (
-        <div className="dashboard-layout investor-dashboard-layout">
-            <Header />
+        <div className="investor-dashboard-layout">
             <div className="dashboard-main-content" style={{ marginLeft: 0 }}>
                 <div className="investor-profile">
                     <PremiumJourneyStepper dashboardData={dashboardData} />

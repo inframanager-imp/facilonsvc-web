@@ -106,13 +106,8 @@ export const DelegationManagement: React.FC = () => {
 
   return (
     <div className="layout-wrapper">
-      <Header />
       <main className="container-fluid dashboard-container-main">
         <div className="delegation-management">
-          <div className="delegation-management__header mb-3">
-            <h1 className="dashboard-title-modern">Service Agent Access</h1>
-            <p className="dashboard-subtitle text-muted">Manage your service agent assignments and permissions here.</p>
-          </div>
 
           {delegations.length === 0 && (
             <div className="delegation-management__empty">

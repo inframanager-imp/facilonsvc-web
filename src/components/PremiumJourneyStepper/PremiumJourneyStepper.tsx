@@ -1,15 +1,13 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { useSAProxyNavigation } from '../../hooks/useSAProxyNavigation';
 import { type InvestorDashboardDto } from '../../services/investor.service';
-import './PremiumJourneyStepper.scss';
 
 interface Props {
   dashboardData: InvestorDashboardDto | null;
 }
 
 export const PremiumJourneyStepper: React.FC<Props> = ({ dashboardData }) => {
-  const { navigate: saNavigate, isProxyMode } = useSAProxyNavigation();
+  const { navigate: saNavigate } = useSAProxyNavigation();
 
   if (!dashboardData) return null;
 
@@ -30,79 +28,83 @@ export const PremiumJourneyStepper: React.FC<Props> = ({ dashboardData }) => {
   const currentStepKey = stepKeys.find((k) => !isDoneFor(k)) ?? 'information';
 
   const journeySteps = [
-    { key: 'information', label: 'Information', icon: 'person-lines-fill', path: '/investor/profile' },
-    { key: 'documents', label: 'KYC Docs', icon: 'file-earmark-lock-fill', path: '/investor/documents' },
-    { key: 'onboarding', label: 'Onboarding', icon: 'file-earmark-richtext-fill', path: '/investor/onboarding' },
-    { key: 'verification', label: 'Verification', icon: 'person-video', path: '/investor/verification' },
-    { key: 'physical', label: 'Physical', icon: 'send-check-fill', path: '/investor/physical-submission' },
-    { key: 'account', label: 'Account', icon: 'bank2', path: '/investor/account-details' },
+    { key: 'information', label: 'Information', icon: 'bi-person-lines-fill', path: '/investor/profile' },
+    { key: 'documents', label: 'KYC Docs', icon: 'bi-file-earmark-lock-fill', path: '/investor/documents' },
+    { key: 'onboarding', label: 'Onboarding', icon: 'bi-file-earmark-richtext-fill', path: '/investor/onboarding' },
+    { key: 'verification', label: 'Verification', icon: 'bi-person-video', path: '/investor/verification' },
+    { key: 'physical', label: 'Physical', icon: 'bi-send-check-fill', path: '/investor/physical-submission' },
+    { key: 'account', label: 'Account', icon: 'bi-bank2', path: '/investor/account-details' },
   ];
 
+  const totalProgress = progress?.progressPercentage || 0;
+
   return (
-    <div className="facilon-premium-journey-card card-ventura">
-      <div className="journey-stepper-horizontal">
+    <div className="bg-primary-700 border-1 border-neutral-200 rounded-md p-2 flex justify-between lg:flex-row items-center gap-6 mb-6 w-full">
+      {/* Journey Header & Progress */}
+      <div className="flex flex-col gap-0 min-w-[160px]">
+        <h2 className="text-white font-bold text-sm tracking-tight uppercase mb-1">Your Journey</h2>
+        <div className="flex items-center gap-3">
+          <div className="flex-1 h-1.5 bg-neutral-100 rounded-full overflow-hidden min-w-[100px]">
+            <div
+              className="h-full bg-gradient-to-r from-primary-500 to-primary-400 rounded-full transition-all duration-1000 ease-out"
+              style={{ width: `${totalProgress}%` }}
+            />
+          </div>
+          <span className="text-white font-extrabold text-lg leading-none">{totalProgress}%</span>
+        </div>
+      </div>
+
+      {/* Stepper Content */}
+      <div className="flex justify-between gap-2 relative">
         {journeySteps.map((step, idx) => {
           const isDone = isDoneFor(step.key);
           const isCurrent = currentStepKey === step.key;
-          const isPending = !isDone && !isCurrent;
-
-          let statusText = "Pending";
-          if (isDone) statusText = "Completed";
-          else if (isCurrent) statusText = "In Progress";
 
           return (
-            <div
-              key={step.key}
-              className={`journey-step-item ${isDone ? 'is-complete' : ''} ${isCurrent ? 'is-active' : ''} ${isPending ? 'is-pending' : ''}`}
-            >
-              <div
-                className="step-node-container"
-                onClick={() => saNavigate(step.path)}
-                style={{ cursor: 'pointer' }}
-              >
-                <div className="step-connector-line" />
-                <div className="step-circle">
-                  <div className="circle-inner">
-                    {isDone ? <i className="bi bi-check-lg"></i> : <i className={`bi bi-${step.icon}`}></i>}
-                  </div>
-                  {isCurrent && <div className="active-pulse-ring"></div>}
+            <div key={step.key} className="flex flex-col gap-0 items-center group relative">
+              {/* Connector Line */}
+              {idx < journeySteps.length - 1 && (
+                <div className="absolute top-[14px] left-[50%] w-full h-[2px] bg-neutral-200 z-10 group-last:hidden">
+                  <div
+                    className={`h-full bg-success-500 transition-all duration-500 ${isDone ? 'w-full' : 'w-0'}`}
+                  />
                 </div>
-              </div>
+              )}
 
-              <div className="step-caption-container">
-                {/*<span className="step-number-label">STEP {idx + 1}</span>*/}
-                <button
-                  type="button"
-                  className="step-title-link"
-                  onClick={() => saNavigate(step.path)}
-                >
-                  {step.label}
-                </button>
-                {/* <div className={`status-pill pill-${statusText.toLowerCase().replace(' ', '-')}`}>
-                  {statusText}
-                </div> */}
-              </div>
+              {/* Node */}
+              <button
+                onClick={() => saNavigate(step.path)}
+                className={`relative w-7 h-7 rounded-full flex items-center justify-center border-1 transition-all duration-300 z-10 mb-1
+                  ${isDone ? 'bg-success-500 border-success-500' : isCurrent ? 'bg-white border-primary-500' : 'bg-white border-neutral-200'}
+                  hover:scale-110 active:scale-95 shadow-sm
+                `}
+              >
+                {isDone ? (
+                  <i className="bi bi-check-lg text-white text-xs font-bold"></i>
+                ) : (
+                  <i className={`${step.icon} text-xs ${isCurrent ? 'text-primary-500 font-bold' : 'text-neutral-400'}`}></i>
+                )}
+
+                {/* Active Pulse */}
+                {isCurrent && (
+                  <div className="absolute -inset-1 border-2 border-primary-500 rounded-full animate-ping opacity-20" />
+                )}
+              </button>
+
+              {/* Label */}
+              <button
+                onClick={() => saNavigate(step.path)}
+                className={`text-[10px] font-medium transition-colors
+                  ${isDone ? 'text-success-600' : isCurrent ? 'text-white' : 'text-neutral-400'}
+                  hover:text-primary-500
+                `}
+              >
+                {step.label}
+              </button>
             </div>
           );
         })}
       </div>
-      <div className="journey-header-modern">
-        <div className="journey-title-group">
-          <h2 className="journey-label-accent">Your Journey</h2>
-        </div>
-
-        <div className="journey-total-progress">
-          {/* <span className="progress-label">FULL PROGRESS</span> */}
-          <div className="progress-mini">
-            <div
-              className="fill"
-              style={{ width: `${progress?.progressPercentage || 0}%` }}
-            ></div>
-          </div>
-          <span className="value">{progress?.progressPercentage || 0}%</span>
-        </div>
-      </div>
-
     </div>
   );
 };
