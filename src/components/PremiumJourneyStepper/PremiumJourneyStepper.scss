@@ -65,7 +65,7 @@
 
         .fill {
           height: 100%;
-          background: linear-gradient(90deg, var(--facilon-primary), var(--facilon-red-light));
+          background: linear-gradient(90deg, var(--facilon-primary), var(--facilon-primary-light));
           border-radius: 10px;
           transition: width 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }

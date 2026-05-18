@@ -111,7 +111,7 @@ const Header: React.FC<HeaderProps> = ({ variant = 'legacy', title, subtitle }) 
         <div className="flex items-center gap-2">
           <button className="w-8 h-8 rounded-full flex items-center justify-center text-neutral-400 hover:bg-neutral-50 transition-colors relative">
             <i className="bi bi-bell text-lg"></i>
-            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 border-2 border-white rounded-full"></span>
+            <span className="absolute top-1 right-1 w-2 h-2 bg-primary-500 border-2 border-white rounded-full"></span>
           </button>
 
           <div className="h-8 w-px bg-neutral-200 mx-1"></div>

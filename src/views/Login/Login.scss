@@ -16,7 +16,7 @@
     left: 0;
     width: 35%;
     height: 100%;
-    background-color: rgba(190, 23, 23, 0.03); // Subtle Red tint
+    background-color: rgba(62, 111, 124, 0.03); // Subtle Primary tint
     z-index: 0;
   }
 
@@ -162,7 +162,7 @@
           /* color and weight moved to Tailwind */
           
           &:hover {
-            color: var(--facilon-red-dark);
+            color: var(--facilon-primary-dark);
             text-decoration: underline;
           }
         }

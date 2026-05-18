@@ -53,7 +53,7 @@ a {
 .button-1,
 .Continue-complete-button,
 .Abandon-button {
-  @include btn-premium-red;
+  @include btn-premium-primary;
 
   &-primary,
   &.button-1,

@@ -259,7 +259,7 @@
 
     &.error {
       background: #fee2e2;
-      border-left-color: red;
+      border-left-color: var(--facilon-primary);
     }
   }
 
