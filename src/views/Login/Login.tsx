@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useMsal } from '@azure/msal-react';
 import { InteractionStatus } from '@azure/msal-browser';
@@ -28,6 +28,55 @@ const Login: React.FC = () => {
   const b2cUserNotFoundRef = useRef(false);
   const { login, userRoles, isAuthenticated, checkAuth } = useAuth();
   const { instance, inProgress } = useMsal();
+  const location = useLocation();
+
+  // After the FISP-style setpassword flow completes, the done page sends users here with
+  // ?passwordSet=1. The reset-password policy left an account + refresh-token in MSAL cache
+  // that belongs to a different B2C user flow than the signin policy; if Login keeps it
+  // around, `acquireTokenSilent` POSTs that token to the signin /token endpoint and gets a
+  // 400 Bad Request (different audiences). Purge MSAL state and surface a confirmation toast
+  // so the user signs in fresh with the new password.
+  //
+  // The /setpassword/done page already does a thorough sweep + hard reload, so by the time
+  // we get here localStorage should be empty. This is belt-and-suspenders for the case where
+  // a user lands on /login?passwordSet=1 without going through /done.
+  const passwordSetShownRef = useRef(false);
+  useEffect(() => {
+    if (passwordSetShownRef.current) return;
+    if (new URLSearchParams(location.search).get('passwordSet') === '1') {
+      passwordSetShownRef.current = true;
+      (async () => {
+        try {
+          for (const acc of instance.getAllAccounts()) {
+            try { await instance.clearCache({ account: acc }); } catch {}
+          }
+        } catch {}
+        try { await instance.clearCache(); } catch {}
+        try {
+          const toRemove: string[] = [];
+          for (let i = 0; i < localStorage.length; i++) {
+            const k = localStorage.key(i);
+            if (!k) continue;
+            if (
+              k.startsWith('msal.') ||
+              k.includes('login.windows.net') ||
+              k.includes('b2clogin.com') ||
+              k.includes('-idtoken-') ||
+              k.includes('-refreshtoken-') ||
+              k.includes('-accesstoken-') ||
+              k.includes('-account-') ||
+              k.includes('interaction.status') ||
+              k === 'facilon.setpassword.inProgress'
+            ) {
+              toRemove.push(k);
+            }
+          }
+          toRemove.forEach((k) => localStorage.removeItem(k));
+        } catch {}
+        toast.success('Your password has been set. Please sign in with your new password.');
+      })();
+    }
+  }, [location.search, instance]);
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -59,6 +108,16 @@ const Login: React.FC = () => {
   // Handle MSAL silent authentication or redirect to Azure B2C
   useEffect(() => {
     if (isAuthenticated || inProgress !== InteractionStatus.None) return;
+
+    // Skip auto-login when the user just completed the setpassword flow: MSAL still has
+    // an account + refresh token from the reset-password policy, and calling
+    // acquireTokenSilent against the signin policy returns 400 (different audiences).
+    // The companion useEffect above clears that cache asynchronously; the user will sign
+    // in manually with their new password.
+    if (new URLSearchParams(location.search).get('passwordSet') === '1') {
+      setLoading(false);
+      return;
+    }
 
     const accounts = instance.getAllAccounts();
     let cancelled = false;

@@ -10,7 +10,7 @@ function getRoleBasedDashboard(roles: string[]): string {
   const isSuperAdmin = roles.some(r => r === 'PLATFORM_SUPER_ADMIN' || r.toUpperCase().includes('SUPER_ADMIN'));
   if (isSuperAdmin) return '/super-admin/dashboard';
   const isAdmin = roles.some(r => r === 'ADMIN' || r.toUpperCase().includes('ADMIN'));
-  if (isAdmin) return '/admin/dashboard';
+  if (isAdmin) return '/admin/clients';
   const isServiceAgent = roles.some(r => r === 'SERVICE_AGENT' || r.toUpperCase() === 'SERVICE_AGENT');
   if (isServiceAgent) return '/service-agent/dashboard';
   return '/investor/dashboard';
@@ -32,7 +32,17 @@ const LoginCallback: React.FC = () => {
 
   useEffect(() => {
     console.log('[LoginCallback] useEffect START - processedRef:', processedRef.current, 'inProgress:', inProgress, 'isAuthenticated:', isAuthenticated);
-    
+
+    // MSAL silent token refresh loads the redirectUri inside a hidden iframe.
+    // Because our redirectUri is the SPA entry, the whole React app — including this
+    // component — mounts inside that iframe and would call acquireTokenSilent recursively,
+    // tripping MSAL's `block_iframe_reload` guard. Detect the iframe and bail; MSAL's own
+    // listeners will still read the response from this URL.
+    if (typeof window !== 'undefined' && window.self !== window.top) {
+      console.log('[LoginCallback] Inside MSAL iframe — skipping callback logic.');
+      return;
+    }
+
     if (processedRef.current) {
       console.log('[LoginCallback] Already processed, skipping');
       return;
@@ -80,7 +90,7 @@ const LoginCallback: React.FC = () => {
     const handleCallback = async () => {
       try {
         console.log('[LoginCallback] handleCallback START');
-        
+
         const accounts = instance.getAllAccounts();
         console.log('[LoginCallback] MSAL accounts count:', accounts.length);
 
@@ -95,30 +105,45 @@ const LoginCallback: React.FC = () => {
         const account = accounts[0];
         console.log('[LoginCallback] Using account - username:', account.username, 'homeAccountId:', account.homeAccountId);
 
-        console.log('[LoginCallback] Acquiring token silently...');
-        const tokenResponse = await instance.acquireTokenSilent({
-          ...loginRequest,
-          account
-        });
+        // Use the ID token that MSAL already extracted from the redirect response (it lives
+        // on `account.idToken` after `handleRedirectPromise` resolves). Calling
+        // acquireTokenSilent here is wrong: it triggers a hidden iframe refresh, which loads
+        // our SPA + Bootstrap inside the iframe, and that's slower than MSAL's iframe
+        // timeout — hence the `BrowserAuthError: timed_out` we were getting.
+        let idToken: string | undefined = (account as any).idToken;
 
-        console.log('[LoginCallback] acquireTokenSilent SUCCESS - hasIdToken:', !!tokenResponse.idToken, 'hasAccessToken:', !!tokenResponse.accessToken);
-        
-        if (tokenResponse && tokenResponse.idToken) {
-          console.log('[LoginCallback] Calling backend with idToken...');
-          await authenticationService.handleAzureB2CCallbackWithMSAL(tokenResponse.idToken);
-          
+        if (!idToken) {
+          // Last resort: try silent acquire. May still time out, but at least the user gets
+          // a chance if MSAL forgot to populate account.idToken.
+          console.warn('[LoginCallback] account.idToken missing; falling back to acquireTokenSilent');
+          try {
+            const tokenResponse = await instance.acquireTokenSilent({
+              ...loginRequest,
+              account,
+              forceRefresh: false,
+            });
+            idToken = tokenResponse?.idToken;
+          } catch (silentErr) {
+            console.warn('[LoginCallback] acquireTokenSilent fallback failed:', silentErr);
+          }
+        }
+
+        if (idToken) {
+          console.log('[LoginCallback] Calling backend with idToken (length:', idToken.length, ')');
+          await authenticationService.handleAzureB2CCallbackWithMSAL(idToken);
+
           console.log('[LoginCallback] Backend call SUCCESS, calling checkAuth()...');
           checkAuth();
-          
+
           setStatus('success');
           const roles = authenticationService.getUserRoles();
           const destination = getRoleBasedDashboard(roles);
           console.log('[LoginCallback] Redirecting to:', destination);
           window.location.replace(destination);
         } else {
-          console.error('[LoginCallback] No ID token in token response!');
+          console.error('[LoginCallback] No ID token available after redirect');
           setStatus('error');
-          setErrorMsg('No ID token received from MSAL');
+          setErrorMsg('No ID token received from MSAL — please try signing in again.');
           processedRef.current = false;
         }
       } catch (err: any) {
