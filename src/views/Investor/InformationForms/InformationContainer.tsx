@@ -32,10 +32,10 @@ export const InformationContainer: React.FC = () => {
   const navigate = useNavigate();
   const { navigate: saNavigate, isProxyMode } = useSAProxyNavigation();
   const delegationPerms = useDelegationPermissions();
-  
+
   const canEdit = !delegationPerms.isProxyMode || delegationPerms.canEditKyc;
   const canSubmit = !delegationPerms.isProxyMode || delegationPerms.canSubmitForms;
-  
+
   // Loaded data states
   const [personalInfo, setPersonalInfo] = useState<UserPersonalInformationDto | null>(null);
   const [passport, setPassport] = useState<UserPassportDetailsDto | null>(null);
@@ -66,7 +66,7 @@ export const InformationContainer: React.FC = () => {
           )
         )
       )
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   useEffect(() => {
@@ -79,7 +79,7 @@ export const InformationContainer: React.FC = () => {
           )
         )
       )
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   // Load all form data
@@ -153,19 +153,19 @@ export const InformationContainer: React.FC = () => {
 
   return (
     <div className="facilon-dashboard-wrapper">
-      <main className="container-fluid dashboard-container-main">
+      <main className="container-fluid dashboard-container-main px-0">
         <div className="investor-profile">
 
           {delegationPerms.isProxyMode && !delegationPerms.canViewProfile && (
             <div className="alert alert-danger" role="alert" style={{ margin: '1rem 0' }}>
-              <strong>Access Restricted:</strong> You don't have permission to view this investor's profile. 
+              <strong>Access Restricted:</strong> You don't have permission to view this investor's profile.
               Please ask the investor to update your delegation permissions to include "View Profile" access.
             </div>
           )}
-          
+
           {delegationPerms.isProxyMode && delegationPerms.canViewProfile && !delegationPerms.canEditKyc && (
             <div className="alert alert-warning" role="alert" style={{ margin: '1rem 0' }}>
-              <strong>Read-Only Mode:</strong> You can view information but cannot make changes. 
+              <strong>Read-Only Mode:</strong> You can view information but cannot make changes.
               Ask the investor to enable "Edit KYC" permission if updates are needed.
             </div>
           )}

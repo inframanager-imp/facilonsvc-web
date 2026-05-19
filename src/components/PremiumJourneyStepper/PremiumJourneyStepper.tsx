@@ -39,7 +39,7 @@ export const PremiumJourneyStepper: React.FC<Props> = ({ dashboardData }) => {
   const totalProgress = progress?.progressPercentage || 0;
 
   return (
-    <div className="bg-primary-700 border-1 border-neutral-200 rounded-md p-2 flex justify-between lg:flex-row items-center gap-6 mb-6 w-full">
+    <div className="bg-primary-500 border-1 border-neutral-200 rounded-md p-2 flex justify-between lg:flex-row items-center gap-6 mb-6 w-full">
       {/* Journey Header & Progress */}
       <div className="flex flex-col gap-0 min-w-[160px]">
         <h2 className="text-white font-bold text-sm tracking-tight uppercase mb-1">Your Journey</h2>
@@ -75,14 +75,14 @@ export const PremiumJourneyStepper: React.FC<Props> = ({ dashboardData }) => {
               <button
                 onClick={() => saNavigate(step.path)}
                 className={`relative w-7 h-7 rounded-full flex items-center justify-center border-1 transition-all duration-300 z-10 mb-1
-                  ${isDone ? 'bg-success-500 border-success-500' : isCurrent ? 'bg-white border-primary-500' : 'bg-white border-neutral-200'}
+                  ${isDone ? 'bg-white border-0' : isCurrent ? 'bg-primary-800 border-0' : 'bg-white border-neutral-200'}
                   hover:scale-110 active:scale-95 shadow-sm
                 `}
               >
                 {isDone ? (
-                  <i className="bi bi-check-lg text-white text-xs font-bold"></i>
+                  <i className="bi bi-check-lg text-success-500 text-lg font-bold"></i>
                 ) : (
-                  <i className={`${step.icon} text-xs ${isCurrent ? 'text-primary-500 font-bold' : 'text-neutral-400'}`}></i>
+                  <i className={`${step.icon} text-xs ${isCurrent ? 'text-primary-200 font-bold' : 'text-neutral-400'}`}></i>
                 )}
 
                 {/* Active Pulse */}
@@ -95,7 +95,7 @@ export const PremiumJourneyStepper: React.FC<Props> = ({ dashboardData }) => {
               <button
                 onClick={() => saNavigate(step.path)}
                 className={`text-[10px] font-medium transition-colors
-                  ${isDone ? 'text-success-600' : isCurrent ? 'text-white' : 'text-neutral-400'}
+                  ${isDone ? 'text-white' : isCurrent ? 'text-primary-700' : 'text-neutral-400'}
                   hover:text-primary-500
                 `}
               >
