@@ -102,7 +102,7 @@ select {
   background-color: #ffffff !important;
   border: 1.5px solid var(--facilon-grey-200) !important;
   border-radius: var(--facilon-radius-sm) !important;
-  height: 42px !important;
+  height: 28px !important;
   padding: 0 1rem !important;
   font-weight: 500 !important;
   font-size: 0.9rem !important;
@@ -115,7 +115,7 @@ select {
     background-color: white !important;
     border-color: var(--facilon-primary) !important;
     box-shadow: none !important;
-    outline: 2px solid rgba(190, 23, 23, 0.2) !important; // Crisp outline instead of shadow
+    outline: 2px solid rgba(62, 111, 124, 0.2) !important; // Crisp outline instead of shadow
   }
 
   &::placeholder {

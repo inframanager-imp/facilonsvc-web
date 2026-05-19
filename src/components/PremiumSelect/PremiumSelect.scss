@@ -50,7 +50,7 @@
     .premium-select-trigger {
       border-color: var(--facilon-primary);
       box-shadow: none;
-      outline: 2px solid rgba(190, 23, 23, 0.2);
+      outline: 2px solid rgba(62, 111, 124, 0.2);
       background-color: #ffffff;
     }
   }
@@ -85,7 +85,7 @@
 
   .premium-select-dropdown {
     position: absolute;
-    top: calc(100% + 8px);
+    top: 100%;
     left: 0;
     width: 100%;
     background: white;
@@ -117,19 +117,19 @@
       padding: 0.6rem 1rem;
       border-radius: var(--facilon-radius-md); // Reduced from 8px
       color: var(--facilon-slate);
-      font-weight: 600;
+      font-weight: 500;
       font-size: 0.9rem;
       cursor: pointer;
       transition: var(--facilon-transition);
 
       &:hover {
-        background: rgba(190, 23, 23, 0.04);
+        background: #f1fcfe;
         color: var(--facilon-primary);
         padding-left: 1.25rem;
       }
 
       &.is-selected {
-        background: rgba(190, 23, 23, 0.08);
+        background: #dff1f5;
         color: var(--facilon-primary);
       }
     }

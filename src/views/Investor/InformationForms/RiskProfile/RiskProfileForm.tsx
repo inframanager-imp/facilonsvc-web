@@ -25,6 +25,80 @@ interface RiskProfileFormProps {
   sharedContext: SharedFormContext;
 }
 
+const MultiSelectDropdown: React.FC<{
+  value: string[];
+  onChange: (value: string[]) => void;
+  options: readonly string[];
+  placeholder?: string;
+  error?: string;
+  disabled?: boolean;
+}> = ({ value, onChange, options, placeholder = 'Select Options', error, disabled = false }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = React.useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (disabled) {
+      setIsOpen(false);
+      return;
+    }
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [disabled]);
+
+  const handleToggle = (option: string) => {
+    const newValue = value.includes(option)
+      ? value.filter((val) => val !== option)
+      : [...value, option];
+    onChange(newValue);
+  };
+
+  const selectedDisplay = value.length > 0 ? value.join(', ') : '';
+
+  return (
+    <div
+      className={`premium-select-container ${isOpen ? 'is-open' : ''} ${error ? 'is-invalid' : ''} ${disabled ? 'is-disabled' : ''}`}
+      ref={dropdownRef}
+    >
+      <div
+        className="premium-select-trigger"
+        onClick={() => !disabled && setIsOpen(!isOpen)}
+        style={{ textTransform: 'uppercase' }}
+      >
+        <span className={`selected-value ${!selectedDisplay ? 'placeholder' : ''}`}>
+          {selectedDisplay || placeholder}
+        </span>
+        <i className={`bi bi-chevron-down arrow-icon ${isOpen ? 'rotate' : ''}`}></i>
+      </div>
+
+      {isOpen && (
+        <div className="premium-select-dropdown">
+          <ul className="premium-select-options" style={{ maxHeight: '200px', overflowY: 'auto' }}>
+            {options.map((option) => {
+              const isSelected = value.includes(option);
+              return (
+                <li
+                  key={option}
+                  className={`premium-select-option ${isSelected ? 'is-selected' : ''}`}
+                  onClick={() => handleToggle(option)}
+                  style={{ textTransform: 'uppercase' }}
+                >
+                  {option}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
+      {error && <div className="invalid-feedback d-block">{error}</div>}
+    </div>
+  );
+};
+
 export const RiskProfileForm: React.FC<RiskProfileFormProps> = ({
   initialData,
   onSave,
@@ -163,13 +237,14 @@ export const RiskProfileForm: React.FC<RiskProfileFormProps> = ({
       <div className="investor-profile__grid" style={{ marginTop: '1rem' }}>
         <div className="form-group">
           <label>Are you a politically exposed person? <span className="text-danger">*</span></label>
-          <div>
-            <label style={{ marginRight: '1rem' }}>
+          <div className="profile-radio-group">
+            <label>
               <input
                 type="radio"
                 name="polExposed"
                 checked={formData.polExposed === true}
                 onChange={() => setFormData({ ...formData, polExposed: true })}
+                disabled={!canEdit}
               /> Yes
             </label>
             <label>
@@ -178,6 +253,7 @@ export const RiskProfileForm: React.FC<RiskProfileFormProps> = ({
                 name="polExposed"
                 checked={formData.polExposed !== true}
                 onChange={() => setFormData({ ...formData, polExposed: false })}
+                disabled={!canEdit}
               /> No
             </label>
           </div>
@@ -186,13 +262,14 @@ export const RiskProfileForm: React.FC<RiskProfileFormProps> = ({
 
         <div className="form-group">
           <label>Are you related to a politically exposed person? <span className="text-danger">*</span></label>
-          <div>
-            <label style={{ marginRight: '1rem' }}>
+          <div className="profile-radio-group">
+            <label>
               <input
                 type="radio"
                 name="polExposedRelated"
                 checked={formData.polExposedRelated === true}
                 onChange={() => setFormData({ ...formData, polExposedRelated: true })}
+                disabled={!canEdit}
               /> Yes
             </label>
             <label>
@@ -201,6 +278,7 @@ export const RiskProfileForm: React.FC<RiskProfileFormProps> = ({
                 name="polExposedRelated"
                 checked={formData.polExposedRelated !== true}
                 onChange={() => setFormData({ ...formData, polExposedRelated: false })}
+                disabled={!canEdit}
               /> No
             </label>
           </div>
@@ -209,13 +287,14 @@ export const RiskProfileForm: React.FC<RiskProfileFormProps> = ({
 
         <div className="form-group">
           <label>Are you involved in any of the following activities? <span className="text-danger">*</span></label>
-          <div>
-            <label style={{ marginRight: '1rem' }}>
+          <div className="profile-radio-group">
+            <label>
               <input
                 type="radio"
                 name="activity"
                 checked={formData.activity === true}
                 onChange={() => setFormData({ ...formData, activity: true })}
+                disabled={!canEdit}
               /> Yes
             </label>
             <label>
@@ -224,6 +303,7 @@ export const RiskProfileForm: React.FC<RiskProfileFormProps> = ({
                 name="activity"
                 checked={formData.activity !== true}
                 onChange={() => setFormData({ ...formData, activity: false })}
+                disabled={!canEdit}
               /> No
             </label>
           </div>
@@ -232,13 +312,14 @@ export const RiskProfileForm: React.FC<RiskProfileFormProps> = ({
 
         <div className="form-group">
           <label>Foreign Exchange / Money Changer Services <span className="text-danger">*</span></label>
-          <div>
-            <label style={{ marginRight: '1rem' }}>
+          <div className="profile-radio-group">
+            <label>
               <input
                 type="radio"
                 name="moneyChangeService"
                 checked={formData.moneyChangeService === true}
                 onChange={() => setFormData({ ...formData, moneyChangeService: true })}
+                disabled={!canEdit}
               /> Yes
             </label>
             <label>
@@ -247,6 +328,7 @@ export const RiskProfileForm: React.FC<RiskProfileFormProps> = ({
                 name="moneyChangeService"
                 checked={formData.moneyChangeService !== true}
                 onChange={() => setFormData({ ...formData, moneyChangeService: false })}
+                disabled={!canEdit}
               /> No
             </label>
           </div>
@@ -255,13 +337,14 @@ export const RiskProfileForm: React.FC<RiskProfileFormProps> = ({
 
         <div className="form-group">
           <label>Gaming / Gambling / Lottery Services <span className="text-danger">*</span></label>
-          <div>
-            <label style={{ marginRight: '1rem' }}>
+          <div className="profile-radio-group">
+            <label>
               <input
                 type="radio"
                 name="gamblingService"
                 checked={formData.gamblingService === true}
                 onChange={() => setFormData({ ...formData, gamblingService: true })}
+                disabled={!canEdit}
               /> Yes
             </label>
             <label>
@@ -270,6 +353,7 @@ export const RiskProfileForm: React.FC<RiskProfileFormProps> = ({
                 name="gamblingService"
                 checked={formData.gamblingService !== true}
                 onChange={() => setFormData({ ...formData, gamblingService: false })}
+                disabled={!canEdit}
               /> No
             </label>
           </div>
@@ -278,13 +362,14 @@ export const RiskProfileForm: React.FC<RiskProfileFormProps> = ({
 
         <div className="form-group">
           <label>Money Lending / Pawning Services <span className="text-danger">*</span></label>
-          <div>
-            <label style={{ marginRight: '1rem' }}>
+          <div className="profile-radio-group">
+            <label>
               <input
                 type="radio"
                 name="pawningService"
                 checked={formData.pawningService === true}
                 onChange={() => setFormData({ ...formData, pawningService: true })}
+                disabled={!canEdit}
               /> Yes
             </label>
             <label>
@@ -293,6 +378,7 @@ export const RiskProfileForm: React.FC<RiskProfileFormProps> = ({
                 name="pawningService"
                 checked={formData.pawningService !== true}
                 onChange={() => setFormData({ ...formData, pawningService: false })}
+                disabled={!canEdit}
               /> No
             </label>
           </div>
@@ -301,13 +387,14 @@ export const RiskProfileForm: React.FC<RiskProfileFormProps> = ({
 
         <div className="form-group form-group--full">
           <label>Any instance of violation or non-adherence to the securities laws, code of ethics / conduct, code of business rules <span className="text-danger">*</span></label>
-          <div>
-            <label style={{ marginRight: '1rem' }}>
+          <div className="profile-radio-group">
+            <label>
               <input
                 type="radio"
                 name="instanceViolation"
                 checked={formData.instanceViolation === true}
                 onChange={() => setFormData({ ...formData, instanceViolation: true })}
+                disabled={!canEdit}
               /> Yes
             </label>
             <label>
@@ -316,6 +403,7 @@ export const RiskProfileForm: React.FC<RiskProfileFormProps> = ({
                 name="instanceViolation"
                 checked={formData.instanceViolation !== true}
                 onChange={() => setFormData({ ...formData, instanceViolation: false })}
+                disabled={!canEdit}
               /> No
             </label>
           </div>
@@ -341,22 +429,13 @@ export const RiskProfileForm: React.FC<RiskProfileFormProps> = ({
 
         <div className="form-group form-group--full">
           <label htmlFor="investment_experience_in">Investment Experience in <span className="text-danger">*</span></label>
-          <select
-            id="investment_experience_in"
-            multiple
-            size={OTHER_INVESTMENT_EXPERIENCE_IN.length}
+          <MultiSelectDropdown
             value={formData.investmentExperienceIn ?? []}
-            onChange={(e) => {
-              const selected = Array.from(e.target.selectedOptions, (o) => o.value);
-              setFormData({ ...formData, investmentExperienceIn: selected });
-            }}
-            className={errors.investmentExperienceIn ? 'form-control is-invalid investor-profile__multiselect' : 'form-control investor-profile__multiselect'}
-          >
-            {OTHER_INVESTMENT_EXPERIENCE_IN.map((opt) => (
-              <option key={opt} value={opt}>{opt}</option>
-            ))}
-          </select>
-          {errors.investmentExperienceIn && <div className="invalid-feedback d-block">{errors.investmentExperienceIn}</div>}
+            onChange={(selected) => setFormData({ ...formData, investmentExperienceIn: selected })}
+            options={OTHER_INVESTMENT_EXPERIENCE_IN}
+            error={errors.investmentExperienceIn}
+            disabled={!canEdit}
+          />
         </div>
       </div>
 

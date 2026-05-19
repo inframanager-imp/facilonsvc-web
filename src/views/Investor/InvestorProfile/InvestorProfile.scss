@@ -142,7 +142,7 @@
               left: -8px;
               right: -8px;
               bottom: -8px;
-              background: rgba(190, 23, 23, 0.1);
+              background: rgba(62, 111, 124, 0.1);
               border-radius: 50%;
               animation: pulse 2s infinite;
               z-index: 1;
@@ -212,7 +212,7 @@
             border-color: var(--facilon-primary);
             color: var(--facilon-primary);
             box-shadow: none;
-            outline: 2px solid rgba(190, 23, 23, 0.1);
+            outline: 2px solid rgba(62, 111, 124, 0.1);
           }
 
           .step-label {
@@ -271,12 +271,12 @@
 
       &:hover {
         color: var(--facilon-primary);
-        background: rgba(190, 23, 23, 0.03);
+        background: #f1fcfe;
       }
 
       &.active {
         color: var(--facilon-primary);
-        background: rgba(190, 23, 23, 0.05);
+        background: #dff1f5;
         font-weight: 600;
 
         &::after {
@@ -327,7 +327,7 @@
   .form-group {
     margin-bottom: 0;
     width: 100%;
-    max-width: 220px;
+    // max-width: 220px;
 
     &--full {
       grid-column: 1 / -1;
@@ -338,13 +338,38 @@
       font-weight: 500;
       color: var(--facilon-text-muted);
       margin-bottom: 2px;
-      font-size: 10px;
+      font-size: 12px;
       display: flex;
       align-items: center;
       gap: 0.25rem;
 
       .text-danger {
         margin: 0;
+      }
+    }
+
+    .profile-radio-group {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-top: 6px;
+      height: 28px;
+
+      label {
+        display: inline-flex !important;
+        width: auto !important;
+        margin: 0 !important;
+        cursor: pointer;
+        font-weight: 500;
+        color: var(--facilon-text-main);
+        font-size: 11px;
+        gap: 0.25rem;
+
+        input[type="radio"] {
+          margin: 0 !important;
+          width: 16px !important;
+          height: 16px !important;
+        }
       }
     }
 
@@ -362,7 +387,8 @@
       text-transform: uppercase;
     }
 
-    input {
+    input,
+    input.form-control {
       width: 100%;
       height: 28px;
       padding: 0.2rem 0.5rem;
@@ -382,13 +408,13 @@
 
       &:hover {
         border-color: #d1d5db;
-        background-color: var(--facilon-grey-50);
+        background-color: #f1fcfe;
       }
 
       &:focus {
         outline: none;
         border-color: var(--facilon-primary);
-        box-shadow: 0 0 0 4px rgba(190, 23, 23, 0.08), inset 0 2px 4px rgba(0, 0, 0, 0.01);
+        box-shadow: 0 0 0 4px rgba(62, 111, 124, 0.08), inset 0 2px 4px rgba(0, 0, 0, 0.01);
         background-color: #ffffff;
       }
 
@@ -405,13 +431,43 @@
         width: 17px;
         height: 17px;
       }
-    }
-    .premium-select-container .premium-select-trigger {
-      height: 28px;
-      padding: 0 0.5rem;
-      
-      .selected-value {
+
+      &[type="date"] {
         font-size: 9px;
+        font-family: inherit;
+
+        &::-webkit-datetime-edit,
+        &::-webkit-datetime-edit-fields-wrapper,
+        &::-webkit-datetime-edit-text,
+        &::-webkit-datetime-edit-month-field,
+        &::-webkit-datetime-edit-day-field,
+        &::-webkit-datetime-edit-year-field {
+          font-size: 9px;
+        }
+      }
+    }
+
+    .premium-select-container {
+      .premium-select-trigger {
+        height: 28px;
+        padding: 0 0.5rem;
+
+        &:hover {
+          background-color: #f1fcfe;
+        }
+
+        .selected-value {
+          font-size: 9px;
+        }
+      }
+
+      .premium-select-options .premium-select-option {
+        font-size: 9px;
+
+        &:hover {
+          background-color: #f1fcfe;
+          color: var(--facilon-primary);
+        }
       }
     }
   }
