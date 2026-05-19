@@ -216,8 +216,31 @@ class AuthenticationService {
   }
 
   logout(): void {
-    console.log('[AuthService] logout - clearing localStorage');
+    console.log('[AuthService] logout - clearing localStorage and sessionStorage');
     localStorage.clear();
+    sessionStorage.clear();
+  }
+
+  /**
+   * Clears only app-owned keys, preserving MSAL's own cache entries (msal.*, b2c-*).
+   * Use this before calling instance.logoutRedirect() so MSAL can still build the
+   * logout request from its cache, while ensuring our JwtToken / loginMethod /
+   * currentUser keys are gone before the post-logout redirect lands back on /login.
+   */
+  clearAppStorage(): void {
+    console.log('[AuthService] clearAppStorage - removing app keys (preserving MSAL cache)');
+    const isMsalKey = (k: string) =>
+      k.startsWith('msal.') ||
+      k.startsWith('b2c.') ||
+      k.startsWith('{') /* MSAL stores some entries as JSON-keyed objects */;
+
+    const toRemove: string[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && !isMsalKey(key)) toRemove.push(key);
+    }
+    toRemove.forEach((k) => localStorage.removeItem(k));
+    sessionStorage.clear();
   }
 
   getToken(): string | null {

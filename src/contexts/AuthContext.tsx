@@ -88,13 +88,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const logout = async () => {
     console.log('[AuthContext] logout START');
+    // Read loginMethod BEFORE clearing storage — it lives in localStorage
     const loginMethod = authenticationService.getLoginMethod();
     console.log('[AuthContext] loginMethod:', loginMethod);
 
     resetB2CLoginUrlFetchState();
 
-    // Clear local state immediately
-    authenticationService.logout();
+    // Clear React state
     setIsAuthenticated(false);
     setUserRoles([]);
     setTenantId(null);
@@ -106,19 +106,24 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     if (loginMethod === 'azure-b2c-msal') {
       console.log('[AuthContext] Azure B2C MSAL logout - calling instance.logoutRedirect...');
       try {
+        // Wipe app keys (JwtToken, loginMethod, currentUser.*) BEFORE the redirect so they're
+        // gone when the post-logout redirect lands back on /login. MSAL's own msal.* cache is
+        // preserved so it can build the logout request.
+        authenticationService.clearAppStorage();
         await instance.logoutRedirect({
           postLogoutRedirectUri: window.location.origin + '/login',
         });
         console.log('[AuthContext] MSAL logoutRedirect completed');
       } catch (error) {
         console.error('[AuthContext] MSAL logout error:', error);
-        // Fallback to manual redirect if MSAL fails
+        authenticationService.logout();
         window.location.replace('/login');
       }
     } else if (loginMethod === 'azure-b2c') {
       // Legacy Azure B2C (non-MSAL) logout
       console.log('[AuthContext] Legacy Azure B2C logout');
       const logoutUrl = await authenticationService.getAzureB2CLogoutUrl();
+      authenticationService.logout();
       if (logoutUrl) {
         console.log('[AuthContext] Redirecting to Azure B2C logout URL');
         window.location.href = logoutUrl;
@@ -129,6 +134,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     } else {
       // Local login logout
       console.log('[AuthContext] Local logout - redirecting to /login');
+      authenticationService.logout();
       window.location.replace('/login');
     }
   };
