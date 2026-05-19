@@ -40,8 +40,8 @@ export const SelfRegistrationSuccess: React.FC = () => {
                   <div style={{ fontSize: '16px', color: '#333', lineHeight: '1.8' }}>
                     <p>Thank you for registering with Facilon Services.</p>
                     <p>Your registration has been submitted successfully.</p>
-                    <p>You will receive login credentials via email shortly.</p>
-                    <p>Please check your inbox (and spam folder) for further instructions.</p>
+                    <p>We've sent you an email with a secure link to set your password and activate your account.</p>
+                    <p>Please check your inbox (and spam folder) and click the link to continue.</p>
                   </div>
 
                   <div style={{ marginTop: '40px' }}>
