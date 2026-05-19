@@ -75,9 +75,35 @@ const LoginCallback: React.FC = () => {
       console.log('[LoginCallback] Waiting for MSAL to complete redirect, inProgress:', inProgress);
       return;
     }
-    
+
     if (!isAuthenticated) {
       console.log('[LoginCallback] MSAL redirect complete but not authenticated');
+
+      // Detect a return from the B2C password-reset policy. That flow's tokens
+      // typically don't carry the claims MSAL needs to build an account, so
+      // handleRedirectPromise resolves with no account. Instead of showing
+      // "Authentication failed", route the user to /login so they can sign in
+      // with the password they just set.
+      const hashOrSearch = (window.location.hash || '') + (window.location.search || '');
+      const isPasswordResetReturn = /passwordreset|password_reset/i.test(hashOrSearch);
+
+      // Also clean up the setpassword in-progress flag and any leftover MSAL
+      // interaction state so the user can sign in cleanly.
+      try {
+        localStorage.removeItem('facilon.setpassword.inProgress');
+        Object.keys(localStorage)
+          .filter((k) => k.includes('interaction.status'))
+          .forEach((k) => localStorage.removeItem(k));
+      } catch {}
+
+      if (isPasswordResetReturn) {
+        processedRef.current = true;
+        // Use the same query param Login.tsx already handles — it clears MSAL
+        // cache for the (different) reset-policy account and shows a toast.
+        window.location.replace('/login?passwordSet=1');
+        return;
+      }
+
       setStatus('error');
       setErrorMsg('Authentication failed. Please try again.');
       return;
