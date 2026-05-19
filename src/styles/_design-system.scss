@@ -3,14 +3,14 @@
 
 :root {
   // Brand Colors
-  --facilon-red: #be1717;
-  --facilon-red-dark: #9a1212;
-  --facilon-red-light: #e02424;
+  --facilon-primary-base: #3E6F7C;
+  --facilon-primary-dark: #355F69;
+  --facilon-primary-light: #7CA6B2;
   --facilon-slate: #2d2d2d;
   --facilon-slate-light: #4b4b4b;
   
   // Semantic Layout Colors
-  --facilon-primary: var(--facilon-red);
+  --facilon-primary: var(--facilon-primary-base);
   --facilon-secondary: var(--facilon-slate);
   --facilon-bg: #fcfcfc;
   --facilon-card-bg: #ffffff;
@@ -54,7 +54,7 @@
   transition: var(--facilon-transition);
 }
 
-@mixin btn-premium-red {
+@mixin btn-premium-primary {
   background-color: var(--facilon-primary);
   color: white;
   border-radius: var(--facilon-radius-md);
@@ -71,7 +71,7 @@
   cursor: pointer;
   
   &:hover:not(:disabled) {
-    background-color: var(--facilon-red-dark);
+    background-color: var(--facilon-primary-dark);
     transform: translateY(-1px);
     box-shadow: none;
   }

@@ -8,7 +8,7 @@
 // Key palette:  teal #3e6f7c  |  red #be1717  |  text #030405  |  input border rgba(62,111,124,0.27)
 
 $teal: #3e6f7c;
-$red: #be1717;
+// Red removed and replaced by teal
 $text: #030405;
 $input-text: #000031;
 $input-border: rgba(62, 111, 124, 0.27);
@@ -152,7 +152,7 @@ $input-border: rgba(62, 111, 124, 0.27);
     text-transform: capitalize;
     margin-bottom: 10px;
     font-weight: 900;
-    color: $red;
+    color: $teal;
     position: relative;
     padding-bottom: 10px;
 
@@ -163,7 +163,7 @@ $input-border: rgba(62, 111, 124, 0.27);
       left: 0;
       bottom: 0;
       height: 3px;
-      background: $red;
+      background: $teal;
       position: absolute;
       transition: all 0.3s linear;
     }
@@ -192,7 +192,7 @@ $input-border: rgba(62, 111, 124, 0.27);
         font-size: 15px;
 
         .star-color {
-          color: $red;
+          color: $teal;
           margin-left: 2px;
         }
 
@@ -525,7 +525,7 @@ $input-border: rgba(62, 111, 124, 0.27);
         font-size: 15px;
 
         .star-color {
-          color: $red;
+          color: $teal;
         }
 
         a {
@@ -573,7 +573,7 @@ $input-border: rgba(62, 111, 124, 0.27);
 
       .timer {
         font-weight: 700;
-        color: $red;
+        color: $teal;
       }
     }
 
@@ -601,7 +601,7 @@ $input-border: rgba(62, 111, 124, 0.27);
       color: #fff;
 
       &:hover {
-        background: $red;
+        background: $teal;
         color: #fff;
       }
 
@@ -637,7 +637,7 @@ $input-border: rgba(62, 111, 124, 0.27);
       transition: all 0.4s ease-in-out;
 
       &:hover {
-        background: $red;
+        background: $teal;
       }
     }
   }
@@ -658,7 +658,7 @@ $input-border: rgba(62, 111, 124, 0.27);
     transition: all 0.4s ease-in-out;
 
     &:hover {
-      background: $red;
+      background: $teal;
       color: #fff;
     }
 
@@ -756,7 +756,7 @@ $input-border: rgba(62, 111, 124, 0.27);
       color: #888;
 
       &:hover {
-        color: $red;
+        color: $teal;
       }
     }
 
@@ -774,7 +774,7 @@ $input-border: rgba(62, 111, 124, 0.27);
       border-radius: 10px;
 
       &:hover {
-        background: $red;
+        background: $teal;
       }
     }
 
@@ -794,11 +794,11 @@ $input-border: rgba(62, 111, 124, 0.27);
   list-style-type: decimal;
 
   li::marker {
-    color: $red;
+    color: $teal;
   }
 
   li a {
-    color: $red;
+    color: $teal;
   }
 }
 
@@ -810,7 +810,7 @@ $input-border: rgba(62, 111, 124, 0.27);
     margin: 0;
     line-height: 62px;
     text-transform: none;
-    color: $red;
+    color: $teal;
   }
 
   h4 {
@@ -819,7 +819,7 @@ $input-border: rgba(62, 111, 124, 0.27);
     margin: 0;
     line-height: 62px;
     text-transform: none;
-    color: $red;
+    color: $teal;
   }
 
   h6 {
@@ -828,7 +828,7 @@ $input-border: rgba(62, 111, 124, 0.27);
     margin: 0;
     line-height: 62px;
     text-transform: none;
-    color: $red;
+    color: $teal;
   }
 }
 
@@ -948,7 +948,7 @@ $input-border: rgba(62, 111, 124, 0.27);
         color: #fff;
 
         &:hover {
-          background: $red;
+          background: $teal;
         }
 
         &:disabled {
@@ -969,7 +969,7 @@ $input-border: rgba(62, 111, 124, 0.27);
   }
 
   .required {
-    color: $red;
+    color: $teal;
   }
 
   small {
@@ -982,7 +982,7 @@ $input-border: rgba(62, 111, 124, 0.27);
 // Error / alert elements
 // ================================================================
 span[role='alert'] {
-  color: $red;
+  color: $teal;
   font-size: 13px;
   display: block;
   margin-top: 5px;

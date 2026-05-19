@@ -20,7 +20,7 @@
 //   • There is NO step indicator anywhere — each Laravel step is its own routed page
 
 $pms-teal: #3e6f7c;
-$pms-red: #be1717;
+// Red removed and replaced by teal
 $pms-text: #030405;
 $pms-input-text: #000031;
 $pms-input-border: rgba(62, 111, 124, 0.27);
@@ -140,7 +140,7 @@ $pms-bg-image: 'https://anvaya.online/facilon/public/frontend/images/banner/2125
       text-transform: capitalize;
       margin: 0 0 18px;
       font-weight: 900;
-      color: $pms-red;
+      color: $pms-teal;
       position: relative;
       padding-bottom: 10px;
 
@@ -151,7 +151,7 @@ $pms-bg-image: 'https://anvaya.online/facilon/public/frontend/images/banner/2125
         bottom: 0;
         width: 15%;
         height: 3px;
-        background: $pms-red;
+        background: $pms-teal;
         transition: all 0.3s linear;
       }
     }
@@ -175,7 +175,7 @@ $pms-bg-image: 'https://anvaya.online/facilon/public/frontend/images/banner/2125
     }
 
     .star-color {
-      color: $pms-red;
+      color: $pms-teal;
       margin-left: 2px;
     }
 
@@ -238,7 +238,7 @@ $pms-bg-image: 'https://anvaya.online/facilon/public/frontend/images/banner/2125
     }
 
     .form-error {
-      color: $pms-red;
+      color: $pms-teal;
       font-size: 13px;
       margin-top: 4px;
       display: block;
@@ -447,7 +447,7 @@ $pms-bg-image: 'https://anvaya.online/facilon/public/frontend/images/banner/2125
     transition: all 0.4s ease-in-out;
 
     &:hover:not(:disabled) {
-      background: $pms-red;
+      background: $pms-teal;
     }
 
     &:disabled {
@@ -497,7 +497,7 @@ $pms-bg-image: 'https://anvaya.online/facilon/public/frontend/images/banner/2125
     font: inherit;
 
     &:hover {
-      color: $pms-red;
+      color: $pms-teal;
     }
   }
 
@@ -550,7 +550,7 @@ $pms-bg-image: 'https://anvaya.online/facilon/public/frontend/images/banner/2125
         line-height: 1;
 
         &:hover {
-          color: $pms-red;
+          color: $pms-teal;
         }
       }
 

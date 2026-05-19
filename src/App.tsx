@@ -81,6 +81,7 @@ import SpThankYou from './views/ServiceProvider/SpThankYou';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { ToastContainer } from './components/ToastContainer';
+import MainLayout from './components/MainLayout/MainLayout';
 import './App.scss';
 
 // When Azure B2C redirects to http://localhost:3000?code=xxx we must send to /login/callback
@@ -195,7 +196,9 @@ const App: React.FC = () => {
             path="/investor/dashboard"
             element={
               <ProtectedRoute>
-                <InvestorDashboard />
+                <MainLayout title="Investor Console" subtitle="Overview of your profile, consents, journey, and services">
+                  <InvestorDashboard />
+                </MainLayout>
               </ProtectedRoute>
             }
           />
@@ -203,7 +206,9 @@ const App: React.FC = () => {
             path="/investor/progress"
             element={
               <ProtectedRoute>
-                <InvestorProgress />
+                <MainLayout title="My Progress" subtitle="Track your onboarding and application journey">
+                  <InvestorProgress />
+                </MainLayout>
               </ProtectedRoute>
             }
           />
@@ -211,7 +216,9 @@ const App: React.FC = () => {
             path="/investor/profile"
             element={
               <ProtectedRoute>
-                <InformationContainer />
+                <MainLayout title="My Profile" subtitle="Manage your personal and investment details">
+                  <InformationContainer />
+                </MainLayout>
               </ProtectedRoute>
             }
           />
@@ -293,7 +300,9 @@ const App: React.FC = () => {
             path="/investor/delegations"
             element={
               <ProtectedRoute>
-                <DelegationManagement />
+                <MainLayout title="Service Agent Access" subtitle="Manage your delegated service agents and permissions">
+                  <DelegationManagement />
+                </MainLayout>
               </ProtectedRoute>
             }
           />
