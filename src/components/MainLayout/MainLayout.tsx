@@ -20,7 +20,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children, title, subtitl
         <Header variant="topbar" title={title} subtitle={subtitle} />
 
         {/* Page Content */}
-        <main className="flex-1 p-6 overflow-y-auto pl-16">
+        <main className="flex-1 p-6 overflow-y-auto pl-16 pt-3">
           {children || <Outlet />}
         </main>
       </div>
