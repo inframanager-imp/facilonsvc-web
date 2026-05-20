@@ -17,6 +17,7 @@ export const InvestorDashboard: React.FC = () => {
   const [processingDelegation, setProcessingDelegation] = useState<number | null>(null);
   const [showAcceptModal, setShowAcceptModal] = useState(false);
   const [selectedDelegation, setSelectedDelegation] = useState<DelegationDto | null>(null);
+  const [showFacilonStatusModal, setShowFacilonStatusModal] = useState(false);
 
   useEffect(() => {
     fetchDashboardData();
@@ -130,7 +131,7 @@ export const InvestorDashboard: React.FC = () => {
 
   return (
     <div className="facilon-dashboard-wrapper font-sans text-gray-800 bg-[#f4f7f9] min-h-screen pb-10">
-      <main className="px-0 py-0 dashboard-container-main mx-auto">
+      <main className="px-4 md:px-6 py-4 dashboard-container-main mx-auto max-w-7xl">
         
         {/* Welcome Banner */}
         <div className="bg-[#466a74] text-white rounded shadow-sm mb-3 px-4 py-3 flex justify-between items-center">
@@ -155,169 +156,174 @@ export const InvestorDashboard: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-3">
           
           {/* Column 1: My Pending Action */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 flex flex-col">
-            <div className="px-3 py-2.5 border-b border-gray-100 flex justify-between items-center">
-              <h2 className="text-[13px] font-bold text-slate-800 flex items-center tracking-tight">
+          <div className="bg-white rounded-lg shadow-sm border border-[#e2e8f0] flex flex-col h-full">
+            <div className="px-4 pt-4 pb-2 flex justify-between items-center">
+              <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
                 <i className="bi bi-list-task mr-2 text-slate-500"></i> My Pending Action
               </h2>
-              <span className="bg-[#e2e8f0] text-slate-700 text-[9px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider">
+              <span className="bg-[#e0ecf0] text-[#1f4851] text-[9px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider">
                 3 PENDING
               </span>
             </div>
             
-            <div className="px-3 py-2 flex-grow">
-              <div className="grid grid-cols-12 text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-2 border-b border-gray-50 pb-1.5">
-                <div className="col-span-6">PENDING ACTIVITY</div>
-                <div className="col-span-3">CENTRA</div>
-                <div className="col-span-2">STATUS</div>
-                <div className="col-span-1 text-right">ACTION</div>
+            <div className="px-4 pb-4 flex-grow flex flex-col justify-between">
+              <div>
+                <div className="grid grid-cols-12 text-[9px] font-bold text-slate-400 uppercase tracking-wider pb-2 border-b border-[#e2e8f0] mb-1">
+                  <div className="col-span-6">PENDING ACTIVITY</div>
+                  <div className="col-span-3">CENTRA</div>
+                  <div className="col-span-2">STATUS</div>
+                  <div className="col-span-1 text-right">ACTION</div>
+                </div>
+                
+                <div className="flex flex-col">
+                  {pendingActions.map((item, idx) => (
+                    <div key={idx} className="grid grid-cols-12 items-center p-1 border-b border-[#e2e8f0] last:border-0 hover:bg-slate-50/50 transition-colors">
+                      <div className="col-span-6 text-[12px] font-semibold text-slate-700 pr-1">{item.activity}</div>
+                      <div className="col-span-3 text-[12px] text-slate-500">{item.centra}</div>
+                      <div className="col-span-2 flex items-center">
+                        <span className={`text-[8.5px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${item.statusColor}`}>
+                          {item.status}
+                        </span>
+                      </div>
+                      <div className="col-span-1 text-right flex justify-end">
+                        <button className="text-slate-400 hover:text-slate-600 transition-colors p-1.5 border border-slate-200 rounded bg-slate-50">
+                           <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                           </svg>
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
               
-              <div className="flex flex-col">
-                {pendingActions.map((item, idx) => (
-                  <div key={idx} className="grid grid-cols-12 items-center py-2 border-b border-gray-50 last:border-0 hover:bg-gray-50/50 transition-colors">
-                    <div className="col-span-6 text-[11px] font-semibold text-slate-700 pr-1">{item.activity}</div>
-                    <div className="col-span-3 text-[11px] text-slate-500">{item.centra}</div>
-                    <div className="col-span-2 flex items-center">
-                      <span className={`text-[8.5px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${item.statusColor}`}>
-                        {item.status}
-                      </span>
-                    </div>
-                    <div className="col-span-1 text-right flex justify-end">
-                      <button className="text-slate-400 hover:text-slate-600 transition-colors p-1 border border-slate-200 rounded bg-slate-50">
-                         <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                         </svg>
-                      </button>
-                    </div>
-                  </div>
-                ))}
+              <div className="pt-4">
+                <button className="w-full py-1.5 text-[11px] font-semibold text-[#1f4851] border border-[#1f4851] rounded hover:bg-[#1f4851]/5 transition-colors">
+                  View All Pending Actions
+                </button>
               </div>
-            </div>
-            
-            <div className="px-3 pb-3 pt-1">
-              <button className="w-full py-1.5 text-[11px] font-semibold text-[#147a7f] border border-[#147a7f]/20 rounded-md hover:bg-[#147a7f]/5 transition-colors">
-                View All Pending Actions
-              </button>
             </div>
           </div>
 
           {/* Column 2: My Onboarding Status */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 flex flex-col">
-            <div className="px-3 py-2.5 border-b border-gray-100 flex justify-between items-center">
-              <h2 className="text-[13px] font-bold text-slate-800 flex items-center tracking-tight">
-                <svg className="w-3.5 h-3.5 mr-2 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="bg-white rounded-lg shadow-sm border border-[#e2e8f0] flex flex-col h-full">
+            <div className="px-4 pt-4 pb-2 flex justify-between items-center">
+              <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
+                <svg className="w-4 h-4 mr-2 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                 </svg>
                 My Onboarding Status
               </h2>
-              <a href="#" className="text-[11px] font-semibold text-[#147a7f] hover:text-[#0f5c60] flex items-center">
+              <button 
+                onClick={() => setShowFacilonStatusModal(true)}
+                className="text-[11px] font-semibold text-[#1f4851] hover:text-[#14353d] transition-colors flex items-center bg-transparent border-0 p-0 cursor-pointer"
+              >
                 Facilon Status &rarr;
-              </a>
+              </button>
             </div>
             
-            <div className="px-3 py-2 flex-grow">
-              <div className="grid grid-cols-12 text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-2 border-b border-gray-50 pb-1.5">
-                <div className="col-span-4">SERVICE PROVIDER</div>
-                <div className="col-span-4">PRODUCT</div>
-                <div className="col-span-3">STATUS</div>
-                <div className="col-span-1 text-right">ACTION</div>
-              </div>
-              
-              <div className="flex flex-col">
-                {onboardingStatus.map((item, idx) => (
-                  <div key={idx} className="grid grid-cols-12 items-center py-2 border-b border-gray-50 last:border-0 hover:bg-gray-50/50 transition-colors">
-                    <div className="col-span-4 pr-1">
-                      <div className="text-[11px] font-bold text-slate-800 leading-tight">{item.provider}</div>
-                      <div className="text-[9px] text-slate-400">ID: {item.id}</div>
-                    </div>
-                    <div className="col-span-4 text-[11px] text-slate-600 pr-1 leading-tight">{item.product}</div>
-                    <div className="col-span-3 pr-1">
-                      <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${item.statusColor}`}>
-                        {item.status}
-                      </span>
-                      <div className="w-10 h-1 bg-slate-100 rounded-full mt-1">
-                        <div 
-                          className={`h-full rounded-full ${item.status === 'COMPLETED' ? 'bg-[#10b981]' : item.status === 'IN PROGRESS' ? 'bg-[#3b82f6]' : 'bg-[#f59e0b]'}`} 
-                          style={{ width: `${item.progress}%` }}
-                        ></div>
+            <div className="px-4 pb-4 flex-grow flex flex-col justify-between">
+              <div>
+                <div className="grid grid-cols-12 text-[9px] font-bold text-slate-400 uppercase tracking-wider pb-2 border-b border-[#e2e8f0] mb-1">
+                  <div className="col-span-4">SERVICE PROVIDER</div>
+                  <div className="col-span-4">PRODUCT</div>
+                  <div className="col-span-3">STATUS</div>
+                  <div className="col-span-1 text-right">ACTION</div>
+                </div>
+                
+                <div className="flex flex-col">
+                  {onboardingStatus.map((item, idx) => (
+                    <div key={idx} className="grid grid-cols-12 items-center p-1 border-b border-[#e2e8f0] last:border-0 hover:bg-slate-50/50 transition-colors">
+                      <div className="col-span-4 pr-1">
+                        <div className="text-[12px] font-bold text-slate-800 leading-tight">{item.provider}</div>
+                        <div className="text-[10px] text-slate-400 mt-0.5">ID: {item.id}</div>
+                      </div>
+                      <div className="col-span-4 text-[12px] text-slate-600 pr-1 leading-tight">{item.product}</div>
+                      <div className="col-span-3 pr-1 flex flex-col items-start justify-center">
+                        <span className={`text-[8.5px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${item.statusColor}`}>
+                          {item.status}
+                        </span>
+                        <div className="w-12 h-[3px] bg-[#e2e8f0] rounded-full mt-1.5 overflow-hidden">
+                          <div 
+                            className={`h-full rounded-full ${item.status === 'COMPLETED' ? 'bg-[#10b981]' : item.status === 'IN PROGRESS' ? 'bg-[#3b82f6]' : 'bg-[#f59e0b]'}`} 
+                            style={{ width: `${item.progress}%` }}
+                          ></div>
+                        </div>
+                      </div>
+                      <div className="col-span-1 text-right flex justify-end">
+                         <button className="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-700 flex items-center justify-center transition-colors">
+                            {item.status === 'COMPLETED' ? (
+                              <i className="bi bi-eye text-[12px]"></i>
+                            ) : (
+                              <i className="bi bi-play-fill text-[13px] ml-0.5"></i>
+                            )}
+                         </button>
                       </div>
                     </div>
-                    <div className="col-span-1 text-right flex justify-end">
-                       <button className="text-slate-500 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-full p-1 transition-colors">
-                          {item.status === 'COMPLETED' ? (
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
-                              <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                              <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
-                            </svg>
-                          ) : (
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
-                              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
-                            </svg>
-                          )}
-                       </button>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
-            
-            <div className="px-3 pb-3 pt-1">
-              <button className="w-full py-1.5 text-[11px] font-semibold text-[#147a7f] border border-[#147a7f]/20 rounded-md hover:bg-[#147a7f]/5 transition-colors flex justify-center items-center">
-                <svg className="w-3 h-3 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                </svg>
-                View Detailed Journey
-              </button>
+              
+              <div className="pt-4">
+                <button 
+                  onClick={() => setShowFacilonStatusModal(true)}
+                  className="w-full py-1.5 text-[11px] font-semibold text-[#1f4851] border border-[#1f4851] rounded hover:bg-[#1f4851]/5 transition-colors flex justify-center items-center cursor-pointer"
+                >
+                  <svg className="w-3.5 h-3.5 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                  </svg>
+                  View Detailed Journey
+                </button>
+              </div>
             </div>
           </div>
 
           {/* Column 3: My Appointment */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 flex flex-col">
-            <div className="px-3 py-2.5 border-b border-gray-100 flex justify-between items-center">
-              <h2 className="text-[13px] font-bold text-slate-800 flex items-center tracking-tight">
+          <div className="bg-white rounded-lg shadow-sm border border-[#e2e8f0] flex flex-col h-full">
+            <div className="px-4 pt-4 pb-2 flex justify-between items-center">
+              <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
                 <i className="bi bi-calendar3 mr-2 text-slate-500"></i> My Appointment
               </h2>
-              <a href="#" className="text-[11px] font-semibold text-[#147a7f] hover:text-[#0f5c60] flex items-center">
+              <a href="#" className="text-[11px] font-semibold text-[#1f4851] hover:text-[#14353d] transition-colors flex items-center">
                 Appointment Center &rarr;
               </a>
             </div>
             
-            <div className="px-3 py-2 flex-grow">
-              <div className="grid grid-cols-12 text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-2 border-b border-gray-50 pb-1.5">
-                <div className="col-span-5">PRODUCT</div>
-                <div className="col-span-3">SERVICE PROVIDER</div>
-                <div className="col-span-2">DATE</div>
-                <div className="col-span-2 text-right">STATUS</div>
+            <div className="px-4 pb-4 flex-grow flex flex-col justify-between">
+              <div>
+                <div className="grid grid-cols-12 text-[9px] font-bold text-slate-400 uppercase tracking-wider pb-2 border-b border-[#e2e8f0] mb-1">
+                  <div className="col-span-5">PRODUCT</div>
+                  <div className="col-span-3">SERVICE PROVIDER</div>
+                  <div className="col-span-2">DATE</div>
+                  <div className="col-span-2 text-right">STATUS</div>
+                </div>
+                
+                <div className="flex flex-col">
+                  {appointments.map((item, idx) => (
+                    <div key={idx} className="grid grid-cols-12 items-center p-1 border-b border-[#e2e8f0] last:border-0 hover:bg-slate-50/50 transition-colors">
+                      <div className="col-span-5 text-[12px] font-bold text-slate-800 pr-1 leading-tight">
+                        {item.product}
+                      </div>
+                      <div className="col-span-3 text-[12px] text-slate-500 pr-1 leading-tight">{item.provider}</div>
+                      <div className="col-span-2 text-[12px] pr-1 leading-tight">
+                        <div className="font-semibold text-slate-700">{item.date.split(',')[0]},</div>
+                        <div className="text-[10px] text-slate-400 mt-0.5">{item.date.split(',')[1]?.trim()}</div>
+                      </div>
+                      <div className="col-span-2 text-right flex justify-end">
+                        <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${item.statusColor}`}>
+                          {item.status}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
               
-              <div className="flex flex-col">
-                {appointments.map((item, idx) => (
-                  <div key={idx} className="grid grid-cols-12 items-center py-2.5 border-b border-gray-50 last:border-0 hover:bg-gray-50/50 transition-colors">
-                    <div className="col-span-5 text-[11px] font-bold text-slate-800 pr-1 leading-tight">
-                      {item.product.split(' ').map((word, i) => (
-                        <React.Fragment key={i}>
-                          {word}
-                          {i === 0 && <br />}
-                        </React.Fragment>
-                      ))}
-                    </div>
-                    <div className="col-span-3 text-[10px] text-slate-500 pr-1 leading-tight">{item.provider}</div>
-                    <div className="col-span-2 text-[10px] text-slate-600 pr-1 leading-tight">{item.date}</div>
-                    <div className="col-span-2 text-right">
-                      <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${item.statusColor}`}>
-                        {item.status}
-                      </span>
-                    </div>
-                  </div>
-                ))}
+              <div className="pt-4">
+                <button className="w-full py-1.5 text-[11px] font-semibold text-[#1f4851] border border-[#1f4851] rounded hover:bg-[#1f4851]/5 transition-colors flex justify-center items-center">
+                  <i className="bi bi-calendar3 mr-1.5"></i> View All Appointments
+                </button>
               </div>
-            </div>
-            
-            <div className="px-3 pb-3 pt-1 mt-auto">
-              <button className="w-full py-1.5 text-[11px] font-semibold text-[#147a7f] border border-[#147a7f]/20 rounded-md hover:bg-[#147a7f]/5 transition-colors flex justify-center items-center">
-                <i className="bi bi-calendar3 mr-1.5"></i> View All Appointments
-              </button>
             </div>
           </div>
 
@@ -327,17 +333,17 @@ export const InvestorDashboard: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
           
           {/* Column 1: My Documents */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 flex flex-col h-full">
-            <div className="px-3 py-2.5 border-b border-gray-100 flex justify-between items-center">
-              <h2 className="text-[13px] font-bold text-slate-800 flex items-center tracking-tight">
+          <div className="bg-white rounded-lg shadow-sm border border-[#e2e8f0] flex flex-col h-full">
+            <div className="px-4 pt-4 pb-2 flex justify-between items-center">
+              <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
                 <i className="bi bi-cloud-arrow-up mr-2 text-slate-500"></i> My Documents
               </h2>
-              <a href="#" className="text-[11px] font-semibold text-[#147a7f] hover:text-[#0f5c60] flex items-center">
+              <a href="#" className="text-[11px] font-semibold text-[#1f4851] hover:text-[#14353d] transition-colors flex items-center">
                 Documents Center &rarr;
               </a>
             </div>
             
-            <div className="grid grid-cols-4 divide-x divide-gray-100 border-b border-gray-100">
+            <div className="grid grid-cols-4 divide-x divide-[#e2e8f0] border-b border-[#e2e8f0]">
               <div className="py-2.5 text-center flex flex-col items-center">
                 <span className="text-[16px] font-bold text-slate-800">0</span>
                 <span className="text-[9px] text-slate-500">of 12 Uploaded</span>
@@ -356,144 +362,152 @@ export const InvestorDashboard: React.FC = () => {
               </div>
             </div>
 
-            <div className="px-3 py-2 flex-grow overflow-hidden">
-              <div className="grid grid-cols-12 text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-2 border-b border-gray-50 pb-1.5">
-                <div className="col-span-5">DOCUMENT TYPE</div>
-                <div className="col-span-5">DOCUMENT NAME</div>
-                <div className="col-span-2 text-right">ACTION</div>
-              </div>
-              
-              <div className="flex flex-col">
-                {documents.map((item, idx) => (
-                  <div key={idx} className="grid grid-cols-12 items-center py-1.5 border-b border-gray-50 last:border-0 hover:bg-gray-50/50 transition-colors">
-                    <div className="col-span-5 text-[11px] font-semibold text-slate-700 pr-1">{item.type}</div>
-                    <div className="col-span-5 text-[11px] text-slate-400">{item.name}</div>
-                    <div className="col-span-2 text-right flex justify-end">
-                      <button className="text-slate-400 hover:text-[#147a7f] transition-colors p-1 border border-slate-200 rounded bg-slate-50 hover:bg-slate-100">
-                        <i className="bi bi-cloud-arrow-up text-[10px]"></i>
-                      </button>
+            <div className="px-4 pb-4 pt-3 flex-grow flex flex-col justify-between overflow-hidden">
+              <div>
+                <div className="grid grid-cols-12 text-[9px] font-bold text-slate-400 uppercase tracking-wider pb-2 border-b border-[#e2e8f0] mb-1">
+                  <div className="col-span-5">DOCUMENT TYPE</div>
+                  <div className="col-span-5">DOCUMENT NAME</div>
+                  <div className="col-span-2 text-right">ACTION</div>
+                </div>
+                
+                <div className="flex flex-col">
+                  {documents.map((item, idx) => (
+                    <div key={idx} className="grid grid-cols-12 items-center p-1 border-b border-[#e2e8f0] last:border-0 hover:bg-slate-50/50 transition-colors">
+                      <div className="col-span-5 text-[11px] font-semibold text-slate-700 pr-1">{item.type}</div>
+                      <div className="col-span-5 text-[11px] text-slate-400">{item.name}</div>
+                      <div className="col-span-2 text-right flex justify-end">
+                        <button className="text-slate-400 hover:text-[#1f4851] transition-colors p-1 border border-slate-200 rounded bg-slate-50 hover:bg-slate-100">
+                          <i className="bi bi-cloud-arrow-up text-[10px]"></i>
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
           </div>
 
           {/* Column 2: My Permissions & My Request stacked */}
-          <div className="flex flex-col gap-4 h-full">
+          <div className="flex flex-col gap-3 h-full">
             
             {/* My Permissions */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 flex flex-col flex-grow">
-              <div className="px-3 py-2.5 border-b border-gray-100 flex justify-between items-center">
-                <h2 className="text-[13px] font-bold text-slate-800 flex items-center tracking-tight">
+            <div className="bg-white rounded-lg shadow-sm border border-[#e2e8f0] flex flex-col flex-grow">
+              <div className="px-4 pt-4 pb-2 flex justify-between items-center">
+                <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
                   <i className="bi bi-shield-lock mr-2 text-slate-500"></i> My Permissions
                 </h2>
-                <a href="#" className="text-[11px] font-semibold text-[#147a7f] hover:text-[#0f5c60] flex items-center">
+                <a href="#" className="text-[11px] font-semibold text-[#1f4851] hover:text-[#14353d] transition-colors flex items-center">
                   Permissions Center &rarr;
                 </a>
               </div>
               
-              <div className="px-3 py-2">
-                <div className="grid grid-cols-12 text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-2 border-b border-gray-50 pb-1.5">
-                  <div className="col-span-5">PERMISSION</div>
-                  <div className="col-span-4">ASSIGNEE</div>
-                  <div className="col-span-3 text-right">STATUS</div>
+              <div className="px-4 pb-4 flex-grow flex flex-col justify-between">
+                <div>
+                  <div className="grid grid-cols-12 text-[9px] font-bold text-slate-400 uppercase tracking-wider pb-2 border-b border-[#e2e8f0] mb-1">
+                    <div className="col-span-5">PERMISSION</div>
+                    <div className="col-span-4">ASSIGNEE</div>
+                    <div className="col-span-3 text-right">STATUS</div>
+                  </div>
+                  
+                  <div className="flex flex-col">
+                    {permissions.map((item, idx) => (
+                      <div key={idx} className="grid grid-cols-12 items-center p-1 border-b border-[#e2e8f0] last:border-0 hover:bg-slate-50/50 transition-colors">
+                        <div className="col-span-5 text-[11px] font-bold text-slate-800 pr-1">{item.permission}</div>
+                        <div className="col-span-4 text-[11px] text-slate-500">{item.assignee}</div>
+                        <div className="col-span-3 text-right flex justify-end">
+                          <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${item.statusColor}`}>
+                            {item.status}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
                 
-                <div className="flex flex-col">
-                  {permissions.map((item, idx) => (
-                    <div key={idx} className="grid grid-cols-12 items-center py-1.5 border-b border-gray-50 last:border-0 hover:bg-gray-50/50 transition-colors">
-                      <div className="col-span-5 text-[11px] font-bold text-slate-800 pr-1">{item.permission}</div>
-                      <div className="col-span-4 text-[11px] text-slate-500">{item.assignee}</div>
-                      <div className="col-span-3 text-right">
-                        <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${item.statusColor}`}>
-                          {item.status}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
+                <div className="pt-3">
+                  <button className="w-full py-1.5 text-[11px] font-semibold text-[#1f4851] border border-[#1f4851] rounded hover:bg-[#1f4851]/5 transition-colors">
+                    Manage Permissions
+                  </button>
                 </div>
-              </div>
-              
-              <div className="px-3 pb-3 pt-1 mt-auto">
-                <button className="w-full py-1.5 text-[11px] font-semibold text-[#147a7f] border border-[#147a7f]/20 rounded-md hover:bg-[#147a7f]/5 transition-colors">
-                  Manage Permissions
-                </button>
               </div>
             </div>
 
             {/* My Request */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 flex flex-col flex-grow">
-              <div className="px-3 py-2.5 border-b border-gray-100 flex justify-between items-center">
-                <h2 className="text-[13px] font-bold text-slate-800 flex items-center tracking-tight">
+            <div className="bg-white rounded-lg shadow-sm border border-[#e2e8f0] flex flex-col flex-grow">
+              <div className="px-4 pt-4 pb-2 flex justify-between items-center">
+                <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
                   <i className="bi bi-journal-text mr-2 text-slate-500"></i> My Request
                 </h2>
-                <a href="#" className="text-[11px] font-semibold text-[#147a7f] hover:text-[#0f5c60] flex items-center">
+                <a href="#" className="text-[11px] font-semibold text-[#1f4851] hover:text-[#14353d] transition-colors flex items-center">
                   DSR Center &rarr;
                 </a>
               </div>
               
-              <div className="px-3 py-2">
-                <div className="grid grid-cols-12 text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-2 border-b border-gray-50 pb-1.5">
-                  <div className="col-span-8">TYPE OF REQUEST</div>
-                  <div className="col-span-4 text-right">STATUS</div>
+              <div className="px-4 pb-4 flex-grow flex flex-col justify-between">
+                <div>
+                  <div className="grid grid-cols-12 text-[9px] font-bold text-slate-400 uppercase tracking-wider pb-2 border-b border-[#e2e8f0] mb-1">
+                    <div className="col-span-8">TYPE OF REQUEST</div>
+                    <div className="col-span-4 text-right">STATUS</div>
+                  </div>
+                  
+                  <div className="flex flex-col">
+                    {requests.map((item, idx) => (
+                      <div key={idx} className="grid grid-cols-12 items-center p-1 border-b border-[#e2e8f0] last:border-0 hover:bg-slate-50/50 transition-colors">
+                        <div className="col-span-8 text-[11px] font-bold text-slate-800 pr-1">{item.type}</div>
+                        <div className="col-span-4 text-right flex justify-end">
+                          <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${item.statusColor}`}>
+                            {item.status}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
                 
-                <div className="flex flex-col">
-                  {requests.map((item, idx) => (
-                    <div key={idx} className="grid grid-cols-12 items-center py-1.5 border-b border-gray-50 last:border-0 hover:bg-gray-50/50 transition-colors">
-                      <div className="col-span-8 text-[11px] font-bold text-slate-800 pr-1">{item.type}</div>
-                      <div className="col-span-4 text-right">
-                        <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${item.statusColor}`}>
-                          {item.status}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
+                <div className="pt-3">
+                  <button className="w-full py-1.5 text-[11px] font-semibold text-[#1f4851] border border-[#1f4851] rounded hover:bg-[#1f4851]/5 transition-colors">
+                    View All Requests
+                  </button>
                 </div>
-              </div>
-              
-              <div className="px-3 pb-3 pt-1 mt-auto">
-                <button className="w-full py-1.5 text-[11px] font-semibold text-[#147a7f] border border-[#147a7f]/20 rounded-md hover:bg-[#147a7f]/5 transition-colors">
-                  View All Requests
-                </button>
               </div>
             </div>
 
           </div>
 
           {/* Column 3: My Consents */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 flex flex-col h-full relative">
-            <div className="px-3 py-2.5 border-b border-gray-100 flex justify-between items-center">
-              <h2 className="text-[13px] font-bold text-slate-800 flex items-center tracking-tight">
+          <div className="bg-white rounded-lg shadow-sm border border-[#e2e8f0] flex flex-col h-full relative">
+            <div className="px-4 pt-4 pb-2 flex justify-between items-center">
+              <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
                 <i className="bi bi-check2-all mr-2 text-slate-500"></i> My Consents
               </h2>
-              <a href="#" className="text-[11px] font-semibold text-[#147a7f] hover:text-[#0f5c60] flex items-center">
+              <a href="#" className="text-[11px] font-semibold text-[#1f4851] hover:text-[#14353d] transition-colors flex items-center">
                 Consent Center &rarr;
               </a>
             </div>
             
-            <div className="px-3 py-2 flex-grow overflow-y-auto max-h-[300px]">
-              <div className="flex flex-col">
-                {consents.map((item, idx) => (
-                  <div key={idx} className="flex justify-between items-center py-2.5 border-b border-gray-50 last:border-0 hover:bg-gray-50/50 transition-colors">
-                    <div>
-                      <div className="text-[11px] font-bold text-slate-800 leading-tight">{item.name}</div>
-                      <div className="text-[10px] text-[#147a7f]">{item.desc}</div>
+            <div className="px-4 pb-4 flex-grow flex flex-col justify-between">
+              <div className="overflow-y-auto max-h-[300px]">
+                <div className="flex flex-col">
+                  {consents.map((item, idx) => (
+                    <div key={idx} className="flex justify-between items-center p-1 border-b border-[#e2e8f0] last:border-0 hover:bg-slate-50/50 transition-colors">
+                      <div>
+                        <div className="text-[11px] font-bold text-slate-800 leading-tight">{item.name}</div>
+                        <div className="text-[10px] text-[#1f4851]">{item.desc}</div>
+                      </div>
+                      <div>
+                        <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${item.statusColor}`}>
+                          {item.status}
+                        </span>
+                      </div>
                     </div>
-                    <div>
-                      <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${item.statusColor}`}>
-                        {item.status}
-                      </span>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
-            
-            <div className="px-3 pb-3 pt-2 mt-auto">
-              <div className="bg-[#f0f7f9] rounded py-2 px-3 text-[10px] text-slate-600 font-medium">
-                Service Agent: <span className="text-slate-400">None assigned - Status: NOT ASSIGNED</span>
+              
+              <div className="pt-3 mt-auto">
+                <div className="bg-[#f0f7f9] rounded py-2 px-3 text-[10px] text-slate-600 font-medium">
+                  Service Agent: <span className="text-slate-400">None assigned - Status: NOT ASSIGNED</span>
+                </div>
               </div>
             </div>
           </div>
@@ -509,6 +523,101 @@ export const InvestorDashboard: React.FC = () => {
           onAccept={handleAcceptDelegation}
           processing={processingDelegation === selectedDelegation.id}
         />
+      )}
+
+      {showFacilonStatusModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fadeIn">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-6xl overflow-hidden border border-slate-200">
+            {/* Header Banner */}
+            <div className="bg-[#2c525d] text-white px-6 py-4 flex justify-between items-center">
+              <div>
+                <h3 className="text-[16px] font-bold text-white mb-0.5 tracking-tight">
+                  My Onboarding Journey
+                </h3>
+                <p className="text-[11px] text-white/80 m-0 font-medium">
+                  Track your product applications, schemes, and plans in real-time.
+                </p>
+              </div>
+              <button 
+                onClick={() => setShowFacilonStatusModal(false)}
+                className="bg-transparent border border-white/25 hover:bg-white/10 text-white rounded px-3 py-1.5 text-[11px] font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
+              >
+                <i className="bi bi-x-lg text-[10px]"></i> Close
+              </button>
+            </div>
+
+            {/* Modal Body Container with custom grey background padding */}
+            <div className="bg-[#f4f7f9] p-5">
+              {/* White rounded card inside */}
+              <div className="bg-white rounded-xl border border-slate-200/60 p-5 shadow-sm">
+                
+                {/* Table Header */}
+                <div className="grid grid-cols-12 text-[10px] font-bold text-slate-400 uppercase tracking-wider pb-3.5 border-b border-[#e2e8f0] mb-1">
+                  <div className="col-span-3">PRODUCT</div>
+                  <div className="col-span-3">SCHEME</div>
+                  <div className="col-span-2">PLAN</div>
+                  <div className="col-span-2">STATUS</div>
+                  <div className="col-span-2 text-right">OPTIONS</div>
+                </div>
+
+                {/* Table Rows */}
+                <div className="flex flex-col">
+                  {/* Row 1 */}
+                  <div className="grid grid-cols-12 items-center py-4 border-b border-[#e2e8f0] last:border-0">
+                    <div className="col-span-3 text-[13px] font-bold text-slate-800">HYSA Account</div>
+                    <div className="col-span-3 text-[13px] text-slate-500">Global Wealth Scheme</div>
+                    <div className="col-span-2 text-[13px] text-slate-500">Premium Tier</div>
+                    <div className="col-span-2 flex">
+                      <span className="bg-[#eff6ff] text-[#3b82f6] border border-[#3b82f6]/20 text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">
+                        IN PROGRESS
+                      </span>
+                    </div>
+                    <div className="col-span-2 text-right flex justify-end">
+                      <button className="bg-[#ecfdf5] hover:bg-[#d1fae5] text-[#10b981] border border-[#10b981]/25 text-[9px] font-extrabold px-3 py-1.5 rounded flex items-center gap-2 tracking-wider transition-colors cursor-pointer">
+                        CONTINUE <i className="bi bi-chevron-down text-[8px]"></i>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Row 2 */}
+                  <div className="grid grid-cols-12 items-center py-4 border-b border-[#e2e8f0] last:border-0">
+                    <div className="col-span-3 text-[13px] font-bold text-slate-800">Private Equity</div>
+                    <div className="col-span-3 text-[13px] text-slate-500">Northern Trust Alt</div>
+                    <div className="col-span-2 text-[13px] text-slate-500">Standard Growth</div>
+                    <div className="col-span-2 flex">
+                      <span className="bg-[#fff8f0] text-[#f59e0b] border border-[#f59e0b]/20 text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">
+                        IN REVIEW
+                      </span>
+                    </div>
+                    <div className="col-span-2 text-right flex justify-end">
+                      <button className="bg-[#ecfdf5] hover:bg-[#d1fae5] text-[#10b981] border border-[#10b981]/25 text-[9px] font-extrabold px-3 py-1.5 rounded flex items-center gap-2 tracking-wider transition-colors cursor-pointer">
+                        CONTINUE <i className="bi bi-chevron-down text-[8px]"></i>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Row 3 */}
+                  <div className="grid grid-cols-12 items-center py-4 border-b border-[#e2e8f0] last:border-0">
+                    <div className="col-span-3 text-[13px] font-bold text-slate-800">Treasury Bonds</div>
+                    <div className="col-span-3 text-[13px] text-slate-500">Facilon Prime Yield</div>
+                    <div className="col-span-2 text-[13px] text-slate-500">Fixed 5-Year</div>
+                    <div className="col-span-2 flex">
+                      <span className="bg-[#ecfdf5] text-[#10b981] border border-[#10b981]/20 text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">
+                        COMPLETED
+                      </span>
+                    </div>
+                    <div className="col-span-2 text-right flex justify-end">
+                      <button className="bg-[#ecfdf5] hover:bg-[#d1fae5] text-[#10b981] border border-[#10b981]/25 text-[9px] font-extrabold px-3 py-1.5 rounded flex items-center gap-2 tracking-wider transition-colors cursor-pointer">
+                        CONTINUE <i className="bi bi-chevron-down text-[8px]"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
