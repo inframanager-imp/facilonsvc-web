@@ -216,7 +216,7 @@ export const InvestorDashboard: React.FC = () => {
               </h2>
               <button 
                 onClick={() => setShowFacilonStatusModal(true)}
-                className="text-[11px] font-semibold text-[#1f4851] underline hover:text-[#14353d] transition-colors flex items-center bg-transparent border-0 p-0 cursor-pointer"
+                className="text-[11px] font-semibold text-[#1f4851] hover:underline hover:text-[#14353d] transition-colors flex items-center bg-transparent border-0 p-0 cursor-pointer"
               >
                 Facilon Status &rarr;
               </button>
@@ -284,7 +284,7 @@ export const InvestorDashboard: React.FC = () => {
               <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
                 <i className="bi bi-calendar3 mr-2 text-slate-500"></i> My Appointment
               </h2>
-              <a href="#" className="text-[11px] font-semibold text-[#1f4851] underline hover:text-[#14353d] transition-colors flex items-center">
+              <a href="#" className="text-[11px] font-semibold text-[#1f4851] hover:underline hover:text-[#14353d] transition-colors flex items-center">
                 Appointment Center &rarr;
               </a>
             </div>
@@ -338,7 +338,7 @@ export const InvestorDashboard: React.FC = () => {
               <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
                 <i className="bi bi-cloud-arrow-up mr-2 text-slate-500"></i> My Documents
               </h2>
-              <a href="#" className="text-[11px] font-semibold text-[#1f4851] underline hover:text-[#14353d] transition-colors flex items-center">
+              <a href="#" className="text-[11px] font-semibold text-[#1f4851] hover:underline hover:text-[#14353d] transition-colors flex items-center">
                 Documents Center &rarr;
               </a>
             </div>
@@ -396,7 +396,7 @@ export const InvestorDashboard: React.FC = () => {
                 <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
                   <i className="bi bi-shield-lock mr-2 text-slate-500"></i> My Permissions
                 </h2>
-                <a href="#" className="text-[12px] font-semibold text-[#1f4851] underline hover:text-[#14353d] transition-colors flex items-center">
+                <a href="#" className="text-[12px] font-semibold text-[#1f4851] hover:underline hover:text-[#14353d] transition-colors flex items-center">
                   Permissions Center &rarr;
                 </a>
               </div>
@@ -438,7 +438,7 @@ export const InvestorDashboard: React.FC = () => {
                 <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
                   <i className="bi bi-journal-text mr-2 text-slate-500"></i> My Request
                 </h2>
-                <a href="#" className="text-[12px] font-semibold text-[#1f4851] underline hover:text-[#14353d] transition-colors flex items-center">
+                <a href="#" className="text-[12px] font-semibold text-[#1f4851] hover:underline hover:text-[#14353d] transition-colors flex items-center">
                   DSR Center &rarr;
                 </a>
               </div>
@@ -480,7 +480,7 @@ export const InvestorDashboard: React.FC = () => {
               <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
                 <i className="bi bi-check2-all mr-2 text-slate-500"></i> My Consents
               </h2>
-              <a href="#" className="text-[12px] font-semibold text-[#1f4851] underline hover:text-[#14353d] transition-colors flex items-center">
+              <a href="#" className="text-[12px] font-semibold text-[#1f4851] hover:underline hover:text-[#14353d] transition-colors flex items-center">
                 Consent Center &rarr;
               </a>
             </div>
