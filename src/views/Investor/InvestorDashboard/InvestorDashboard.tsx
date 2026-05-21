@@ -18,6 +18,15 @@ export const InvestorDashboard: React.FC = () => {
   const [showAcceptModal, setShowAcceptModal] = useState(false);
   const [selectedDelegation, setSelectedDelegation] = useState<DelegationDto | null>(null);
   const [showFacilonStatusModal, setShowFacilonStatusModal] = useState(false);
+  const [showPermissionsModal, setShowPermissionsModal] = useState(false);
+  const [showConsentModal, setShowConsentModal] = useState(false);
+  const [showDsrModal, setShowDsrModal] = useState(false);
+  const [showMakeRequestModal, setShowMakeRequestModal] = useState(false);
+
+  // Form states for Make a Request modal
+  const [requestType, setRequestType] = useState('Right to Access');
+  const [requestComments, setRequestComments] = useState('');
+  const [requestFile, setRequestFile] = useState<File | null>(null);
 
   useEffect(() => {
     fetchDashboardData();
@@ -115,11 +124,23 @@ export const InvestorDashboard: React.FC = () => {
     { permission: 'Doc Upload', assignee: 'Tax Pro', status: 'INACTIVE', statusColor: 'bg-[#f1f5f9] text-[#64748b]' },
   ];
 
+  const permissionsCenterList = [
+    { permission: 'Account View', assignee: 'Advisor Team', accessLevel: 'Read-Only', status: 'ACTIVE', statusColor: 'bg-[#ecfdf5] text-[#10b981] border border-[#10b981]/20' },
+    { permission: 'Trade Execution', assignee: 'Primary Broker', accessLevel: 'Full Access', status: 'PENDING', statusColor: 'bg-[#fff8f0] text-[#f59e0b] border border-[#f59e0b]/20' },
+    { permission: 'Document Upload', assignee: 'Tax Consultant', accessLevel: 'Write-Only', status: 'INACTIVE', statusColor: 'bg-slate-100 text-slate-500 border border-slate-200' },
+  ];
+
   const requests = [
     { type: 'Address Change', status: 'IN REVIEW', statusColor: 'bg-[#eff6ff] text-[#3b82f6]' },
     { type: 'Dividend Reinvestment', status: 'APPROVED', statusColor: 'bg-[#ecfdf5] text-[#10b981]' },
     { type: 'Tax Document Request', status: 'PENDING', statusColor: 'bg-[#fff8f0] text-[#f59e0b]' },
     { type: 'Account Closure', status: 'CANCELLED', statusColor: 'bg-[#f1f5f9] text-[#64748b]' },
+  ];
+
+  const dsrRequestsList = [
+    { id: 'REQ-8302', type: 'Right to Access', status: 'COMPLETED', statusColor: 'bg-[#ecfdf5] text-[#10b981] border border-[#10b981]/20', response: '2 files available' },
+    { id: 'REQ-8419', type: 'Right to Rectification', status: 'IN REVIEW', statusColor: 'bg-[#fff8f0] text-[#f59e0b] border border-[#f59e0b]/20', response: 'Awaiting support' },
+    { id: 'REQ-8542', type: 'Right to Erasure', status: 'PENDING', statusColor: 'bg-slate-100 text-slate-500 border border-[#e2e8f0]', response: 'Under evaluation' }
   ];
 
   const consents = [
@@ -216,7 +237,7 @@ export const InvestorDashboard: React.FC = () => {
               </h2>
               <button 
                 onClick={() => setShowFacilonStatusModal(true)}
-                className="text-[11px] font-semibold text-[#1f4851] hover:underline hover:text-[#14353d] transition-colors flex items-center bg-transparent border-0 p-0 cursor-pointer"
+                className="text-[11px] font-semibold text-[#3e6f7c] hover:underline hover:text-[#1f4851] transition-colors flex items-center bg-transparent border-0 p-0 cursor-pointer"
               >
                 Facilon Status &rarr;
               </button>
@@ -284,7 +305,7 @@ export const InvestorDashboard: React.FC = () => {
               <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
                 <i className="bi bi-calendar3 mr-2 text-slate-500"></i> My Appointment
               </h2>
-              <a href="#" className="text-[11px] font-semibold text-[#1f4851] hover:underline hover:text-[#14353d] transition-colors flex items-center">
+              <a href="#" className="text-[11px] font-semibold text-[#3e6f7c] hover:underline hover:text-[#1f4851] transition-colors flex items-center">
                 Appointment Center &rarr;
               </a>
             </div>
@@ -338,7 +359,7 @@ export const InvestorDashboard: React.FC = () => {
               <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
                 <i className="bi bi-cloud-arrow-up mr-2 text-slate-500"></i> My Documents
               </h2>
-              <a href="#" className="text-[11px] font-semibold text-[#1f4851] hover:underline hover:text-[#14353d] transition-colors flex items-center">
+              <a href="#" className="text-[11px] font-semibold text-[#3e6f7c] hover:underline hover:text-[#1f4851] transition-colors flex items-center">
                 Documents Center &rarr;
               </a>
             </div>
@@ -396,9 +417,12 @@ export const InvestorDashboard: React.FC = () => {
                 <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
                   <i className="bi bi-shield-lock mr-2 text-slate-500"></i> My Permissions
                 </h2>
-                <a href="#" className="text-[12px] font-semibold text-[#1f4851] hover:underline hover:text-[#14353d] transition-colors flex items-center">
+                <button 
+                  onClick={() => setShowPermissionsModal(true)}
+                  className="text-[12px] font-semibold text-[#3e6f7c] hover:underline hover:text-[#1f4851] transition-colors flex items-center bg-transparent border-0 p-0 cursor-pointer"
+                >
                   Permissions Center &rarr;
-                </a>
+                </button>
               </div>
               
               <div className="px-4 pt-2 pb-2 flex flex-col justify-start">
@@ -438,9 +462,12 @@ export const InvestorDashboard: React.FC = () => {
                 <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
                   <i className="bi bi-journal-text mr-2 text-slate-500"></i> My Request
                 </h2>
-                <a href="#" className="text-[12px] font-semibold text-[#1f4851] hover:underline hover:text-[#14353d] transition-colors flex items-center">
+                <button 
+                  onClick={() => setShowDsrModal(true)}
+                  className="text-[12px] font-semibold text-[#3e6f7c] hover:underline hover:text-[#1f4851] transition-colors flex items-center bg-transparent border-0 p-0 cursor-pointer"
+                >
                   DSR Center &rarr;
-                </a>
+                </button>
               </div>
               
               <div className="px-4 pt-2 pb-2 flex flex-col justify-start">
@@ -480,9 +507,12 @@ export const InvestorDashboard: React.FC = () => {
               <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
                 <i className="bi bi-check2-all mr-2 text-slate-500"></i> My Consents
               </h2>
-              <a href="#" className="text-[12px] font-semibold text-[#1f4851] hover:underline hover:text-[#14353d] transition-colors flex items-center">
+              <button 
+                onClick={() => setShowConsentModal(true)}
+                className="text-[12px] font-semibold text-[#3e6f7c] hover:underline hover:text-[#1f4851] transition-colors flex items-center bg-transparent border-0 p-0 cursor-pointer"
+              >
                 Consent Center &rarr;
-              </a>
+              </button>
             </div>
             
             <div className="px-4 pt-2 pb-2 flex flex-col justify-start">
@@ -615,6 +645,315 @@ export const InvestorDashboard: React.FC = () => {
                 </div>
 
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showPermissionsModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fadeIn">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-6xl overflow-hidden border border-slate-200">
+            {/* Header Banner */}
+            <div className="bg-[#2c525d] text-white px-6 py-4 flex justify-between items-center">
+              <div>
+                <h3 className="text-[15px] font-bold text-white mb-0.5 tracking-tight">
+                  Permissions Center
+                </h3>
+                <p className="text-[10px] text-white/80 m-0 font-medium">
+                  Manage your account permissions and access levels.
+                </p>
+              </div>
+              <button 
+                onClick={() => setShowPermissionsModal(false)}
+                className="bg-transparent border border-white/25 hover:bg-white/10 text-white rounded px-3 py-1.5 text-[10px] font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
+              >
+                <i className="bi bi-x-lg text-[9px]"></i> Close
+              </button>
+            </div>
+
+            {/* Modal Body Container with custom grey background padding */}
+            <div className="bg-[#e1e4e7] p-5">
+              {/* White rounded card inside */}
+              <div className="bg-white rounded-xl border border-slate-200/60 p-5 shadow-sm">
+                
+                {/* Action Row */}
+                <div className="flex justify-end mb-4">
+                  <button className="bg-[#2c525d] hover:bg-[#1f4851] text-white rounded px-3 py-1.5 text-[10px] font-semibold flex items-center gap-1.5 transition-colors cursor-pointer border-0">
+                    <i className="bi bi-pencil-square text-[10px]"></i> Grant New Permission
+                  </button>
+                </div>
+
+                {/* Table Wrapper with rounded border */}
+                <div className="border border-[#e2e8f0] rounded-lg overflow-hidden">
+                  {/* Table Header */}
+                  <div className="grid grid-cols-12 text-[9px] font-bold text-slate-400 uppercase tracking-wider py-2.5 px-4 bg-slate-50 border-b border-[#e2e8f0]">
+                    <div className="col-span-3">PERMISSION</div>
+                    <div className="col-span-3">ASSIGNEE</div>
+                    <div className="col-span-2">ACCESS LEVEL</div>
+                    <div className="col-span-2">STATUS</div>
+                    <div className="col-span-2 text-right">ACTION</div>
+                  </div>
+
+                  {/* Table Rows */}
+                  <div className="flex flex-col bg-white">
+                    {permissionsCenterList.map((item, idx) => (
+                      <div key={idx} className="grid grid-cols-12 items-center py-4 px-4 border-b border-[#e2e8f0] last:border-0 hover:bg-slate-50/30 transition-colors">
+                        <div className="col-span-3 text-[12px] font-bold text-slate-800">{item.permission}</div>
+                        <div className="col-span-3 text-[12px] font-medium text-[#3e6f7c]">{item.assignee}</div>
+                        <div className="col-span-2 text-[12px] text-slate-500">{item.accessLevel}</div>
+                        <div className="col-span-2 flex">
+                          <span className={`${item.statusColor} text-[8px] font-bold px-2 py-0.5 rounded uppercase tracking-wider`}>
+                            {item.status}
+                          </span>
+                        </div>
+                        <div className="col-span-2 text-right flex justify-end">
+                          <button className="bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 text-[10px] font-semibold px-3 py-1 rounded transition-colors cursor-pointer">
+                            Manage
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showConsentModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fadeIn">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-6xl overflow-hidden border border-slate-200">
+            {/* Header Banner */}
+            <div className="bg-[#2c525d] text-white px-6 py-4 flex justify-between items-center">
+              <div>
+                <h3 className="text-[15px] font-bold text-white mb-0.5 tracking-tight">
+                  Consent Center
+                </h3>
+                <p className="text-[10px] text-white/80 m-0 font-medium">
+                  Manage your active consents and data sharing preferences.
+                </p>
+              </div>
+              <button 
+                onClick={() => setShowConsentModal(false)}
+                className="bg-transparent border border-white/25 hover:bg-white/10 text-white rounded px-3 py-1.5 text-[10px] font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
+              >
+                <i className="bi bi-x-lg text-[9px]"></i> Close
+              </button>
+            </div>
+
+            {/* Modal Body Container with custom grey background padding */}
+            <div className="bg-[#e1e4e7] p-5">
+              {/* White rounded card inside */}
+              <div className="bg-white rounded-xl border border-slate-200/60 p-5 shadow-sm">
+                
+                {/* Table Wrapper with rounded border */}
+                <div className="border border-[#e2e8f0] rounded-lg overflow-hidden">
+                  {/* Table Header */}
+                  <div className="grid grid-cols-12 text-[9px] font-bold text-slate-400 uppercase tracking-wider py-2.5 px-4 bg-slate-50 border-b border-[#e2e8f0]">
+                    <div className="col-span-4">CONSENT</div>
+                    <div className="col-span-3">SCOPE</div>
+                    <div className="col-span-2">STATUS</div>
+                    <div className="col-span-3 text-right">ACTION</div>
+                  </div>
+
+                  {/* Table Rows */}
+                  <div className="flex flex-col bg-white">
+                    {consents.map((item, idx) => (
+                      <div key={idx} className="grid grid-cols-12 items-center py-4 px-4 border-b border-[#e2e8f0] last:border-0 hover:bg-slate-50/30 transition-colors">
+                        <div className="col-span-4 text-[12px] font-bold text-slate-800">{item.name}</div>
+                        <div className="col-span-3 text-[12px] font-medium text-[#3e6f7c]">{item.desc}</div>
+                        <div className="col-span-2 flex">
+                          <span className={`text-[8px] font-bold px-2 py-0.5 rounded uppercase tracking-wider ${
+                            item.status === 'ACTIVE'
+                              ? 'bg-[#ecfdf5] text-[#10b981] border border-[#10b981]/20'
+                              : 'bg-slate-100 text-slate-500 border border-slate-200'
+                          }`}>
+                            {item.status}
+                          </span>
+                        </div>
+                        <div className="col-span-3 text-right flex justify-end">
+                          <button className="bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 text-[10px] font-semibold px-3 py-1 rounded transition-colors cursor-pointer">
+                            Manage
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Bottom Action Row */}
+                <div className="flex gap-3 mt-4">
+                  <button className="bg-[#2c525d] hover:bg-[#1f4851] text-white rounded px-3 py-1.5 text-[10px] font-semibold flex items-center gap-1.5 transition-colors cursor-pointer border-0">
+                    <i className="bi bi-gear text-[10px]"></i> Manage All Consent
+                  </button>
+                  <button className="bg-white border border-[#2c525d] text-[#2c525d] hover:bg-[#2c525d]/5 rounded px-3 py-1.5 text-[10px] font-semibold flex items-center gap-1.5 transition-colors cursor-pointer">
+                    <i className="bi bi-cloud-arrow-down text-[11px]"></i> Download Documents
+                  </button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showDsrModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fadeIn">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-6xl overflow-hidden border border-slate-200">
+            {/* Header Banner */}
+            <div className="bg-[#2c525d] text-white px-6 py-4 flex justify-between items-center">
+              <div>
+                <h3 className="text-[15px] font-bold text-white mb-0.5 tracking-tight">
+                  Data Subject Rights Center
+                </h3>
+                <p className="text-[10px] text-white/80 m-0 font-medium">
+                  Manage your data requests and privacy preferences.
+                </p>
+              </div>
+              <button 
+                onClick={() => setShowDsrModal(false)}
+                className="bg-transparent border border-white/25 hover:bg-white/10 text-white rounded px-3 py-1.5 text-[10px] font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
+              >
+                <i className="bi bi-x-lg text-[9px]"></i> Close
+              </button>
+            </div>
+
+            {/* Modal Body Container with custom grey background padding */}
+            <div className="bg-[#e1e4e7] p-5">
+              {/* White rounded card inside */}
+              <div className="bg-white rounded-xl border border-slate-200/60 p-5 shadow-sm">
+                
+                {/* Subheader action buttons */}
+                <div className="flex justify-between items-center mb-4">
+                  <button className="bg-transparent border border-slate-300 hover:border-slate-400 text-slate-700 rounded px-3 py-1.5 text-[11px] font-semibold flex items-center gap-1.5 transition-colors cursor-pointer">
+                    <i className="bi bi-clock-history"></i> Request Status
+                  </button>
+                  <button 
+                    onClick={() => setShowMakeRequestModal(true)}
+                    className="bg-[#2c525d] hover:bg-[#1f4851] text-white rounded px-3 py-1.5 text-[11px] font-semibold flex items-center gap-1.5 transition-colors cursor-pointer border-0"
+                  >
+                    <i className="bi bi-pencil-square text-[10px]"></i> Make a Request
+                  </button>
+                </div>
+
+                {/* Table Wrapper with rounded border */}
+                <div className="border border-[#e2e8f0] rounded-lg overflow-hidden bg-white">
+                  {/* Table Header */}
+                  <div className="grid grid-cols-12 text-[9px] font-bold text-slate-400 uppercase tracking-wider py-2.5 px-4 bg-slate-50 border-b border-[#e2e8f0]">
+                    <div className="col-span-3">REQUEST ID</div>
+                    <div className="col-span-3">REQUEST TYPE</div>
+                    <div className="col-span-3">STATUS</div>
+                    <div className="col-span-3 text-right">RESPONSES</div>
+                  </div>
+
+                  {/* Table Rows with EXACT py-4 px-4 padding */}
+                  <div className="flex flex-col">
+                    {dsrRequestsList.map((item, idx) => (
+                      <div key={idx} className="grid grid-cols-12 items-center py-4 px-4 border-b border-[#e2e8f0] last:border-0 hover:bg-slate-50/30 transition-colors">
+                        <div className="col-span-3 text-[12px] font-bold text-slate-800">{item.id}</div>
+                        <div className="col-span-3 text-[12px] font-medium text-[#3e6f7c]">{item.type}</div>
+                        <div className="col-span-3 flex">
+                          <span className={`${item.statusColor} text-[8px] font-bold px-2 py-0.5 rounded uppercase tracking-wider`}>
+                            {item.status}
+                          </span>
+                        </div>
+                        <div className="col-span-3 text-[12px] font-medium text-slate-400 text-right">
+                          {item.response}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showMakeRequestModal && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fadeIn">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-xl overflow-hidden border border-slate-200">
+            {/* Header */}
+            <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-white">
+              <div className="flex items-center gap-2.5">
+                <i className="bi bi-pencil-square text-[#2c525d] text-[18px]"></i>
+                <h3 className="text-[16px] font-bold text-slate-800 mb-0">
+                  Make a Request
+                </h3>
+              </div>
+              <button 
+                onClick={() => setShowMakeRequestModal(false)}
+                className="text-slate-400 hover:text-slate-600 transition-colors bg-transparent border-0 p-1 cursor-pointer"
+              >
+                <i className="bi bi-x-lg text-[16px]"></i>
+              </button>
+            </div>
+
+            {/* Body */}
+            <div className="p-6 flex flex-col gap-4 bg-white">
+              <div>
+                <label className="block text-[12px] font-bold text-slate-700 mb-1.5">
+                  Type of Request
+                </label>
+                <select 
+                  value={requestType}
+                  onChange={(e) => setRequestType(e.target.value)}
+                  className="w-full bg-white border border-slate-300 hover:border-slate-400 focus:border-[#2c525d] focus:ring-1 focus:ring-[#2c525d] rounded px-3 py-2 text-[12px] font-medium text-slate-800 transition-colors outline-none cursor-pointer"
+                >
+                  <option value="Right to Access">Right to Access</option>
+                  <option value="Right to Rectification">Right to Rectification</option>
+                  <option value="Right to Erasure">Right to Erasure</option>
+                  <option value="Right to Portability">Right to Portability</option>
+                  <option value="Right to Restrict Processing">Right to Restrict Processing</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-[12px] font-bold text-slate-700 mb-1.5">
+                  Supporting Documents (Optional)
+                </label>
+                <div className="border border-dashed border-slate-300 rounded bg-[#f8fafc]/50 p-6 flex flex-col items-center justify-center cursor-pointer hover:bg-[#f8fafc] hover:border-slate-400 transition-all duration-200">
+                  <svg className="w-8 h-8 text-slate-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                  </svg>
+                  <span className="text-[12px] text-slate-500 font-medium">Click to upload file or drag and drop</span>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[12px] font-bold text-slate-700 mb-1.5">
+                  Comments
+                </label>
+                <textarea 
+                  placeholder="Provide any additional details..."
+                  value={requestComments}
+                  onChange={(e) => setRequestComments(e.target.value)}
+                  rows={4}
+                  className="w-full bg-white border border-slate-300 hover:border-slate-400 focus:border-[#2c525d] focus:ring-1 focus:ring-[#2c525d] rounded px-3 py-2 text-[12px] font-medium text-slate-800 transition-colors outline-none resize-y"
+                />
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">
+              <button 
+                onClick={() => setShowMakeRequestModal(false)}
+                className="bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 px-4 py-2 rounded text-[12px] font-semibold transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={() => {
+                  toast.success('DSR Request submitted successfully');
+                  setShowMakeRequestModal(false);
+                }}
+                className="bg-[#2c525d] hover:bg-[#1f4851] text-white px-4 py-2 rounded text-[12px] font-semibold border-0 transition-colors cursor-pointer"
+              >
+                Submit Request
+              </button>
             </div>
           </div>
         </div>
