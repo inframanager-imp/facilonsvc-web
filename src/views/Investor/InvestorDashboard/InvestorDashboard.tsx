@@ -70,7 +70,7 @@ export const InvestorDashboard: React.FC = () => {
     return (
       <div className="facilon-dashboard-wrapper">
         <Header />
-        <div className="container dashboard-container-main">
+        <div className="container-fluid dashboard-container-main">
           <div className="alert alert-warning mt-4">
             Unable to load dashboard data. Please refresh.
           </div>
@@ -130,34 +130,34 @@ export const InvestorDashboard: React.FC = () => {
   ];
 
   return (
-    <div className="facilon-dashboard-wrapper font-sans text-gray-800 bg-[#f4f7f9] min-h-screen pb-10">
-      <main className="px-4 md:px-6 py-4 dashboard-container-main mx-auto max-w-7xl">
+    <div className="facilon-dashboard-wrapper font-sans text-gray-800 bg-[#e1e4e7] min-h-screen pb-10">
+      <main className="container-fluid px-4 md:px-6 pt-0 pb-4 dashboard-container-main">
         
         {/* Welcome Banner */}
-        <div className="bg-[#466a74] text-white rounded shadow-sm mb-3 px-4 py-3 flex justify-between items-center">
+        <div className="bg-[#466a74] text-white rounded shadow-sm mb-[5px] px-4 py-2 flex justify-between items-center">
           <div>
-            <h1 className="text-[15px] font-bold text-white flex items-center mb-0.5 tracking-tight">
+            <h1 className="text-[14px] font-bold text-white flex items-center mb-0.5 tracking-tight">
               Welcome back, {dashboardData?.investor?.firstName || 'Pankaj'} 
-              <i className="bi bi-pencil-square ml-2 text-[11px] opacity-70 cursor-pointer hover:opacity-100"></i>
+              <i className="bi bi-pencil-square ml-2 text-[10px] opacity-70 cursor-pointer hover:opacity-100"></i>
             </h1>
-            <p className="text-[11px] opacity-80 m-0">
+            <p className="text-[10px] opacity-80 m-0">
               Investor ID: {dashboardData?.investor?.uniqueCode || '202604096545'} &middot; Jurisdiction: {dashboardData?.accountSnapshot?.primaryJurisdiction || 'U.S. Virgin Islands'}
             </p>
           </div>
           <div>
-            <div className="bg-white/10 border border-white/20 rounded px-2.5 py-1.5 flex items-center text-[12px] cursor-pointer hover:bg-white/20 transition-colors">
+            <div className="bg-white/10 border border-white/25 rounded px-2.5 py-1 flex items-center text-[11px] cursor-pointer hover:bg-white/20 transition-colors">
               <span>{dashboardData?.investor?.firstName || 'Pankaj'} (Primary)</span>
-              <i className="bi bi-chevron-down ml-2 text-[10px]"></i>
+              <i className="bi bi-chevron-down ml-2 text-[9px]"></i>
             </div>
           </div>
         </div>
 
         {/* TOP ROW: 3 Column Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-3">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-[5px] mb-[5px] items-start">
           
           {/* Column 1: My Pending Action */}
-          <div className="bg-white rounded-lg shadow-sm border border-[#e2e8f0] flex flex-col h-full">
-            <div className="px-4 pt-4 pb-2 flex justify-between items-center">
+          <div className="bg-white rounded-lg shadow-sm border border-[#e2e8f0] flex flex-col">
+            <div className="px-4 pt-4 pb-2 flex justify-between items-center border-b border-[#e2e8f0]">
               <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
                 <i className="bi bi-list-task mr-2 text-slate-500"></i> My Pending Action
               </h2>
@@ -166,9 +166,9 @@ export const InvestorDashboard: React.FC = () => {
               </span>
             </div>
             
-            <div className="px-4 pb-4 flex-grow flex flex-col justify-between">
+            <div className="px-4 pt-2 pb-2 flex flex-col justify-start">
               <div>
-                <div className="grid grid-cols-12 text-[9px] font-bold text-slate-400 uppercase tracking-wider pb-2 border-b border-[#e2e8f0] mb-1">
+                <div className="grid grid-cols-12 text-[8px] font-bold text-slate-400 uppercase tracking-wider pb-2 border-b border-[#e2e8f0] mb-1">
                   <div className="col-span-6">PENDING ACTIVITY</div>
                   <div className="col-span-3">CENTRA</div>
                   <div className="col-span-2">STATUS</div>
@@ -178,10 +178,10 @@ export const InvestorDashboard: React.FC = () => {
                 <div className="flex flex-col">
                   {pendingActions.map((item, idx) => (
                     <div key={idx} className="grid grid-cols-12 items-center p-1 border-b border-[#e2e8f0] last:border-0 hover:bg-slate-50/50 transition-colors">
-                      <div className="col-span-6 text-[12px] font-semibold text-slate-700 pr-1">{item.activity}</div>
-                      <div className="col-span-3 text-[12px] text-slate-500">{item.centra}</div>
+                      <div className="col-span-6 text-[11px] font-semibold text-slate-700 pr-1">{item.activity}</div>
+                      <div className="col-span-3 text-[11px] text-slate-500">{item.centra}</div>
                       <div className="col-span-2 flex items-center">
-                        <span className={`text-[8.5px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${item.statusColor}`}>
+                        <span className={`text-[7.5px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${item.statusColor}`}>
                           {item.status}
                         </span>
                       </div>
@@ -197,8 +197,8 @@ export const InvestorDashboard: React.FC = () => {
                 </div>
               </div>
               
-              <div className="pt-4">
-                <button className="w-full py-1.5 text-[11px] font-semibold text-[#1f4851] border border-[#1f4851] rounded hover:bg-[#1f4851]/5 transition-colors">
+              <div className="mt-3">
+                <button className="w-full py-1.5 text-[10px] font-semibold text-[#1f4851] border border-[#1f4851] rounded hover:bg-[#1f4851]/5 transition-colors">
                   View All Pending Actions
                 </button>
               </div>
@@ -206,8 +206,8 @@ export const InvestorDashboard: React.FC = () => {
           </div>
 
           {/* Column 2: My Onboarding Status */}
-          <div className="bg-white rounded-lg shadow-sm border border-[#e2e8f0] flex flex-col h-full">
-            <div className="px-4 pt-4 pb-2 flex justify-between items-center">
+          <div className="bg-white rounded-lg shadow-sm border border-[#e2e8f0] flex flex-col">
+            <div className="px-4 pt-4 pb-2 flex justify-between items-center border-b border-[#e2e8f0]">
               <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
                 <svg className="w-4 h-4 mr-2 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
@@ -216,15 +216,15 @@ export const InvestorDashboard: React.FC = () => {
               </h2>
               <button 
                 onClick={() => setShowFacilonStatusModal(true)}
-                className="text-[11px] font-semibold text-[#1f4851] hover:text-[#14353d] transition-colors flex items-center bg-transparent border-0 p-0 cursor-pointer"
+                className="text-[11px] font-semibold text-[#1f4851] underline hover:text-[#14353d] transition-colors flex items-center bg-transparent border-0 p-0 cursor-pointer"
               >
                 Facilon Status &rarr;
               </button>
             </div>
             
-            <div className="px-4 pb-4 flex-grow flex flex-col justify-between">
+            <div className="px-4 pt-2 pb-2 flex flex-col justify-start">
               <div>
-                <div className="grid grid-cols-12 text-[9px] font-bold text-slate-400 uppercase tracking-wider pb-2 border-b border-[#e2e8f0] mb-1">
+                <div className="grid grid-cols-12 text-[8px] font-bold text-slate-400 uppercase tracking-wider pb-2 border-b border-[#e2e8f0] mb-1">
                   <div className="col-span-4">SERVICE PROVIDER</div>
                   <div className="col-span-4">PRODUCT</div>
                   <div className="col-span-3">STATUS</div>
@@ -235,12 +235,12 @@ export const InvestorDashboard: React.FC = () => {
                   {onboardingStatus.map((item, idx) => (
                     <div key={idx} className="grid grid-cols-12 items-center p-1 border-b border-[#e2e8f0] last:border-0 hover:bg-slate-50/50 transition-colors">
                       <div className="col-span-4 pr-1">
-                        <div className="text-[12px] font-bold text-slate-800 leading-tight">{item.provider}</div>
-                        <div className="text-[10px] text-slate-400 mt-0.5">ID: {item.id}</div>
+                        <div className="text-[11px] font-bold text-slate-800 leading-tight">{item.provider}</div>
+                        <div className="text-[9px] text-slate-400 mt-0.5">ID: {item.id}</div>
                       </div>
-                      <div className="col-span-4 text-[12px] text-slate-600 pr-1 leading-tight">{item.product}</div>
+                      <div className="col-span-4 text-[11px] text-slate-600 pr-1 leading-tight">{item.product}</div>
                       <div className="col-span-3 pr-1 flex flex-col items-start justify-center">
-                        <span className={`text-[8.5px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${item.statusColor}`}>
+                        <span className={`text-[7.5px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${item.statusColor}`}>
                           {item.status}
                         </span>
                         <div className="w-12 h-[3px] bg-[#e2e8f0] rounded-full mt-1.5 overflow-hidden">
@@ -264,10 +264,10 @@ export const InvestorDashboard: React.FC = () => {
                 </div>
               </div>
               
-              <div className="pt-4">
+              <div className="mt-3">
                 <button 
                   onClick={() => setShowFacilonStatusModal(true)}
-                  className="w-full py-1.5 text-[11px] font-semibold text-[#1f4851] border border-[#1f4851] rounded hover:bg-[#1f4851]/5 transition-colors flex justify-center items-center cursor-pointer"
+                  className="w-full py-1.5 text-[10px] font-semibold text-[#1f4851] border border-[#1f4851] rounded hover:bg-[#1f4851]/5 transition-colors flex justify-center items-center cursor-pointer"
                 >
                   <svg className="w-3.5 h-3.5 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
@@ -279,19 +279,19 @@ export const InvestorDashboard: React.FC = () => {
           </div>
 
           {/* Column 3: My Appointment */}
-          <div className="bg-white rounded-lg shadow-sm border border-[#e2e8f0] flex flex-col h-full">
-            <div className="px-4 pt-4 pb-2 flex justify-between items-center">
+          <div className="bg-white rounded-lg shadow-sm border border-[#e2e8f0] flex flex-col">
+            <div className="px-4 pt-4 pb-2 flex justify-between items-center border-b border-[#e2e8f0]">
               <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
                 <i className="bi bi-calendar3 mr-2 text-slate-500"></i> My Appointment
               </h2>
-              <a href="#" className="text-[11px] font-semibold text-[#1f4851] hover:text-[#14353d] transition-colors flex items-center">
+              <a href="#" className="text-[11px] font-semibold text-[#1f4851] underline hover:text-[#14353d] transition-colors flex items-center">
                 Appointment Center &rarr;
               </a>
             </div>
             
-            <div className="px-4 pb-4 flex-grow flex flex-col justify-between">
+            <div className="px-4 pt-2 pb-2 flex flex-col justify-start">
               <div>
-                <div className="grid grid-cols-12 text-[9px] font-bold text-slate-400 uppercase tracking-wider pb-2 border-b border-[#e2e8f0] mb-1">
+                <div className="grid grid-cols-12 text-[8px] font-bold text-slate-400 uppercase tracking-wider pb-2 border-b border-[#e2e8f0] mb-1">
                   <div className="col-span-5">PRODUCT</div>
                   <div className="col-span-3">SERVICE PROVIDER</div>
                   <div className="col-span-2">DATE</div>
@@ -301,16 +301,16 @@ export const InvestorDashboard: React.FC = () => {
                 <div className="flex flex-col">
                   {appointments.map((item, idx) => (
                     <div key={idx} className="grid grid-cols-12 items-center p-1 border-b border-[#e2e8f0] last:border-0 hover:bg-slate-50/50 transition-colors">
-                      <div className="col-span-5 text-[12px] font-bold text-slate-800 pr-1 leading-tight">
+                      <div className="col-span-5 text-[11px] font-bold text-slate-800 pr-1 leading-tight">
                         {item.product}
                       </div>
-                      <div className="col-span-3 text-[12px] text-slate-500 pr-1 leading-tight">{item.provider}</div>
-                      <div className="col-span-2 text-[12px] pr-1 leading-tight">
+                      <div className="col-span-3 text-[11px] text-slate-500 pr-1 leading-tight">{item.provider}</div>
+                      <div className="col-span-2 text-[11px] pr-1 leading-tight">
                         <div className="font-semibold text-slate-700">{item.date.split(',')[0]},</div>
-                        <div className="text-[10px] text-slate-400 mt-0.5">{item.date.split(',')[1]?.trim()}</div>
+                        <div className="text-[9px] text-slate-400 mt-0.5">{item.date.split(',')[1]?.trim()}</div>
                       </div>
                       <div className="col-span-2 text-right flex justify-end">
-                        <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${item.statusColor}`}>
+                        <span className={`text-[7px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${item.statusColor}`}>
                           {item.status}
                         </span>
                       </div>
@@ -319,8 +319,8 @@ export const InvestorDashboard: React.FC = () => {
                 </div>
               </div>
               
-              <div className="pt-4">
-                <button className="w-full py-1.5 text-[11px] font-semibold text-[#1f4851] border border-[#1f4851] rounded hover:bg-[#1f4851]/5 transition-colors flex justify-center items-center">
+              <div className="mt-3">
+                <button className="w-full py-1.5 text-[10px] font-semibold text-[#1f4851] border border-[#1f4851] rounded hover:bg-[#1f4851]/5 transition-colors flex justify-center items-center">
                   <i className="bi bi-calendar3 mr-1.5"></i> View All Appointments
                 </button>
               </div>
@@ -330,15 +330,15 @@ export const InvestorDashboard: React.FC = () => {
         </div>
 
         {/* BOTTOM ROW: 3 Column Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-[5px] items-start">
           
           {/* Column 1: My Documents */}
-          <div className="bg-white rounded-lg shadow-sm border border-[#e2e8f0] flex flex-col h-full">
-            <div className="px-4 pt-4 pb-2 flex justify-between items-center">
+          <div className="bg-white rounded-lg shadow-sm border border-[#e2e8f0] flex flex-col">
+            <div className="px-4 pt-4 pb-2 flex justify-between items-center border-b border-[#e2e8f0]">
               <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
                 <i className="bi bi-cloud-arrow-up mr-2 text-slate-500"></i> My Documents
               </h2>
-              <a href="#" className="text-[11px] font-semibold text-[#1f4851] hover:text-[#14353d] transition-colors flex items-center">
+              <a href="#" className="text-[11px] font-semibold text-[#1f4851] underline hover:text-[#14353d] transition-colors flex items-center">
                 Documents Center &rarr;
               </a>
             </div>
@@ -346,25 +346,25 @@ export const InvestorDashboard: React.FC = () => {
             <div className="grid grid-cols-4 divide-x divide-[#e2e8f0] border-b border-[#e2e8f0]">
               <div className="py-2.5 text-center flex flex-col items-center">
                 <span className="text-[16px] font-bold text-slate-800">0</span>
-                <span className="text-[9px] text-slate-500">of 12 Uploaded</span>
+                <span className="text-[8px] text-slate-500">of 12 Uploaded</span>
               </div>
               <div className="py-2.5 text-center flex flex-col items-center">
                 <span className="text-[16px] font-bold text-slate-800">0%</span>
-                <span className="text-[9px] text-slate-500">Complete</span>
+                <span className="text-[8px] text-slate-500">Complete</span>
               </div>
               <div className="py-2.5 text-center flex flex-col items-center">
                 <span className="text-[16px] font-bold text-[#10b981]">0</span>
-                <span className="text-[9px] text-slate-500">Approved</span>
+                <span className="text-[8px] text-slate-500">Approved</span>
               </div>
               <div className="py-2.5 text-center flex flex-col items-center">
                 <span className="text-[16px] font-bold text-[#ef4444]">0</span>
-                <span className="text-[9px] text-slate-500">Rejected</span>
+                <span className="text-[8px] text-slate-500">Rejected</span>
               </div>
             </div>
 
-            <div className="px-4 pb-4 pt-3 flex-grow flex flex-col justify-between overflow-hidden">
+            <div className="px-4 pb-2 pt-3 flex flex-col overflow-hidden">
               <div>
-                <div className="grid grid-cols-12 text-[9px] font-bold text-slate-400 uppercase tracking-wider pb-2 border-b border-[#e2e8f0] mb-1">
+                <div className="grid grid-cols-12 text-[8px] font-bold text-slate-400 uppercase tracking-wider pb-2 border-b border-[#e2e8f0] mb-1">
                   <div className="col-span-5">DOCUMENT TYPE</div>
                   <div className="col-span-5">DOCUMENT NAME</div>
                   <div className="col-span-2 text-right">ACTION</div>
@@ -388,20 +388,20 @@ export const InvestorDashboard: React.FC = () => {
           </div>
 
           {/* Column 2: My Permissions & My Request stacked */}
-          <div className="flex flex-col gap-3 h-full">
+          <div className="flex flex-col gap-[5px]">
             
             {/* My Permissions */}
-            <div className="bg-white rounded-lg shadow-sm border border-[#e2e8f0] flex flex-col flex-grow">
-              <div className="px-4 pt-4 pb-2 flex justify-between items-center">
+            <div className="bg-white rounded-lg shadow-sm border border-[#e2e8f0] flex flex-col">
+              <div className="px-4 pt-4 pb-2 flex justify-between items-center border-b border-[#e2e8f0]">
                 <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
                   <i className="bi bi-shield-lock mr-2 text-slate-500"></i> My Permissions
                 </h2>
-                <a href="#" className="text-[11px] font-semibold text-[#1f4851] hover:text-[#14353d] transition-colors flex items-center">
+                <a href="#" className="text-[12px] font-semibold text-[#1f4851] underline hover:text-[#14353d] transition-colors flex items-center">
                   Permissions Center &rarr;
                 </a>
               </div>
               
-              <div className="px-4 pb-4 flex-grow flex flex-col justify-between">
+              <div className="px-4 pt-2 pb-2 flex flex-col justify-start">
                 <div>
                   <div className="grid grid-cols-12 text-[9px] font-bold text-slate-400 uppercase tracking-wider pb-2 border-b border-[#e2e8f0] mb-1">
                     <div className="col-span-5">PERMISSION</div>
@@ -424,7 +424,7 @@ export const InvestorDashboard: React.FC = () => {
                   </div>
                 </div>
                 
-                <div className="pt-3">
+                <div className="mt-3">
                   <button className="w-full py-1.5 text-[11px] font-semibold text-[#1f4851] border border-[#1f4851] rounded hover:bg-[#1f4851]/5 transition-colors">
                     Manage Permissions
                   </button>
@@ -433,17 +433,17 @@ export const InvestorDashboard: React.FC = () => {
             </div>
 
             {/* My Request */}
-            <div className="bg-white rounded-lg shadow-sm border border-[#e2e8f0] flex flex-col flex-grow">
-              <div className="px-4 pt-4 pb-2 flex justify-between items-center">
+            <div className="bg-white rounded-lg shadow-sm border border-[#e2e8f0] flex flex-col">
+              <div className="px-4 pt-4 pb-2 flex justify-between items-center border-b border-[#e2e8f0]">
                 <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
                   <i className="bi bi-journal-text mr-2 text-slate-500"></i> My Request
                 </h2>
-                <a href="#" className="text-[11px] font-semibold text-[#1f4851] hover:text-[#14353d] transition-colors flex items-center">
+                <a href="#" className="text-[12px] font-semibold text-[#1f4851] underline hover:text-[#14353d] transition-colors flex items-center">
                   DSR Center &rarr;
                 </a>
               </div>
               
-              <div className="px-4 pb-4 flex-grow flex flex-col justify-between">
+              <div className="px-4 pt-2 pb-2 flex flex-col justify-start">
                 <div>
                   <div className="grid grid-cols-12 text-[9px] font-bold text-slate-400 uppercase tracking-wider pb-2 border-b border-[#e2e8f0] mb-1">
                     <div className="col-span-8">TYPE OF REQUEST</div>
@@ -464,7 +464,7 @@ export const InvestorDashboard: React.FC = () => {
                   </div>
                 </div>
                 
-                <div className="pt-3">
+                <div className="mt-3">
                   <button className="w-full py-1.5 text-[11px] font-semibold text-[#1f4851] border border-[#1f4851] rounded hover:bg-[#1f4851]/5 transition-colors">
                     View All Requests
                   </button>
@@ -475,17 +475,17 @@ export const InvestorDashboard: React.FC = () => {
           </div>
 
           {/* Column 3: My Consents */}
-          <div className="bg-white rounded-lg shadow-sm border border-[#e2e8f0] flex flex-col h-full relative">
-            <div className="px-4 pt-4 pb-2 flex justify-between items-center">
+          <div className="bg-white rounded-lg shadow-sm border border-[#e2e8f0] flex flex-col relative">
+            <div className="px-4 pt-4 pb-2 flex justify-between items-center border-b border-[#e2e8f0]">
               <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
                 <i className="bi bi-check2-all mr-2 text-slate-500"></i> My Consents
               </h2>
-              <a href="#" className="text-[11px] font-semibold text-[#1f4851] hover:text-[#14353d] transition-colors flex items-center">
+              <a href="#" className="text-[12px] font-semibold text-[#1f4851] underline hover:text-[#14353d] transition-colors flex items-center">
                 Consent Center &rarr;
               </a>
             </div>
             
-            <div className="px-4 pb-4 flex-grow flex flex-col justify-between">
+            <div className="px-4 pt-2 pb-2 flex flex-col justify-start">
               <div className="overflow-y-auto max-h-[300px]">
                 <div className="flex flex-col">
                   {consents.map((item, idx) => (
@@ -504,7 +504,7 @@ export const InvestorDashboard: React.FC = () => {
                 </div>
               </div>
               
-              <div className="pt-3 mt-auto">
+              <div className="mt-3">
                 <div className="bg-[#f0f7f9] rounded py-2 px-3 text-[10px] text-slate-600 font-medium">
                   Service Agent: <span className="text-slate-400">None assigned - Status: NOT ASSIGNED</span>
                 </div>
@@ -531,28 +531,28 @@ export const InvestorDashboard: React.FC = () => {
             {/* Header Banner */}
             <div className="bg-[#2c525d] text-white px-6 py-4 flex justify-between items-center">
               <div>
-                <h3 className="text-[16px] font-bold text-white mb-0.5 tracking-tight">
+                <h3 className="text-[15px] font-bold text-white mb-0.5 tracking-tight">
                   My Onboarding Journey
                 </h3>
-                <p className="text-[11px] text-white/80 m-0 font-medium">
+                <p className="text-[10px] text-white/80 m-0 font-medium">
                   Track your product applications, schemes, and plans in real-time.
                 </p>
               </div>
               <button 
                 onClick={() => setShowFacilonStatusModal(false)}
-                className="bg-transparent border border-white/25 hover:bg-white/10 text-white rounded px-3 py-1.5 text-[11px] font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
+                className="bg-transparent border border-white/25 hover:bg-white/10 text-white rounded px-3 py-1.5 text-[10px] font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
               >
-                <i className="bi bi-x-lg text-[10px]"></i> Close
+                <i className="bi bi-x-lg text-[9px]"></i> Close
               </button>
             </div>
 
             {/* Modal Body Container with custom grey background padding */}
-            <div className="bg-[#f4f7f9] p-5">
+            <div className="bg-[#e1e4e7] p-5">
               {/* White rounded card inside */}
               <div className="bg-white rounded-xl border border-slate-200/60 p-5 shadow-sm">
                 
                 {/* Table Header */}
-                <div className="grid grid-cols-12 text-[10px] font-bold text-slate-400 uppercase tracking-wider pb-3.5 border-b border-[#e2e8f0] mb-1">
+                <div className="grid grid-cols-12 text-[9px] font-bold text-slate-400 uppercase tracking-wider pb-3.5 border-b border-[#e2e8f0] mb-1">
                   <div className="col-span-3">PRODUCT</div>
                   <div className="col-span-3">SCHEME</div>
                   <div className="col-span-2">PLAN</div>
@@ -564,51 +564,51 @@ export const InvestorDashboard: React.FC = () => {
                 <div className="flex flex-col">
                   {/* Row 1 */}
                   <div className="grid grid-cols-12 items-center py-4 border-b border-[#e2e8f0] last:border-0">
-                    <div className="col-span-3 text-[13px] font-bold text-slate-800">HYSA Account</div>
-                    <div className="col-span-3 text-[13px] text-slate-500">Global Wealth Scheme</div>
-                    <div className="col-span-2 text-[13px] text-slate-500">Premium Tier</div>
+                    <div className="col-span-3 text-[12px] font-bold text-slate-800">HYSA Account</div>
+                    <div className="col-span-3 text-[12px] text-slate-500">Global Wealth Scheme</div>
+                    <div className="col-span-2 text-[12px] text-slate-500">Premium Tier</div>
                     <div className="col-span-2 flex">
-                      <span className="bg-[#eff6ff] text-[#3b82f6] border border-[#3b82f6]/20 text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">
+                      <span className="bg-[#eff6ff] text-[#3b82f6] border border-[#3b82f6]/20 text-[8px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">
                         IN PROGRESS
                       </span>
                     </div>
                     <div className="col-span-2 text-right flex justify-end">
-                      <button className="bg-[#ecfdf5] hover:bg-[#d1fae5] text-[#10b981] border border-[#10b981]/25 text-[9px] font-extrabold px-3 py-1.5 rounded flex items-center gap-2 tracking-wider transition-colors cursor-pointer">
-                        CONTINUE <i className="bi bi-chevron-down text-[8px]"></i>
+                      <button className="bg-[#ecfdf5] hover:bg-[#d1fae5] text-[#10b981] border border-[#10b981]/25 text-[8px] font-extrabold px-3 py-1.5 rounded flex items-center gap-2 tracking-wider transition-colors cursor-pointer">
+                        CONTINUE <i className="bi bi-chevron-down text-[7px]"></i>
                       </button>
                     </div>
                   </div>
 
                   {/* Row 2 */}
                   <div className="grid grid-cols-12 items-center py-4 border-b border-[#e2e8f0] last:border-0">
-                    <div className="col-span-3 text-[13px] font-bold text-slate-800">Private Equity</div>
-                    <div className="col-span-3 text-[13px] text-slate-500">Northern Trust Alt</div>
-                    <div className="col-span-2 text-[13px] text-slate-500">Standard Growth</div>
+                    <div className="col-span-3 text-[12px] font-bold text-slate-800">Private Equity</div>
+                    <div className="col-span-3 text-[12px] text-slate-500">Northern Trust Alt</div>
+                    <div className="col-span-2 text-[12px] text-slate-500">Standard Growth</div>
                     <div className="col-span-2 flex">
-                      <span className="bg-[#fff8f0] text-[#f59e0b] border border-[#f59e0b]/20 text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">
+                      <span className="bg-[#fff8f0] text-[#f59e0b] border border-[#f59e0b]/20 text-[8px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">
                         IN REVIEW
                       </span>
                     </div>
                     <div className="col-span-2 text-right flex justify-end">
-                      <button className="bg-[#ecfdf5] hover:bg-[#d1fae5] text-[#10b981] border border-[#10b981]/25 text-[9px] font-extrabold px-3 py-1.5 rounded flex items-center gap-2 tracking-wider transition-colors cursor-pointer">
-                        CONTINUE <i className="bi bi-chevron-down text-[8px]"></i>
+                      <button className="bg-[#ecfdf5] hover:bg-[#d1fae5] text-[#10b981] border border-[#10b981]/25 text-[8px] font-extrabold px-3 py-1.5 rounded flex items-center gap-2 tracking-wider transition-colors cursor-pointer">
+                        CONTINUE <i className="bi bi-chevron-down text-[7px]"></i>
                       </button>
                     </div>
                   </div>
 
                   {/* Row 3 */}
                   <div className="grid grid-cols-12 items-center py-4 border-b border-[#e2e8f0] last:border-0">
-                    <div className="col-span-3 text-[13px] font-bold text-slate-800">Treasury Bonds</div>
-                    <div className="col-span-3 text-[13px] text-slate-500">Facilon Prime Yield</div>
-                    <div className="col-span-2 text-[13px] text-slate-500">Fixed 5-Year</div>
+                    <div className="col-span-3 text-[12px] font-bold text-slate-800">Treasury Bonds</div>
+                    <div className="col-span-3 text-[12px] text-slate-500">Facilon Prime Yield</div>
+                    <div className="col-span-2 text-[12px] text-slate-500">Fixed 5-Year</div>
                     <div className="col-span-2 flex">
-                      <span className="bg-[#ecfdf5] text-[#10b981] border border-[#10b981]/20 text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">
+                      <span className="bg-[#ecfdf5] text-[#10b981] border border-[#10b981]/20 text-[8px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">
                         COMPLETED
                       </span>
                     </div>
                     <div className="col-span-2 text-right flex justify-end">
-                      <button className="bg-[#ecfdf5] hover:bg-[#d1fae5] text-[#10b981] border border-[#10b981]/25 text-[9px] font-extrabold px-3 py-1.5 rounded flex items-center gap-2 tracking-wider transition-colors cursor-pointer">
-                        CONTINUE <i className="bi bi-chevron-down text-[8px]"></i>
+                      <button className="bg-[#ecfdf5] hover:bg-[#d1fae5] text-[#10b981] border border-[#10b981]/25 text-[8px] font-extrabold px-3 py-1.5 rounded flex items-center gap-2 tracking-wider transition-colors cursor-pointer">
+                        CONTINUE <i className="bi bi-chevron-down text-[7px]"></i>
                       </button>
                     </div>
                   </div>
