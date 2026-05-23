@@ -71,7 +71,7 @@ export const KycPdfPreview: React.FC = () => {
   const handleClose = () => {
     window.close();
     // Fallback if window.close() doesn't work
-    setTimeout(() => navigate('/investor/profile'), 100);
+    setTimeout(() => navigate('/investor/journey'), 100);
   };
 
   if (loading) {

@@ -126,7 +126,7 @@ export const ConsentCentreTab: React.FC<ConsentCentreTabProps> = ({
             <div className="mt-3">
               <button
                 className="btn btn-outline-primary btn-sm"
-                onClick={() => navigate('/investor/profile')}
+                onClick={() => navigate('/investor/journey')}
               >
                 <i className="bi bi-gear me-1"></i>
                 Manage Consents

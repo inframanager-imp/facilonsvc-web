@@ -432,6 +432,18 @@ export interface SetPasswordDetailsDto {
 }
 
 
+export interface JourneyListItem {
+  journeyId?: string;
+  serviceProviderName?: string;
+  product?: string;
+  productCode?: string;
+  scheme?: string;
+  plan?: string;
+  status?: string;
+  progress?: number;
+  actionRoute?: string;
+}
+
 class InvestorService {
   private readonly baseUrl = '/api/clients';
 
@@ -534,6 +546,13 @@ class InvestorService {
   async getDashboard(): Promise<InvestorDashboardDto> {
     const response = await this.client.get<InvestorDashboardDto>(
       `${this.baseUrl}/me/dashboard`
+    );
+    return response.data;
+  }
+
+  async getJourneys(): Promise<JourneyListItem[]> {
+    const response = await this.client.get<JourneyListItem[]>(
+      `${this.baseUrl}/me/journeys`
     );
     return response.data;
   }

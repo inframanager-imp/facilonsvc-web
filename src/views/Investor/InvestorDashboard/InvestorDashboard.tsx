@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Header from '../../../components/Header/Header';
-import { investorService, InvestorDashboardDto } from '../../../services/investor.service';
+import { investorService, InvestorDashboardDto, JourneyListItem } from '../../../services/investor.service';
 import { delegationService } from '../../../services/delegation.service';
 import { DelegationDto } from '../../../models/DelegationDto';
 import { LoadingSpinner } from '../../../components/LoadingSpinner/LoadingSpinner';
@@ -13,11 +13,11 @@ export const InvestorDashboard: React.FC = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [dashboardData, setDashboardData] = useState<InvestorDashboardDto | null>(null);
+  const [journeys, setJourneys] = useState<JourneyListItem[]>([]);
   const [pendingDelegations, setPendingDelegations] = useState<DelegationDto[]>([]);
   const [processingDelegation, setProcessingDelegation] = useState<number | null>(null);
   const [showAcceptModal, setShowAcceptModal] = useState(false);
   const [selectedDelegation, setSelectedDelegation] = useState<DelegationDto | null>(null);
-  const [showFacilonStatusModal, setShowFacilonStatusModal] = useState(false);
   const [showPermissionsModal, setShowPermissionsModal] = useState(false);
   const [showConsentModal, setShowConsentModal] = useState(false);
   const [showDsrModal, setShowDsrModal] = useState(false);
@@ -31,7 +31,17 @@ export const InvestorDashboard: React.FC = () => {
   useEffect(() => {
     fetchDashboardData();
     fetchPendingDelegations();
+    fetchJourneys();
   }, []);
+
+  const fetchJourneys = async () => {
+    try {
+      const data = await investorService.getJourneys();
+      setJourneys(data || []);
+    } catch (error) {
+      console.error('[InvestorDashboard] Error fetching journeys:', error);
+    }
+  };
 
   const fetchDashboardData = async () => {
     try {
@@ -95,12 +105,6 @@ export const InvestorDashboard: React.FC = () => {
     { activity: 'Fatca Declaration', centra: 'Tax Centre', status: 'REQUIRED', statusColor: 'bg-[#fef2f2] text-[#ef4444] border border-[#ef4444]/30' },
   ];
 
-  const onboardingStatus = [
-    { provider: 'Global Wealth', id: 'NT-001459', product: 'HYSA Account', status: 'IN PROGRESS', progress: 60, statusColor: 'text-[#3b82f6] bg-[#eff6ff]' },
-    { provider: 'Northern Trust', id: 'NT-002459', product: 'Private Equity', status: 'IN REVIEW', progress: 80, statusColor: 'text-[#f59e0b] bg-[#fff8f0]' },
-    { provider: 'Facilon Prime', id: 'NT-003459', product: 'Treasury Bonds', status: 'COMPLETED', progress: 100, statusColor: 'text-[#10b981] bg-[#ecfdf5]' },
-  ];
-
   const appointments = [
     { product: 'HYSA Consultation', provider: 'Global Wealth', date: 'May 15, 2026', status: 'CONFIRMED', statusColor: 'bg-[#ecfdf5] text-[#10b981] border-none' },
     { product: 'Equity Review', provider: 'Northern Trust', date: 'May 22, 2026', status: 'PENDING', statusColor: 'bg-[#fff8f0] text-[#f59e0b] border-none' },
@@ -153,7 +157,7 @@ export const InvestorDashboard: React.FC = () => {
   return (
     <div className="facilon-dashboard-wrapper font-sans text-gray-800 min-h-screen pb-0">
       <main className="container-fluid px-0 pt-0 pb-0 dashboard-container-main">
-        {!showFacilonStatusModal && !showPermissionsModal && !showConsentModal && !showDsrModal && (
+        {!showPermissionsModal && !showConsentModal && !showDsrModal && (
           <>
         {/* Welcome Banner */}
         <div className="bg-[#466a74] text-white rounded shadow-sm mb-3 px-4 py-3 flex flex-col justify-between">
@@ -266,7 +270,7 @@ export const InvestorDashboard: React.FC = () => {
                 My Onboarding Status
               </h2>
               <button
-                onClick={() => setShowFacilonStatusModal(true)}
+                onClick={() => navigate('/investor/journeys')}
                 className="text-[11px] font-semibold text-[#3e6f7c] hover:underline hover:text-[#1f4851] transition-colors flex items-center bg-transparent border-0 p-0 cursor-pointer"
               >
                 Facilon Status &rarr;
@@ -283,41 +287,61 @@ export const InvestorDashboard: React.FC = () => {
                 </div>
 
                 <div className="flex flex-col">
-                  {onboardingStatus.map((item, idx) => (
-                    <div key={idx} className="grid grid-cols-12 items-center p-1 border-b border-[#e2e8f0] last:border-0 hover:bg-slate-50/50 transition-colors">
-                      <div className="col-span-4 pr-1">
-                        <div className="text-[11px] font-bold text-slate-800 leading-tight">{item.provider}</div>
-                        <div className="text-[9px] text-slate-400 mt-0.5">ID: {item.id}</div>
-                      </div>
-                      <div className="col-span-4 text-[11px] text-slate-600 pr-1 leading-tight">{item.product}</div>
-                      <div className="col-span-3 pr-1 flex flex-col items-start justify-center">
-                        <span className={`text-[7.5px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${item.statusColor}`}>
-                          {item.status}
-                        </span>
-                        <div className="w-12 h-[3px] bg-[#e2e8f0] rounded-full mt-1.5 overflow-hidden">
-                          <div
-                            className={`h-full rounded-full ${item.status === 'COMPLETED' ? 'bg-[#10b981]' : item.status === 'IN PROGRESS' ? 'bg-[#3b82f6]' : 'bg-[#f59e0b]'}`}
-                            style={{ width: `${item.progress}%` }}
-                          ></div>
-                        </div>
-                      </div>
-                      <div className="col-span-1 text-right flex justify-end">
-                        <button className="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-700 flex items-center justify-center transition-colors">
-                          {item.status === 'COMPLETED' ? (
-                            <i className="bi bi-eye text-[12px]"></i>
-                          ) : (
-                            <i className="bi bi-play-fill text-[13px] ml-0.5"></i>
-                          )}
-                        </button>
-                      </div>
+                  {journeys.length === 0 ? (
+                    <div className="py-4 text-center text-[11px] text-slate-400">
+                      No onboarding journeys assigned yet.
                     </div>
-                  ))}
+                  ) : (
+                    journeys.map((item, idx) => {
+                      const status = (item.status || 'IN PROGRESS').toUpperCase();
+                      const completed = status === 'COMPLETED';
+                      const statusColor = completed
+                        ? 'text-[#10b981] bg-[#ecfdf5]'
+                        : status === 'ABANDONED'
+                        ? 'text-[#ef4444] bg-[#fef2f2]'
+                        : status === 'IN REVIEW'
+                        ? 'text-[#f59e0b] bg-[#fff8f0]'
+                        : 'text-[#3b82f6] bg-[#eff6ff]';
+                      const barColor = completed ? 'bg-[#10b981]' : status === 'IN PROGRESS' ? 'bg-[#3b82f6]' : status === 'ABANDONED' ? 'bg-[#ef4444]' : 'bg-[#f59e0b]';
+                      const progress = typeof item.progress === 'number' ? item.progress : (completed ? 100 : status === 'ABANDONED' ? 100 : 0);
+                      const goToJourney = () => navigate(item.actionRoute || '/investor/journeys');
+                      return (
+                        <div key={item.journeyId || idx} className="grid grid-cols-12 items-center p-1 border-b border-[#e2e8f0] last:border-0 hover:bg-slate-50/50 transition-colors">
+                          <div className="col-span-4 pr-1">
+                            <div className="text-[11px] font-bold text-slate-800 leading-tight">{item.serviceProviderName || '-'}</div>
+                            <div className="text-[9px] text-slate-400 mt-0.5">{item.productCode ? `Code: ${item.productCode}` : '-'}</div>
+                          </div>
+                          <div className="col-span-4 text-[11px] text-slate-600 pr-1 leading-tight">{item.product || '-'}</div>
+                          <div className="col-span-3 pr-1 flex flex-col items-start justify-center">
+                            <span className={`text-[7.5px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${statusColor}`}>
+                              {status}
+                            </span>
+                            <div className="w-12 h-[3px] bg-[#e2e8f0] rounded-full mt-1.5 overflow-hidden">
+                              <div className={`h-full rounded-full ${barColor}`} style={{ width: `${progress}%` }}></div>
+                            </div>
+                          </div>
+                          <div className="col-span-1 text-right flex justify-end">
+                            <button
+                              onClick={goToJourney}
+                              className="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-700 flex items-center justify-center transition-colors cursor-pointer"
+                            >
+                              {completed ? (
+                                <i className="bi bi-eye text-[12px]"></i>
+                              ) : (
+                                <i className="bi bi-play-fill text-[13px] ml-0.5"></i>
+                              )}
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })
+                  )}
                 </div>
               </div>
 
               <div className="mt-3">
                 <button
-                  onClick={() => setShowFacilonStatusModal(true)}
+                  onClick={() => navigate('/investor/journeys')}
                   className="w-full py-1.5 text-[10px] font-semibold text-[#1f4851] border border-[#1f4851] rounded hover:bg-[#1f4851]/5 transition-colors flex justify-center items-center cursor-pointer"
                 >
                   <svg className="w-3.5 h-3.5 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -335,9 +359,9 @@ export const InvestorDashboard: React.FC = () => {
               <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
                 <i className="bi bi-calendar3 mr-2 text-slate-500"></i> My Appointment
               </h2>
-              <a href="#" className="text-[11px] font-semibold text-[#3e6f7c] hover:underline hover:text-[#1f4851] transition-colors flex items-center">
-                Appointment Center &rarr;
-              </a>
+              <span className="text-[9px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider bg-[#fff8f0] text-[#f59e0b] border border-[#f59e0b]/30">
+                Coming Soon
+              </span>
             </div>
 
             <div className="px-4 pt-2 pb-2 flex flex-col justify-start">
@@ -371,7 +395,7 @@ export const InvestorDashboard: React.FC = () => {
               </div>
 
               <div className="mt-3">
-                <button className="w-full py-1.5 text-[10px] font-semibold text-[#1f4851] border border-[#1f4851] rounded hover:bg-[#1f4851]/5 transition-colors flex justify-center items-center">
+                <button className="w-full py-1.5 text-[10px] font-semibold text-slate-400 border border-slate-200 rounded bg-slate-50 cursor-not-allowed flex justify-center items-center" disabled>
                   <i className="bi bi-calendar3 mr-1.5"></i> View All Appointments
                 </button>
               </div>
@@ -574,102 +598,6 @@ export const InvestorDashboard: React.FC = () => {
 
         </div>
           </>
-        )}
-        {showFacilonStatusModal && (
-          <div className="bg-white rounded-lg w-full overflow-hidden border border-slate-200 mt-0 mb-0">
-            {/* Header Banner */}
-            <div className="bg-[#2c525d] text-white px-3 py-3 flex justify-between items-center">
-              <div>
-                <h3 className="text-[15px] font-bold text-white mb-0.5 tracking-tight">
-                  My Onboarding Journey
-                </h3>
-                <p className="text-[10px] text-white/80 m-0 font-medium">
-                  Track your product applications, schemes, and plans in real-time.
-                </p>
-              </div>
-              <button 
-                onClick={() => setShowFacilonStatusModal(false)}
-                className="bg-transparent border border-white/25 hover:bg-white/10 text-white rounded px-3 py-1.5 text-[10px] font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
-              >
-                <i className="bi bi-x-lg text-[9px]"></i> Close
-              </button>
-            </div>
-
-            {/* Modal Body Container with custom grey background padding */}
-            <div className="bg-[#e1e4e7] p-0">
-              {/* White rounded card inside */}
-              <div className="bg-white border border-slate-200/60 p-3 shadow-sm">
-                
-                {/* Data Table */}
-                <div className="overflow-x-auto w-full">
-                  <table className="w-full text-left border-collapse">
-                    <thead>
-                      <tr className="text-[9px] font-bold text-slate-400 uppercase tracking-wider border-b border-[#e2e8f0]">
-                        <th className="pb-3.5 px-2">PRODUCT</th>
-                        <th className="pb-3.5 px-2">SCHEME</th>
-                        <th className="pb-3.5 px-2">PLAN</th>
-                        <th className="pb-3.5 px-2">STATUS</th>
-                        <th className="pb-3.5 px-2 text-right">OPTIONS</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-[#e2e8f0]">
-                      {/* Row 1 */}
-                      <tr className="hover:bg-slate-50/50 transition-colors">
-                        <td className="py-2 px-2 text-[12px] font-bold text-slate-800">HYSA Account</td>
-                        <td className="py-2 px-2 text-[12px] text-slate-500">Global Wealth Scheme</td>
-                        <td className="py-2 px-2 text-[12px] text-slate-500">Premium Tier</td>
-                        <td className="py-2 px-2">
-                          <span className="bg-[#eff6ff] text-[#3b82f6] border border-[#3b82f6]/20 text-[8px] font-bold px-2 py-0.5 rounded uppercase tracking-wider inline-block">
-                            IN PROGRESS
-                          </span>
-                        </td>
-                        <td className="py-2 px-2 text-right">
-                          <button className="bg-[#ecfdf5] hover:bg-[#d1fae5] text-[#10b981] border border-[#10b981]/25 text-[8px] font-extrabold px-3 py-1.5 rounded inline-flex items-center gap-2 tracking-wider transition-colors cursor-pointer ml-auto">
-                            CONTINUE <i className="bi bi-chevron-down text-[7px]"></i>
-                          </button>
-                        </td>
-                      </tr>
-
-                      {/* Row 2 */}
-                      <tr className="hover:bg-slate-50/50 transition-colors">
-                        <td className="py-2 px-2 text-[12px] font-bold text-slate-800">Private Equity</td>
-                        <td className="py-2 px-2 text-[12px] text-slate-500">Northern Trust Alt</td>
-                        <td className="py-2 px-2 text-[12px] text-slate-500">Standard Growth</td>
-                        <td className="py-2 px-2">
-                          <span className="bg-[#fff8f0] text-[#f59e0b] border border-[#f59e0b]/20 text-[8px] font-bold px-2 py-0.5 rounded uppercase tracking-wider inline-block">
-                            IN REVIEW
-                          </span>
-                        </td>
-                        <td className="py-2 px-2 text-right">
-                          <button className="bg-[#ecfdf5] hover:bg-[#d1fae5] text-[#10b981] border border-[#10b981]/25 text-[8px] font-extrabold px-3 py-1.5 rounded inline-flex items-center gap-2 tracking-wider transition-colors cursor-pointer ml-auto">
-                            CONTINUE <i className="bi bi-chevron-down text-[7px]"></i>
-                          </button>
-                        </td>
-                      </tr>
-
-                      {/* Row 3 */}
-                      <tr className="hover:bg-slate-50/50 transition-colors">
-                        <td className="py-2 px-2 text-[12px] font-bold text-slate-800">Treasury Bonds</td>
-                        <td className="py-2 px-2 text-[12px] text-slate-500">Facilon Prime Yield</td>
-                        <td className="py-2 px-2 text-[12px] text-slate-500">Fixed 5-Year</td>
-                        <td className="py-2 px-2">
-                          <span className="bg-[#ecfdf5] text-[#10b981] border border-[#10b981]/20 text-[8px] font-bold px-2 py-0.5 rounded uppercase tracking-wider inline-block">
-                            COMPLETED
-                          </span>
-                        </td>
-                        <td className="py-2 px-2 text-right">
-                          <button className="bg-[#ecfdf5] hover:bg-[#d1fae5] text-[#10b981] border border-[#10b981]/25 text-[8px] font-extrabold px-3 py-1.5 rounded inline-flex items-center gap-2 tracking-wider transition-colors cursor-pointer ml-auto">
-                            CONTINUE <i className="bi bi-chevron-down text-[7px]"></i>
-                          </button>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-
-              </div>
-            </div>
-          </div>
         )}
         {showPermissionsModal && (
           <div className="bg-white rounded-lg w-full max-w-6xl overflow-hidden border border-slate-200 mt-0 mx-0 mb-0">

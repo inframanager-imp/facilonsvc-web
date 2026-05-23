@@ -68,7 +68,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({ dashboardData }) => {
             <div className="dashboard-action-buttons d-flex gap-2">
               <button
                 className="bg-white border border-primary-500 text-primary-500 hover:bg-primary-50 px-3 py-1.5 rounded-md text-sm font-bold transition-all"
-                onClick={() => navigate('/investor/profile')}
+                onClick={() => navigate('/investor/journey')}
               >
                 <i className="bi bi-pencil me-1"></i>
                 Edit Profile

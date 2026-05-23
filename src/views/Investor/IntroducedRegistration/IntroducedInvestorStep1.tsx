@@ -3,13 +3,17 @@ import { useParams, useNavigate } from 'react-router-dom';
 import introducedInvestorService, { Step1RequestDto } from '../../../services/introducedInvestorService';
 import './IntroducedInvestorRegistration.scss';
 import { PremiumSelect } from '../../../components/PremiumSelect/PremiumSelect';
+import { contentService } from '../../../services/content.service';
 
+// Dropdown values are UPPERCASE by convention (see V12__uppercase_dropdown_values.sql),
+// so the option value and the stored DB value match and the select re-renders on reload.
 const GENDER_OPTIONS = [
-  { value: 'Male', label: 'Male' },
-  { value: 'Female', label: 'Female' },
-  { value: 'Transgender', label: 'Transgender' },
+  { value: 'MALE', label: 'MALE' },
+  { value: 'FEMALE', label: 'FEMALE' },
+  { value: 'TRANSGENDER', label: 'TRANSGENDER' },
 ];
 
+// Fallback used only until the ISD list loads from the backend (/master/isd-codes).
 const COUNTRY_CODE_OPTIONS = [
   { value: '+91', label: '+91 (India)' },
   { value: '+1', label: '+1 (USA)' },
@@ -27,6 +31,7 @@ const IntroducedInvestorStep1: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [prefillLoading, setPrefillLoading] = useState(true);
   const [error, setError] = useState('');
+  const [countryCodeOptions, setCountryCodeOptions] = useState(COUNTRY_CODE_OPTIONS);
   const [formData, setFormData] = useState<Step1RequestDto>({
     uniqueCode: uniqueCode!,
     firstName: '',
@@ -53,7 +58,9 @@ const IntroducedInvestorStep1: React.FC = () => {
           firstName: data.firstName || '',
           middleName: data.middleName || '',
           lastName: data.lastName || '',
-          mobileNumber: data.mobile || ''
+          mobileNumber: data.mobile || '',
+          // Preselect the investor's country dialing code from Dataverse (e.g. "+65").
+          countryCode: data.countryCode || prev.countryCode
         }));
       } catch (err: any) {
         console.error('Error fetching session prefill:', err);
@@ -66,6 +73,20 @@ const IntroducedInvestorStep1: React.FC = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [uniqueCode]);
+
+  // Load the full country dialing-code list (matches Laravel's master_country_of_residence dropdown).
+  useEffect(() => {
+    contentService.getIsdCodes()
+      .then(list => {
+        const opts = (list || [])
+          .filter(c => c.codeValue != null)
+          .map(c => ({ value: `+${c.codeValue}`, label: `+${c.codeValue} (${c.countryName ?? ''})` }));
+        if (opts.length) {
+          setCountryCodeOptions(opts);
+        }
+      })
+      .catch(err => console.error('Error fetching ISD codes:', err));
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
@@ -226,7 +247,7 @@ const IntroducedInvestorStep1: React.FC = () => {
                           <PremiumSelect
                             value={formData.countryCode}
                             onChange={(val) => setFormData(prev => ({ ...prev, countryCode: val }))}
-                            options={COUNTRY_CODE_OPTIONS}
+                            options={countryCodeOptions}
                             className="country-code-select"
                           />
                           <input

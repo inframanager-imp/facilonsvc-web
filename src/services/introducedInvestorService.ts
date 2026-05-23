@@ -17,6 +17,8 @@ export interface IntroducedInvestorDetailsDto {
   countryOfResidenceName?: string;
   investorTypeName: string;
   emailAlreadyExists: boolean;
+  isdCode?: string;      // Dataverse country-of-residence ISD GUID
+  countryCode?: string;  // resolved dialing code, e.g. "+65"
 }
 
 export interface Step1RequestDto {

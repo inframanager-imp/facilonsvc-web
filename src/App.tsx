@@ -46,6 +46,8 @@ import { MyAgents } from './views/Broker/MyAgents/MyAgents';
 import { InvestorDashboard } from './views/Investor/InvestorDashboard/InvestorDashboard';
 import { InvestorProgress } from './views/Investor/InvestorProgress/InvestorProgress';
 import { InformationContainer } from './views/Investor/InformationForms/InformationContainer';
+import { JourneyList } from './views/Investor/JourneyList/JourneyList';
+import { MyProfile } from './views/Investor/MyProfile/MyProfile';
 import { DsrCenter } from './views/Investor/DsrCenter/DsrCenter';
 import { DocumentUpload } from './views/Investor/DocumentUpload/DocumentUpload';
 import { OnboardingDocuments } from './views/Investor/OnboardingDocuments/OnboardingDocuments';
@@ -139,6 +141,8 @@ const App: React.FC = () => {
           {/* New Introduced Investor Registration Flow (Laravel Parity) */}
           {/* Laravel: introduce-investor1/{Crypt::encrypt(introduce_id)} — same token supported here */}
           <Route path="/introduce-investor1/*" element={<IntroduceInvestor1Redirect />} />
+          {/* Alias: Laravel emailed links use the full /account/investor/ prefix */}
+          <Route path="/account/investor/introduce-investor1/*" element={<IntroduceInvestor1Redirect />} />
           {/* Single route: * captures plain ss_name or Laravel token (including slashes in base64) */}
           <Route path="/investor/introduced/start/*" element={<IntroducedInvestorStart />} />
           <Route path="/investor/introduced/consent/:investorId" element={<IntroducedInvestorConsent />} />
@@ -212,12 +216,45 @@ const App: React.FC = () => {
               </ProtectedRoute>
             }
           />
+          {/* Journeys list — one row per assigned product; click-through to a specific journey */}
+          <Route
+            path="/investor/journeys"
+            element={
+              <ProtectedRoute>
+                <MainLayout title="My Onboarding Status" subtitle="Your product journeys — select one to continue">
+                  <JourneyList />
+                </MainLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/investor/journey"
+            element={
+              <ProtectedRoute>
+                <MainLayout title="My Journey" subtitle="Track and complete your onboarding journey">
+                  <InformationContainer />
+                </MainLayout>
+              </ProtectedRoute>
+            }
+          />
+          {/* Specific journey by id */}
+          <Route
+            path="/investor/journey/:journeyId"
+            element={
+              <ProtectedRoute>
+                <MainLayout title="My Journey" subtitle="Track and complete your onboarding journey">
+                  <InformationContainer />
+                </MainLayout>
+              </ProtectedRoute>
+            }
+          />
+          {/* My Profile — read-only personal profile summary (Laravel investor-details parity) */}
           <Route
             path="/investor/profile"
             element={
               <ProtectedRoute>
-                <MainLayout title="My Profile" subtitle="Manage your personal and investment details">
-                  <InformationContainer />
+                <MainLayout title="My Profile" subtitle="Your personal profile details">
+                  <MyProfile />
                 </MainLayout>
               </ProtectedRoute>
             }

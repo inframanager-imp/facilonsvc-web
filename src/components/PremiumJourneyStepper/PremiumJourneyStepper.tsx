@@ -28,7 +28,7 @@ export const PremiumJourneyStepper: React.FC<Props> = ({ dashboardData }) => {
   const currentStepKey = stepKeys.find((k) => !isDoneFor(k)) ?? 'information';
 
   const journeySteps = [
-    { key: 'information', label: 'Information', icon: 'bi-person-lines-fill', path: '/investor/profile' },
+    { key: 'information', label: 'Information', icon: 'bi-person-lines-fill', path: '/investor/journey' },
     { key: 'documents', label: 'KYC Docs', icon: 'bi-file-earmark-lock-fill', path: '/investor/documents' },
     { key: 'onboarding', label: 'Onboarding', icon: 'bi-file-earmark-richtext-fill', path: '/investor/onboarding' },
     { key: 'verification', label: 'Verification', icon: 'bi-person-video', path: '/investor/verification' },
@@ -36,22 +36,11 @@ export const PremiumJourneyStepper: React.FC<Props> = ({ dashboardData }) => {
     { key: 'account', label: 'Account', icon: 'bi-bank2', path: '/investor/account-details' },
   ];
 
-  const totalProgress = progress?.progressPercentage || 0;
-
   return (
     <div className="bg-primary-500 border-1 border-neutral-200 rounded-md p-2 flex justify-between lg:flex-row items-center gap-6 mb-6 w-full">
-      {/* Journey Header & Progress */}
-      <div className="flex flex-col gap-0 min-w-[160px]">
-        <h2 className="text-white font-bold text-sm tracking-tight uppercase mb-1">Your Journey</h2>
-        <div className="flex items-center gap-3">
-          <div className="flex-1 h-1.5 bg-neutral-100 rounded-full overflow-hidden min-w-[100px]">
-            <div
-              className="h-full bg-gradient-to-r from-primary-500 to-primary-400 rounded-full transition-all duration-1000 ease-out"
-              style={{ width: `${totalProgress}%` }}
-            />
-          </div>
-          <span className="text-white font-extrabold text-lg leading-none">{totalProgress}%</span>
-        </div>
+      {/* Journey Header */}
+      <div className="flex flex-col gap-0 min-w-[120px]">
+        <h2 className="text-white font-bold text-sm tracking-tight uppercase mb-0">Your Journey</h2>
       </div>
 
       {/* Stepper Content */}

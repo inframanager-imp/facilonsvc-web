@@ -46,8 +46,8 @@ export const InvestorProfilePdf: React.FC = () => {
 
   const handleSubmitProfile = () => {
     if (window.confirm('Are you sure you want to submit your profile? This action cannot be undone.')) {
-      // Navigate back to profile page for submission
-      navigate('/investor/profile');
+      // Navigate back to journey page for submission
+      navigate('/investor/journey');
     }
   };
 
@@ -82,7 +82,7 @@ export const InvestorProfilePdf: React.FC = () => {
     window.close();
     // If window.close() doesn't work (popup blocker), navigate back
     setTimeout(() => {
-      navigate('/investor/profile');
+      navigate('/investor/journey');
     }, 100);
   };
 

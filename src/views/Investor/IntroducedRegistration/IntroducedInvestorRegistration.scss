@@ -280,7 +280,11 @@ $input-border: rgba(62, 111, 124, 0.27);
       gap: 10px;
       align-items: stretch;
 
-      select {
+      // Country code is a custom PremiumSelect (renders a div, not a native <select>),
+      // so constrain its wrapper class too — otherwise it fills the row and the
+      // mobile <input> collapses to zero width and disappears.
+      select,
+      .country-code-select {
         width: 35%;
         min-width: 120px;
         flex-shrink: 0;

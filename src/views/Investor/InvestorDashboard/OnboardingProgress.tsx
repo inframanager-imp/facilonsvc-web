@@ -42,8 +42,8 @@ export const OnboardingProgress: React.FC = () => {
     { 
       key: 'information', 
       label: 'Information', 
-      icon: 'person-lines-fill', 
-      path: '/investor/profile',
+      icon: 'person-lines-fill',
+      path: '/investor/journey',
       complete: status.personalInfoComplete && status.passportComplete 
     },
     { 

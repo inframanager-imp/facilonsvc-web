@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import introducedInvestorService, { Step4CompletionDto } from '../../../services/introducedInvestorService';
-import PrivacyPolicyModal from './PrivacyPolicyModal';
 import TermsModal from './TermsModal';
 import './IntroducedInvestorRegistration.scss';
 import { PremiumSelect } from '../../../components/PremiumSelect/PremiumSelect';
@@ -23,11 +22,9 @@ const IntroducedInvestorStep4: React.FC = () => {
   const [showDiffWhatsappDiv, setShowDiffWhatsappDiv] = useState(false);
   
   // Modal states
-  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+  // Privacy consent is captured earlier in the flow (consent step), so step4 only gates on Terms — matches Laravel.
   const [showTermsModal, setShowTermsModal] = useState(false);
-  const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
-  const [privacyCheckboxEnabled, setPrivacyCheckboxEnabled] = useState(false);
   const [termsCheckboxEnabled, setTermsCheckboxEnabled] = useState(false);
 
   const [formData, setFormData] = useState<Step4CompletionDto>({
@@ -88,11 +85,6 @@ const IntroducedInvestorStep4: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!privacyAccepted) {
-      alert('Please read and accept the Privacy Policy to continue');
-      return;
-    }
-    
     if (!termsAccepted) {
       alert('Please read and accept the Terms and Conditions to continue');
       return;
@@ -101,11 +93,12 @@ const IntroducedInvestorStep4: React.FC = () => {
     try {
       setLoading(true);
       setError('');
-      
+
       const submitData: Step4CompletionDto = {
         ...formData,
         termsAccepted: termsAccepted,
-        privacyPolicyAccepted: privacyAccepted
+        // Privacy was already accepted at the consent step earlier in the flow.
+        privacyPolicyAccepted: true
       };
       
       const response = await introducedInvestorService.completeRegistration(submitData);
@@ -127,23 +120,6 @@ const IntroducedInvestorStep4: React.FC = () => {
     }
   };
 
-  const openPrivacyModal = (e?: React.MouseEvent) => {
-    e?.preventDefault();
-    e?.stopPropagation();
-    setShowPrivacyModal(true);
-  };
-
-  const closePrivacyModal = () => {
-    setShowPrivacyModal(false);
-  };
-
-  const acceptPrivacy = () => {
-    setPrivacyCheckboxEnabled(true);
-    setPrivacyAccepted(true);
-    setFormData(prev => ({ ...prev, termsAccepted: termsAccepted && true }));
-    setShowPrivacyModal(false);
-  };
-
   const openTermsModal = (e?: React.MouseEvent) => {
     e?.preventDefault();
     e?.stopPropagation();
@@ -157,7 +133,7 @@ const IntroducedInvestorStep4: React.FC = () => {
   const acceptTerms = () => {
     setTermsCheckboxEnabled(true);
     setTermsAccepted(true);
-    setFormData(prev => ({ ...prev, termsAccepted: privacyAccepted && true }));
+    setFormData(prev => ({ ...prev, termsAccepted: true }));
     setShowTermsModal(false);
   };
 
@@ -533,33 +509,6 @@ const IntroducedInvestorStep4: React.FC = () => {
                           </div>
                         </div>
 
-                        {/* Privacy Policy */}
-                        <div className="single-field">
-                          <div className="checkbox-wrapper-33">
-                            <label className="checkbox" onClick={(e) => !privacyCheckboxEnabled && openPrivacyModal(e)}>
-                              <input
-                                className="checkbox__trigger visuallyhidden"
-                                type="checkbox"
-                                id="privacyCheckbox"
-                                name="agree_privacy"
-                                checked={privacyAccepted}
-                                disabled={!privacyCheckboxEnabled}
-                                onChange={(e) => privacyCheckboxEnabled && setPrivacyAccepted(e.target.checked)}
-                              />
-                              <span className="checkbox__symbol">
-                                <svg aria-hidden="true" className="icon-checkbox" width="28px" height="28px" viewBox="0 0 28 28" version="1" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M4 14l8 7L24 7"></path>
-                                </svg>
-                              </span>
-                              <p className="checkbox__textwrapper">
-                                I have read and understood the{' '}
-                                <a href="javascript:void(0);" onClick={openPrivacyModal}>Privacy Policy</a>
-                                <span className="star-color">*</span>
-                              </p>
-                            </label>
-                          </div>
-                        </div>
-
                         {/* Terms and Conditions */}
                         <div className="single-field">
                           <div className="checkbox-wrapper-33">
@@ -626,11 +575,6 @@ const IntroducedInvestorStep4: React.FC = () => {
       </section>
 
       {/* Modals */}
-      <PrivacyPolicyModal
-        show={showPrivacyModal}
-        onClose={closePrivacyModal}
-        onAccept={acceptPrivacy}
-      />
       <TermsModal
         show={showTermsModal}
         onClose={closeTermsModal}
