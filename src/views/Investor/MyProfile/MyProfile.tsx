@@ -7,6 +7,22 @@ interface FieldProps {
   value?: string | null;
 }
 
+// The API sends investorType as the raw enum constant (the journey's tab/field
+// visibility keys off that exact value). Format it to a readable label for display only.
+const INVESTOR_TYPE_LABELS: Record<string, string> = {
+  RESIDENT_INDIVIDUAL: 'Resident - Individual',
+  RESIDENT_NON_INDIVIDUAL: 'Resident Non-Individual',
+  NRI: 'NRI',
+  OCI: 'OCI',
+  FOREIGN_NATIONAL: 'Foreign National',
+  FOREIGN_NON_INDIVIDUAL: 'Foreign Non-Individual',
+};
+
+const formatInvestorType = (type?: string | null): string | null | undefined => {
+  if (!type) return type;
+  return INVESTOR_TYPE_LABELS[type.toUpperCase()] ?? type;
+};
+
 const Field: React.FC<FieldProps> = ({ label, value }) => (
   <div className="flex flex-col">
     <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">{label}</label>
@@ -71,7 +87,7 @@ export const MyProfile: React.FC = () => {
           <Field label="Mobile Number" value={investor.mobileNumber} />
           <Field label="Nationality" value={investor.nationality} />
           <Field label="Country of Residence" value={investor.countryOfResidence} />
-          <Field label="Investor Type" value={investor.investorType} />
+          <Field label="Investor Type" value={formatInvestorType(investor.investorType)} />
         </div>
       </div>
     </div>
