@@ -21,6 +21,30 @@ export const DocumentUpload: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [showReasonsModal, setShowReasonsModal] = useState(false);
 
+  const handlePreview = (documentId: number, documentUrl?: string) => {
+    if (documentUrl) {
+      window.open(documentUrl, '_blank');
+    } else {
+      window.open(`/api/clients/me/documents/${documentId}/download`, '_blank');
+    }
+  };
+
+  const handlePreviewClick = (localDocumentId?: number, documentUrl?: string) => {
+    if (!localDocumentId) {
+      toast.warning('Please upload a document first to preview');
+      return;
+    }
+    handlePreview(localDocumentId, documentUrl);
+  };
+
+  const handleDeleteClick = (localDocumentId?: number) => {
+    if (!localDocumentId) {
+      toast.warning('No document uploaded to delete');
+      return;
+    }
+    handleDelete(localDocumentId);
+  };
+
   useEffect(() => {
     loadData();
   }, []);
@@ -114,18 +138,50 @@ export const DocumentUpload: React.FC = () => {
     }
   };
 
-  const getStatusBadge = (status: string) => {
+  const getStatusBadge = (status: string, dynamicsId?: string) => {
     switch (status.toLowerCase()) {
       case 'approved':
-        return <span className="status-badge status-approved">✓ Approved</span>;
+        return (
+          <span className="status-badge status-approved">
+            <i className="bi bi-check-circle-fill" />
+            Approved
+          </span>
+        );
       case 'rejected':
       case 'sent back':
-        return <span className="status-badge status-rejected">✗ Rejected</span>;
+        return (
+          <span className="status-badge status-rejected">
+            <i className="bi bi-x-circle-fill" />
+            Rejected
+          </span>
+        );
       case 'pending':
       case 'under review':
-        return <span className="status-badge status-pending">⏱ Pending</span>;
+        return (
+          <span className="status-badge status-pending">
+            <i className="bi bi-clock-fill" />
+            Pending
+          </span>
+        );
       default:
-        return <span className="status-badge status-not-uploaded">Not Uploaded</span>;
+        if (dynamicsId) {
+          return (
+            <label 
+              htmlFor={`file-${dynamicsId}`} 
+              className="status-badge status-not-uploaded"
+              title="Click to choose and upload file"
+            >
+              <i className="bi bi-cloud-arrow-up-fill" />
+              Not Uploaded
+            </label>
+          );
+        }
+        return (
+          <span className="status-badge status-not-uploaded">
+            <i className="bi bi-cloud-arrow-up-fill" />
+            Not Uploaded
+          </span>
+        );
     }
   };
 
@@ -187,148 +243,180 @@ export const DocumentUpload: React.FC = () => {
   return (
     <div className="facilon-dashboard-wrapper">
       {!isProxyMode && <Header />}
-      <main className="container-fluid dashboard-container-main">
-        <div className="document-upload">
+      <main className="container-fluid dashboard-container-main px-0">
+        <div className="investor-profile px-3 px-md-0">
           <div className="profile-header">
             <h1>KYC Documents</h1>
           </div>
 
           {renderProgressBar()}
 
-          <div className="document-upload__content">
+          <div className="investor-profile__card document-upload">
             {requirements.serviceProviderName && (
               <p className="document-upload__service-provider">Service Provider: <strong>{requirements.serviceProviderName}</strong></p>
             )}
 
-          <div className="progress-summary">
-            <div className="progress-summary__stats">
-              <div className="stat">
-                <span className="stat-value">{requirements.uploaded}</span>
-                <span className="stat-label">of {requirements.totalRequired} Uploaded</span>
-              </div>
-              <div className="stat">
-                <span className="stat-value">{requirements.completionPercentage}%</span>
-                <span className="stat-label">Complete</span>
-              </div>
-              <div className="stat">
-                <span className="stat-value stat-approved">{requirements.approved}</span>
-                <span className="stat-label">Approved</span>
-              </div>
-              <div className="stat">
-                <span className="stat-value stat-rejected">{requirements.rejected}</span>
-                <span className="stat-label">Rejected</span>
-              </div>
-            </div>
-            {rejectedDocs.length > 0 && (
-              <button 
-                className="btn-see-reasons" 
-                onClick={() => setShowReasonsModal(true)}
-              >
-                See Reasons for Rejection
-              </button>
-            )}
-          </div>
+            <div className="document-list">
+              <div className="document-list__header-row">
+                <h2>Required Documents</h2>
 
-          <div className="document-list">
-            <h2>Required Documents</h2>
-            <p className="document-list__note">
-              Please upload clear, legible copies of the following documents. Accepted formats: PDF, JPG, PNG (Max size: 10MB)
-            </p>
-
-            {requirements.documents.map((doc) => {
-              const isUploaded = doc.localRecordExists || (doc.localStatus && doc.localStatus.toLowerCase() !== 'not uploaded');
-              const isRejected = doc.localStatus?.toLowerCase() === 'rejected' || doc.localStatus?.toLowerCase() === 'sent back';
-              const uploadedDoc = doc.localDocumentId ? documents.find((d) => d.id === doc.localDocumentId) : null;
-
-              return (
-                <div key={doc.dynamicsId} className="document-item">
-                  <div className="document-item__header">
-                    <h3>{doc.description}</h3>
-                    {getStatusBadge(doc.localStatus || 'not uploaded')}
-                  </div>
-
-                  {isRejected && doc.reason && (
-                    <div className="document-item__reason">
-                      <strong>Rejection Reason:</strong> {doc.reason}
-                    </div>
-                  )}
-
-                  {isUploaded && doc.localDocumentId ? (
-                    <div className="document-item__uploaded">
-                      <div className="document-item__uploaded-info">
-                        <span className="document-item__uploaded-icon">📄</span>
-                        <div>
-                          <div className="document-item__uploaded-name">
-                            {uploadedDoc?.fileName || doc.fileName || 'Document'}
-                          </div>
-                          <div className="document-item__uploaded-date">
-                            Uploaded{' '}
-                            {uploadedDoc?.uploadedAt
-                              ? new Date(uploadedDoc.uploadedAt).toLocaleDateString()
-                              : doc.uploadedAt
-                                ? new Date(doc.uploadedAt).toLocaleDateString()
-                                : ''}
-                          </div>
-                        </div>
-                      </div>
-                      <button
-                        type="button"
-                        className="btn-danger-outline"
-                        onClick={() => handleDelete(doc.localDocumentId!)}
-                        disabled={uploading}
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="document-item__upload">
-                      <input
-                        type="file"
-                        id={`file-${doc.dynamicsId}`}
-                        accept={
-                          Array.isArray(doc.acceptedFormats)
-                            ? doc.acceptedFormats.map((f) => `.${f.toLowerCase()}`).join(',')
-                            : doc.acceptedFormats || '.pdf,.jpg,.jpeg,.png'
-                        }
-                        onChange={(e) => handleFileSelect(`${doc.dynamicsId}|${doc.description}`, e.target.files?.[0] || null)}
-                        disabled={uploading}
-                      />
-                      <label htmlFor={`file-${doc.dynamicsId}`} className="btn btn-outline-primary file-input-label-custom">
-                        {selectedFiles.has(`${doc.dynamicsId}|${doc.description}`)
-                          ? selectedFiles.get(`${doc.dynamicsId}|${doc.description}`)?.name
-                          : 'Choose File'}
-                      </label>
-                      {doc.maxSize && (
-                        <span className="file-size-hint">Max size: {doc.maxSize}</span>
-                      )}
-                    </div>
+                <div className="progress-summary-compact">
+                  <span className="stat-pill">
+                    Uploaded: <strong>{requirements.uploaded}/{requirements.totalRequired}</strong>
+                  </span>
+                  <span className="stat-pill stat-approved">
+                    Approved: <strong>{requirements.approved}</strong>
+                  </span>
+                  <span className="stat-pill stat-rejected">
+                    Rejected: <strong>{requirements.rejected}</strong>
+                  </span>
+                  <span className="stat-pill stat-percentage">
+                    {requirements.completionPercentage}% Complete
+                  </span>
+                  {rejectedDocs.length > 0 && (
+                    <button 
+                      className="btn-see-reasons-compact" 
+                      onClick={() => setShowReasonsModal(true)}
+                    >
+                      <i className="bi bi-exclamation-triangle-fill" />
+                      Reasons
+                    </button>
                   )}
                 </div>
-              );
-            })}
-          </div>
+              </div>
 
-          <div className="document-upload__actions">
-            <button
-              type="button"
-              onClick={() => regularNavigate(-1)}
-              className="btn-secondary"
-              disabled={uploading}
-            >
-              Cancel
-            </button>
-            <button
-              type="button"
-              onClick={handleUpload}
-              className="btn-primary"
-              disabled={isUploadButtonDisabled()}
-            >
-              {uploading ? 'Uploading...' : 'Upload Documents'}
-            </button>
+              <p className="document-list__subtitle">
+                Please upload clear, legible copies of the following documents. Accepted formats: PDF, JPG, PNG (Max size: 10MB)
+              </p>
+
+              <div className="document-table-container">
+                <table className="document-table">
+                  <thead>
+                    <tr>
+                      <th style={{ width: '40%' }}>Required Document</th>
+                      <th style={{ width: '15%' }}>Status</th>
+                      <th style={{ width: '30%' }}>Uploaded File / Upload Tool</th>
+                      <th style={{ width: '15%' }}>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {requirements.documents.map((doc) => {
+                      const isUploaded = doc.localRecordExists || (doc.localStatus && doc.localStatus.toLowerCase() !== 'not uploaded');
+                      const isRejected = doc.localStatus?.toLowerCase() === 'rejected' || doc.localStatus?.toLowerCase() === 'sent back';
+                      const uploadedDoc = doc.localDocumentId ? documents.find((d) => d.id === doc.localDocumentId) : null;
+                      const hasSelectedFile = selectedFiles.has(`${doc.dynamicsId}|${doc.description}`);
+
+                      return (
+                        <tr key={doc.dynamicsId}>
+                          <td>
+                            <div className="table-document-info">
+                              <div className="table-document-name">{doc.description}</div>
+                              {isRejected && doc.reason && (
+                                <div className="document-item__reason">
+                                  <strong>Rejection Reason:</strong> {doc.reason}
+                                </div>
+                              )}
+                            </div>
+                          </td>
+                          <td>
+                            {getStatusBadge(doc.localStatus || 'not uploaded', doc.dynamicsId)}
+                          </td>
+                          <td>
+                            {isUploaded && doc.localDocumentId ? (
+                              <div className="table-file-uploaded">
+                                <i className="bi bi-file-earmark-check-fill table-file-uploaded__icon" />
+                                <div>
+                                  <div className="table-file-uploaded__name" title={uploadedDoc?.fileName || doc.fileName || 'Document'}>
+                                    {uploadedDoc?.fileName || doc.fileName || 'Document'}
+                                  </div>
+                                  <div className="table-file-uploaded__date">
+                                    Uploaded{' '}
+                                    {uploadedDoc?.uploadedAt
+                                      ? new Date(uploadedDoc.uploadedAt).toLocaleDateString()
+                                      : doc.uploadedAt
+                                        ? new Date(doc.uploadedAt).toLocaleDateString()
+                                        : ''}
+                                  </div>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="table-file-upload">
+                                <input
+                                  type="file"
+                                  id={`file-${doc.dynamicsId}`}
+                                  accept={
+                                    Array.isArray(doc.acceptedFormats)
+                                      ? doc.acceptedFormats.map((f) => `.${f.toLowerCase()}`).join(',')
+                                      : doc.acceptedFormats || '.pdf,.jpg,.jpeg,.png'
+                                  }
+                                  onChange={(e) => handleFileSelect(`${doc.dynamicsId}|${doc.description}`, e.target.files?.[0] || null)}
+                                  disabled={uploading}
+                                />
+                                <div className="file-upload-wrapper">
+                                  <label htmlFor={`file-${doc.dynamicsId}`} className={`file-input-label-custom ${hasSelectedFile ? 'file-selected' : ''}`}>
+                                    <i className="bi bi-file-earmark-arrow-up me-2" />
+                                    {hasSelectedFile
+                                      ? selectedFiles.get(`${doc.dynamicsId}|${doc.description}`)?.name
+                                      : 'Choose File'}
+                                  </label>
+                                  {doc.maxSize && (
+                                    <span className="file-size-hint">Max size: {doc.maxSize}</span>
+                                  )}
+                                </div>
+                              </div>
+                            )}
+                          </td>
+                          <td>
+                            <div className="table-actions-cell">
+                              <button
+                                type="button"
+                                className="btn-action-icon text-primary"
+                                onClick={() => handlePreviewClick(doc.localDocumentId, uploadedDoc?.documentUrl)}
+                                title="Preview Document"
+                              >
+                                <i className="bi bi-eye-fill" />
+                              </button>
+                              <button
+                                type="button"
+                                className="btn-action-icon text-danger"
+                                onClick={() => handleDeleteClick(doc.localDocumentId)}
+                                title="Delete Document"
+                              >
+                                <i className="bi bi-trash3-fill" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div className="document-upload__actions">
+              <button
+                type="button"
+                onClick={() => regularNavigate(-1)}
+                className="btn-outline-primary"
+                disabled={uploading}
+              >
+                <i className="bi bi-x-circle me-2" />
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleUpload}
+                className="btn-save"
+                disabled={isUploadButtonDisabled()}
+              >
+                <i className="bi bi-cloud-upload me-2" />
+                {uploading ? 'Uploading...' : 'Upload Documents'}
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-    </main>
+      </main>
       {!isProxyMode && <Footer />}
 
       {/* Rejection Reasons Modal */}
