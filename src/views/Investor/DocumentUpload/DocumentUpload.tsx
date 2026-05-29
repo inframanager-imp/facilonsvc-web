@@ -1,17 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import Header from '../../../components/Header/Header';
-import Footer from '../../../components/Footer/Footer';
 import { investorService, type KycDocumentRequirementDto, type RequiredDocument, type InvestorDashboardDto, type DocumentResponseDto } from '../../../services/investor.service';
-import { useSAProxyNavigation } from '../../../hooks/useSAProxyNavigation';
 import { PremiumJourneyStepper } from '../../../components/PremiumJourneyStepper/PremiumJourneyStepper';
 import '../InvestorProfile/InvestorProfile.scss';
 import './DocumentUpload.scss';
 
 export const DocumentUpload: React.FC = () => {
   const regularNavigate = useNavigate();
-  const { navigate: saNavigate, isProxyMode } = useSAProxyNavigation();
   
   const [documents, setDocuments] = useState<DocumentResponseDto[]>([]);
   const [requirements, setRequirements] = useState<KycDocumentRequirementDto | null>(null);
@@ -211,14 +207,12 @@ export const DocumentUpload: React.FC = () => {
   if (loading) {
     return (
       <div className="facilon-dashboard-wrapper">
-        {!isProxyMode && <Header />}
         <main className="container-fluid dashboard-container-main">
           <div className="loading-container" style={{ textAlign: 'center', padding: '100px 0' }}>
             <div className="spinner"></div>
             <p>Loading KYC document requirements...</p>
           </div>
         </main>
-        {!isProxyMode && <Footer />}
       </div>
     );
   }
@@ -226,14 +220,12 @@ export const DocumentUpload: React.FC = () => {
   if (!requirements) {
     return (
       <div className="facilon-dashboard-wrapper">
-        {!isProxyMode && <Header />}
         <main className="container-fluid dashboard-container-main">
           <div className="error-container">
             <p>Failed to load document requirements. Please try again later.</p>
             <button onClick={loadData} className="btn-retry">Retry</button>
           </div>
         </main>
-        {!isProxyMode && <Footer />}
       </div>
     );
   }
@@ -242,13 +234,8 @@ export const DocumentUpload: React.FC = () => {
 
   return (
     <div className="facilon-dashboard-wrapper">
-      {!isProxyMode && <Header />}
       <main className="container-fluid dashboard-container-main px-0">
         <div className="investor-profile px-3 px-md-0">
-          <div className="profile-header">
-            <h1>KYC Documents</h1>
-          </div>
-
           {renderProgressBar()}
 
           <div className="investor-profile__card document-upload">
@@ -417,7 +404,6 @@ export const DocumentUpload: React.FC = () => {
           </div>
         </div>
       </main>
-      {!isProxyMode && <Footer />}
 
       {/* Rejection Reasons Modal */}
       {showReasonsModal && (

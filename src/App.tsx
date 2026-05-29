@@ -283,7 +283,9 @@ const App: React.FC = () => {
             path="/investor/documents"
             element={
               <ProtectedRoute>
-                <DocumentUpload />
+                <MainLayout title="KYC Documents" subtitle="Upload and manage your KYC documents">
+                  <DocumentUpload />
+                </MainLayout>
               </ProtectedRoute>
             }
           />
@@ -291,7 +293,9 @@ const App: React.FC = () => {
             path="/investor/onboarding"
             element={
               <ProtectedRoute>
-                <OnboardingDocuments />
+                <MainLayout title="Onboarding Documents" subtitle="Upload and manage your onboarding documents">
+                  <OnboardingDocuments />
+                </MainLayout>
               </ProtectedRoute>
             }
           />
@@ -299,7 +303,9 @@ const App: React.FC = () => {
             path="/investor/account-details"
             element={
               <ProtectedRoute>
-                <AccountDetails />
+                <MainLayout title="Account Details" subtitle="View your bank and trading account details">
+                  <AccountDetails />
+                </MainLayout>
               </ProtectedRoute>
             }
           />
@@ -307,7 +313,9 @@ const App: React.FC = () => {
             path="/investor/physical-submission"
             element={
               <ProtectedRoute>
-                <PhysicalSubmission />
+                <MainLayout title="Physical Submission" subtitle="Submit physical documents via courier or in person">
+                  <PhysicalSubmission />
+                </MainLayout>
               </ProtectedRoute>
             }
           />
@@ -315,7 +323,9 @@ const App: React.FC = () => {
             path="/investor/verification"
             element={
               <ProtectedRoute>
-                <InPersonVerification />
+                <MainLayout title="In-Person Verification" subtitle="Complete your in-person verification process">
+                  <InPersonVerification />
+                </MainLayout>
               </ProtectedRoute>
             }
           />

@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import Header from '../../../components/Header/Header';
-import Footer from '../../../components/Footer/Footer';
 import { investorService, KycDocumentRequirementDto } from '../../../services/investor.service';
 import { pdfService } from '../../../services/pdf.service';
 import { PremiumJourneyStepper } from '../../../components/PremiumJourneyStepper/PremiumJourneyStepper';
 import '../InvestorProfile/InvestorProfile.scss';
-import './OnboardingDocuments.scss';
+import '../DocumentUpload/DocumentUpload.scss';
 
 interface FileSelection {
   file: File;
@@ -263,14 +261,12 @@ export const OnboardingDocuments: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="dashboard-layout">
-        <Header />
-        <div className="dashboard-main-content" style={{ marginLeft: 0 }}>
+      <div className="facilon-dashboard-wrapper">
+        <main className="container-fluid dashboard-container-main">
           <div className="onboarding-documents">
             <div className="loading">Loading onboarding documents...</div>
           </div>
-          <Footer />
-        </div>
+        </main>
       </div>
     );
   }
@@ -278,248 +274,226 @@ export const OnboardingDocuments: React.FC = () => {
   console.log('🎨 Rendering OnboardingDocuments - requirements:', requirements, 'kycComplete:', kycComplete);
 
   return (
-    <div className="dashboard-layout">
-      <Header />
-      <div className="dashboard-main-content" style={{ marginLeft: 0 }}>
-        <div className="onboarding-documents">
+    <div className="facilon-dashboard-wrapper">
+      <main className="container-fluid dashboard-container-main px-0">
+        <div className="investor-profile px-3 px-md-0">
           {/* Progress Bar */}
           {renderProgressBar()}
 
-          {/* Main Content */}
-          <div className="section derivatives-wrap trading-sec-1" style={{ display: 'block', opacity: 1, visibility: 'visible' }}>
-            <div className="container-fluid">
-              <div className="row">
-                <div className="col-md-12">
-                  <div className="tab-content tabs onboarding-submission">
-                    <div role="tabpanel" className="tab-pane active show" id="Section2" style={{ display: 'block', opacity: 1 }}>
-                      <h2 className="onboarding-heading">Onboarding Documents Submission</h2>
-                      <h2 className="text-center on-borad-subtitle-custom">
-                        As Required by {getServiceProviderDisplayName()}
-                      </h2>
+          <div className="investor-profile__card document-upload">
+            {requirements && requirements.serviceProviderName && (
+              <p className="document-upload__service-provider">
+                Service Provider: <strong>{getServiceProviderDisplayName()}</strong>
+              </p>
+            )}
 
-                      {/* Instructional Accordion */}
-                      <div className="tab-content tabs tab-content-main">
-                        <div role="tabpanel" className="tab-pane active show" id="Section1" style={{ display: 'block', opacity: 1 }}>
-                          <div className="accordion-menu">
-                            <span style={{ marginTop: '-42px' }}>
-                              <b style={{ margin: '40px 0 20px' }}>
-                                This portal provides you with real-time visibility into your onboarding and account opening process.
-                              </b>
-                            </span>
+            {/* Instruction Banner */}
+            <div className="mb-4 p-3 bg-light rounded border border-neutral-200" style={{ fontSize: '11px', color: 'var(--facilon-text-muted)', lineHeight: '1.6' }}>
+              <div className="d-flex align-items-center gap-2 mb-2" style={{ color: 'var(--facilon-primary)', fontWeight: 700 }}>
+                <i className="bi bi-info-circle-fill" />
+                <span>Onboarding Documents Process</span>
+              </div>
+              <ul className="ps-3 mb-0" style={{ listStyleType: 'disc' }}>
+                <li><strong>Download Templates:</strong> Use the "Download Template" links to get templates for documents such as the Account Opening Booklet.</li>
+                <li><strong>Fill & Sign:</strong> Review carefully for accuracy, fill in any missing details, and sign.</li>
+                <li><strong>Upload Soft Copy:</strong> Upload clear, self-attested soft copies through this platform.</li>
+                <li><strong>Retain Physical Copies:</strong> Keep signed physical documents safe; some may need to be couriered or submitted in person later.</li>
+              </ul>
+            </div>
 
-                            <div className="row">
-                              <div className="col-md-6">
-                                <ul>
-                                  <li>
-                                    <input type="checkbox" checked readOnly />
-                                    <i className="arrow"></i>
-                                    <h2>
-                                      <i className="fa-solid fa-circle"></i>
-                                      Download
-                                    </h2>
-                                    <p>The document provided and review it carefully for accuracy.</p>
-                                  </li>
-                                  <li>
-                                    <input type="checkbox" checked readOnly />
-                                    <i className="arrow"></i>
-                                    <h2>
-                                      <i className="fa-solid fa-circle"></i>
-                                      Fill in
-                                    </h2>
-                                    <p>Any missing or incomplete information.</p>
-                                  </li>
-                                  <li>
-                                    <input type="checkbox" checked readOnly />
-                                    <i className="arrow"></i>
-                                    <h2>
-                                      <i className="fa-solid fa-circle"></i>
-                                      Upload
-                                    </h2>
-                                    <p>The completed and signed document as a soft copy through this platform.</p>
-                                  </li>
-                                </ul>
-                              </div>
-                              <div className="col-md-6">
-                                <ul>
-                                  <li>
-                                    <input type="checkbox" checked readOnly />
-                                    <i className="arrow"></i>
-                                    <h2>
-                                      <i className="fa-solid fa-circle"></i>
-                                      Retain Physical Copies
-                                    </h2>
-                                    <p>
-                                      Once your soft copies are approved, we suggest that you retain the physical copies as you will be required to send the original documents either in person or by courier.
-                                    </p>
-                                  </li>
-                                  <li>
-                                    <input type="checkbox" checked readOnly />
-                                    <i className="arrow"></i>
-                                    <h2>
-                                      <i className="fa-solid fa-circle"></i>
-                                      Physical Submission Notice
-                                    </h2>
-                                    <p>
-                                      Please note that some documents may need to be physically submitted—either in person or via courier—depending on the Service Provider's requirements.
-                                    </p>
-                                  </li>
-                                </ul>
-                              </div>
-                            </div>
-                          </div>
+            {/* Document Upload Section */}
+            {requirements && (
+              <div className="document-list">
+                {!kycComplete && (
+                  <div className="alert alert-warning mb-3 py-2 px-3 d-flex align-items-center justify-content-between flex-wrap gap-2" style={{ backgroundColor: '#fff3cd', border: '1px solid #ffc107', borderRadius: '6px', fontSize: '11px', color: '#856404' }}>
+                    <span className="d-flex align-items-center gap-2">
+                      <strong>⚠️ KYC Verification Required First!</strong>
+                      <span>Please upload all KYC documents before uploading onboarding forms.</span>
+                    </span>
+                    <button className="btn btn-xs btn-warning py-1 px-2 font-weight-bold" onClick={() => navigate('/investor/documents')} style={{ fontSize: '10px', height: 'auto', display: 'inline-flex', alignItems: 'center' }}>
+                      Go to KYC Documents
+                    </button>
+                  </div>
+                )}
 
-                          {/* Document Upload Section */}
-                          {requirements && (
-                            <div className="onboarding-documents-section mt-4">
-                              {!kycComplete && (
-                                <div className="alert alert-warning" style={{ margin: '10px 2rem', backgroundColor: '#fff3cd', border: '1px solid #ffc107', borderRadius: '5px', padding: '10px' }}>
-                                  <strong style={{ color: '#856404' }}>⚠️ Please complete KYC documents first!</strong>
-                                  <p style={{ marginBottom: 10, color: '#856404' }}>You need to upload all required KYC documents before you can upload onboarding forms.</p>
-                                  <button className="btn btn-primary" onClick={() => navigate('/investor/documents')} style={{ backgroundColor: '#be1717', border: 'none' }}>
-                                    Go to KYC Documents
-                                  </button>
-                                </div>
-                              )}
-                              
-                              <h3 style={{ marginLeft: '1.5rem' }}>
-                                <strong>Account Opening</strong>
-                              </h3>
-                              <span style={{ color: '#be1717', marginLeft: '1.5rem' }}>
-                                Please provide self-attested copies of the requested documents (Allowed formats: PDF, JPG, JPEG | Max size: 10 MB per file).
-                              </span>
-
-                              <div className="row" style={{ borderBottom: '2px solid #BE1717', marginTop: '10px', marginLeft: '1rem', paddingBottom: '10px' }}>
-                                {requirements.documents.length === 0 ? (
-                                  <div className="col-md-12">
-                                    <p>No onboarding documents required at this time.</p>
-                                  </div>
-                                ) : (
-                                  [...requirements.documents]
-                                    .sort((a, b) => a.description.localeCompare(b.description))
-                                    .map((doc, index) => {
-                                      const selectedFile = selectedFiles.get(doc.description);
-                                      const isUploading = uploadingFile === doc.description;
-
-                                      return (
-                                        <div key={doc.dynamicsId || index} className="col-md-4">
-                                          <div className="form-group first">
-                                            <label style={{ marginLeft: '18px' }}>
-                                              {doc.description}
-                                              {isAccountOpeningBooklet(doc) && (
-                                                <a
-                                                  href="#"
-                                                  onClick={handleDownloadAccountOpeningBooklet}
-                                                  style={{ color: '#be1717', marginLeft: '5px', cursor: 'pointer' }}
-                                                >
-                                                  <u>Download</u>
-                                                </a>
-                                              )}
-                                              {!isAccountOpeningBooklet(doc) && doc.documentMasterUrl && (
-                                                <a
-                                                  href="#"
-                                                  onClick={(e) => handleDownloadMasterDocument(e, doc.documentMasterUrl, doc.description)}
-                                                  style={{ color: '#be1717', marginLeft: '5px', cursor: 'pointer' }}
-                                                >
-                                                  <u>Download</u>
-                                                </a>
-                                              )}
-                                            </label>
-
-                                            <input
-                                              type="file"
-                                              id={`doc_${index}`}
-                                              accept=".pdf,.jpg,.jpeg,.png"
-                                              style={{ display: 'none' }}
-                                              onChange={(e) => handleFileSelect(e, doc.description, doc.dynamicsId)}
-                                              disabled={!kycComplete || doc.localRecordExists || isUploading}
-                                            />
-                                            <br />
-
-                                            {doc.localRecordExists ? (
-                                              <>
-                                                <span id={`file-chosen-uploaded-${index}`} style={{ marginLeft: '20px' }}>
-                                                  File Uploaded
-                                                </span>
-                                                <br />
-                                                <span style={{ color: 'orange', marginLeft: '20px' }}>
-                                                  {doc.localStatus || 'Pending'}
-                                                </span>
-                                              </>
-                                            ) : (
-                                              <>
-                                                <label
-                                                  className="upload-button"
-                                                  htmlFor={`doc_${index}`}
-                                                  style={{
-                                                    backgroundColor: (!kycComplete || isUploading) ? '#888' : '#be1717',
-                                                    cursor: (!kycComplete || isUploading) ? 'not-allowed' : 'pointer',
-                                                    pointerEvents: (!kycComplete || isUploading) ? 'none' : 'auto'
-                                                  }}
-                                                >
-                                                  {isUploading ? 'Uploading...' : 'Upload'}
-                                                </label>
-                                                <br /><br />
-                                                <span id={`file-chosen-${index}`}>
-                                                  {selectedFile ? selectedFile.fileName : 'File to be uploaded'}
-                                                </span>
-                                              </>
-                                            )}
-                                          </div>
-                                        </div>
-                                      );
-                                    })
-                                )}
-                              </div>
-
-                              {/* Submit Button */}
-                              <br />
-                              {requirements && requirements.totalRequired > 0 && (
-                                <div style={{ marginLeft: '39px', marginTop: '-14px' }}>
-                                  {requirements.uploaded >= requirements.totalRequired && requirements.totalRequired > 0 ? (
-                                    <>
-                                      <button
-                                        type="button"
-                                        className="btn px-5 btn-primary"
-                                        style={{ fontWeight: 'normal', borderRadius: '25px' }}
-                                        disabled
-                                      >
-                                        Submit
-                                      </button>
-                                      <small style={{ color: 'green', marginLeft: '10px' }}>All documents uploaded</small>
-                                    </>
-                                  ) : (
-                                    <>
-                                      <button
-                                        type="button"
-                                        className="btn px-5 btn-primary"
-                                        style={{ fontWeight: 'normal', borderRadius: '25px' }}
-                                        onClick={handleBatchSubmit}
-                                        disabled={uploadingFile === 'batch' || selectedFiles.size === 0}
-                                      >
-                                        {uploadingFile === 'batch' ? 'Uploading...' : 'Submit'}
-                                      </button>
-                                      {selectedFiles.size > 0 && (
-                                        <small style={{ color: '#be1717', marginLeft: '10px' }}>
-                                          {selectedFiles.size} file(s) selected
-                                        </small>
-                                      )}
-                                    </>
-                                  )}
-                                </div>
-                              )}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
+                <div className="document-list__header-row">
+                  <h2>Required Onboarding Documents</h2>
+                  <div className="progress-summary-compact">
+                    <span className="stat-pill">
+                      Uploaded: <strong>{requirements.uploaded}/{requirements.totalRequired}</strong>
+                    </span>
+                    <span className="stat-pill stat-percentage">
+                      {requirements.totalRequired > 0 
+                        ? Math.round((requirements.uploaded / requirements.totalRequired) * 100) 
+                        : 0}% Complete
+                    </span>
                   </div>
                 </div>
+
+                <p className="document-list__subtitle">
+                  Please provide completed and signed copies of the requested onboarding files. Accepted formats: PDF, JPG, PNG (Max size: 10MB)
+                </p>
+
+                <div className="document-table-container">
+                  <table className="document-table">
+                    <thead>
+                      <tr>
+                        <th style={{ width: '45%' }}>Required Document</th>
+                        <th style={{ width: '15%' }}>Status</th>
+                        <th style={{ width: '30%' }}>Uploaded File / Upload Tool</th>
+                        <th style={{ width: '10%' }}>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {[...requirements.documents]
+                        .sort((a, b) => a.description.localeCompare(b.description))
+                        .map((doc, index) => {
+                          const selectedFile = selectedFiles.get(doc.description);
+                          const isUploaded = doc.localRecordExists;
+                          const isUploading = uploadingFile === doc.description;
+
+                          return (
+                            <tr key={doc.dynamicsId || index}>
+                              <td>
+                                <div className="table-document-info">
+                                  <div className="table-document-name">
+                                    {doc.description}
+                                    {isAccountOpeningBooklet(doc) && (
+                                      <a
+                                        href="#"
+                                        onClick={handleDownloadAccountOpeningBooklet}
+                                        style={{ color: 'var(--facilon-primary)', marginLeft: '8px', cursor: 'pointer', fontWeight: 600, textDecoration: 'underline' }}
+                                        title="Download Booklet Template"
+                                      >
+                                        <i className="bi bi-download me-1" />
+                                        Download Template
+                                      </a>
+                                    )}
+                                    {!isAccountOpeningBooklet(doc) && doc.documentMasterUrl && (
+                                      <a
+                                        href="#"
+                                        onClick={(e) => handleDownloadMasterDocument(e, doc.documentMasterUrl, doc.description)}
+                                        style={{ color: 'var(--facilon-primary)', marginLeft: '8px', cursor: 'pointer', fontWeight: 600, textDecoration: 'underline' }}
+                                        title="Download Master Template"
+                                      >
+                                        <i className="bi bi-download me-1" />
+                                        Download Template
+                                      </a>
+                                    )}
+                                  </div>
+                                </div>
+                              </td>
+                              <td>
+                                {isUploaded ? (
+                                  <span className="status-badge status-approved">
+                                    <i className="bi bi-check-circle-fill" />
+                                    {doc.localStatus || 'Uploaded'}
+                                  </span>
+                                ) : (
+                                  <label 
+                                    htmlFor={`doc_${index}`}
+                                    className="status-badge status-not-uploaded"
+                                    title="Click to choose and upload file"
+                                  >
+                                    <i className="bi bi-cloud-arrow-up-fill" />
+                                    Not Uploaded
+                                  </label>
+                                )}
+                              </td>
+                              <td>
+                                {isUploaded ? (
+                                  <div className="table-file-uploaded">
+                                    <i className="bi bi-file-earmark-check-fill table-file-uploaded__icon" />
+                                    <div>
+                                      <div className="table-file-uploaded__name" title={doc.fileName || 'Document'}>
+                                        {doc.fileName || 'Onboarding Document'}
+                                      </div>
+                                      {doc.uploadedAt && (
+                                        <div className="table-file-uploaded__date">
+                                          Uploaded {new Date(doc.uploadedAt).toLocaleDateString()}
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <div className="table-file-upload">
+                                    <input
+                                      type="file"
+                                      id={`doc_${index}`}
+                                      accept=".pdf,.jpg,.jpeg,.png"
+                                      onChange={(e) => handleFileSelect(e, doc.description, doc.dynamicsId)}
+                                      disabled={!kycComplete || isUploading}
+                                      style={{ display: 'none' }}
+                                    />
+                                    <div className="file-upload-wrapper">
+                                      <label 
+                                        htmlFor={`doc_${index}`} 
+                                        className={`file-input-label-custom ${selectedFile ? 'file-selected' : ''}`}
+                                        style={{
+                                          opacity: !kycComplete ? 0.6 : 1,
+                                          cursor: !kycComplete ? 'not-allowed' : 'pointer'
+                                        }}
+                                      >
+                                        <i className="bi bi-file-earmark-arrow-up me-2" />
+                                        {selectedFile ? selectedFile.fileName : 'Choose File'}
+                                      </label>
+                                      <span className="file-size-hint">Max size: 10MB</span>
+                                    </div>
+                                  </div>
+                                )}
+                              </td>
+                              <td>
+                                <div className="table-actions-cell">
+                                  <button
+                                    type="button"
+                                    className="btn-action-icon text-primary"
+                                    onClick={() => {
+                                      if (doc.documentUrl) {
+                                        window.open(doc.documentUrl, '_blank');
+                                      } else if (doc.localDocumentId) {
+                                        window.open(`/api/clients/me/documents/${doc.localDocumentId}/download`, '_blank');
+                                      } else {
+                                        toast.warning('No document preview available');
+                                      }
+                                    }}
+                                    disabled={!isUploaded}
+                                    title="Preview Document"
+                                  >
+                                    <i className="bi bi-eye-fill" />
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                    </tbody>
+                  </table>
+                </div>
               </div>
+            )}
+
+            <div className="document-upload__actions">
+              <button
+                type="button"
+                onClick={() => navigate(-1)}
+                className="btn-outline-primary"
+              >
+                <i className="bi bi-x-circle me-2" />
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleBatchSubmit}
+                className="btn-save"
+                disabled={uploadingFile === 'batch' || selectedFiles.size === 0 || !kycComplete}
+              >
+                <i className="bi bi-cloud-upload me-2" />
+                {uploadingFile === 'batch' ? 'Uploading...' : 'Submit Documents'}
+              </button>
             </div>
           </div>
         </div>
-        <Footer />
-      </div>
+      </main>
     </div>
   );
 };

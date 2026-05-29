@@ -1,17 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import Header from '../../../components/Header/Header';
-import Footer from '../../../components/Footer/Footer';
 import { investorService, VerificationStatusDto, AccountDetailsDto, InvestorDashboardDto } from '../../../services/investor.service';
-import { useSAProxyNavigation } from '../../../hooks/useSAProxyNavigation';
 import { PremiumJourneyStepper } from '../../../components/PremiumJourneyStepper/PremiumJourneyStepper';
 import '../InvestorProfile/InvestorProfile.scss';
-import './InPersonVerification.scss';
+import '../DocumentUpload/DocumentUpload.scss';
 
 export const InPersonVerification: React.FC = () => {
-    const regularNavigate = useNavigate();
-    const { navigate: saNavigate, isProxyMode } = useSAProxyNavigation();
     const [loading, setLoading] = useState(true);
     const [verificationStatus, setVerificationStatus] = useState<VerificationStatusDto | null>(null);
     const [dashboardData, setDashboardData] = useState<InvestorDashboardDto | null>(null);
@@ -31,7 +24,6 @@ export const InPersonVerification: React.FC = () => {
             setDashboardData(dashboard);
         } catch (error: any) {
             console.error('Error loading verification data:', error);
-            toast.error(error.response?.data?.message || 'Failed to load verification status');
         } finally {
             setLoading(false);
         }
@@ -47,135 +39,74 @@ export const InPersonVerification: React.FC = () => {
   if (loading) {
     return (
       <div className="facilon-dashboard-wrapper">
-        <Header />
         <main className="container-fluid dashboard-container-main">
           <div className="in-person-verification">
             <div className="loading">Loading verification status...</div>
           </div>
         </main>
-        <Footer />
       </div>
     );
   }
 
   return (
     <div className="facilon-dashboard-wrapper">
-      <Header />
-      <main className="container-fluid dashboard-container-main">
-        <div className="in-person-verification">
+      <main className="container-fluid dashboard-container-main px-0">
+        <div className="investor-profile px-3 px-md-0">
           {/* Progress Bar */}
           {renderProgressBar()}
 
-          <div className="derivatives-wrap trading-sec-1">
-            <div className="container-fluid">
-              <div className="row">
-                <div className="col-md-12">
-                  <div className="tab" role="tabpanel">
-                    {/* Nav tabs */}
-                    <ul className="nav nav-tabs" role="tablist">
-                      <li role="presentation" className="active">
-                        <a href="#Section1" aria-controls="home" role="tab" data-toggle="tab">
-                          In Person Verification
-                        </a>
-                      </li>
-                    </ul>
+          <div className="investor-profile__card document-upload">
+            <div className="document-list__header-row">
+              <h2>In-Person Verification (IPV)</h2>
+            </div>
+            
+            <p className="document-list__subtitle">
+              As a regulatory requirement, you must complete an in-person verification process. Your current IPV status is shown below.
+            </p>
 
-                    {/* Tab panes */}
-                    <div className="tab-content tabs">
-                      <div role="tabpanel" className="tab-pane active" id="Section1">
-                        <form>
-                          <div className="row">
-                            <div className="col-md-6">
-                              <div className="form-group first">
-                                <p style={{ marginBottom: '10px', fontWeight: 500 }}>Verification Done?</p>
-                                <label className="radio-inline" style={{ marginRight: '20px' }}>
-                                  <input
-                                    type="radio"
-                                    name="verification_done"
-                                    value="yes"
-                                    checked={isVerified}
-                                    disabled
-                                    style={{ marginRight: '5px' }}
-                                  />
-                                  Yes
-                                </label>
-                                <label className="radio-inline">
-                                  <input
-                                    type="radio"
-                                    name="verification_done"
-                                    value="no"
-                                    checked={isPending}
-                                    disabled
-                                    style={{ marginRight: '5px' }}
-                                  />
-                                  No
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Verification Details (shown if verified) */}
-                          {isVerified && (
-                            <div className="row" id="verification_done_div">
-                              <div className="col-md-6">
-                                <div className="form-group first">
-                                  <label htmlFor="verification-by">Verification Done By</label>
-                                  <input
-                                    type="text"
-                                    className="form-control"
-                                    id="verification-by"
-                                    value={verificationStatus?.verifiedBy || ''}
-                                    disabled
-                                  />
-                                </div>
-                              </div>
-                              <div className="col-md-6">
-                                <div className="form-group first">
-                                  <label htmlFor="verification-date-time">Verification Date and Time</label>
-                                  <input
-                                    type="text"
-                                    className="form-control"
-                                    id="verification-date-time"
-                                    value={
-                                      verificationStatus?.verifiedAt
-                                        ? new Date(verificationStatus.verifiedAt!).toLocaleString('en-GB')
-                                        : ''
-                                    }
-                                    disabled
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                          )}
-
-                          {/* Booking Calendar (shown if not verified) */}
-                          {isPending && (
-                            <div className="row" id="verification_not_done_div">
-                              <div className="col-md-12">
-                                <div className="form-group first">
-                                  <iframe
-                                    src="https://outlook.office.com/book/MeetingwithVentura@facilonservices.com/?ismsaljsauthenabled"
-                                    width="100%"
-                                    height="800"
-                                    frameBorder="0"
-                                    title="Book Verification Appointment"
-                                    style={{ border: 'none', borderRadius: '8px' }}
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                          )}
-                        </form>
-                      </div>
-                    </div>
-                  </div>
+            {isVerified ? (
+              <div className="mb-4 p-3 rounded border border-success d-flex align-items-center gap-3" style={{ backgroundColor: '#ecfdf5', color: '#047857' }}>
+                <i className="bi bi-check-circle-fill" style={{ fontSize: '20px', color: '#059669' }} />
+                <div>
+                  <h4 className="mb-1" style={{ fontSize: '12px', fontWeight: 700 }}>In-Person Verification Completed</h4>
+                  <p className="mb-0" style={{ fontSize: '11px', color: '#047857', opacity: 0.9 }}>
+                    Your verification was successfully completed by <strong>{verificationStatus?.verifiedBy || 'System Admin'}</strong> on{' '}
+                    <strong>
+                      {verificationStatus?.verifiedAt
+                        ? new Date(verificationStatus.verifiedAt).toLocaleString('en-GB')
+                        : ''}
+                    </strong>.
+                  </p>
                 </div>
               </div>
-            </div>
+            ) : (
+              <div className="mb-4 p-3 rounded border border-warning d-flex align-items-center gap-3" style={{ backgroundColor: '#fffbeb', color: '#b45309' }}>
+                <i className="bi bi-exclamation-triangle-fill" style={{ fontSize: '20px', color: '#d97706' }} />
+                <div>
+                  <h4 className="mb-1" style={{ fontSize: '12px', fontWeight: 700 }}>In-Person Verification Pending</h4>
+                  <p className="mb-0" style={{ fontSize: '11px', color: '#b45309', opacity: 0.9 }}>
+                    Your verification is currently pending. Please schedule an online IPV session using the calendar tool below.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Booking Calendar (shown if not verified) */}
+            {isPending && (
+              <div className="mt-4 border border-neutral-200 rounded" style={{ overflow: 'hidden' }}>
+                <iframe
+                  src="https://outlook.office.com/book/MeetingwithVentura@facilonservices.com/?ismsaljsauthenabled"
+                  width="100%"
+                  height="750"
+                  frameBorder="0"
+                  title="Book Verification Appointment"
+                  style={{ border: 'none', backgroundColor: '#ffffff' }}
+                />
+              </div>
+            )}
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   );
 };

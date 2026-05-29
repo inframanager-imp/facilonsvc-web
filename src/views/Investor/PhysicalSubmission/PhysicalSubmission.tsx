@@ -1,17 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import Header from '../../../components/Header/Header';
-import Footer from '../../../components/Footer/Footer';
 import { investorService, PhysicalSubmissionFormData, InvestorDashboardDto } from '../../../services/investor.service';
-import { useSAProxyNavigation } from '../../../hooks/useSAProxyNavigation';
 import { PremiumJourneyStepper } from '../../../components/PremiumJourneyStepper/PremiumJourneyStepper';
 import '../InvestorProfile/InvestorProfile.scss';
-import './PhysicalSubmission.scss';
+import '../DocumentUpload/DocumentUpload.scss';
 
 export const PhysicalSubmission: React.FC = () => {
-  const regularNavigate = useNavigate();
-  const { navigate: saNavigate, isProxyMode } = useSAProxyNavigation();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [dashboardData, setDashboardData] = useState<InvestorDashboardDto | null>(null);
@@ -40,28 +36,16 @@ export const PhysicalSubmission: React.FC = () => {
       
       setDashboardData(dashboard);
 
-      // Check if in-person verification is completed.
-      // Trust either the verification endpoint's currentStatus OR the dashboard's
-      // accountSummary.verificationDone flag — they read the same backing column
-      // (ss_verification_done) but go through different services, and a stale
-      // Dataverse sync in one path shouldn't lock the form.
       const isVerified =
         verificationStatus?.currentStatus === 'completed' ||
         dashboard?.accountSummary?.verificationDone === true;
       setVerificationCompleted(isVerified);
       
-      if (!isVerified) {
-        toast.warning('Please complete In-person Verification before submitting documents physically.');
-      }
-      
-      // Pre-fill form if submission already exists
       if (physicalStatus && physicalStatus.submitted) {
-        // Set submission type and pre-select radio button
         if (physicalStatus.physicalSubmission) {
           setSubmissionType(physicalStatus.physicalSubmission as 'inperson' | 'courier');
         }
         
-        // Pre-fill form data
         setFormData({
           physicalSubmission: physicalStatus.physicalSubmission || 'inperson',
           courierName: physicalStatus.courierName || '',
@@ -83,13 +67,11 @@ export const PhysicalSubmission: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Check verification status (matching Laravel's workflow enforcement)
     if (!verificationCompleted) {
       toast.error('You must complete In-person Verification before proceeding with physical submission.');
       return;
     }
 
-    // Validation
     if (!submissionType) {
       toast.error('Please select a submission method');
       return;
@@ -128,7 +110,6 @@ export const PhysicalSubmission: React.FC = () => {
   const handleDownloadChecklist = async () => {
     try {
       const response = await investorService.downloadDocumentChecklist();
-      // Open in new window
       const blob = new Blob([response], { type: 'text/html' });
       const url = window.URL.createObjectURL(blob);
       const newWindow = window.open(url, '_blank');
@@ -148,200 +129,156 @@ export const PhysicalSubmission: React.FC = () => {
   if (loading) {
     return (
       <div className="facilon-dashboard-wrapper">
-        {!isProxyMode && <Header />}
         <main className="container-fluid dashboard-container-main">
           <div className="physical-submission-container" style={{ textAlign: 'center', padding: '100px 0' }}>
             <div className="loading">Loading physical submission...</div>
           </div>
         </main>
-        {!isProxyMode && <Footer />}
       </div>
     );
   }
 
   return (
     <div className="facilon-dashboard-wrapper">
-      {!isProxyMode && <Header />}
-      <main className="container-fluid dashboard-container-main">
-        <div className="physical-submission-container">
+      <main className="container-fluid dashboard-container-main px-0">
+        <div className="investor-profile px-3 px-md-0">
           {/* Progress Bar */}
           {renderProgressBar()}
 
-          {/* Main Content */}
-          <div className="section derivatives-wrap trading-sec-1">
-            <div className="container-fluid">
-              <div className="row">
-                <div className="col-md-12">
-                  <div className="tab" role="tabpanel">
-                    <center>
-                      <a
-                        href="#"
-                        className="btn btn-primary"
-                        style={{
-                          backgroundColor: '#be1717 !important',
-                          borderColor: '#be1717 !important',
-                          pointerEvents: 'none'
-                        }}
-                      >
-                        Physical Submission
-                      </a>
-                    </center>
+          <div className="investor-profile__card document-upload">
+            <div className="document-list__header-row">
+              <h2>Physical Document Submission</h2>
+            </div>
+            
+            <p className="document-list__subtitle">
+              Please download the physical document checklist, gather the required documents, and record your submission details below.
+            </p>
 
-                    <div className="tab-content tabs">
-                      <div role="tabpanel" className="tab-pane fade show active" id="Section1">
-                        <center>
-                          <p style={{ marginTop: '10px' }}>
-                            Please download the checklist and send the documents by courier to the address of the service provider indicated in the checklist.
-                          </p>
-                        </center>
+            {/* Verification Required Warning Banner */}
+            {!verificationCompleted && (
+              <div className="alert alert-warning mb-3 py-2 px-3 d-flex align-items-center justify-content-between flex-wrap gap-2" style={{ backgroundColor: '#fff3cd', border: '1px solid #ffc107', borderRadius: '6px', fontSize: '11px', color: '#856404' }}>
+                <span className="d-flex align-items-center gap-2">
+                  <strong>⚠️ In-person Verification Required:</strong>
+                  <span>You must complete the in-person verification step before submitting physical documents.</span>
+                </span>
+                <button className="btn btn-xs btn-warning py-1 px-2 font-weight-bold" onClick={() => navigate('/investor/verification')} style={{ fontSize: '10px', height: 'auto', display: 'inline-flex', alignItems: 'center' }}>
+                  Go to Verification
+                </button>
+              </div>
+            )}
 
-                        {/* Download Checklist Button */}
-                        <center>
-                          <p>
-                            <button
-                              className="btn btn-primary"
-                              style={{ height: 'auto', marginTop: '10px', marginBottom: '10px' }}
-                              onClick={handleDownloadChecklist}
-                            >
-                              Download checklist of documents to be submitted
-                            </button>
-                          </p>
-                        </center>
+            {/* Download Checklist Button */}
+            <div className="mb-4 d-flex justify-content-start">
+              <button
+                type="button"
+                className="file-input-label-custom btn btn-outline-primary"
+                onClick={handleDownloadChecklist}
+                style={{ height: '32px', fontSize: '11px', display: 'inline-flex', alignItems: 'center', fontWeight: 700 }}
+              >
+                <i className="bi bi-download me-2" />
+                Download Checklist of Physical Documents
+              </button>
+            </div>
 
-                        <center>
-                          <h3 className="physical-submission">Details of Physical Submission</h3>
-                        </center>
-
-                        {/* Verification Required Warning */}
-                        {!verificationCompleted && (
-                          <div style={{
-                            backgroundColor: '#fff3cd',
-                            border: '1px solid #ffc107',
-                            borderRadius: '4px',
-                            padding: '15px',
-                            margin: '20px auto',
-                            maxWidth: '800px',
-                            textAlign: 'center'
-                          }}>
-                            <p style={{ margin: 0, color: '#856404', fontWeight: 'bold' }}>
-                              ⚠️ In-person Verification Required
-                            </p>
-                            <p style={{ margin: '5px 0 0', color: '#856404' }}>
-                              You must complete the in-person verification step before submitting documents physically.
-                            </p>
-                          </div>
-                        )}
-
-                        {/* Submission Form */}
-                        <center>
-                          <form onSubmit={handleSubmit}>
-                            <div className="row">
-                              <div className="col-md-12">
-                                <div className="form-group first">
-                                  <label className="radio-inline" style={{ marginRight: '20px' }}>
-                                    <input
-                                      type="radio"
-                                      name="physical_submission"
-                                      value="inperson"
-                                      checked={submissionType === 'inperson'}
-                                      onChange={(e) => setSubmissionType('inperson')}
-                                      style={{ marginRight: '5px' }}
-                                    />
-                                    In Person
-                                  </label>
-                                  <label className="radio-inline">
-                                    <input
-                                      type="radio"
-                                      name="physical_submission"
-                                      value="courier"
-                                      checked={submissionType === 'courier'}
-                                      onChange={(e) => setSubmissionType('courier')}
-                                      style={{ marginRight: '5px' }}
-                                    />
-                                    Courier
-                                  </label>
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Courier Details (conditional) */}
-                            {submissionType === 'courier' && (
-                              <div className="row" id="physical_submission_done_div">
-                                <div className="col-md-4">
-                                  <div className="form-group first">
-                                    <label htmlFor="courier_name">Courier Name</label>
-                                    <input
-                                      type="text"
-                                      className="form-control"
-                                      id="courier_name"
-                                      value={formData.courierName}
-                                      onChange={(e) => handleInputChange('courierName', e.target.value)}
-                                      placeholder="e.g., DHL, BlueDart"
-                                      required={submissionType === 'courier'}
-                                      maxLength={100}
-                                    />
-                                  </div>
-                                </div>
-
-                                <div className="col-md-4">
-                                  <div className="form-group first">
-                                    <label htmlFor="dispatch_date">Dispatch Date</label>
-                                    <input
-                                      type="datetime-local"
-                                      className="form-control"
-                                      id="dispatch_date"
-                                      value={formData.dispatchDate}
-                                      onChange={(e) => handleInputChange('dispatchDate', e.target.value)}
-                                      required={submissionType === 'courier'}
-                                    />
-                                  </div>
-                                </div>
-
-                                <div className="col-md-4">
-                                  <div className="form-group first">
-                                    <label htmlFor="awb_number">AWB Number</label>
-                                    <input
-                                      type="text"
-                                      className="form-control"
-                                      id="awb_number"
-                                      value={formData.awbNumber}
-                                      onChange={(e) => handleInputChange('awbNumber', e.target.value)}
-                                      placeholder="Tracking Number"
-                                      required={submissionType === 'courier'}
-                                      maxLength={50}
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-                            )}
-
-                            <button
-                              type="submit"
-                              className="btn px-5 btn-primary"
-                              disabled={submitting || !verificationCompleted}
-                              style={{ 
-                                marginTop: '20px',
-                                opacity: !verificationCompleted ? 0.5 : 1,
-                                cursor: !verificationCompleted ? 'not-allowed' : 'pointer'
-                              }}
-                              title={!verificationCompleted ? 'Complete in-person verification first' : ''}
-                            >
-                              {submitting ? 'Submitting...' : 'Submit'}
-                            </button>
-                          </form>
-                        </center>
-                      </div>
-                    </div>
-                    <br />
-                    <br />
-                  </div>
+            <h3 className="mb-3" style={{ fontSize: '12px', fontWeight: 700, color: 'var(--facilon-slate)', borderBottom: '1.5px solid var(--facilon-grey-200)', paddingBottom: '6px' }}>Submission Method & Courier Details</h3>
+            
+            <form onSubmit={handleSubmit}>
+              <div className="mb-4">
+                <label className="form-label d-block mb-2" style={{ fontSize: '11px', fontWeight: 600, color: 'var(--facilon-text-muted)' }}>Submission Method</label>
+                <div className="d-flex gap-4">
+                  <label className="d-inline-flex align-items-center gap-2" style={{ cursor: 'pointer', fontSize: '11px' }}>
+                    <input
+                      type="radio"
+                      name="physical_submission"
+                      value="inperson"
+                      checked={submissionType === 'inperson'}
+                      onChange={() => setSubmissionType('inperson')}
+                      style={{ width: '16px', height: '16px' }}
+                    />
+                    <span>Hand Deliver In-Person</span>
+                  </label>
+                  <label className="d-inline-flex align-items-center gap-2" style={{ cursor: 'pointer', fontSize: '11px' }}>
+                    <input
+                      type="radio"
+                      name="physical_submission"
+                      value="courier"
+                      checked={submissionType === 'courier'}
+                      onChange={() => setSubmissionType('courier')}
+                      style={{ width: '16px', height: '16px' }}
+                    />
+                    <span>Send via Courier</span>
+                  </label>
                 </div>
               </div>
-            </div>
+
+              {submissionType === 'courier' && (
+                <div className="row g-3 mb-4">
+                  <div className="col-md-4">
+                    <div className="form-group">
+                      <label htmlFor="courier_name" style={{ fontSize: '11px', fontWeight: 600 }}>Courier Name</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="courier_name"
+                        value={formData.courierName}
+                        onChange={(e) => handleInputChange('courierName', e.target.value)}
+                        placeholder="e.g. DHL, BlueDart"
+                        required
+                        maxLength={100}
+                        style={{ height: '32px', fontSize: '11px' }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="col-md-4">
+                    <div className="form-group">
+                      <label htmlFor="dispatch_date" style={{ fontSize: '11px', fontWeight: 600 }}>Dispatch Date & Time</label>
+                      <input
+                        type="datetime-local"
+                        className="form-control"
+                        id="dispatch_date"
+                        value={formData.dispatchDate}
+                        onChange={(e) => handleInputChange('dispatchDate', e.target.value)}
+                        required
+                        style={{ height: '32px', fontSize: '11px' }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="col-md-4">
+                    <div className="form-group">
+                      <label htmlFor="awb_number" style={{ fontSize: '11px', fontWeight: 600 }}>AWB / Tracking Number</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="awb_number"
+                        value={formData.awbNumber}
+                        onChange={(e) => handleInputChange('awbNumber', e.target.value)}
+                        placeholder="Tracking Number"
+                        required
+                        maxLength={50}
+                        style={{ height: '32px', fontSize: '11px' }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div className="document-upload__actions mt-4 pt-3" style={{ borderTop: '1.5px solid var(--facilon-grey-200)' }}>
+                <button
+                  type="submit"
+                  className="btn btn-save"
+                  disabled={submitting || !verificationCompleted}
+                  style={{ minWidth: '160px', height: '38px', fontSize: '11px', fontWeight: 700 }}
+                >
+                  <i className="bi bi-check-circle me-2" />
+                  {submitting ? 'Submitting...' : 'Record Submission'}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </main>
-      {!isProxyMode && <Footer />}
     </div>
   );
 };
