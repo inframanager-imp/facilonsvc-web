@@ -151,6 +151,27 @@ export const InformationContainer: React.FC = () => {
     );
   }
 
+  // SOW gate: the onboarding journey can't be opened until the investor has agreed to their
+  // Statement of Work. A revoke re-closes it. (undefined = backend not reporting → allow.)
+  if (dashboardData?.sowAgreed === false) {
+    return (
+      <div className="facilon-dashboard-wrapper">
+        <main className="container-fluid dashboard-container-main">
+          <div className="alert alert-warning mt-4" role="alert" style={{ maxWidth: 640, margin: '60px auto' }}>
+            <h5 className="mb-2">Statement of Work required</h5>
+            <p className="mb-3">
+              You need to review and agree to your Statement of Work before you can continue your
+              onboarding journey. If you previously revoked it, please agree again to proceed.
+            </p>
+            <button className="btn btn-primary" onClick={() => navigate('/investor/consents')}>
+              Go to Consent Centre
+            </button>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div className="facilon-dashboard-wrapper">
       <main className="container-fluid dashboard-container-main px-0">

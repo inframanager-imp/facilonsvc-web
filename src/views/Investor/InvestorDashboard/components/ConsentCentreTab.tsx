@@ -126,10 +126,10 @@ export const ConsentCentreTab: React.FC<ConsentCentreTabProps> = ({
             <div className="mt-3">
               <button
                 className="btn btn-outline-primary btn-sm"
-                onClick={() => navigate('/investor/journey')}
+                onClick={() => navigate('/investor/consents')}
               >
                 <i className="bi bi-gear me-1"></i>
-                Manage Consents
+                Open Consent Centre
               </button>
             </div>
           </div>

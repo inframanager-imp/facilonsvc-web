@@ -48,6 +48,7 @@ import { InvestorProgress } from './views/Investor/InvestorProgress/InvestorProg
 import { InformationContainer } from './views/Investor/InformationForms/InformationContainer';
 import { JourneyList } from './views/Investor/JourneyList/JourneyList';
 import { MyProfile } from './views/Investor/MyProfile/MyProfile';
+import { MyConsents } from './views/Investor/MyConsents/MyConsents';
 import { DsrCenter } from './views/Investor/DsrCenter/DsrCenter';
 import { DocumentUpload } from './views/Investor/DocumentUpload/DocumentUpload';
 import { OnboardingDocuments } from './views/Investor/OnboardingDocuments/OnboardingDocuments';
@@ -255,6 +256,17 @@ const App: React.FC = () => {
               <ProtectedRoute>
                 <MainLayout title="My Profile" subtitle="Your personal profile details">
                   <MyProfile />
+                </MainLayout>
+              </ProtectedRoute>
+            }
+          />
+          {/* My Consents — Consent Centre detail (Privacy, Platform Terms, SOW, Marketing, WhatsApp) */}
+          <Route
+            path="/investor/consents"
+            element={
+              <ProtectedRoute>
+                <MainLayout title="Consent Centre" subtitle="Manage your consents and Statement of Work">
+                  <MyConsents />
                 </MainLayout>
               </ProtectedRoute>
             }

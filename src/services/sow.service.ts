@@ -56,6 +56,28 @@ export interface UpdateSowDto {
 
 class SowService {
     /**
+     * Whether the current investor has agreed to their SOW (drives the journey gate).
+     */
+    async getMyAgreed(): Promise<boolean> {
+        const response = await apiClient.get<{ agreed: boolean }>('/api/investor/sow/me/agreed');
+        return !!response.data?.agreed;
+    }
+
+    /**
+     * Record the current investor's agreement to the SOW.
+     */
+    async agreeMe(): Promise<void> {
+        await apiClient.post('/api/investor/sow/me/agree');
+    }
+
+    /**
+     * Revoke the current investor's SOW agreement (re-closes the journey gate).
+     */
+    async revokeMe(): Promise<void> {
+        await apiClient.post('/api/investor/sow/me/revoke');
+    }
+
+    /**
      * Get active SOW template
      */
     async getTemplate(applicableFor: string = 'All'): Promise<SowTemplateDto> {

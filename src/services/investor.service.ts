@@ -184,6 +184,8 @@ export interface InvestorDashboardDto {
   applications?: ApplicationItem[];
   consentCenter?: ConsentItem[];
   delegation?: DelegationInfo;
+  /** True once the investor has agreed to their SOW. The onboarding journey is gated on this. */
+  sowAgreed?: boolean;
 }
 
 export interface AccountSnapshot {
@@ -223,8 +225,10 @@ export interface ApplicationItem {
 export interface ConsentItem {
   consent?: string;
   scope?: string;
-  status?: string;
+  status?: string; // "Active" | "Inactive"
   actionRequired?: boolean;
+  action?: string; // "ACTIVATE" | "UPDATE" | "REVOKE" | "NONE"
+  key?: string;    // "sow" | "marketing" | "whatsapp" | "privacy" | "platformTerms"
 }
 
 export interface DelegationInfo {

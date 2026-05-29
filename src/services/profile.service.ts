@@ -405,6 +405,11 @@ class ProfileService {
     return response.data;
   }
 
+  /** Activate or revoke a manageable consent (key: "marketing" | "whatsapp"; action: "activate" | "revoke"). */
+  async updateConsent(key: string, action: 'activate' | 'revoke'): Promise<void> {
+    await this.client.post(`${this.baseUrl}/consents/${key}/${action}`);
+  }
+
   async getPassport(): Promise<UserPassportDetailsDto | null> {
     const response = await this.client.get<UserPassportDetailsDto>(`${this.baseUrl}/passport`);
     return response.status === 204 || !response.data ? null : response.data;

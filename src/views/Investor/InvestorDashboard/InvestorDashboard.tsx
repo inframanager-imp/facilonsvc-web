@@ -147,12 +147,16 @@ export const InvestorDashboard: React.FC = () => {
     { id: 'REQ-8542', type: 'Right to Erasure', status: 'PENDING', statusColor: 'bg-slate-100 text-slate-500 border border-[#e2e8f0]', response: 'Under evaluation' }
   ];
 
-  const consents = [
-    { name: 'Platform Terms', desc: 'Facilon Status', status: 'ACTIVE', statusColor: 'bg-[#ecfdf5] text-[#10b981]' },
-    { name: 'Data & Documents', desc: 'Facilon Status', status: 'ACTIVE', statusColor: 'bg-[#ecfdf5] text-[#10b981]' },
-    { name: 'Contact Details', desc: 'Marketing', status: 'INACTIVE', statusColor: 'bg-[#f1f5f9] text-[#64748b]' },
-    { name: 'Mobile number', desc: 'WhatsApp', status: 'ACTIVE', statusColor: 'bg-[#ecfdf5] text-[#10b981]' },
-  ];
+  // Consent rows come from the API (dashboardData.consentCenter) so the Consent Centre, SOW row
+  // and statuses stay in sync. Read-only here — actions live on the My Consents page.
+  const consents = (dashboardData?.consentCenter || []).map((c) => ({
+    name: c.consent || '-',
+    desc: c.scope || '-',
+    status: (c.status || '').toUpperCase(),
+    statusColor: c.status === 'Active'
+      ? 'bg-[#ecfdf5] text-[#10b981]'
+      : 'bg-[#f1f5f9] text-[#64748b]',
+  }));
 
   return (
     <div className="facilon-dashboard-wrapper font-sans text-gray-800 min-h-screen pb-0">
@@ -562,7 +566,7 @@ export const InvestorDashboard: React.FC = () => {
                 <i className="bi bi-check2-all mr-2 text-slate-500"></i> My Consents
               </h2>
               <button
-                onClick={() => setShowConsentModal(true)}
+                onClick={() => navigate('/investor/consents')}
                 className="text-[12px] font-semibold text-[#3e6f7c] hover:underline hover:text-[#1f4851] transition-colors flex items-center bg-transparent border-0 p-0 cursor-pointer"
               >
                 Consent Center &rarr;
