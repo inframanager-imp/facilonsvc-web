@@ -98,10 +98,12 @@ const Header: React.FC<HeaderProps> = ({ variant = 'legacy', title, subtitle }) 
     return (
       <header className="h-header bg-white border-b border-neutral-100 flex items-center justify-between pr-6 pl-16 sticky top-0 z-40">
         <div>
-          <h1 className="text-xl font-bold text-neutral-900 leading-tight mb-0">
-            {title || 'Investor Console'}
-          </h1>
-          {subtitle && (
+          {title !== "" && (
+            <h1 className="text-xl font-bold text-neutral-900 leading-tight mb-0">
+              {title !== undefined ? title : 'Investor Console'}
+            </h1>
+          )}
+          {title !== "" && subtitle && (
             <p className="text-sm text-neutral-500 font-medium mb-0">
               {subtitle}
             </p>

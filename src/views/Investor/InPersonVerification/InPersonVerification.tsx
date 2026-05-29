@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { investorService, VerificationStatusDto, AccountDetailsDto, InvestorDashboardDto } from '../../../services/investor.service';
+import { investorService, VerificationStatusDto, InvestorDashboardDto } from '../../../services/investor.service';
 import { PremiumJourneyStepper } from '../../../components/PremiumJourneyStepper/PremiumJourneyStepper';
 import '../InvestorProfile/InvestorProfile.scss';
 import '../DocumentUpload/DocumentUpload.scss';
@@ -56,38 +56,19 @@ export const InPersonVerification: React.FC = () => {
           {renderProgressBar()}
 
           <div className="investor-profile__card document-upload">
-            <div className="document-list__header-row">
-              <h2>In-Person Verification (IPV)</h2>
-            </div>
-            
-            <p className="document-list__subtitle">
-              As a regulatory requirement, you must complete an in-person verification process. Your current IPV status is shown below.
-            </p>
-
             {isVerified ? (
-              <div className="mb-4 p-3 rounded border border-success d-flex align-items-center gap-3" style={{ backgroundColor: '#ecfdf5', color: '#047857' }}>
-                <i className="bi bi-check-circle-fill" style={{ fontSize: '20px', color: '#059669' }} />
-                <div>
-                  <h4 className="mb-1" style={{ fontSize: '12px', fontWeight: 700 }}>In-Person Verification Completed</h4>
-                  <p className="mb-0" style={{ fontSize: '11px', color: '#047857', opacity: 0.9 }}>
-                    Your verification was successfully completed by <strong>{verificationStatus?.verifiedBy || 'System Admin'}</strong> on{' '}
-                    <strong>
-                      {verificationStatus?.verifiedAt
-                        ? new Date(verificationStatus.verifiedAt).toLocaleString('en-GB')
-                        : ''}
-                    </strong>.
-                  </p>
-                </div>
+              <div className="mb-3 py-1.5 px-2.5 rounded border border-success d-inline-flex align-items-center gap-2" style={{ backgroundColor: '#ecfdf5', color: '#047857', fontSize: '10px' }}>
+                <i className="bi bi-check-circle-fill" style={{ fontSize: '14px', color: '#059669', flexShrink: 0 }} />
+                <span>
+                  <strong>In-Person Verification Completed:</strong> Your verification was successfully completed by <strong>{verificationStatus?.verifiedBy || 'System Admin'}</strong> on <strong>{verificationStatus?.verifiedAt ? new Date(verificationStatus.verifiedAt).toLocaleString('en-GB') : ''}</strong>.
+                </span>
               </div>
             ) : (
-              <div className="mb-4 p-3 rounded border border-warning d-flex align-items-center gap-3" style={{ backgroundColor: '#fffbeb', color: '#b45309' }}>
-                <i className="bi bi-exclamation-triangle-fill" style={{ fontSize: '20px', color: '#d97706' }} />
-                <div>
-                  <h4 className="mb-1" style={{ fontSize: '12px', fontWeight: 700 }}>In-Person Verification Pending</h4>
-                  <p className="mb-0" style={{ fontSize: '11px', color: '#b45309', opacity: 0.9 }}>
-                    Your verification is currently pending. Please schedule an online IPV session using the calendar tool below.
-                  </p>
-                </div>
+              <div className="mb-3 py-1.5 px-2.5 rounded border border-warning d-inline-flex align-items-center gap-2" style={{ backgroundColor: '#fffbeb', color: '#b45309', fontSize: '10px' }}>
+                <i className="bi bi-exclamation-triangle-fill" style={{ fontSize: '14px', color: '#d97706', flexShrink: 0 }} />
+                <span>
+                  <strong>In-Person Verification Pending:</strong> Please schedule an online IPV session using the calendar tool below.
+                </span>
               </div>
             )}
 

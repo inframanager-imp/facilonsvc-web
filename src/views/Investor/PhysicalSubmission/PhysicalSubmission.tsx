@@ -146,9 +146,6 @@ export const PhysicalSubmission: React.FC = () => {
           {renderProgressBar()}
 
           <div className="investor-profile__card document-upload">
-            <div className="document-list__header-row">
-              <h2>Physical Document Submission</h2>
-            </div>
             
             <p className="document-list__subtitle">
               Please download the physical document checklist, gather the required documents, and record your submission details below.
@@ -180,7 +177,7 @@ export const PhysicalSubmission: React.FC = () => {
               </button>
             </div>
 
-            <h3 className="mb-3" style={{ fontSize: '12px', fontWeight: 700, color: 'var(--facilon-slate)', borderBottom: '1.5px solid var(--facilon-grey-200)', paddingBottom: '6px' }}>Submission Method & Courier Details</h3>
+            <h3 className="mb-3 no-before" style={{ fontSize: '12px', fontWeight: 700, color: 'var(--facilon-slate)', borderBottom: '1.5px solid var(--facilon-grey-200)', paddingBottom: '6px' }}>Submission Method & Courier Details</h3>
             
             <form onSubmit={handleSubmit}>
               <div className="mb-4">

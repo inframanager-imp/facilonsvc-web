@@ -323,7 +323,7 @@ const App: React.FC = () => {
             path="/investor/verification"
             element={
               <ProtectedRoute>
-                <MainLayout title="In-Person Verification" subtitle="Complete your in-person verification process">
+                <MainLayout title="" subtitle="">
                   <InPersonVerification />
                 </MainLayout>
               </ProtectedRoute>
