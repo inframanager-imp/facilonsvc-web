@@ -102,17 +102,22 @@ export const FinalSubmissionForm: React.FC<FinalSubmissionFormProps> = ({
 
   return (
     <form className="investor-profile__card" onSubmit={handleSubmit}>
-      {/* <h3>Final Submit</h3> */}
+      <div className="form-group form-group--full mb-3">
+        <h3>Final Submit</h3>
+      </div>
 
       {alreadySubmitted ? (
         <>
-          <div className="alert alert-success" style={{ margin: '1rem 0', padding: '1rem', backgroundColor: '#d4edda', border: '1px solid #c3e6cb', borderRadius: '5px', color: '#155724' }}>
-            <strong>✓ Profile Already Submitted</strong>
-            <p style={{ marginBottom: 0, marginTop: '0.5rem' }}>Your profile has been successfully submitted. Any modifications will require a Request for Change.</p>
+          <div className="submission-submitted-alert">
+            <i className="bi bi-check-circle-fill alert-icon" />
+            <div className="alert-content">
+              <strong>Profile Already Submitted</strong>
+              <p>Your profile has been successfully submitted. Any modifications will require a Request for Change.</p>
+            </div>
           </div>
 
           <div className="investor-profile__grid investor-profile__final-submit">
-            <div className="form-group form-group--checkbox form-group--full">
+            <div className={`form-group form-group--checkbox form-group--full ${formData.agreementComplete ? 'checked' : ''}`}>
               <label>
                 <input
                   type="checkbox"
@@ -122,7 +127,7 @@ export const FinalSubmissionForm: React.FC<FinalSubmissionFormProps> = ({
                 I confirm that all information provided is true, complete and up to date.
               </label>
             </div>
-            <div className="form-group form-group--checkbox form-group--full">
+            <div className={`form-group form-group--checkbox form-group--full ${formData.agreementLegal ? 'checked' : ''}`}>
               <label>
                 <input
                   type="checkbox"
@@ -132,7 +137,7 @@ export const FinalSubmissionForm: React.FC<FinalSubmissionFormProps> = ({
                 I am acting on my own behalf and have legal capacity to contract.
               </label>
             </div>
-            <div className="form-group form-group--checkbox form-group--full">
+            <div className={`form-group form-group--checkbox form-group--full ${formData.agreementModification ? 'checked' : ''}`}>
               <label>
                 <input
                   type="checkbox"
@@ -147,23 +152,35 @@ export const FinalSubmissionForm: React.FC<FinalSubmissionFormProps> = ({
           <div className="investor-profile__buttons">
             <button
               type="button"
-              className="btn-preview"
+              className="btn-outline-primary"
               onClick={handlePrintPreview}
             >
+              <i className="bi bi-file-earmark-pdf me-2" />
               View PDF
             </button>
           </div>
         </>
       ) : (
         <>
-          <p className="investor-profile__hint">
-            <strong>Step 1:</strong> Click "Generate PDF Preview" to review all your profile information in a new window.<br />
-            <strong>Step 2:</strong> After reviewing, check the boxes below and click "Submit Profile".<br />
-            You can also submit directly from the preview window.
-          </p>
+          <div className="submission-steps-container form-group--full">
+            <div className="submission-step-card">
+              <div className="step-badge">1</div>
+              <div className="step-content">
+                <h4>Generate PDF Preview</h4>
+                <p>Click "Generate PDF Preview" below to open and carefully review all your profile information in a new window.</p>
+              </div>
+            </div>
+            <div className="submission-step-card">
+              <div className="step-badge">2</div>
+              <div className="step-content">
+                <h4>Review & Submit</h4>
+                <p>After reviewing, check the consent agreements below and click "Submit Profile" to finalize your onboarding journey.</p>
+              </div>
+            </div>
+          </div>
 
-          <div className="investor-profile__grid investor-profile__final-submit">
-            <div className="form-group form-group--checkbox form-group--full">
+          <div className="investor-profile__grid investor-profile__final-submit mt-3">
+            <div className={`form-group form-group--checkbox form-group--full ${formData.agreementComplete ? 'checked' : ''}`}>
               <label>
                 <input
                   type="checkbox"
@@ -173,7 +190,7 @@ export const FinalSubmissionForm: React.FC<FinalSubmissionFormProps> = ({
                 I confirm that all information provided is true, complete and up to date.
               </label>
             </div>
-            <div className="form-group form-group--checkbox form-group--full">
+            <div className={`form-group form-group--checkbox form-group--full ${formData.agreementLegal ? 'checked' : ''}`}>
               <label>
                 <input
                   type="checkbox"
@@ -183,7 +200,7 @@ export const FinalSubmissionForm: React.FC<FinalSubmissionFormProps> = ({
                 I am acting on my own behalf and have legal capacity to contract.
               </label>
             </div>
-            <div className="form-group form-group--checkbox form-group--full">
+            <div className={`form-group form-group--checkbox form-group--full ${formData.agreementModification ? 'checked' : ''}`}>
               <label>
                 <input
                   type="checkbox"
@@ -195,13 +212,14 @@ export const FinalSubmissionForm: React.FC<FinalSubmissionFormProps> = ({
             </div>
           </div>
 
-          <div className="investor-profile__buttons mt-2">
+          <div className="investor-profile__buttons">
             <button
               type="button"
-              className="btn-outline-primary py-1 px-3 me-2"
+              className="btn-outline-primary"
               onClick={handlePrintPreview}
               disabled={saving}
             >
+              <i className="bi bi-file-earmark-pdf me-2" />
               Generate PDF Preview
             </button>
             <button
@@ -209,7 +227,8 @@ export const FinalSubmissionForm: React.FC<FinalSubmissionFormProps> = ({
               className="btn-save"
               disabled={saving || !canSubmit || !formData.agreementComplete || !formData.agreementLegal || !formData.agreementModification}
             >
-              {saving ? 'Submitting...' : 'Submit Profile'}
+              <i className="bi bi-send me-2" />
+              {saving ? 'Submitting...' : 'Review and Submit Profile'}
             </button>
             {!canSubmit && delegationPerms.isProxyMode && (
               <small className="text-warning d-block mt-2">

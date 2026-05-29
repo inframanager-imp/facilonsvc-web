@@ -481,13 +481,215 @@
   }
 
   .btn-outline-primary {
-    border-radius: 5px;
+    border-radius: var(--facilon-radius-md) !important;
     font-size: 10px;
     height: 28px;
-    padding: 0 1rem;
+    padding: 0 1.25rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    border: 1.5px solid var(--facilon-primary) !important;
+    background-color: transparent !important;
+    color: var(--facilon-primary) !important;
+    font-weight: 700 !important;
+    transition: var(--facilon-transition);
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      background-color: rgba(62, 111, 124, 0.08) !important;
+      transform: translateY(-1px);
+      color: var(--facilon-primary-dark) !important;
+      border-color: var(--facilon-primary-dark) !important;
+    }
+
+    &:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  .btn-preview {
+    border-radius: var(--facilon-radius-md) !important;
+    font-size: 10px;
+    height: 28px;
+    padding: 0 1.25rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid var(--facilon-primary) !important;
+    background-color: transparent !important;
+    color: var(--facilon-primary) !important;
+    font-weight: 700 !important;
+    transition: var(--facilon-transition);
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      background-color: rgba(62, 111, 124, 0.08) !important;
+      transform: translateY(-1px);
+      color: var(--facilon-primary-dark) !important;
+      border-color: var(--facilon-primary-dark) !important;
+    }
+
+    &:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  .investor-profile__buttons {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+
+    .btn-save,
+    .btn-outline-primary,
+    .btn-preview {
+      margin-top: 0 !important;
+      height: 38px !important;
+      font-size: 11px !important;
+      padding: 0 1.5rem !important;
+      border-radius: var(--facilon-radius-md) !important;
+    }
+  }
+
+  .submission-steps-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .submission-step-card {
+    display: flex;
+    gap: 1rem;
+    background: #fdfdfd;
+    border: 1.5px dashed var(--facilon-grey-200);
+    border-radius: var(--facilon-radius-md);
+    padding: 1rem;
+    align-items: flex-start;
+    transition: var(--facilon-transition);
+
+    &:hover {
+      border-color: var(--facilon-primary-light);
+      background-color: #f1fcfe;
+    }
+
+    .step-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background-color: var(--facilon-primary);
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .step-content {
+      h4 {
+        margin: 0 0 4px;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--facilon-slate);
+      }
+
+      p {
+        margin: 0;
+        font-size: 10px;
+        color: var(--facilon-text-muted);
+        line-height: 1.4;
+      }
+    }
+  }
+
+  .submission-submitted-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    background-color: #ecfdf5;
+    border: 1.5px solid #a7f3d0;
+    border-radius: var(--facilon-radius-md);
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    color: #065f46;
+
+    .alert-icon {
+      font-size: 16px;
+      color: #059669;
+      margin-top: 1px;
+    }
+
+    .alert-content {
+      strong {
+        font-size: 12px;
+        font-weight: 700;
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      p {
+        margin: 0;
+        font-size: 10px;
+        color: #047857;
+        line-height: 1.4;
+      }
+    }
+  }
+
+  .form-group--checkbox {
+    background-color: #fafafa;
+    border: 1.5px solid var(--facilon-grey-200);
+    border-radius: var(--facilon-radius-md);
+    padding: 0.75rem 1rem;
+    transition: var(--facilon-transition);
+    cursor: pointer;
+    margin-bottom: 0.5rem;
+
+    &:hover {
+      background-color: #f7f7f7;
+      border-color: #d1d5db;
+    }
+
+    label {
+      display: flex !important;
+      align-items: flex-start !important;
+      gap: 0.75rem !important;
+      color: var(--facilon-text-main) !important;
+      font-size: 11px !important;
+      font-weight: 500 !important;
+      margin: 0 !important;
+      cursor: pointer;
+
+      input[type="checkbox"] {
+        margin: 2px 0 0 0 !important;
+        width: 16px !important;
+        height: 16px !important;
+        flex-shrink: 0;
+        cursor: pointer;
+        accent-color: var(--facilon-primary);
+      }
+    }
+
+    &.checked {
+      background-color: #f1fcfe;
+      border-color: var(--facilon-primary-light);
+    }
   }
 }
 
