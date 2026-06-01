@@ -521,7 +521,7 @@ export const InvestorDashboard: React.FC = () => {
                   <i className="bi bi-journal-text mr-2 text-slate-500"></i> My Request
                 </h2>
                 <button
-                  onClick={() => setShowDsrModal(true)}
+                  onClick={() => navigate('/investor/dsr-center')}
                   className="text-[12px] font-semibold text-[#3e6f7c] hover:underline hover:text-[#1f4851] transition-colors flex items-center bg-transparent border-0 p-0 cursor-pointer"
                 >
                   DSR Center &rarr;
