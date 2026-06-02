@@ -50,6 +50,7 @@ import { JourneyList } from './views/Investor/JourneyList/JourneyList';
 import { MyProfile } from './views/Investor/MyProfile/MyProfile';
 import { MyConsents } from './views/Investor/MyConsents/MyConsents';
 import { DsrCenter } from './views/Investor/DsrCenter/DsrCenter';
+import { DsrCaseDetail } from './views/Investor/DsrCenter/DsrCaseDetail';
 import { DocumentUpload } from './views/Investor/DocumentUpload/DocumentUpload';
 import { OnboardingDocuments } from './views/Investor/OnboardingDocuments/OnboardingDocuments';
 import { PublicDocumentSubmission } from './views/Investor/PublicDocumentSubmission/PublicDocumentSubmission';
@@ -68,6 +69,9 @@ import { InPersonVerification } from './views/Investor/InPersonVerification/InPe
 import { Appointments } from './views/Investor/Appointments/Appointments';
 import { DocumentVerification } from './views/Admin/DocumentVerification/DocumentVerification';
 import { AppointmentManagement } from './views/Admin/AppointmentManagement/AppointmentManagement';
+import { AdminDsrDashboard } from './views/Admin/DsrConsole/AdminDsrDashboard';
+import { AdminDsrList } from './views/Admin/DsrConsole/AdminDsrList';
+import { AdminDsrCaseDetail } from './views/Admin/DsrConsole/AdminDsrCaseDetail';
 import { NextholderManagement } from './views/Investor/NextholderManagement/NextholderManagement';
 import { ServiceAgentDashboard } from './views/ServiceAgent/ServiceAgentDashboard/ServiceAgentDashboard';
 import { SAInvestorList } from './views/ServiceAgent/InvestorList/InvestorList';
@@ -276,6 +280,14 @@ const App: React.FC = () => {
             element={
               <ProtectedRoute>
                 <DsrCenter />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/investor/dsr-center/:caseId"
+            element={
+              <ProtectedRoute>
+                <DsrCaseDetail />
               </ProtectedRoute>
             }
           />
@@ -491,6 +503,30 @@ const App: React.FC = () => {
           />
 
           {/* Admin Routes */}
+          <Route
+            path="/admin/dashboard"
+            element={
+              <ProtectedRoute requiredRoles={['ADMIN', 'PLATFORM_SUPER_ADMIN']}>
+                <AdminDsrDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/dsr"
+            element={
+              <ProtectedRoute requiredRoles={['ADMIN', 'PLATFORM_SUPER_ADMIN']}>
+                <AdminDsrList />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/dsr/:caseId"
+            element={
+              <ProtectedRoute requiredRoles={['ADMIN', 'PLATFORM_SUPER_ADMIN']}>
+                <AdminDsrCaseDetail />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/admin/clients/batch-register"
             element={

@@ -47,6 +47,37 @@
       color: var(--facilon-text-main);
     }
   }
+  .dsr-timeline {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      position: relative;
+      padding: 0 0 0.9rem 1rem;
+      border-left: 2px solid var(--facilon-border-light, #e4e7ec);
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: -6px;
+        top: 4px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--facilon-primary, #175cd3);
+      }
+
+      &:last-child { border-left-color: transparent; }
+    }
+
+    &__head {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+  }
+
   .custom-file-upload {
     margin-top: 5px;
     

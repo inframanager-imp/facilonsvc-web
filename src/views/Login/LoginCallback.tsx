@@ -10,7 +10,7 @@ function getRoleBasedDashboard(roles: string[]): string {
   const isSuperAdmin = roles.some(r => r === 'PLATFORM_SUPER_ADMIN' || r.toUpperCase().includes('SUPER_ADMIN'));
   if (isSuperAdmin) return '/super-admin/dashboard';
   const isAdmin = roles.some(r => r === 'ADMIN' || r.toUpperCase().includes('ADMIN'));
-  if (isAdmin) return '/admin/clients';
+  if (isAdmin) return '/admin/dashboard';
   const isServiceAgent = roles.some(r => r === 'SERVICE_AGENT' || r.toUpperCase() === 'SERVICE_AGENT');
   if (isServiceAgent) return '/service-agent/dashboard';
   return '/investor/dashboard';

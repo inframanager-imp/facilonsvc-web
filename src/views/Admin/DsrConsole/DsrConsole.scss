@@ -1,0 +1,65 @@
+.dsr-console {
+  padding: 0.5rem 0 2rem;
+
+  .dsr-card {
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    background: #fff;
+    border: 1px solid #eceef2;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+    height: 100%;
+
+    &__value {
+      font-size: 1.75rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    &__label {
+      margin-top: 0.35rem;
+      font-size: 0.8rem;
+      color: #667085;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    &--overdue .dsr-card__value { color: #d92d20; }
+    &--verify  .dsr-card__value { color: #b54708; }
+    &--open    .dsr-card__value { color: #175cd3; }
+    &--closed  .dsr-card__value { color: #067647; }
+  }
+
+  .dsr-timeline {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      position: relative;
+      padding: 0 0 0.9rem 1rem;
+      border-left: 2px solid #e4e7ec;
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: -6px;
+        top: 4px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #98a2b3;
+      }
+
+      &.visible::before { background: #175cd3; }
+      &.internal::before { background: #d0d5dd; }
+
+      &:last-child { border-left-color: transparent; }
+    }
+
+    &__head {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+  }
+}

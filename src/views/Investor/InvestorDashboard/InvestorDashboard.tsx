@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Header from '../../../components/Header/Header';
-import { investorService, InvestorDashboardDto, JourneyListItem } from '../../../services/investor.service';
+import { investorService, InvestorDashboardDto, JourneyListItem, DsrCaseResponseDto } from '../../../services/investor.service';
 import { delegationService } from '../../../services/delegation.service';
 import { DelegationDto } from '../../../models/DelegationDto';
 import { LoadingSpinner } from '../../../components/LoadingSpinner/LoadingSpinner';
@@ -14,6 +14,7 @@ export const InvestorDashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [dashboardData, setDashboardData] = useState<InvestorDashboardDto | null>(null);
   const [journeys, setJourneys] = useState<JourneyListItem[]>([]);
+  const [dsrCases, setDsrCases] = useState<DsrCaseResponseDto[]>([]);
   const [pendingDelegations, setPendingDelegations] = useState<DelegationDto[]>([]);
   const [processingDelegation, setProcessingDelegation] = useState<number | null>(null);
   const [showAcceptModal, setShowAcceptModal] = useState(false);
@@ -32,6 +33,7 @@ export const InvestorDashboard: React.FC = () => {
     fetchDashboardData();
     fetchPendingDelegations();
     fetchJourneys();
+    fetchDsrCases();
   }, []);
 
   const fetchJourneys = async () => {
@@ -40,6 +42,35 @@ export const InvestorDashboard: React.FC = () => {
       setJourneys(data || []);
     } catch (error) {
       console.error('[InvestorDashboard] Error fetching journeys:', error);
+    }
+  };
+
+  const fetchDsrCases = async () => {
+    try {
+      const data = await investorService.getDsrCases();
+      setDsrCases(data || []);
+    } catch (error) {
+      console.error('[InvestorDashboard] Error fetching DSR cases:', error);
+    }
+  };
+
+  const prettyRequestType = (t: string) =>
+    (t || '').replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+
+  const dsrStatusColor = (status?: string): string => {
+    switch (status) {
+      case 'Response Available':
+        return 'bg-[#ecfdf5] text-[#10b981]'; // green
+      case 'Verification Required':
+      case 'More Information Required':
+      case 'Partially Completed':
+        return 'bg-[#fff8f0] text-[#f59e0b]'; // amber
+      case 'Unable to Fulfil':
+        return 'bg-[#fef2f2] text-[#ef4444]'; // red
+      case 'Closed':
+        return 'bg-[#f1f5f9] text-[#64748b]'; // slate
+      default:
+        return 'bg-[#eff6ff] text-[#3b82f6]'; // blue (Submitted/Received/Under Review/…)
     }
   };
 
@@ -134,12 +165,6 @@ export const InvestorDashboard: React.FC = () => {
     { permission: 'Document Upload', assignee: 'Tax Consultant', accessLevel: 'Write-Only', status: 'INACTIVE', statusColor: 'bg-slate-100 text-slate-500 border border-slate-200' },
   ];
 
-  const requests = [
-    { type: 'Address Change', status: 'IN REVIEW', statusColor: 'bg-[#eff6ff] text-[#3b82f6]' },
-    { type: 'Dividend Reinvestment', status: 'APPROVED', statusColor: 'bg-[#ecfdf5] text-[#10b981]' },
-    { type: 'Tax Document Request', status: 'PENDING', statusColor: 'bg-[#fff8f0] text-[#f59e0b]' },
-    { type: 'Account Closure', status: 'CANCELLED', statusColor: 'bg-[#f1f5f9] text-[#64748b]' },
-  ];
 
   const dsrRequestsList = [
     { id: 'REQ-8302', type: 'Right to Access', status: 'COMPLETED', statusColor: 'bg-[#ecfdf5] text-[#10b981] border border-[#10b981]/20', response: '2 files available' },
@@ -536,12 +561,24 @@ export const InvestorDashboard: React.FC = () => {
                   </div>
 
                   <div className="flex flex-col">
-                    {requests.map((item, idx) => (
-                      <div key={idx} className="grid grid-cols-12 items-center p-1 border-b border-[#e2e8f0] last:border-0 hover:bg-slate-50/50 transition-colors">
-                        <div className="col-span-8 text-[11px] font-bold text-slate-800 pr-1">{item.type}</div>
+                    {dsrCases.length === 0 && (
+                      <div className="text-[11px] text-slate-400 py-3 text-center">
+                        No DSR requests yet.
+                      </div>
+                    )}
+                    {dsrCases.slice(0, 4).map((item) => (
+                      <div
+                        key={item.caseId}
+                        onClick={() => navigate(`/investor/dsr-center/${item.caseId}`)}
+                        className="grid grid-cols-12 items-center p-1 border-b border-[#e2e8f0] last:border-0 hover:bg-slate-50/50 transition-colors cursor-pointer"
+                      >
+                        <div className="col-span-8 text-[11px] font-bold text-slate-800 pr-1">
+                          {prettyRequestType(item.requestType)}
+                          <span className="block text-[9px] font-normal text-slate-400">{item.caseId}</span>
+                        </div>
                         <div className="col-span-4 text-right flex justify-end">
-                          <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${item.statusColor}`}>
-                            {item.status}
+                          <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${dsrStatusColor(item.investorStatus)}`}>
+                            {item.investorStatus}
                           </span>
                         </div>
                       </div>
@@ -550,7 +587,10 @@ export const InvestorDashboard: React.FC = () => {
                 </div>
 
                 <div className="mt-3">
-                  <button className="w-full py-1.5 text-[11px] font-semibold text-[#1f4851] border border-[#1f4851] rounded hover:bg-[#1f4851]/5 transition-colors">
+                  <button
+                    onClick={() => navigate('/investor/dsr-center')}
+                    className="w-full py-1.5 text-[11px] font-semibold text-[#1f4851] border border-[#1f4851] rounded hover:bg-[#1f4851]/5 transition-colors"
+                  >
                     View All Requests
                   </button>
                 </div>

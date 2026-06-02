@@ -242,6 +242,7 @@ export interface DelegationInfo {
 export interface DsrCaseCreateDto {
   requestType: string;
   jurisdiction: string;
+  dataArea?: string;
   requestDescription: string;
   requesterName: string;
   requesterEmail: string;
@@ -254,17 +255,33 @@ export interface DsrCaseResponseDto {
   investorUniqueCode: string;
   requestType: string;
   jurisdiction: string;
+  dataArea?: string;
   requestDescription: string;
   requesterName: string;
   requesterEmail: string;
   requesterPhone?: string;
   requesterRole?: string;
-  status: string;
+  /** Plain-language, investor-facing status (mapped from internal status). */
+  investorStatus: string;
+  actionRequired: boolean;
   supportingFilePath?: string;
   submittedAt?: string;
   slaDeadline?: string;
   resolvedAt?: string;
   resolutionNotes?: string;
+  finalOutcome?: string;
+}
+
+export interface DsrCaseEventDto {
+  eventCode: string;
+  title: string;
+  note?: string;
+  createdAt?: string;
+}
+
+export interface DsrCaseDetailDto {
+  request: DsrCaseResponseDto;
+  timeline: DsrCaseEventDto[];
 }
 
 export interface AccountSummary {
@@ -565,6 +582,7 @@ class InvestorService {
     const formData = new FormData();
     formData.append('requestType', data.requestType);
     formData.append('jurisdiction', data.jurisdiction);
+    if (data.dataArea) formData.append('dataArea', data.dataArea);
     formData.append('requestDescription', data.requestDescription);
     formData.append('requesterName', data.requesterName);
     formData.append('requesterEmail', data.requesterEmail);
@@ -583,8 +601,8 @@ class InvestorService {
     return response.data;
   }
 
-  async getDsrCase(caseId: string): Promise<DsrCaseResponseDto> {
-    const response = await this.client.get<DsrCaseResponseDto>(`${this.baseUrl}/me/dsr/${caseId}`);
+  async getDsrCase(caseId: string): Promise<DsrCaseDetailDto> {
+    const response = await this.client.get<DsrCaseDetailDto>(`${this.baseUrl}/me/dsr/${caseId}`);
     return response.data;
   }
 
