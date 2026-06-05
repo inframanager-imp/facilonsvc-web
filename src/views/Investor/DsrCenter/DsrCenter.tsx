@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../../components/Header/Header';
 import Footer from '../../../components/Footer/Footer';
-import { investorService, DsrCaseCreateDto, DsrCaseResponseDto } from '../../../services/investor.service';
-import { LoadingSpinner } from '../../../components/LoadingSpinner/LoadingSpinner';
+import { investorService, DsrCaseCreateDto } from '../../../services/investor.service';
 import { PremiumSelect } from '../../../components/PremiumSelect/PremiumSelect';
 import { useSAProxyNavigation } from '../../../hooks/useSAProxyNavigation';
 import '../InvestorProfile/InvestorProfile.scss';
@@ -48,9 +47,7 @@ const DECLARATION_TEXT =
 export const DsrCenter: React.FC = () => {
   const { isProxyMode } = useSAProxyNavigation();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [cases, setCases] = useState<DsrCaseResponseDto[]>([]);
   const [supportingFile, setSupportingFile] = useState<File | undefined>(undefined);
   const [dataAreas, setDataAreas] = useState<string[]>([]);
   const [declaration, setDeclaration] = useState(false);
@@ -71,35 +68,24 @@ export const DsrCenter: React.FC = () => {
   };
 
   useEffect(() => {
-    loadCases();
     prefillFromProfile();
   }, []);
-
-  const loadCases = async () => {
-    try {
-      const data = await investorService.getDsrCases();
-      setCases(data);
-    } catch (error) {
-      console.error('[DsrCenter] Failed loading DSR cases:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const prefillFromProfile = async () => {
     try {
       const data = await investorService.getDashboard();
       const inv = data?.investor;
-      if (!inv) return;
-      const fullName = [inv.firstName, inv.middleName, inv.lastName]
-        .filter((p) => p && p.trim())
-        .join(' ') || inv.name || '';
-      setForm((prev) => ({
-        ...prev,
-        requesterName: prev.requesterName || fullName,
-        requesterEmail: prev.requesterEmail || inv.email || '',
-        requesterPhone: prev.requesterPhone || inv.mobileNumber || ''
-      }));
+      if (inv) {
+        const fullName = [inv.firstName, inv.middleName, inv.lastName]
+          .filter((p) => p && p.trim())
+          .join(' ') || inv.name || '';
+        setForm((prev) => ({
+          ...prev,
+          requesterName: prev.requesterName || fullName,
+          requesterEmail: prev.requesterEmail || inv.email || '',
+          requesterPhone: prev.requesterPhone || inv.mobileNumber || ''
+        }));
+      }
     } catch (error) {
       console.error('[DsrCenter] Failed prefilling requester details from profile:', error);
     }
@@ -123,12 +109,8 @@ export const DsrCenter: React.FC = () => {
     try {
       setSaving(true);
       await investorService.submitDsrCase({ ...form, dataArea: dataAreas.join(',') }, supportingFile);
-      setForm((prev) => ({ ...prev, requestDescription: '' }));
-      setSupportingFile(undefined);
-      setDataAreas([]);
-      setDeclaration(false);
-      await loadCases();
       alert('DSR request submitted successfully.');
+      navigate('/investor/dsr-center/requests');
     } catch (error) {
       console.error('[DsrCenter] Failed submitting DSR case:', error);
       alert('Failed to submit DSR request. Please try again.');
@@ -137,19 +119,22 @@ export const DsrCenter: React.FC = () => {
     }
   };
 
-  if (loading) return <LoadingSpinner />;
-
   return (
     <div className="facilon-dashboard-wrapper">
       {!isProxyMode && <Header />}
       <main className="container-fluid dashboard-container-main">
         <div className="dsr-center">
-          <button className="btn btn-link px-0 mb-2" onClick={() => navigate('/investor/dashboard')}>
-            ← Back to Dashboard
-          </button>
+          <div className="d-flex justify-content-between align-items-center mb-2">
+            <button className="btn btn-link px-0" onClick={() => navigate('/investor/dashboard')}>
+              ← Back to Dashboard
+            </button>
+            <button className="btn btn-link px-0" onClick={() => navigate('/investor/dsr-center/requests')}>
+              View All Requests →
+            </button>
+          </div>
           <div className="dsr-center__header mb-3">
-            <h1 className="dashboard-title-modern">Data Subject Rights Center</h1>
-            <p className="dashboard-subtitle text-muted">Submit and track your data privacy and rights requests here.</p>
+            <h1 className="dashboard-title-modern">New DSR Request</h1>
+            <p className="dashboard-subtitle text-muted">Submit a data privacy or rights request here.</p>
           </div>
 
           <div className="card p-3 mb-3">
@@ -280,50 +265,6 @@ export const DsrCenter: React.FC = () => {
                 </div>
               </div>
             </form>
-          </div>
-
-          <div className="card p-3 mb-3">
-            <h5 className="mb-3">My DSR Requests</h5>
-            <div className="table-responsive">
-              <table className="table table-sm">
-                <thead>
-                  <tr>
-                    <th>Case ID</th>
-                    <th>Right</th>
-                    <th>Jurisdiction</th>
-                    <th>Status</th>
-                    <th>Submitted</th>
-                    <th>SLA Deadline</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {cases.length === 0 && (
-                    <tr>
-                      <td colSpan={6} className="text-muted">No DSR requests yet.</td>
-                    </tr>
-                  )}
-                  {cases.map((item) => (
-                    <tr
-                      key={item.caseId}
-                      style={{ cursor: 'pointer' }}
-                      onClick={() => navigate(`/investor/dsr-center/${item.caseId}`)}
-                    >
-                      <td><span className="text-primary">{item.caseId}</span></td>
-                      <td>{item.requestType}</td>
-                      <td>{item.jurisdiction}</td>
-                      <td>
-                        {item.investorStatus}
-                        {item.actionRequired && (
-                          <span className="badge bg-warning text-dark ms-2">Action required</span>
-                        )}
-                      </td>
-                      <td>{item.submittedAt ? item.submittedAt.split('T')[0] : '-'}</td>
-                      <td>{item.slaDeadline ? item.slaDeadline.split('T')[0] : '-'}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
           </div>
         </div>
       </main>

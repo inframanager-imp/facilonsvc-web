@@ -9,13 +9,26 @@ import { LoadingSpinner } from '../../../components/LoadingSpinner/LoadingSpinne
 import { AcceptDelegationModal, ConsentCustomization } from '../../../components/AcceptDelegationModal/AcceptDelegationModal';
 // import './InvestorDashboard.scss';
 
+/**
+ * Module-level cache so returning to the dashboard renders instantly from the last
+ * load (stale-while-revalidate) instead of showing a spinner and cold-fetching again.
+ * Lives for the app session; cleared on a full page reload / logout.
+ */
+let dashboardCache: {
+  dashboardData: InvestorDashboardDto | null;
+  journeys: JourneyListItem[];
+  dsrCases: DsrCaseResponseDto[];
+  pendingDelegations: DelegationDto[];
+} | null = null;
+
 export const InvestorDashboard: React.FC = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
-  const [dashboardData, setDashboardData] = useState<InvestorDashboardDto | null>(null);
-  const [journeys, setJourneys] = useState<JourneyListItem[]>([]);
-  const [dsrCases, setDsrCases] = useState<DsrCaseResponseDto[]>([]);
-  const [pendingDelegations, setPendingDelegations] = useState<DelegationDto[]>([]);
+  // Show the spinner only on the very first load; on return, render cached data immediately.
+  const [loading, setLoading] = useState(!dashboardCache);
+  const [dashboardData, setDashboardData] = useState<InvestorDashboardDto | null>(dashboardCache?.dashboardData ?? null);
+  const [journeys, setJourneys] = useState<JourneyListItem[]>(dashboardCache?.journeys ?? []);
+  const [dsrCases, setDsrCases] = useState<DsrCaseResponseDto[]>(dashboardCache?.dsrCases ?? []);
+  const [pendingDelegations, setPendingDelegations] = useState<DelegationDto[]>(dashboardCache?.pendingDelegations ?? []);
   const [processingDelegation, setProcessingDelegation] = useState<number | null>(null);
   const [showAcceptModal, setShowAcceptModal] = useState(false);
   const [selectedDelegation, setSelectedDelegation] = useState<DelegationDto | null>(null);
@@ -35,6 +48,11 @@ export const InvestorDashboard: React.FC = () => {
     fetchJourneys();
     fetchDsrCases();
   }, []);
+
+  // Keep the session cache in sync so the next return paints instantly.
+  useEffect(() => {
+    dashboardCache = { dashboardData, journeys, dsrCases, pendingDelegations };
+  }, [dashboardData, journeys, dsrCases, pendingDelegations]);
 
   const fetchJourneys = async () => {
     try {
@@ -543,14 +561,8 @@ export const InvestorDashboard: React.FC = () => {
             <div className="bg-white rounded-lg shadow-sm border border-[#e2e8f0] flex flex-col">
               <div className="p-2 flex justify-between items-center border-b border-[#e2e8f0]">
                 <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
-                  <i className="bi bi-journal-text mr-2 text-slate-500"></i> My Request
+                  <i className="bi bi-journal-text mr-2 text-slate-500"></i> Data Subject Right Request Center
                 </h2>
-                <button
-                  onClick={() => navigate('/investor/dsr-center')}
-                  className="text-[12px] font-semibold text-[#3e6f7c] hover:underline hover:text-[#1f4851] transition-colors flex items-center bg-transparent border-0 p-0 cursor-pointer"
-                >
-                  DSR Center &rarr;
-                </button>
               </div>
 
               <div className="px-4 pt-2 pb-2 flex flex-col justify-start">
@@ -569,7 +581,7 @@ export const InvestorDashboard: React.FC = () => {
                     {dsrCases.slice(0, 4).map((item) => (
                       <div
                         key={item.caseId}
-                        onClick={() => navigate(`/investor/dsr-center/${item.caseId}`)}
+                        onClick={() => navigate(`/investor/dsr-center/requests?case=${item.caseId}`)}
                         className="grid grid-cols-12 items-center p-1 border-b border-[#e2e8f0] last:border-0 hover:bg-slate-50/50 transition-colors cursor-pointer"
                       >
                         <div className="col-span-8 text-[11px] font-bold text-slate-800 pr-1">
@@ -586,12 +598,18 @@ export const InvestorDashboard: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="mt-3">
+                <div className="mt-3 flex gap-2">
                   <button
-                    onClick={() => navigate('/investor/dsr-center')}
-                    className="w-full py-1.5 text-[11px] font-semibold text-[#1f4851] border border-[#1f4851] rounded hover:bg-[#1f4851]/5 transition-colors"
+                    onClick={() => navigate('/investor/dsr-center/requests')}
+                    className="flex-1 py-1.5 text-[11px] font-semibold text-[#1f4851] border border-[#1f4851] rounded hover:bg-[#1f4851]/5 transition-colors"
                   >
                     View All Requests
+                  </button>
+                  <button
+                    onClick={() => navigate('/investor/dsr-center')}
+                    className="flex-1 py-1.5 text-[11px] font-semibold text-white bg-[#1f4851] border border-[#1f4851] rounded hover:bg-[#163a42] transition-colors"
+                  >
+                    New Request &rarr;
                   </button>
                 </div>
               </div>

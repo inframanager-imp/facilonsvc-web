@@ -15,16 +15,25 @@ import { SowAgreementModal } from './SowAgreementModal';
  *    (re-blocks the journey).
  *  - Marketing / WhatsApp / Privacy / Platform Terms: Activate / Revoke toggles.
  */
+/**
+ * Module-level cache so returning to Consents renders instantly from the last load
+ * (stale-while-revalidate) instead of a spinner + cold fetch. Lives for the app session.
+ */
+let consentsCache: ConsentItem[] | null = null;
+
 export const MyConsents: React.FC = () => {
-  const [loading, setLoading] = useState(true);
-  const [items, setItems] = useState<ConsentItem[]>([]);
+  // Spinner only on the very first load; on return, show cached items immediately.
+  const [loading, setLoading] = useState(!consentsCache);
+  const [items, setItems] = useState<ConsentItem[]>(consentsCache ?? []);
   const [busyKey, setBusyKey] = useState<string | null>(null);
   const [showSowModal, setShowSowModal] = useState(false);
 
   const load = useCallback(async () => {
     try {
       const data = await investorService.getDashboard();
-      setItems(data?.consentCenter || []);
+      const list = data?.consentCenter || [];
+      setItems(list);
+      consentsCache = list;
     } catch (e) {
       console.error('[MyConsents] load failed', e);
       toast.error('Failed to load consents');

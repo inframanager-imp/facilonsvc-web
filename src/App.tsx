@@ -50,6 +50,7 @@ import { JourneyList } from './views/Investor/JourneyList/JourneyList';
 import { MyProfile } from './views/Investor/MyProfile/MyProfile';
 import { MyConsents } from './views/Investor/MyConsents/MyConsents';
 import { DsrCenter } from './views/Investor/DsrCenter/DsrCenter';
+import { DsrRequests } from './views/Investor/DsrCenter/DsrRequests';
 import { DsrCaseDetail } from './views/Investor/DsrCenter/DsrCaseDetail';
 import { DocumentUpload } from './views/Investor/DocumentUpload/DocumentUpload';
 import { OnboardingDocuments } from './views/Investor/OnboardingDocuments/OnboardingDocuments';
@@ -280,6 +281,14 @@ const App: React.FC = () => {
             element={
               <ProtectedRoute>
                 <DsrCenter />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/investor/dsr-center/requests"
+            element={
+              <ProtectedRoute>
+                <DsrRequests />
               </ProtectedRoute>
             }
           />
