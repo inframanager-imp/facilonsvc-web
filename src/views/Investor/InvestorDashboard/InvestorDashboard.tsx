@@ -206,459 +206,459 @@ export const InvestorDashboard: React.FC = () => {
       <main className="container-fluid px-0 pt-0 pb-0 dashboard-container-main">
         {!showPermissionsModal && !showConsentModal && !showDsrModal && (
           <>
-        {/* Welcome Banner */}
-        <div className="bg-[#466a74] text-white rounded shadow-sm mb-3 px-4 py-3 flex flex-col justify-between">
-          <div className="flex justify-between items-start">
-            <div className="flex flex-col justify-between items-start mb-0">
-              <h1 className="text-[16px] font-bold text-white flex items-center tracking-tight mb-0">
-                Welcome {dashboardData?.investor?.firstName || 'Pankaj'} {dashboardData?.investor?.lastName || ''}
-                <i className="bi bi-pencil-square ml-2 text-[12px] opacity-70 cursor-pointer hover:opacity-100"></i>
-              </h1>
+            {/* Welcome Banner */}
+            <div className="bg-gradient-to-r from-[#2c5e6a] to-[#355f69] text-white rounded shadow-sm mb-3 px-4 py-3 flex flex-col justify-between">
+              <div className="flex justify-between items-start">
+                <div className="flex flex-col justify-between items-start mb-0">
+                  <h1 className="text-[16px] font-bold text-white flex items-center tracking-tight mb-0">
+                    Welcome {dashboardData?.investor?.firstName || 'Pankaj'} {dashboardData?.investor?.lastName || ''}
+                    <i className="bi bi-pencil-square ml-2 text-[12px] opacity-70 cursor-pointer hover:opacity-100"></i>
+                  </h1>
 
-              <div className="flex flex-wrap items-center gap-2 text-[12px] opacity-90 mt-1">
-                <div className="flex items-center gap-1.5">
-                  <span className="opacity-70">Email:</span>
-                  <span className="font-semibold">{dashboardData?.investor?.email || 'investor@example.com'}</span>
-                </div>
-                |
-                <div className="flex items-center gap-1.5">
-                  <span className="opacity-70">Investor ID:</span>
-                  <span className="font-semibold">{dashboardData?.investor?.uniqueCode || '202604096545'}</span>
-                </div>
-                |
-                <div className="flex items-center gap-1.5">
-                  <span className="opacity-70">Country of Residence:</span>
-                  <span className="font-semibold">{dashboardData?.investor?.countryOfResidence || 'United States'}</span>
-                </div>
-                |
-                <div className="flex items-center gap-1.5">
-                  <span className="opacity-70">Nationality:</span>
-                  <span className="font-semibold">{dashboardData?.investor?.nationality || 'American'}</span>
-                </div>
-                |
-                <div className="flex items-center gap-1.5">
-                  <span className="opacity-70">Mobile:</span>
-                  <span className="font-semibold">{dashboardData?.investor?.mobileNumber || '+1 (555) 123-4567'}</span>
-                </div>
-              </div>
-            </div>
-
-
-            <div>
-              <div className="bg-white/10 border border-white/25 rounded px-2.5 py-1 flex items-center text-[11px] cursor-pointer hover:bg-white/20 transition-colors">
-                <span>{dashboardData?.investor?.firstName || 'Pankaj'} (Primary)</span>
-                <i className="bi bi-chevron-down ml-2 text-[9px]"></i>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        {/* TOP ROW: 3 Column Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-3 items-start">
-
-          {/* Column 1: My Pending Action */}
-          <div className="bg-white rounded-lg shadow-sm border border-[#e2e8f0] flex flex-col">
-            <div className="p-2 flex justify-between items-center border-b border-[#e2e8f0]">
-              <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
-                <i className="bi bi-list-task mr-2 text-slate-500"></i> My Pending Action
-              </h2>
-              <span className="bg-[#e0ecf0] text-[#1f4851] text-[9px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider">
-                3 PENDING
-              </span>
-            </div>
-
-            <div className="px-4 pt-2 pb-2 flex flex-col justify-start">
-              <div>
-                <div className="grid grid-cols-12 text-[8px] font-bold text-slate-400 uppercase tracking-wider pb-2 border-b border-[#e2e8f0] mb-1">
-                  <div className="col-span-6">PENDING ACTIVITY</div>
-                  <div className="col-span-3">CENTRA</div>
-                  <div className="col-span-2">STATUS</div>
-                  <div className="col-span-1 text-right">ACTION</div>
-                </div>
-
-                <div className="flex flex-col">
-                  {pendingActions.map((item, idx) => (
-                    <div key={idx} className="grid grid-cols-12 items-center p-1 border-b border-[#e2e8f0] last:border-0 hover:bg-slate-50/50 transition-colors">
-                      <div className="col-span-6 text-[11px] font-semibold text-slate-700 pr-1">{item.activity}</div>
-                      <div className="col-span-3 text-[11px] text-slate-500">{item.centra}</div>
-                      <div className="col-span-2 flex items-center">
-                        <span className={`text-[7.5px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${item.statusColor}`}>
-                          {item.status}
-                        </span>
-                      </div>
-                      <div className="col-span-1 text-right flex justify-end">
-                        <button className="text-slate-400 hover:text-slate-600 transition-colors p-1.5 border border-slate-200 rounded bg-slate-50">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                          </svg>
-                        </button>
-                      </div>
+                  <div className="flex flex-wrap items-center gap-2 text-[12px] opacity-90 mt-1">
+                    <div className="flex items-center gap-1.5">
+                      <span className="opacity-70">Email:</span>
+                      <span className="font-semibold">{dashboardData?.investor?.email || 'investor@example.com'}</span>
                     </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="mt-3">
-                <button className="w-full py-1.5 text-[10px] font-semibold text-[#1f4851] border border-[#1f4851] rounded hover:bg-[#1f4851]/5 transition-colors">
-                  View All Pending Actions
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Column 2: My Onboarding Status */}
-          <div className="bg-white rounded-lg shadow-sm border border-[#e2e8f0] flex flex-col">
-            <div className="p-2 flex justify-between items-center border-b border-[#e2e8f0]">
-              <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
-                <svg className="w-4 h-4 mr-2 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                </svg>
-                My Onboarding Status
-              </h2>
-              <button
-                onClick={() => navigate('/investor/journeys')}
-                className="text-[11px] font-semibold text-[#3e6f7c] hover:underline hover:text-[#1f4851] transition-colors flex items-center bg-transparent border-0 p-0 cursor-pointer"
-              >
-                Facilon Status &rarr;
-              </button>
-            </div>
-
-            <div className="px-4 pt-2 pb-2 flex flex-col justify-start">
-              <div>
-                <div className="grid grid-cols-12 text-[8px] font-bold text-slate-400 uppercase tracking-wider pb-2 border-b border-[#e2e8f0] mb-1">
-                  <div className="col-span-4">SERVICE PROVIDER</div>
-                  <div className="col-span-4">PRODUCT</div>
-                  <div className="col-span-3">STATUS</div>
-                  <div className="col-span-1 text-right">ACTION</div>
-                </div>
-
-                <div className="flex flex-col">
-                  {journeys.length === 0 ? (
-                    <div className="py-4 text-center text-[11px] text-slate-400">
-                      No onboarding journeys assigned yet.
+                    |
+                    <div className="flex items-center gap-1.5">
+                      <span className="opacity-70">Investor ID:</span>
+                      <span className="font-semibold">{dashboardData?.investor?.uniqueCode || '202604096545'}</span>
                     </div>
-                  ) : (
-                    journeys.map((item, idx) => {
-                      const status = (item.status || 'IN PROGRESS').toUpperCase();
-                      const completed = status === 'COMPLETED';
-                      const statusColor = completed
-                        ? 'text-[#10b981] bg-[#ecfdf5]'
-                        : status === 'ABANDONED'
-                        ? 'text-[#ef4444] bg-[#fef2f2]'
-                        : status === 'IN REVIEW'
-                        ? 'text-[#f59e0b] bg-[#fff8f0]'
-                        : 'text-[#3b82f6] bg-[#eff6ff]';
-                      const barColor = completed ? 'bg-[#10b981]' : status === 'IN PROGRESS' ? 'bg-[#3b82f6]' : status === 'ABANDONED' ? 'bg-[#ef4444]' : 'bg-[#f59e0b]';
-                      const progress = typeof item.progress === 'number' ? item.progress : (completed ? 100 : status === 'ABANDONED' ? 100 : 0);
-                      const goToJourney = () => navigate(item.actionRoute || '/investor/journeys');
-                      return (
-                        <div key={item.journeyId || idx} className="grid grid-cols-12 items-center p-1 border-b border-[#e2e8f0] last:border-0 hover:bg-slate-50/50 transition-colors">
-                          <div className="col-span-4 pr-1">
-                            <div className="text-[11px] font-bold text-slate-800 leading-tight">{item.serviceProviderName || '-'}</div>
-                            <div className="text-[9px] text-slate-400 mt-0.5">{item.productCode ? `Code: ${item.productCode}` : '-'}</div>
-                          </div>
-                          <div className="col-span-4 text-[11px] text-slate-600 pr-1 leading-tight">{item.product || '-'}</div>
-                          <div className="col-span-3 pr-1 flex flex-col items-start justify-center">
-                            <span className={`text-[7.5px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${statusColor}`}>
-                              {status}
+                    |
+                    <div className="flex items-center gap-1.5">
+                      <span className="opacity-70">Country of Residence:</span>
+                      <span className="font-semibold">{dashboardData?.investor?.countryOfResidence || 'United States'}</span>
+                    </div>
+                    |
+                    <div className="flex items-center gap-1.5">
+                      <span className="opacity-70">Nationality:</span>
+                      <span className="font-semibold">{dashboardData?.investor?.nationality || 'American'}</span>
+                    </div>
+                    |
+                    <div className="flex items-center gap-1.5">
+                      <span className="opacity-70">Mobile:</span>
+                      <span className="font-semibold">{dashboardData?.investor?.mobileNumber || '+1 (555) 123-4567'}</span>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div>
+                  <div className="bg-white/10 border border-white/25 rounded px-2.5 py-1 flex items-center text-[11px] cursor-pointer hover:bg-white/20 transition-colors">
+                    <span>{dashboardData?.investor?.firstName || 'Pankaj'} (Primary)</span>
+                    <i className="bi bi-chevron-down ml-2 text-[9px]"></i>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            {/* TOP ROW: 3 Column Layout */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-3 items-start">
+
+              {/* Column 1: My Pending Action */}
+              <div className="bg-white rounded-lg shadow-sm border border-[#e2e8f0] flex flex-col">
+                <div className="p-2 flex justify-between items-center border-b border-[#e2e8f0]">
+                  <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
+                    <i className="bi bi-list-task mr-2 text-slate-500"></i> My Pending Action
+                  </h2>
+                  <span className="bg-[#e0ecf0] text-[#1f4851] text-[9px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider">
+                    3 PENDING
+                  </span>
+                </div>
+
+                <div className="px-4 pt-2 pb-2 flex flex-col justify-start">
+                  <div>
+                    <div className="grid grid-cols-12 text-[8px] font-bold text-slate-400 uppercase tracking-wider pb-2 border-b border-[#e2e8f0] mb-1">
+                      <div className="col-span-6">PENDING ACTIVITY</div>
+                      <div className="col-span-3">CENTRA</div>
+                      <div className="col-span-2">STATUS</div>
+                      <div className="col-span-1 text-right">ACTION</div>
+                    </div>
+
+                    <div className="flex flex-col">
+                      {pendingActions.map((item, idx) => (
+                        <div key={idx} className="grid grid-cols-12 items-center p-1 border-b border-[#e2e8f0] last:border-0 hover:bg-slate-50/50 transition-colors">
+                          <div className="col-span-6 text-[11px] font-semibold text-slate-700 pr-1">{item.activity}</div>
+                          <div className="col-span-3 text-[11px] text-slate-500">{item.centra}</div>
+                          <div className="col-span-2 flex items-center">
+                            <span className={`text-[7.5px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${item.statusColor}`}>
+                              {item.status}
                             </span>
-                            <div className="w-12 h-[3px] bg-[#e2e8f0] rounded-full mt-1.5 overflow-hidden">
-                              <div className={`h-full rounded-full ${barColor}`} style={{ width: `${progress}%` }}></div>
-                            </div>
                           </div>
                           <div className="col-span-1 text-right flex justify-end">
-                            <button
-                              onClick={goToJourney}
-                              className="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-700 flex items-center justify-center transition-colors cursor-pointer"
-                            >
-                              {completed ? (
-                                <i className="bi bi-eye text-[12px]"></i>
-                              ) : (
-                                <i className="bi bi-play-fill text-[13px] ml-0.5"></i>
-                              )}
+                            <button className="text-slate-400 hover:text-slate-600 transition-colors p-1.5 border border-slate-200 rounded bg-slate-50">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                              </svg>
                             </button>
                           </div>
                         </div>
-                      );
-                    })
-                  )}
-                </div>
-              </div>
-
-              <div className="mt-3">
-                <button
-                  onClick={() => navigate('/investor/journeys')}
-                  className="w-full py-1.5 text-[10px] font-semibold text-[#1f4851] border border-[#1f4851] rounded hover:bg-[#1f4851]/5 transition-colors flex justify-center items-center cursor-pointer"
-                >
-                  <svg className="w-3.5 h-3.5 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                  </svg>
-                  View Detailed Journey
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Column 3: My Appointment */}
-          <div className="bg-white rounded-lg shadow-sm border border-[#e2e8f0] flex flex-col">
-            <div className="p-2 flex justify-between items-center border-b border-[#e2e8f0]">
-              <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
-                <i className="bi bi-calendar3 mr-2 text-slate-500"></i> My Appointment
-              </h2>
-              <span className="text-[9px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider bg-[#fff8f0] text-[#f59e0b] border border-[#f59e0b]/30">
-                Coming Soon
-              </span>
-            </div>
-
-            <div className="px-4 pt-2 pb-2 flex flex-col justify-start">
-              <div>
-                <div className="grid grid-cols-12 text-[8px] font-bold text-slate-400 uppercase tracking-wider pb-2 border-b border-[#e2e8f0] mb-1">
-                  <div className="col-span-5">PRODUCT</div>
-                  <div className="col-span-3">SERVICE PROVIDER</div>
-                  <div className="col-span-2">DATE</div>
-                  <div className="col-span-2 text-right">STATUS</div>
-                </div>
-
-                <div className="flex flex-col">
-                  {appointments.map((item, idx) => (
-                    <div key={idx} className="grid grid-cols-12 items-center p-1 border-b border-[#e2e8f0] last:border-0 hover:bg-slate-50/50 transition-colors">
-                      <div className="col-span-5 text-[11px] font-bold text-slate-800 pr-1 leading-tight">
-                        {item.product}
-                      </div>
-                      <div className="col-span-3 text-[11px] text-slate-500 pr-1 leading-tight">{item.provider}</div>
-                      <div className="col-span-2 text-[11px] pr-1 leading-tight">
-                        <div className="font-semibold text-slate-700">{item.date.split(',')[0]},</div>
-                        <div className="text-[9px] text-slate-400 mt-0.5">{item.date.split(',')[1]?.trim()}</div>
-                      </div>
-                      <div className="col-span-2 text-right flex justify-end">
-                        <span className={`text-[7px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${item.statusColor}`}>
-                          {item.status}
-                        </span>
-                      </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="mt-3">
-                <button className="w-full py-1.5 text-[10px] font-semibold text-slate-400 border border-slate-200 rounded bg-slate-50 cursor-not-allowed flex justify-center items-center" disabled>
-                  <i className="bi bi-calendar3 mr-1.5"></i> View All Appointments
-                </button>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        {/* BOTTOM ROW: 3 Column Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 items-start">
-
-          {/* Column 1: My Documents */}
-          <div className="bg-white rounded-lg shadow-sm border border-[#e2e8f0] flex flex-col">
-            <div className="p-2 flex justify-between items-center border-b border-[#e2e8f0]">
-              <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
-                <i className="bi bi-cloud-arrow-up mr-2 text-slate-500"></i> My Documents
-              </h2>
-              <a href="#" className="text-[11px] font-semibold text-[#3e6f7c] hover:underline hover:text-[#1f4851] transition-colors flex items-center">
-                Documents Center &rarr;
-              </a>
-            </div>
-
-            <div className="grid grid-cols-4 divide-x divide-[#e2e8f0] border-b border-[#e2e8f0]">
-              <div className="py-2.5 text-center flex flex-col items-center">
-                <span className="text-[16px] font-bold text-slate-800">0</span>
-                <span className="text-[8px] text-slate-500">of 12 Uploaded</span>
-              </div>
-              <div className="py-2.5 text-center flex flex-col items-center">
-                <span className="text-[16px] font-bold text-slate-800">0%</span>
-                <span className="text-[8px] text-slate-500">Complete</span>
-              </div>
-              <div className="py-2.5 text-center flex flex-col items-center">
-                <span className="text-[16px] font-bold text-[#10b981]">0</span>
-                <span className="text-[8px] text-slate-500">Approved</span>
-              </div>
-              <div className="py-2.5 text-center flex flex-col items-center">
-                <span className="text-[16px] font-bold text-[#ef4444]">0</span>
-                <span className="text-[8px] text-slate-500">Rejected</span>
-              </div>
-            </div>
-
-            <div className="px-4 pb-2 pt-3 flex flex-col overflow-hidden">
-              <div>
-                <div className="grid grid-cols-12 text-[8px] font-bold text-slate-400 uppercase tracking-wider pb-2 border-b border-[#e2e8f0] mb-1">
-                  <div className="col-span-5">DOCUMENT TYPE</div>
-                  <div className="col-span-5">DOCUMENT NAME</div>
-                  <div className="col-span-2 text-right">ACTION</div>
-                </div>
-
-                <div className="flex flex-col">
-                  {documents.map((item, idx) => (
-                    <div key={idx} className="grid grid-cols-12 items-center p-1 border-b border-[#e2e8f0] last:border-0 hover:bg-slate-50/50 transition-colors">
-                      <div className="col-span-5 text-[11px] font-semibold text-slate-700 pr-1">{item.type}</div>
-                      <div className="col-span-5 text-[11px] text-slate-400">{item.name}</div>
-                      <div className="col-span-2 text-right flex justify-end">
-                        <button className="text-slate-400 hover:text-[#1f4851] transition-colors p-1 border border-slate-200 rounded bg-slate-50 hover:bg-slate-100">
-                          <i className="bi bi-cloud-arrow-up text-[10px]"></i>
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Column 2: My Permissions & My Request stacked */}
-          <div className="flex flex-col gap-3">
-
-            {/* My Permissions */}
-            <div className="bg-white rounded-lg shadow-sm border border-[#e2e8f0] flex flex-col">
-              <div className="p-2 flex justify-between items-center border-b border-[#e2e8f0]">
-                <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
-                  <i className="bi bi-shield-lock mr-2 text-slate-500"></i> My Permissions
-                </h2>
-                <button
-                  onClick={() => setShowPermissionsModal(true)}
-                  className="text-[12px] font-semibold text-[#3e6f7c] hover:underline hover:text-[#1f4851] transition-colors flex items-center bg-transparent border-0 p-0 cursor-pointer"
-                >
-                  Permissions Center &rarr;
-                </button>
-              </div>
-
-              <div className="px-4 pt-2 pb-2 flex flex-col justify-start">
-                <div>
-                  <div className="grid grid-cols-12 text-[9px] font-bold text-slate-400 uppercase tracking-wider pb-2 border-b border-[#e2e8f0] mb-1">
-                    <div className="col-span-5">PERMISSION</div>
-                    <div className="col-span-4">ASSIGNEE</div>
-                    <div className="col-span-3 text-right">STATUS</div>
                   </div>
 
-                  <div className="flex flex-col">
-                    {permissions.map((item, idx) => (
-                      <div key={idx} className="grid grid-cols-12 items-center p-1 border-b border-[#e2e8f0] last:border-0 hover:bg-slate-50/50 transition-colors">
-                        <div className="col-span-5 text-[11px] font-bold text-slate-800 pr-1">{item.permission}</div>
-                        <div className="col-span-4 text-[11px] text-slate-500">{item.assignee}</div>
-                        <div className="col-span-3 text-right flex justify-end">
-                          <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${item.statusColor}`}>
-                            {item.status}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
+                  <div className="mt-3">
+                    <button className="w-full py-1.5 text-[10px] font-semibold text-[#1f4851] border border-[#1f4851] rounded hover:bg-[#1f4851]/5 transition-colors">
+                      View All Pending Actions
+                    </button>
                   </div>
                 </div>
+              </div>
 
-                <div className="mt-3">
-                  <button className="w-full py-1.5 text-[11px] font-semibold text-[#1f4851] border border-[#1f4851] rounded hover:bg-[#1f4851]/5 transition-colors">
-                    Manage Permissions
+              {/* Column 2: My Onboarding Status */}
+              <div className="bg-white rounded-lg shadow-sm border border-[#e2e8f0] flex flex-col">
+                <div className="p-2 flex justify-between items-center border-b border-[#e2e8f0]">
+                  <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
+                    <svg className="w-4 h-4 mr-2 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                    </svg>
+                    My Onboarding Status
+                  </h2>
+                  <button
+                    onClick={() => navigate('/investor/journeys')}
+                    className="text-[11px] font-semibold text-[#3e6f7c] hover:underline hover:text-[#1f4851] transition-colors flex items-center bg-transparent border-0 p-0 cursor-pointer"
+                  >
+                    Facilon Status &rarr;
                   </button>
                 </div>
-              </div>
-            </div>
 
-            {/* My Request */}
-            <div className="bg-white rounded-lg shadow-sm border border-[#e2e8f0] flex flex-col">
-              <div className="p-2 flex justify-between items-center border-b border-[#e2e8f0]">
-                <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
-                  <i className="bi bi-journal-text mr-2 text-slate-500"></i> Data Subject Right Request Center
-                </h2>
-              </div>
+                <div className="px-4 pt-2 pb-2 flex flex-col justify-start">
+                  <div>
+                    <div className="grid grid-cols-12 text-[8px] font-bold text-slate-400 uppercase tracking-wider pb-2 border-b border-[#e2e8f0] mb-1">
+                      <div className="col-span-4">SERVICE PROVIDER</div>
+                      <div className="col-span-4">PRODUCT</div>
+                      <div className="col-span-3">STATUS</div>
+                      <div className="col-span-1 text-right">ACTION</div>
+                    </div>
 
-              <div className="px-4 pt-2 pb-2 flex flex-col justify-start">
-                <div>
-                  <div className="grid grid-cols-12 text-[9px] font-bold text-slate-400 uppercase tracking-wider pb-2 border-b border-[#e2e8f0] mb-1">
-                    <div className="col-span-8">TYPE OF REQUEST</div>
-                    <div className="col-span-4 text-right">STATUS</div>
+                    <div className="flex flex-col">
+                      {journeys.length === 0 ? (
+                        <div className="py-4 text-center text-[11px] text-slate-400">
+                          No onboarding journeys assigned yet.
+                        </div>
+                      ) : (
+                        journeys.map((item, idx) => {
+                          const status = (item.status || 'IN PROGRESS').toUpperCase();
+                          const completed = status === 'COMPLETED';
+                          const statusColor = completed
+                            ? 'text-[#10b981] bg-[#ecfdf5]'
+                            : status === 'ABANDONED'
+                              ? 'text-[#ef4444] bg-[#fef2f2]'
+                              : status === 'IN REVIEW'
+                                ? 'text-[#f59e0b] bg-[#fff8f0]'
+                                : 'text-[#3b82f6] bg-[#eff6ff]';
+                          const barColor = completed ? 'bg-[#10b981]' : status === 'IN PROGRESS' ? 'bg-[#3b82f6]' : status === 'ABANDONED' ? 'bg-[#ef4444]' : 'bg-[#f59e0b]';
+                          const progress = typeof item.progress === 'number' ? item.progress : (completed ? 100 : status === 'ABANDONED' ? 100 : 0);
+                          const goToJourney = () => navigate(item.actionRoute || '/investor/journeys');
+                          return (
+                            <div key={item.journeyId || idx} className="grid grid-cols-12 items-center p-1 border-b border-[#e2e8f0] last:border-0 hover:bg-slate-50/50 transition-colors">
+                              <div className="col-span-4 pr-1">
+                                <div className="text-[11px] font-bold text-slate-800 leading-tight">{item.serviceProviderName || '-'}</div>
+                                <div className="text-[9px] text-slate-400 mt-0.5">{item.productCode ? `Code: ${item.productCode}` : '-'}</div>
+                              </div>
+                              <div className="col-span-4 text-[11px] text-slate-600 pr-1 leading-tight">{item.product || '-'}</div>
+                              <div className="col-span-3 pr-1 flex flex-col items-start justify-center">
+                                <span className={`text-[7.5px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${statusColor}`}>
+                                  {status}
+                                </span>
+                                <div className="w-12 h-[3px] bg-[#e2e8f0] rounded-full mt-1.5 overflow-hidden">
+                                  <div className={`h-full rounded-full ${barColor}`} style={{ width: `${progress}%` }}></div>
+                                </div>
+                              </div>
+                              <div className="col-span-1 text-right flex justify-end">
+                                <button
+                                  onClick={goToJourney}
+                                  className="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-700 flex items-center justify-center transition-colors cursor-pointer"
+                                >
+                                  {completed ? (
+                                    <i className="bi bi-eye text-[12px]"></i>
+                                  ) : (
+                                    <i className="bi bi-play-fill text-[13px] ml-0.5"></i>
+                                  )}
+                                </button>
+                              </div>
+                            </div>
+                          );
+                        })
+                      )}
+                    </div>
                   </div>
 
-                  <div className="flex flex-col">
-                    {dsrCases.length === 0 && (
-                      <div className="text-[11px] text-slate-400 py-3 text-center">
-                        No DSR requests yet.
+                  <div className="mt-3">
+                    <button
+                      onClick={() => navigate('/investor/journeys')}
+                      className="w-full py-1.5 text-[10px] font-semibold text-[#1f4851] border border-[#1f4851] rounded hover:bg-[#1f4851]/5 transition-colors flex justify-center items-center cursor-pointer"
+                    >
+                      <svg className="w-3.5 h-3.5 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                      </svg>
+                      View Detailed Journey
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Column 3: My Appointment */}
+              <div className="bg-white rounded-lg shadow-sm border border-[#e2e8f0] flex flex-col">
+                <div className="p-2 flex justify-between items-center border-b border-[#e2e8f0]">
+                  <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
+                    <i className="bi bi-calendar3 mr-2 text-slate-500"></i> My Appointment
+                  </h2>
+                  <span className="text-[9px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider bg-[#fff8f0] text-[#f59e0b] border border-[#f59e0b]/30">
+                    Coming Soon
+                  </span>
+                </div>
+
+                <div className="px-4 pt-2 pb-2 flex flex-col justify-start">
+                  <div>
+                    <div className="grid grid-cols-12 text-[8px] font-bold text-slate-400 uppercase tracking-wider pb-2 border-b border-[#e2e8f0] mb-1">
+                      <div className="col-span-5">PRODUCT</div>
+                      <div className="col-span-3">SERVICE PROVIDER</div>
+                      <div className="col-span-2">DATE</div>
+                      <div className="col-span-2 text-right">STATUS</div>
+                    </div>
+
+                    <div className="flex flex-col">
+                      {appointments.map((item, idx) => (
+                        <div key={idx} className="grid grid-cols-12 items-center p-1 border-b border-[#e2e8f0] last:border-0 hover:bg-slate-50/50 transition-colors">
+                          <div className="col-span-5 text-[11px] font-bold text-slate-800 pr-1 leading-tight">
+                            {item.product}
+                          </div>
+                          <div className="col-span-3 text-[11px] text-slate-500 pr-1 leading-tight">{item.provider}</div>
+                          <div className="col-span-2 text-[11px] pr-1 leading-tight">
+                            <div className="font-semibold text-slate-700">{item.date.split(',')[0]},</div>
+                            <div className="text-[9px] text-slate-400 mt-0.5">{item.date.split(',')[1]?.trim()}</div>
+                          </div>
+                          <div className="col-span-2 text-right flex justify-end">
+                            <span className={`text-[7px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${item.statusColor}`}>
+                              {item.status}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="mt-3">
+                    <button className="w-full py-1.5 text-[10px] font-semibold text-slate-400 border border-slate-200 rounded bg-slate-50 cursor-not-allowed flex justify-center items-center" disabled>
+                      <i className="bi bi-calendar3 mr-1.5"></i> View All Appointments
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            {/* BOTTOM ROW: 3 Column Layout */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 items-start">
+
+              {/* Column 1: My Documents */}
+              <div className="bg-white rounded-lg shadow-sm border border-[#e2e8f0] flex flex-col">
+                <div className="p-2 flex justify-between items-center border-b border-[#e2e8f0]">
+                  <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
+                    <i className="bi bi-cloud-arrow-up mr-2 text-slate-500"></i> My Documents
+                  </h2>
+                  <a href="#" className="text-[11px] font-semibold text-[#3e6f7c] hover:underline hover:text-[#1f4851] transition-colors flex items-center">
+                    Documents Center &rarr;
+                  </a>
+                </div>
+
+                <div className="grid grid-cols-4 divide-x divide-[#e2e8f0] border-b border-[#e2e8f0]">
+                  <div className="py-2.5 text-center flex flex-col items-center">
+                    <span className="text-[16px] font-bold text-slate-800">0</span>
+                    <span className="text-[8px] text-slate-500">of 12 Uploaded</span>
+                  </div>
+                  <div className="py-2.5 text-center flex flex-col items-center">
+                    <span className="text-[16px] font-bold text-slate-800">0%</span>
+                    <span className="text-[8px] text-slate-500">Complete</span>
+                  </div>
+                  <div className="py-2.5 text-center flex flex-col items-center">
+                    <span className="text-[16px] font-bold text-[#10b981]">0</span>
+                    <span className="text-[8px] text-slate-500">Approved</span>
+                  </div>
+                  <div className="py-2.5 text-center flex flex-col items-center">
+                    <span className="text-[16px] font-bold text-[#ef4444]">0</span>
+                    <span className="text-[8px] text-slate-500">Rejected</span>
+                  </div>
+                </div>
+
+                <div className="px-4 pb-2 pt-3 flex flex-col overflow-hidden">
+                  <div>
+                    <div className="grid grid-cols-12 text-[8px] font-bold text-slate-400 uppercase tracking-wider pb-2 border-b border-[#e2e8f0] mb-1">
+                      <div className="col-span-5">DOCUMENT TYPE</div>
+                      <div className="col-span-5">DOCUMENT NAME</div>
+                      <div className="col-span-2 text-right">ACTION</div>
+                    </div>
+
+                    <div className="flex flex-col">
+                      {documents.map((item, idx) => (
+                        <div key={idx} className="grid grid-cols-12 items-center p-1 border-b border-[#e2e8f0] last:border-0 hover:bg-slate-50/50 transition-colors">
+                          <div className="col-span-5 text-[11px] font-semibold text-slate-700 pr-1">{item.type}</div>
+                          <div className="col-span-5 text-[11px] text-slate-400">{item.name}</div>
+                          <div className="col-span-2 text-right flex justify-end">
+                            <button className="text-slate-400 hover:text-[#1f4851] transition-colors p-1 border border-slate-200 rounded bg-slate-50 hover:bg-slate-100">
+                              <i className="bi bi-cloud-arrow-up text-[10px]"></i>
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Column 2: My Permissions & My Request stacked */}
+              <div className="flex flex-col gap-3">
+
+                {/* My Permissions */}
+                <div className="bg-white rounded-lg shadow-sm border border-[#e2e8f0] flex flex-col">
+                  <div className="p-2 flex justify-between items-center border-b border-[#e2e8f0]">
+                    <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
+                      <i className="bi bi-shield-lock mr-2 text-slate-500"></i> My Permissions
+                    </h2>
+                    <button
+                      onClick={() => setShowPermissionsModal(true)}
+                      className="text-[12px] font-semibold text-[#3e6f7c] hover:underline hover:text-[#1f4851] transition-colors flex items-center bg-transparent border-0 p-0 cursor-pointer"
+                    >
+                      Permissions Center &rarr;
+                    </button>
+                  </div>
+
+                  <div className="px-4 pt-2 pb-2 flex flex-col justify-start">
+                    <div>
+                      <div className="grid grid-cols-12 text-[9px] font-bold text-slate-400 uppercase tracking-wider pb-2 border-b border-[#e2e8f0] mb-1">
+                        <div className="col-span-5">PERMISSION</div>
+                        <div className="col-span-4">ASSIGNEE</div>
+                        <div className="col-span-3 text-right">STATUS</div>
                       </div>
-                    )}
-                    {dsrCases.slice(0, 4).map((item) => (
-                      <div
-                        key={item.caseId}
-                        onClick={() => navigate(`/investor/dsr-center/requests?case=${item.caseId}`)}
-                        className="grid grid-cols-12 items-center p-1 border-b border-[#e2e8f0] last:border-0 hover:bg-slate-50/50 transition-colors cursor-pointer"
+
+                      <div className="flex flex-col">
+                        {permissions.map((item, idx) => (
+                          <div key={idx} className="grid grid-cols-12 items-center p-1 border-b border-[#e2e8f0] last:border-0 hover:bg-slate-50/50 transition-colors">
+                            <div className="col-span-5 text-[11px] font-bold text-slate-800 pr-1">{item.permission}</div>
+                            <div className="col-span-4 text-[11px] text-slate-500">{item.assignee}</div>
+                            <div className="col-span-3 text-right flex justify-end">
+                              <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${item.statusColor}`}>
+                                {item.status}
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="mt-3">
+                      <button className="w-full py-1.5 text-[11px] font-semibold text-[#1f4851] border border-[#1f4851] rounded hover:bg-[#1f4851]/5 transition-colors">
+                        Manage Permissions
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* My Request */}
+                <div className="bg-white rounded-lg shadow-sm border border-[#e2e8f0] flex flex-col">
+                  <div className="p-2 flex justify-between items-center border-b border-[#e2e8f0]">
+                    <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
+                      <i className="bi bi-journal-text mr-2 text-slate-500"></i> Data Subject Right Request Center
+                    </h2>
+                  </div>
+
+                  <div className="px-4 pt-2 pb-2 flex flex-col justify-start">
+                    <div>
+                      <div className="grid grid-cols-12 text-[9px] font-bold text-slate-400 uppercase tracking-wider pb-2 border-b border-[#e2e8f0] mb-1">
+                        <div className="col-span-8">TYPE OF REQUEST</div>
+                        <div className="col-span-4 text-right">STATUS</div>
+                      </div>
+
+                      <div className="flex flex-col">
+                        {dsrCases.length === 0 && (
+                          <div className="text-[11px] text-slate-400 py-3 text-center">
+                            No DSR requests yet.
+                          </div>
+                        )}
+                        {dsrCases.slice(0, 4).map((item) => (
+                          <div
+                            key={item.caseId}
+                            onClick={() => navigate(`/investor/dsr-center/requests?case=${item.caseId}`)}
+                            className="grid grid-cols-12 items-center p-1 border-b border-[#e2e8f0] last:border-0 hover:bg-slate-50/50 transition-colors cursor-pointer"
+                          >
+                            <div className="col-span-8 text-[11px] font-bold text-slate-800 pr-1">
+                              {prettyRequestType(item.requestType)}
+                              <span className="block text-[9px] font-normal text-slate-400">{item.caseId}</span>
+                            </div>
+                            <div className="col-span-4 text-right flex justify-end">
+                              <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${dsrStatusColor(item.investorStatus)}`}>
+                                {item.investorStatus}
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="mt-3 flex gap-2">
+                      <button
+                        onClick={() => navigate('/investor/dsr-center/requests')}
+                        className="flex-1 py-1.5 text-[11px] font-semibold text-[#1f4851] border border-[#1f4851] rounded hover:bg-[#1f4851]/5 transition-colors"
                       >
-                        <div className="col-span-8 text-[11px] font-bold text-slate-800 pr-1">
-                          {prettyRequestType(item.requestType)}
-                          <span className="block text-[9px] font-normal text-slate-400">{item.caseId}</span>
-                        </div>
-                        <div className="col-span-4 text-right flex justify-end">
-                          <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${dsrStatusColor(item.investorStatus)}`}>
-                            {item.investorStatus}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
+                        View All Requests
+                      </button>
+                      <button
+                        onClick={() => navigate('/investor/dsr-center')}
+                        className="flex-1 py-1.5 text-[11px] font-semibold text-white bg-[#1f4851] border border-[#1f4851] rounded hover:bg-[#163a42] transition-colors"
+                      >
+                        New Request &rarr;
+                      </button>
+                    </div>
                   </div>
                 </div>
 
-                <div className="mt-3 flex gap-2">
+              </div>
+
+              {/* Column 3: My Consents */}
+              <div className="bg-white rounded-lg shadow-sm border border-[#e2e8f0] flex flex-col relative">
+                <div className="p-2 flex justify-between items-center border-b border-[#e2e8f0]">
+                  <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
+                    <i className="bi bi-check2-all mr-2 text-slate-500"></i> My Consents
+                  </h2>
                   <button
-                    onClick={() => navigate('/investor/dsr-center/requests')}
-                    className="flex-1 py-1.5 text-[11px] font-semibold text-[#1f4851] border border-[#1f4851] rounded hover:bg-[#1f4851]/5 transition-colors"
+                    onClick={() => navigate('/investor/consents')}
+                    className="text-[12px] font-semibold text-[#3e6f7c] hover:underline hover:text-[#1f4851] transition-colors flex items-center bg-transparent border-0 p-0 cursor-pointer"
                   >
-                    View All Requests
-                  </button>
-                  <button
-                    onClick={() => navigate('/investor/dsr-center')}
-                    className="flex-1 py-1.5 text-[11px] font-semibold text-white bg-[#1f4851] border border-[#1f4851] rounded hover:bg-[#163a42] transition-colors"
-                  >
-                    New Request &rarr;
+                    Consent Center &rarr;
                   </button>
                 </div>
-              </div>
-            </div>
 
-          </div>
-
-          {/* Column 3: My Consents */}
-          <div className="bg-white rounded-lg shadow-sm border border-[#e2e8f0] flex flex-col relative">
-            <div className="p-2 flex justify-between items-center border-b border-[#e2e8f0]">
-              <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
-                <i className="bi bi-check2-all mr-2 text-slate-500"></i> My Consents
-              </h2>
-              <button
-                onClick={() => navigate('/investor/consents')}
-                className="text-[12px] font-semibold text-[#3e6f7c] hover:underline hover:text-[#1f4851] transition-colors flex items-center bg-transparent border-0 p-0 cursor-pointer"
-              >
-                Consent Center &rarr;
-              </button>
-            </div>
-
-            <div className="px-4 pt-2 pb-2 flex flex-col justify-start">
-              <div className="overflow-y-auto max-h-[300px]">
-                <div className="flex flex-col">
-                  {consents.map((item, idx) => (
-                    <div key={idx} className="flex justify-between items-center p-1 border-b border-[#e2e8f0] last:border-0 hover:bg-slate-50/50 transition-colors">
-                      <div>
-                        <div className="text-[11px] font-bold text-slate-800 leading-tight">{item.name}</div>
-                        <div className="text-[10px] text-[#1f4851]">{item.desc}</div>
-                      </div>
-                      <div>
-                        <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${item.statusColor}`}>
-                          {item.status}
-                        </span>
-                      </div>
+                <div className="px-4 pt-2 pb-2 flex flex-col justify-start">
+                  <div className="overflow-y-auto max-h-[300px]">
+                    <div className="flex flex-col">
+                      {consents.map((item, idx) => (
+                        <div key={idx} className="flex justify-between items-center p-1 border-b border-[#e2e8f0] last:border-0 hover:bg-slate-50/50 transition-colors">
+                          <div>
+                            <div className="text-[11px] font-bold text-slate-800 leading-tight">{item.name}</div>
+                            <div className="text-[10px] text-[#1f4851]">{item.desc}</div>
+                          </div>
+                          <div>
+                            <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${item.statusColor}`}>
+                              {item.status}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  </div>
+
+                  <div className="mt-3">
+                    <div className="bg-[#f0f7f9] rounded py-2 px-3 text-[10px] text-slate-600 font-medium">
+                      Service Agent: <span className="text-slate-400">None assigned - Status: NOT ASSIGNED</span>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div className="mt-3">
-                <div className="bg-[#f0f7f9] rounded py-2 px-3 text-[10px] text-slate-600 font-medium">
-                  Service Agent: <span className="text-slate-400">None assigned - Status: NOT ASSIGNED</span>
-                </div>
-              </div>
             </div>
-          </div>
-
-        </div>
           </>
         )}
         {showPermissionsModal && (
@@ -673,7 +673,7 @@ export const InvestorDashboard: React.FC = () => {
                   Manage your account permissions and access levels.
                 </p>
               </div>
-              <button 
+              <button
                 onClick={() => setShowPermissionsModal(false)}
                 className="bg-transparent border border-white/25 hover:bg-white/10 text-white rounded px-3 py-1.5 text-[10px] font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
               >
@@ -685,7 +685,7 @@ export const InvestorDashboard: React.FC = () => {
             <div className="bg-[#e1e4e7] p-0">
               {/* White rounded card inside */}
               <div className="bg-white border border-slate-200/60 p-0">
-                
+
                 {/* Action Row */}
                 <div className="flex justify-end mb-1 px-2 pt-1">
                   <button className="bg-[#2c525d] hover:bg-[#1f4851] text-white rounded px-3 py-1.5 text-[10px] font-semibold flex items-center gap-1.5 transition-colors cursor-pointer border-0">
@@ -743,7 +743,7 @@ export const InvestorDashboard: React.FC = () => {
                   Manage your active consents and data sharing preferences.
                 </p>
               </div>
-              <button 
+              <button
                 onClick={() => setShowConsentModal(false)}
                 className="bg-transparent border border-white/25 hover:bg-white/10 text-white rounded px-3 py-1.5 text-[10px] font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
               >
@@ -774,8 +774,8 @@ export const InvestorDashboard: React.FC = () => {
                           <td className="py-2 px-2 text-[12px] font-medium text-[#3e6f7c]">{item.desc}</td>
                           <td className="py-2 px-2">
                             <span className={`text-[8px] font-bold px-2 py-0.5 rounded uppercase tracking-wider inline-block ${item.status === 'ACTIVE'
-                                ? 'bg-[#ecfdf5] text-[#10b981] border border-[#10b981]/20'
-                                : 'bg-slate-100 text-slate-500 border border-slate-200'
+                              ? 'bg-[#ecfdf5] text-[#10b981] border border-[#10b981]/20'
+                              : 'bg-slate-100 text-slate-500 border border-slate-200'
                               }`}>
                               {item.status}
                             </span>

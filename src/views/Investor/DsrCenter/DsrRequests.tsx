@@ -2,8 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { investorService, DsrCaseResponseDto, DsrCaseDetailDto } from '../../../services/investor.service';
 import { LoadingSpinner } from '../../../components/LoadingSpinner/LoadingSpinner';
+import { FiChevronLeft, FiEdit } from 'react-icons/fi';
+import { BsEyeFill } from 'react-icons/bs';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 import '../InvestorProfile/InvestorProfile.scss';
 import './DsrCenter.scss';
+
+const ChevronLeftIcon = FiChevronLeft as any;
+const EditIcon = FiEdit as any;
+const EyeIcon = BsEyeFill as any;
 
 export const DsrRequests: React.FC = () => {
   const navigate = useNavigate();
@@ -82,70 +90,107 @@ export const DsrRequests: React.FC = () => {
 
   return (
     <div className="facilon-dashboard-wrapper">
-      <main className="container-fluid dashboard-container-main px-0">
+      <main className="container-fluid dashboard-container-main p-0">
         <div className="investor-profile dsr-page">
-          <div className="flex justify-between items-center mb-3">
-            <button
-              onClick={() => navigate('/investor/dashboard')}
-              className="text-[11px] font-semibold text-[#3e6f7c] hover:underline hover:text-[#1f4851] transition-colors flex items-center bg-transparent border-0 p-0 cursor-pointer"
-            >
-              ← Back to Dashboard
-            </button>
-            <button
-              onClick={() => navigate('/investor/dsr-center')}
-              className="btn-save"
-            >
-              + New Request
-            </button>
-          </div>
 
-          <div className="investor-profile__card" style={{ padding: '15px' }}>
-            <div className="overflow-x-auto w-full">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="text-[9px] font-bold text-slate-400 uppercase tracking-wider border-b border-[#e2e8f0]">
-                    <th className="pb-3.5 px-2">Case ID</th>
-                    <th className="pb-3.5 px-2">Right</th>
-                    <th className="pb-3.5 px-2">Jurisdiction</th>
-                    <th className="pb-3.5 px-2">Status</th>
-                    <th className="pb-3.5 px-2">Submitted</th>
-                    <th className="pb-3.5 px-2">SLA Deadline</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[#e2e8f0]">
-                  {cases.length === 0 && (
-                    <tr>
-                      <td colSpan={6} className="py-4 px-2 text-center text-[12px] text-slate-400">
-                        No DSR requests yet.
-                      </td>
-                    </tr>
-                  )}
-                  {cases.map((item) => (
-                    <tr
-                      key={item.caseId}
-                      style={{ cursor: 'pointer' }}
-                      className={`hover:bg-slate-50/50 transition-colors ${selectedCaseId === item.caseId ? 'bg-slate-100/80 font-semibold' : ''}`}
-                      onClick={() => selectCase(item.caseId)}
-                    >
-                      <td className="py-3 px-2 text-[12px]"><span className="text-[#3e6f7c] hover:underline font-bold">{item.caseId}</span></td>
-                      <td className="py-3 px-2 text-[12px] text-slate-700">{prettyRequestType(item.requestType)}</td>
-                      <td className="py-3 px-2 text-[12px] text-slate-500">{item.jurisdiction}</td>
-                      <td className="py-3 px-2 text-[12px]">
-                        <span className={`text-[8.5px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${dsrStatusColor(item.investorStatus)}`}>
-                          {item.investorStatus}
-                        </span>
-                        {item.actionRequired && (
-                          <span className="text-[7.5px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider bg-[#fff8f0] text-[#f59e0b] border border-[#f59e0b]/30 ms-2">
-                            Action required
-                          </span>
-                        )}
-                      </td>
-                      <td className="py-3 px-2 text-[12px] text-slate-500">{item.submittedAt ? item.submittedAt.split('T')[0] : '-'}</td>
-                      <td className="py-3 px-2 text-[12px] text-slate-500">{item.slaDeadline ? item.slaDeadline.split('T')[0] : '-'}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+          <div className="bg-white rounded-xl border border-gray-200 overflow-hidden mb-6 shadow-sm">
+            {/* Blue Header Banner */}
+            <div className="bg-gradient-to-r from-[#2c5e6a] to-[#355f69] p-3 flex justify-between items-center text-white">
+              <div>
+                <h2 className="m-0 text-base font-bold text-white tracking-tight">Data Subject Rights Center</h2>
+                <p className="m-0 text-[11.5px] font-normal text-white/80 mt-0.5">Manage your data requests and privacy preferences.</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  className="inline-flex items-center bg-white text-[#3e6f7c] border-0 text-[11px] font-bold h-[30px] px-3.5 rounded-md transition-colors hover:bg-white/90 cursor-pointer shadow-sm text-decoration-none"
+                  onClick={() => navigate('/investor/dsr-center')}
+                >
+                  <EditIcon size={12} className="me-1.5 flex-shrink-0" />
+                  Make a Request
+                </button>
+                <button
+                  type="button"
+                  className="inline-flex items-center bg-white/10 border border-white/20 text-white text-[11px] font-semibold h-[30px] px-3 rounded-md transition-colors hover:bg-white/20 hover:border-white/30 cursor-pointer text-decoration-none"
+                  onClick={() => navigate('/investor/dashboard')}
+                >
+                  <ChevronLeftIcon size={12} className="me-1 flex-shrink-0" />
+                  Back
+                </button>
+              </div>
+            </div>
+
+            {/* Dsr Card Body */}
+            <div className="p-3 bg-white">
+              <div className="bg-transparent border-0 rounded-none mb-0 pt-2.5 p-0 bg-white" style={{ padding: '15px' }}>
+                <div className="overflow-x-auto w-full">
+                  <table className="w-full text-left border-collapse">
+                    <thead>
+                      <tr className="text-[9px] font-bold text-slate-400 uppercase tracking-wider border-b border-[#e2e8f0]">
+                        <th className="pb-3.5 px-2">Case ID</th>
+                        <th className="pb-3.5 px-2">Right</th>
+                        <th className="pb-3.5 px-2">Jurisdiction</th>
+                        <th className="pb-3.5 px-2">Status</th>
+                        <th className="pb-3.5 px-2">Submitted</th>
+                        <th className="pb-3.5 px-2">SLA Deadline</th>
+                        <th className="pb-3.5 px-2 text-right">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-[#e2e8f0]">
+                      {cases.length === 0 && (
+                        <tr>
+                          <td colSpan={7} className="py-4 px-2 text-center text-[12px] text-slate-400">
+                            No DSR requests yet.
+                          </td>
+                        </tr>
+                      )}
+                      {cases.map((item) => (
+                        <tr
+                          key={item.caseId}
+                          style={{ cursor: 'pointer' }}
+                          className={`hover:bg-slate-50/50 transition-colors ${selectedCaseId === item.caseId ? 'bg-slate-100/80 font-semibold' : ''}`}
+                          onClick={() => selectCase(item.caseId)}
+                        >
+                          <td className="p-2 text-[12px]"><span className="text-[#3e6f7c] hover:underline font-bold">{item.caseId}</span></td>
+                          <td className="p-2 text-[12px] text-slate-700">{prettyRequestType(item.requestType)}</td>
+                          <td className="p-2 text-[12px] text-slate-500">{item.jurisdiction}</td>
+                          <td className="p-2 text-[12px]">
+                            <span className={`text-[8.5px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${dsrStatusColor(item.investorStatus)}`}>
+                              {item.investorStatus}
+                            </span>
+                            {item.actionRequired && (
+                              <span className="text-[7.5px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider bg-[#fff8f0] text-[#f59e0b] border border-[#f59e0b]/30 ms-2">
+                                Action required
+                              </span>
+                            )}
+                          </td>
+                          <td className="p-2 text-[12px] text-slate-500">{item.submittedAt ? item.submittedAt.split('T')[0] : '-'}</td>
+                          <td className="p-2 text-[12px] text-slate-500">{item.slaDeadline ? item.slaDeadline.split('T')[0] : '-'}</td>
+                          <td className="p-2 text-[12px] text-right">
+                            <div className="inline-flex items-center gap-1.5 justify-end w-full">
+                              <OverlayTrigger
+                                placement="top"
+                                overlay={<Tooltip id={`tooltip-view-${item.caseId}`} className="text-[10px]">View Details</Tooltip>}
+                              >
+                                <button
+                                  type="button"
+                                  className="inline-flex items-center justify-center w-[28px] h-[28px] bg-transparent border border-gray-200 hover:border-[#3e6f7c] hover:bg-[#3e6f7c]/5 text-[#3e6f7c] rounded-md transition-all cursor-pointer"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    selectCase(item.caseId);
+                                  }}
+                                >
+                                  <EyeIcon size={12} className="flex-shrink-0" />
+                                </button>
+                              </OverlayTrigger>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -189,7 +234,7 @@ export const DsrRequests: React.FC = () => {
                               {req.investorStatus}
                             </span>
                           </dd>
-                          
+
                           <dt className="col-span-5 font-semibold text-slate-500">Submitted</dt>
                           <dd className="col-span-7 text-slate-700">{req.submittedAt?.replace('T', ' ') || '—'}</dd>
 

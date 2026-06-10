@@ -174,7 +174,7 @@ export const InformationContainer: React.FC = () => {
 
   return (
     <div className="facilon-dashboard-wrapper">
-      <main className="container-fluid dashboard-container-main px-0">
+      <main className="container-fluid dashboard-container-main p-0">
         <div className="investor-profile">
 
           {delegationPerms.isProxyMode && !delegationPerms.canViewProfile && (
@@ -191,8 +191,22 @@ export const InformationContainer: React.FC = () => {
             </div>
           )}
 
-          {/* Your Journey Progress Section */}
-          <PremiumJourneyStepper dashboardData={dashboardData} />
+          {/* Merged Header Banner with Stepper */}
+          <div className="bg-white rounded-xl border border-gray-200 overflow-hidden mb-4 shadow-sm">
+            <div className="bg-gradient-to-r from-[#2c5e6a] to-[#355f69] p-3 flex flex-col md:flex-row justify-between items-center text-white gap-3 md:gap-6">
+              <div className="flex-shrink-0">
+                <h2 className="m-0 text-base font-bold text-white tracking-tight">Investor Information</h2>
+                {dashboardData?.productAssignment?.serviceProviderName && (
+                  <p className="m-0 text-[11.5px] font-normal text-white/80 mt-0.5">
+                    Service Provider: <strong>{dashboardData.productAssignment.serviceProviderName}</strong>
+                  </p>
+                )}
+              </div>
+              <div className="flex-shrink-0">
+                <PremiumJourneyStepper dashboardData={dashboardData} compact={true} />
+              </div>
+            </div>
+          </div>
 
           <div className="investor-profile__tabs">
             <button
