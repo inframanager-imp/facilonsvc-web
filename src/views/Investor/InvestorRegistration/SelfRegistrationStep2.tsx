@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { investorService } from '../../../services/investor.service';
 import { toast } from 'react-toastify';
 import '../IntroducedRegistration/IntroducedInvestorRegistration.scss';
@@ -93,109 +93,109 @@ export const SelfRegistrationStep2: React.FC = () => {
   };
 
   return (
-    <>
-      {/* Header with Logo */}
-      <header className="header header_style_01">
-        <nav className="navbar navbar-default">
-          <div className="container">
-            <div className="navbar-header">
-              <a className="navbar-brand" href="/" style={{ padding: 0 }}>
-                <img src="/assets/images/logo.png" alt="Facilon" style={{ height: '50px' }} />
-              </a>
-            </div>
-          </div>
-        </nav>
-      </header>
+    <section 
+      className="login-form-style4 steps4-sec section-padding align-items-center" 
+      style={{ backgroundImage: "url('https://anvaya.online/facilon/public/frontend/images/banner/2125.jpg')" }}
+    >
+      <div className="container d-flex flex-column align-items-center justify-content-center text-center">
+        {/* Facilon Logo with white background wrapper for contrast */}
+        <div className="mb-4 bg-white px-4 py-2 rounded shadow-sm d-inline-block" style={{ borderRadius: '8px', marginTop: '-25px' }}>
+          <Link to="/">
+            <img src="/assets/images/logo.png" alt="Facilon" style={{ height: '45px', display: 'block' }} />
+          </Link>
+        </div>
 
-      <section 
-        className="login-form-style4 section-padding" 
-        style={{ backgroundImage: 'url(/assets/images/banner/2125.jpg)' }}
-      >
-        <div className="container">
-          <div className="row align-items-center">
-            <div className="col-lg-5 col-md-12 col-sm-12">
-              <div className="lgf4_Left_content">
-                <h3>Investor <span>Registration</span></h3>
-                <p>Please enter the OTP sent to your email address</p>
-              </div>
+        {/* Welcome text */}
+        <div className="lgf4_Left_content mb-4" style={{ width: '100%', maxWidth: '600px' }}>
+          <p className="text-center mt-2" style={{ color: '#fff', opacity: 0.9, fontSize: '18px', fontWeight: '500' }}>
+            Please enter the OTP sent to your email address.
+          </p>
+        </div>
+
+        {/* Investor Registration Card */}
+        <div className="login-form-style3-main" style={{ width: '100%', maxWidth: '550px', margin: '0 auto' }}>
+          <div className="login-form-style3-main_full">
+            <div className="login-register_style3-head">
+              <h2 className="text-center" style={{ textAlign: 'center' }}>Verify OTP</h2>
             </div>
 
-            <div className="col-lg-7 col-md-12 col-sm-12" style={{ marginTop: '4%' }}>
-              <div className="login-form-style3-main">
-                <div className="login-form-style3-main_full">
-                  <div className="login-register_style3-head">
-                    <h2>Verify OTP</h2>
+            <div className="login-register3-form-middle" style={{ textAlign: 'left' }}>
+              <p>An OTP has been sent to: <strong>{email}</strong></p>
+              
+              <form onSubmit={handleOtpVerification}>
+                <div className="single-field">
+                  <label htmlFor="otp">Enter 4-digit OTP <span className="star-color">*</span></label>
+                  <input
+                    type="text"
+                    id="otp"
+                    value={otp}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/[^0-9]/g, '');
+                      if (value.length <= 4) setOtp(value);
+                    }}
+                    placeholder="Enter OTP"
+                    maxLength={4}
+                    required
+                  />
+                </div>
+
+                <div className="timer-sec">
+                  <p>
+                    OTP expires in: <span className="timer">{formatTime(otpTimer)}</span>
+                  </p>
+                  {otpTimer === 0 && (
+                    <div style={{ marginTop: '8px' }}>
+                      <a 
+                        href="javascript:void(0);"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (!loading) handleResendOtp();
+                        }}
+                        style={{
+                          color: '#2c5966',
+                          textDecoration: 'underline',
+                          fontWeight: '600',
+                          fontSize: '14px',
+                          cursor: loading ? 'not-allowed' : 'pointer',
+                          opacity: loading ? 0.6 : 1
+                        }}
+                      >
+                        {loading ? 'Resending...' : 'Resend OTP'}
+                      </a>
+                    </div>
+                  )}
+                </div>
+
+                <div className="row">
+                  <div className="col-md-6">
+                    <div className="single-field mb-0">
+                      <button 
+                        className="button-1" 
+                        type="submit" 
+                        disabled={loading || otpTimer === 0}
+                      >
+                        {loading ? 'Verifying...' : 'Verify OTP'}
+                      </button>
+                    </div>
                   </div>
-
-                  <div className="login-register3-form-middle">
-                    <p>An OTP has been sent to: <strong>{email}</strong></p>
-                    
-                    <form onSubmit={handleOtpVerification}>
-                      <div className="single-field">
-                        <label htmlFor="otp">Enter 4-digit OTP <span className="star-color">*</span></label>
-                        <input
-                          type="text"
-                          id="otp"
-                          value={otp}
-                          onChange={(e) => {
-                            const value = e.target.value.replace(/[^0-9]/g, '');
-                            if (value.length <= 4) setOtp(value);
-                          }}
-                          placeholder="Enter OTP"
-                          maxLength={4}
-                          required
-                        />
-                      </div>
-
-                      <div className="timer-sec">
-                        <p>
-                          OTP expires in: <span className="timer">{formatTime(otpTimer)}</span>
-                        </p>
-                        {otpTimer === 0 && (
-                          <button 
-                            type="button" 
-                            className="button-2" 
-                            onClick={handleResendOtp}
-                            disabled={loading}
-                          >
-                            Resend OTP
-                          </button>
-                        )}
-                      </div>
-
-                      <div className="row">
-                        <div className="col-md-6">
-                          <div className="single-field mb-0">
-                            <button 
-                              className="button-1" 
-                              type="submit" 
-                              disabled={loading || otpTimer === 0}
-                            >
-                              {loading ? 'Verifying...' : 'Verify OTP'}
-                            </button>
-                          </div>
-                        </div>
-                        <div className="col-md-6">
-                          <div className="single-field mb-0">
-                            <button
-                              type="button"
-                              className="button-2"
-                              onClick={() => navigate('/investor/register')}
-                            >
-                              Back
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </form>
+                  <div className="col-md-6">
+                    <div className="single-field mb-0">
+                      <button
+                        type="button"
+                        className="button-2"
+                        onClick={() => navigate('/investor/register')}
+                      >
+                        Back
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </form>
             </div>
           </div>
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 };
 

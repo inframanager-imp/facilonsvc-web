@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { investorService } from '../../../services/investor.service';
 import { toast } from 'react-toastify';
 import '../IntroducedRegistration/IntroducedInvestorRegistration.scss';
@@ -39,102 +39,91 @@ export const SelfRegistrationStep1: React.FC = () => {
   };
 
   return (
-    <>
-      {/* Header with Logo */}
-      <header className="header header_style_01">
-        <nav className="navbar navbar-default">
-          <div className="container">
-            <div className="navbar-header">
-              <a className="navbar-brand" href="/" style={{ padding: 0 }}>
-                <img src="/assets/images/logo.png" alt="Facilon" style={{ height: '50px' }} />
-              </a>
+    <section 
+      className="login-form-style4 steps4-sec section-padding align-items-center" 
+      style={{ backgroundImage: "url('https://anvaya.online/facilon/public/frontend/images/banner/2125.jpg')" }}
+    >
+      <div className="container d-flex flex-column align-items-center justify-content-center text-center">
+        {/* Facilon Logo with white background wrapper for contrast */}
+        <div className="mb-4 bg-white px-4 py-2 rounded shadow-sm d-inline-block" style={{ borderRadius: '8px', marginTop: '-25px' }}>
+          <Link to="/">
+            <img src="/assets/images/logo.png" alt="Facilon" style={{ height: '45px', display: 'block' }} />
+          </Link>
+        </div>
+
+        {/* Welcome text */}
+        <div className="lgf4_Left_content mb-4" style={{ width: '100%', maxWidth: '600px' }}>
+          <p className="text-center mt-2" style={{ color: '#fff', opacity: 0.9, fontSize: '18px', fontWeight: '500' }}>
+            Please verify your email to continue registration.
+          </p>
+        </div>
+
+        {/* Investor Registration Card */}
+        <div className="login-form-style3-main" style={{ width: '100%', maxWidth: '550px', margin: '0 auto' }}>
+          <div className="login-form-style3-main_full">
+            <div className="login-register_style3-head">
+              <h2 className="text-center" style={{ textAlign: 'center' }}>Investor Registration</h2>
             </div>
-          </div>
-        </nav>
-      </header>
 
-      <section 
-        className="login-form-style4 section-padding" 
-        style={{ backgroundImage: 'url(/assets/images/banner/2125.jpg)' }}
-      >
-        <div className="container">
-          <div className="row align-items-center">
-            <div className="col-lg-5 col-md-12 col-sm-12">
-              <div className="lgf4_Left_content">
-                <h3>Welcome to <span>Facilon Services</span> Registration Process</h3>
-                <p>Before we start the registration process, we would like to verify your email address</p>
-              </div>
-            </div>
-
-            <div className="col-lg-7 col-md-12 col-sm-12" style={{ marginTop: '4%' }}>
-              <div className="login-form-style3-main">
-                <div className="login-form-style3-main_full">
-                  <div className="login-register_style3-head">
-                    <h2>Investor Registration</h2>
+            <div className="login-register3-form-middle" style={{ textAlign: 'left' }}>
+              <form onSubmit={handleEmailSubmit}>
+                {/* Register As Selection */}
+                <div className="single-field self-sec">
+                  <label>Are you registering for an individual or a legal entity? <span className="star-color">*</span></label>
+                  <div className="radio-box">
+                    <label className="radio">
+                      <input
+                        type="radio"
+                        name="registerAs"
+                        value={1}
+                        checked={registerAs === 1}
+                        onChange={() => setRegisterAs(1)}
+                      />
+                      <span>Individual</span>
+                    </label>
+                    <label className="radio">
+                      <input
+                        type="radio"
+                        name="registerAs"
+                        value={2}
+                        checked={registerAs === 2}
+                        onChange={() => setRegisterAs(2)}
+                      />
+                      <span>Legal Entity</span>
+                    </label>
                   </div>
-
-                  <div className="login-register3-form-middle">
-                    <form onSubmit={handleEmailSubmit}>
-                      {/* Register As Selection */}
-                      <div className="single-field self-sec">
-                        <label>Are you registering for an individual or a legal entity? <span className="star-color">*</span></label>
-                        <div className="radio-box">
-                          <label className="radio">
-                            <input
-                              type="radio"
-                              name="registerAs"
-                              value={1}
-                              checked={registerAs === 1}
-                              onChange={() => setRegisterAs(1)}
-                            />
-                            <span>Individual</span>
-                          </label>
-                          <label className="radio">
-                            <input
-                              type="radio"
-                              name="registerAs"
-                              value={2}
-                              checked={registerAs === 2}
-                              onChange={() => setRegisterAs(2)}
-                            />
-                            <span>Legal Entity</span>
-                          </label>
-                        </div>
-                        {errors.registerAs && <span role="alert">{errors.registerAs}</span>}
-                      </div>
-
-                      {/* Email Input */}
-                      <div className="single-field">
-                        <label htmlFor="email">Please enter email address here <span className="star-color">*</span></label>
-                        <input
-                          type="email"
-                          id="email"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          placeholder="Enter your email"
-                          required
-                        />
-                        {errors.email && <span role="alert">{errors.email}</span>}
-                      </div>
-
-                      {/* Submit Button */}
-                      <div className="single-field mb-0">
-                        <button 
-                          className="button-1" 
-                          type="submit"
-                        >
-                          Continue
-                        </button>
-                      </div>
-                    </form>
-                  </div>
+                  {errors.registerAs && <span role="alert">{errors.registerAs}</span>}
                 </div>
-              </div>
+
+                {/* Email Input */}
+                <div className="single-field">
+                  <label htmlFor="email">Please enter email address here <span className="star-color">*</span></label>
+                  <input
+                    type="email"
+                    id="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter your email"
+                    required
+                  />
+                  {errors.email && <span role="alert">{errors.email}</span>}
+                </div>
+
+                {/* Submit Button */}
+                <div className="single-field mb-0">
+                  <button 
+                    className="button-1" 
+                    type="submit"
+                  >
+                    Continue
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 };
 

@@ -1,52 +1,62 @@
 @import '../../../styles/design-system';
 
-.dsr-center {
-  padding: 0 0 2rem;
-  background-color: var(--facilon-bg);
-  min-height: calc(100vh - 80px);
-
-  @media (max-width: 1200px) {
-    padding: 0 0 2rem;
+.dsr-page {
+  // Overrides for DSR form buttons to match Review and Submit Profile button size
+  .btn-save,
+  .btn-outline-primary,
+  .custom-file-label {
+    height: 38px !important;
+    font-size: 11px !important;
+    padding: 0 1.5rem !important;
+    border-radius: var(--facilon-radius-md) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-top: 0 !important;
   }
-  
-  @media (max-width: 768px) {
-    padding: 0 0 2rem;
-  }
 
-  &__header {
-    padding-top: 1.5rem;
-    .dashboard-title-modern {
-      font-size: 2.5rem;
-      font-weight: 800;
-      color: var(--facilon-slate);
-      margin-bottom: 0.5rem;
-      letter-spacing: -1px;
+  .custom-file-upload {
+    margin-top: 5px;
+    
+    .custom-file-label {
+      cursor: pointer;
     }
   }
 
-  .card {
-    @include card-premium;
-    padding: 1.5rem !important;
-    margin-bottom: 1.5rem;
-    border: 1px solid var(--facilon-border-light);
+  // Customize input, textarea, and dropdown selects inside DSR page to 10px font size
+  input.form-control,
+  textarea.form-control,
+  .premium-select-container .premium-select-trigger .selected-value,
+  .premium-select-container .premium-select-options .premium-select-option {
+    font-size: 10px !important;
   }
 
-  .table {
-    margin-bottom: 0;
-    th {
-      border-top: none;
-      color: var(--facilon-primary);
-      text-transform: uppercase;
-      font-size: 0.75rem;
-      letter-spacing: 0.5px;
-      font-weight: 700;
+  textarea.form-control {
+    width: 100%;
+    padding: 0.4rem 0.5rem !important;
+    background: #ffffff !important;
+    border: 1.5px solid var(--facilon-grey-200) !important;
+    border-radius: var(--facilon-radius-sm) !important;
+    color: var(--facilon-text-main) !important;
+    font-weight: 500 !important;
+    font-size: 10px !important;
+    transition: var(--facilon-transition) !important;
+    box-shadow: none !important;
+
+    &:hover {
+      border-color: #d1d5db !important;
+      background-color: #f1fcfe !important;
     }
-    td {
-      font-size: 0.95rem;
-      vertical-align: middle;
-      color: var(--facilon-text-main);
+
+    &:focus {
+      outline: none !important;
+      border-color: var(--facilon-primary) !important;
+      box-shadow: 0 0 0 4px rgba(62, 111, 124, 0.08), inset 0 2px 4px rgba(0, 0, 0, 0.01) !important;
+      background-color: #ffffff !important;
     }
   }
+
+  // DSR progress timeline styles
   .dsr-timeline {
     list-style: none;
     margin: 0;
@@ -68,35 +78,15 @@
         background: var(--facilon-primary, #175cd3);
       }
 
-      &:last-child { border-left-color: transparent; }
+      &:last-child {
+        border-left-color: transparent;
+      }
     }
 
     &__head {
       display: flex;
       justify-content: space-between;
       gap: 0.5rem;
-    }
-  }
-
-  .custom-file-upload {
-    margin-top: 5px;
-    
-    .custom-file-label {
-      background: transparent !important;
-      color: var(--facilon-primary) !important;
-      border: 2px solid var(--facilon-primary) !important;
-      border-radius: var(--facilon-radius-md) !important;
-      padding: 0.6rem 1.25rem !important;
-      font-weight: 700 !important;
-      transition: var(--facilon-transition);
-      cursor: pointer;
-      display: inline-block;
-      box-shadow: none !important;
-
-      &:hover {
-        background: var(--facilon-primary) !important;
-        color: white !important;
-      }
     }
   }
 }

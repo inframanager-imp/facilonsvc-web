@@ -280,7 +280,9 @@ const App: React.FC = () => {
             path="/investor/dsr-center"
             element={
               <ProtectedRoute>
-                <DsrCenter />
+                <MainLayout title="DSR Center" subtitle="Submit a data privacy or rights request">
+                  <DsrCenter />
+                </MainLayout>
               </ProtectedRoute>
             }
           />
@@ -288,7 +290,9 @@ const App: React.FC = () => {
             path="/investor/dsr-center/requests"
             element={
               <ProtectedRoute>
-                <DsrRequests />
+                <MainLayout title="My DSR Requests" subtitle="Track your data privacy and rights requests here">
+                  <DsrRequests />
+                </MainLayout>
               </ProtectedRoute>
             }
           />
@@ -296,7 +300,9 @@ const App: React.FC = () => {
             path="/investor/dsr-center/:caseId"
             element={
               <ProtectedRoute>
-                <DsrCaseDetail />
+                <MainLayout title="DSR Case Detail" subtitle="View details of your DSR case">
+                  <DsrCaseDetail />
+                </MainLayout>
               </ProtectedRoute>
             }
           />

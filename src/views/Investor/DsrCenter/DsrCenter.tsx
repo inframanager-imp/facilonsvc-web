@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from '../../../components/Header/Header';
-import Footer from '../../../components/Footer/Footer';
 import { investorService, DsrCaseCreateDto } from '../../../services/investor.service';
 import { PremiumSelect } from '../../../components/PremiumSelect/PremiumSelect';
-import { useSAProxyNavigation } from '../../../hooks/useSAProxyNavigation';
 import '../InvestorProfile/InvestorProfile.scss';
 import './DsrCenter.scss';
 
@@ -45,7 +42,6 @@ const DECLARATION_TEXT =
   'regulatory, contractual, security, audit, or retention requirements.';
 
 export const DsrCenter: React.FC = () => {
-  const { isProxyMode } = useSAProxyNavigation();
   const navigate = useNavigate();
   const [saving, setSaving] = useState(false);
   const [supportingFile, setSupportingFile] = useState<File | undefined>(undefined);
@@ -121,154 +117,166 @@ export const DsrCenter: React.FC = () => {
 
   return (
     <div className="facilon-dashboard-wrapper">
-      {!isProxyMode && <Header />}
-      <main className="container-fluid dashboard-container-main">
-        <div className="dsr-center">
-          <div className="d-flex justify-content-between align-items-center mb-2">
-            <button className="btn btn-link px-0" onClick={() => navigate('/investor/dashboard')}>
+      <main className="container-fluid dashboard-container-main px-0">
+        <div className="investor-profile dsr-page">
+          <div className="flex justify-between items-center mb-3">
+            <button
+              onClick={() => navigate('/investor/dashboard')}
+              className="text-[11px] font-semibold text-[#3e6f7c] hover:underline hover:text-[#1f4851] transition-colors flex items-center bg-transparent border-0 p-0 cursor-pointer"
+            >
               ← Back to Dashboard
             </button>
-            <button className="btn btn-link px-0" onClick={() => navigate('/investor/dsr-center/requests')}>
-              View All Requests →
+            <button
+              onClick={() => navigate('/investor/dsr-center/requests')}
+              className="text-[11px] font-semibold text-[#3e6f7c] hover:underline hover:text-[#1f4851] transition-colors flex items-center bg-transparent border-0 p-0 cursor-pointer"
+            >
+              View All Requests &rarr;
             </button>
           </div>
-          <div className="dsr-center__header mb-3">
-            <h1 className="dashboard-title-modern">New DSR Request</h1>
-            <p className="dashboard-subtitle text-muted">Submit a data privacy or rights request here.</p>
-          </div>
 
-          <div className="card p-3 mb-3">
-            <h5 className="mb-3">Submit a DSR Request</h5>
-            <form onSubmit={onSubmit}>
-              <div className="row g-3">
-                <div className="col-md-4">
-                  <label className="form-label" htmlFor="dsr-request-type">Right Exercised</label>
-                  <PremiumSelect
-                    value={form.requestType}
-                    onChange={(val) => setForm({ ...form, requestType: val })}
-                    options={REQUEST_TYPES.map((type) => ({ value: type, label: type }))}
-                    placeholder="Select Right"
-                  />
-                </div>
-                <div className="col-md-4">
-                  <label className="form-label" htmlFor="dsr-jurisdiction">Jurisdiction</label>
-                  <PremiumSelect
-                    value={form.jurisdiction}
-                    onChange={(val) => setForm({ ...form, jurisdiction: val })}
-                    options={JURISDICTIONS.map((jurisdiction) => ({ value: jurisdiction, label: jurisdiction }))}
-                    placeholder="Select Jurisdiction"
-                  />
-                </div>
-                <div className="col-md-4">
-                  <label className="form-label" htmlFor="dsr-role">Role</label>
-                  <input
-                    id="dsr-role"
-                    className="form-control"
-                    value={form.requesterRole || ''}
-                    onChange={(e) => setForm({ ...form, requesterRole: e.target.value })}
-                    placeholder="INVESTOR"
-                  />
-                </div>
-                <div className="col-md-4">
-                  <label className="form-label" htmlFor="dsr-requester-name">Requester Name</label>
-                  <input
-                    id="dsr-requester-name"
-                    className="form-control"
-                    value={form.requesterName}
-                    onChange={(e) => setForm({ ...form, requesterName: e.target.value })}
-                    required
-                  />
-                </div>
-                <div className="col-md-4">
-                  <label className="form-label" htmlFor="dsr-requester-email">Requester Email</label>
-                  <input
-                    id="dsr-requester-email"
-                    type="email"
-                    className="form-control"
-                    value={form.requesterEmail}
-                    onChange={(e) => setForm({ ...form, requesterEmail: e.target.value })}
-                    required
-                  />
-                </div>
-                <div className="col-md-4">
-                  <label className="form-label" htmlFor="dsr-requester-phone">Requester Phone</label>
-                  <input
-                    id="dsr-requester-phone"
-                    className="form-control"
-                    value={form.requesterPhone || ''}
-                    onChange={(e) => setForm({ ...form, requesterPhone: e.target.value })}
-                  />
-                </div>
-                <div className="col-md-12">
-                  <label className="form-label" htmlFor="dsr-request-description">Request Description</label>
-                  <textarea
-                    id="dsr-request-description"
-                    className="form-control"
-                    rows={4}
-                    value={form.requestDescription}
-                    onChange={(e) => setForm({ ...form, requestDescription: e.target.value })}
-                    required
-                  />
-                </div>
-                <div className="col-md-12">
-                  <label className="form-label d-block">Data Area (what does this request relate to?)</label>
-                  <div className="d-flex flex-wrap gap-3">
-                    {DATA_AREAS.map((area) => (
-                      <div className="form-check" key={area.code}>
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          id={`dsr-data-area-${area.code}`}
-                          checked={dataAreas.includes(area.code)}
-                          onChange={() => toggleDataArea(area.code)}
-                        />
-                        <label className="form-check-label" htmlFor={`dsr-data-area-${area.code}`}>
+          <form className="investor-profile__card" onSubmit={onSubmit}>
+            <div className="form-group form-group--full" style={{ marginBottom: '1rem' }}>
+              <h3>Submit a DSR Request</h3>
+            </div>
+
+            <div className="investor-profile__grid">
+              <div className="form-group">
+                <label htmlFor="dsr-request-type">Right Exercised <span className="text-danger">*</span></label>
+                <PremiumSelect
+                  value={form.requestType}
+                  onChange={(val) => setForm({ ...form, requestType: val })}
+                  options={REQUEST_TYPES.map((type) => ({ value: type, label: type }))}
+                  placeholder="Select Right"
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="dsr-jurisdiction">Jurisdiction <span className="text-danger">*</span></label>
+                <PremiumSelect
+                  value={form.jurisdiction}
+                  onChange={(val) => setForm({ ...form, jurisdiction: val })}
+                  options={JURISDICTIONS.map((jurisdiction) => ({ value: jurisdiction, label: jurisdiction }))}
+                  placeholder="Select Jurisdiction"
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="dsr-role">Role</label>
+                <input
+                  id="dsr-role"
+                  className="form-control"
+                  value={form.requesterRole || ''}
+                  onChange={(e) => setForm({ ...form, requesterRole: e.target.value })}
+                  placeholder="INVESTOR"
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="dsr-requester-name">Requester Name <span className="text-danger">*</span></label>
+                <input
+                  id="dsr-requester-name"
+                  className="form-control"
+                  value={form.requesterName}
+                  onChange={(e) => setForm({ ...form, requesterName: e.target.value })}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="dsr-requester-email">Requester Email <span className="text-danger">*</span></label>
+                <input
+                  id="dsr-requester-email"
+                  type="email"
+                  className="form-control"
+                  value={form.requesterEmail}
+                  onChange={(e) => setForm({ ...form, requesterEmail: e.target.value })}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="dsr-requester-phone">Requester Phone</label>
+                <input
+                  id="dsr-requester-phone"
+                  className="form-control"
+                  value={form.requesterPhone || ''}
+                  onChange={(e) => setForm({ ...form, requesterPhone: e.target.value })}
+                />
+              </div>
+
+              <div className="form-group form-group--full">
+                <label htmlFor="dsr-request-description">Request Description <span className="text-danger">*</span></label>
+                <textarea
+                  id="dsr-request-description"
+                  className="form-control"
+                  rows={4}
+                  value={form.requestDescription}
+                  onChange={(e) => setForm({ ...form, requestDescription: e.target.value })}
+                  required
+                />
+              </div>
+
+              <div className="form-group form-group--full">
+                <label>Data Area (what does this request relate to?) <span className="text-danger">*</span></label>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '0.5rem', marginTop: '0.5rem' }}>
+                  {DATA_AREAS.map((area) => {
+                    const isChecked = dataAreas.includes(area.code);
+                    return (
+                      <div className={`form-group--checkbox ${isChecked ? 'checked' : ''}`} key={area.code}>
+                        <label htmlFor={`dsr-data-area-${area.code}`}>
+                          <input
+                            type="checkbox"
+                            id={`dsr-data-area-${area.code}`}
+                            checked={isChecked}
+                            onChange={() => toggleDataArea(area.code)}
+                          />
                           {area.label}
                         </label>
                       </div>
-                    ))}
-                  </div>
+                    );
+                  })}
                 </div>
-                <div className="col-md-6">
-                  <label className="form-label" htmlFor="dsr-supporting-file">Supporting Evidence (PDF/JPG/JPEG, max 5MB)</label>
-                  <div className="custom-file-upload">
-                    <input
-                      id="dsr-supporting-file"
-                      type="file"
-                      className="d-none"
-                      accept=".pdf,.jpg,.jpeg"
-                      onChange={(e) => setSupportingFile(e.target.files?.[0])}
-                    />
-                    <label htmlFor="dsr-supporting-file" className="btn btn-outline-primary custom-file-label">
-                      {supportingFile ? supportingFile.name : 'Choose File'}
-                    </label>
-                  </div>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="dsr-supporting-file">Supporting Evidence (PDF/JPG/JPEG, max 5MB)</label>
+                <div className="custom-file-upload mt-1">
+                  <input
+                    id="dsr-supporting-file"
+                    type="file"
+                    className="d-none"
+                    accept=".pdf,.jpg,.jpeg"
+                    onChange={(e) => setSupportingFile(e.target.files?.[0])}
+                  />
+                  <label htmlFor="dsr-supporting-file" className="btn-outline-primary custom-file-label" style={{ width: '100%' }}>
+                    {supportingFile ? supportingFile.name : 'Choose File'}
+                  </label>
                 </div>
-                <div className="col-md-12">
-                  <div className="form-check">
+              </div>
+
+              <div className="form-group form-group--full" style={{ marginTop: '1rem' }}>
+                <div className={`form-group--checkbox ${declaration ? 'checked' : ''}`}>
+                  <label htmlFor="dsr-declaration">
                     <input
-                      className="form-check-input"
                       type="checkbox"
                       id="dsr-declaration"
                       checked={declaration}
                       onChange={(e) => setDeclaration(e.target.checked)}
                     />
-                    <label className="form-check-label small text-muted" htmlFor="dsr-declaration">
-                      {DECLARATION_TEXT}
-                    </label>
-                  </div>
-                </div>
-                <div className="col-md-12">
-                  <button type="submit" className="btn btn-primary" disabled={saving}>
-                    {saving ? 'Submitting...' : 'Submit DSR Request'}
-                  </button>
+                    <span>{DECLARATION_TEXT}</span>
+                  </label>
                 </div>
               </div>
-            </form>
-          </div>
+
+              <div className="form-group form-group--full" style={{ marginTop: '1rem' }}>
+                <button type="submit" className="btn-save" disabled={saving}>
+                  {saving ? 'Submitting...' : 'Submit DSR Request'}
+                </button>
+              </div>
+            </div>
+          </form>
         </div>
       </main>
-      {!isProxyMode && <Footer />}
     </div>
   );
 };

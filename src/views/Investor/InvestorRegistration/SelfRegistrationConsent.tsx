@@ -3,6 +3,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { investorService } from '../../../services/investor.service';
 import { toast } from 'react-toastify';
 import '../IntroducedRegistration/IntroducedInvestorRegistration.scss';
+import { CompactHeader } from '../../../components/CompactHeader/CompactHeader';
+import { CompactFooter } from '../../../components/CompactFooter/CompactFooter';
 
 /**
  * Self Registration Consent Page
@@ -70,18 +72,7 @@ const SelfRegistrationConsent: React.FC = () => {
 
   return (
     <>
-      {/* Header with Logo */}
-      <header className="header header_style_01">
-        <nav className="navbar navbar-default">
-          <div className="container">
-            <div className="navbar-header">
-              <a className="navbar-brand" href="/" style={{ padding: 0 }}>
-                <img src="/assets/images/logo.png" alt="Facilon" style={{ height: '50px' }} />
-              </a>
-            </div>
-          </div>
-        </nav>
-      </header>
+      <CompactHeader />
 
       <div style={{ background: '#f5f5f7', minHeight: '100vh', padding: '24px 0' }}>
         <div className="consent-container">
@@ -100,6 +91,7 @@ const SelfRegistrationConsent: React.FC = () => {
           corresponding purposes.
         </p>
 
+        <div className="table-responsive">
         <table>
           <thead>
             <tr>
@@ -193,6 +185,7 @@ const SelfRegistrationConsent: React.FC = () => {
             </tr>
           </tbody>
         </table>
+        </div>
 
         <h2>Consent Declaration</h2>
         <p className="section-note">
@@ -209,9 +202,11 @@ const SelfRegistrationConsent: React.FC = () => {
               onChange={(e) => setConsent1(e.target.checked)}
               required
             />
-            I provide <strong>free, specific, informed, unconditional and unambiguous consent</strong> to Facilon Services Private Limited
-            to collect and process my personal data as described in the table above, and to share it with my selected Service Providers
-            for the stated purposes, in accordance with the Digital Personal Data Protection Act, 2023 and applicable regulations.
+            <span>
+              I provide <strong>free, specific, informed, unconditional and unambiguous consent</strong> to Facilon Services Private Limited
+              to collect and process my personal data as described in the table above, and to share it with my selected Service Providers
+              for the stated purposes, in accordance with the Digital Personal Data Protection Act, 2023 and applicable regulations.
+            </span>
           </label>
         </div>
         <div className="ack">
@@ -223,7 +218,9 @@ const SelfRegistrationConsent: React.FC = () => {
               onChange={(e) => setConsent2(e.target.checked)}
               required
             />
-            I confirm that I have been provided <strong> access to, reviewed and understood </strong> the <a href="/privacy-policy">Privacy Policy</a>, which in addition to the above table, describes our rights and the available grievance redressal mechanisms.
+            <span>
+              I confirm that I have been provided <strong> access to, reviewed and understood </strong> the <a href="/privacy-policy">Privacy Policy</a>, which in addition to the above table, describes our rights and the available grievance redressal mechanisms.
+            </span>
           </label>
         </div>
         <div className="ack">
@@ -254,7 +251,8 @@ const SelfRegistrationConsent: React.FC = () => {
           </button>
         </div>
       </div>
-    </div>
+      </div>
+      <CompactFooter />
     </>
   );
 };
