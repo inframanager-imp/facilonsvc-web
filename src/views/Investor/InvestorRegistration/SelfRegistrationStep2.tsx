@@ -234,29 +234,22 @@ export const SelfRegistrationStep2: React.FC = () => {
                         )}
                       </div>
 
-                      <div className="row">
-                        <div className="col-md-6">
-                          <div className="single-field mb-0">
-                            <button
-                              className="button-1"
-                              type="submit"
-                              disabled={loading || otpTimer === 0}
-                            >
-                              {loading ? 'Verifying...' : 'Verify OTP'}
-                            </button>
-                          </div>
-                        </div>
-                        <div className="col-md-6">
-                          <div className="single-field mb-0">
-                            <button
-                              type="button"
-                              className="button-2"
-                              onClick={() => navigate('/investor/register/consent', { state: { email, registerAs } })}
-                            >
-                              Back
-                            </button>
-                          </div>
-                        </div>
+
+                      <div className="flex gap-2 justify-center single-field mb-0 mt-3 border-t pt-3">
+                        <button
+                          className="button-1"
+                          type="submit"
+                          disabled={loading || otpTimer === 0}
+                        >
+                          {loading ? 'Verifying...' : 'Verify OTP'}
+                        </button>
+                        <button
+                          type="button"
+                          className="button-2"
+                          onClick={() => navigate('/investor/register/email', { state: { email, registerAs } })}
+                        >
+                          Back
+                        </button>
                       </div>
                     </form>
                   </div>

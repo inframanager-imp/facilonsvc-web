@@ -44,6 +44,7 @@ export const SelfRegistrationStep3: React.FC = () => {
   // Additional checkboxes
   const [whatsappConsent, setWhatsappConsent] = useState(false);
   const [informationAccuracy, setInformationAccuracy] = useState(false);
+  const [showErrors, setShowErrors] = useState(false);
 
   // Individual form data
   const [individualData, setIndividualData] = useState<Partial<IndividualRegistrationDto>>({
@@ -101,21 +102,21 @@ export const SelfRegistrationStep3: React.FC = () => {
     setShowTermsModal(false);
   };
 
+  const handleTermsCheckboxClick = (e: React.MouseEvent) => {
+    if (!termsAccepted) {
+      e.preventDefault();
+      openTermsModal(e);
+    }
+  };
+
   const handleIndividualSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
+    setShowErrors(true);
 
     // Validate checkboxes first
-    if (!whatsappConsent) {
-      toast.error('Please confirm WhatsApp communication preference');
-      return;
-    }
-    if (!informationAccuracy) {
-      toast.error('Please confirm that the information provided is accurate');
-      return;
-    }
-    if (!termsAccepted) {
-      toast.error('Please read and accept the Terms and Conditions');
+    if (!whatsappConsent || !informationAccuracy || !termsAccepted) {
+      toast.error('Please accept all consents and terms to continue.');
       return;
     }
 
@@ -173,18 +174,11 @@ export const SelfRegistrationStep3: React.FC = () => {
   const handleLegalEntitySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
+    setShowErrors(true);
 
     // Validate checkboxes first
-    if (!whatsappConsent) {
-      toast.error('Please confirm WhatsApp communication preference');
-      return;
-    }
-    if (!informationAccuracy) {
-      toast.error('Please confirm that the information provided is accurate');
-      return;
-    }
-    if (!termsAccepted) {
-      toast.error('Please read and accept the Terms and Conditions');
+    if (!whatsappConsent || !informationAccuracy || !termsAccepted) {
+      toast.error('Please accept all consents and terms to continue.');
       return;
     }
 
@@ -506,101 +500,126 @@ export const SelfRegistrationStep3: React.FC = () => {
                         )}
 
                         {/* Consents */}
-                        <div id="note_confirm_div" style={{ marginTop: '24px' }}>
-                          {/* 1. WhatsApp Communication */}
-                          <div className={`form-group--checkbox ${whatsappConsent ? 'checked' : ''}`}>
-                            <label htmlFor="whatsappConsent">
-                              <input
-                                type="checkbox"
-                                id="whatsappConsent"
-                                checked={whatsappConsent}
-                                onChange={(e) => setWhatsappConsent(e.target.checked)}
-                              />
-                              <span>
-                                I agree to receive communication on WhatsApp <span className="star-color">*</span>
-                              </span>
-                            </label>
-                          </div>
+                        <div className="consent-container m-0 p-0">
+                          <div id="note_confirm_div" style={{ marginTop: '24px' }}>
+                            {/* 1. WhatsApp Communication */}
+                            <div
+                              className={`highlight ${whatsappConsent ? 'checked' : ''}`}
+                              style={{
+                                backgroundColor: showErrors && !whatsappConsent ? '#ffebee' : undefined,
+                                borderLeft: showErrors && !whatsappConsent ? '4px solid #be1717' : undefined
+                              }}
+                            >
+                              <label htmlFor="whatsappConsent">
+                                <input
+                                  type="checkbox"
+                                  id="whatsappConsent"
+                                  className="w-4 h-4 text-[#be1717] bg-white border-slate-300 rounded focus:ring-[#be1717] cursor-pointer align-middle mr-2"
+                                  checked={whatsappConsent}
+                                  onChange={(e) => setWhatsappConsent(e.target.checked)}
+                                />
+                                <span>
+                                  I agree to receive communication on WhatsApp <span className="star-color">*</span>
+                                </span>
+                              </label>
+                            </div>
+                            {showErrors && !whatsappConsent && (
+                              <div style={{ color: '#be1717', fontSize: '11.5px', marginTop: '-8px', marginBottom: '12px', paddingLeft: '4px', fontWeight: '500' }}>
+                                <i className="bi bi-exclamation-circle-fill me-1"></i> Please accept the WhatsApp communication consent to continue.
+                              </div>
+                            )}
 
-                          {/* 2. Information Accuracy */}
-                          <div className={`form-group--checkbox ${informationAccuracy ? 'checked' : ''}`}>
-                            <label htmlFor="informationAccuracy">
-                              <input
-                                type="checkbox"
-                                id="informationAccuracy"
-                                checked={informationAccuracy}
-                                onChange={(e) => setInformationAccuracy(e.target.checked)}
-                              />
-                              <span>
-                                I hereby confirm that the information provided is accurate, correct and complete <span className="star-color">*</span>
-                              </span>
-                            </label>
-                          </div>
+                            {/* 2. Information Accuracy */}
+                            <div
+                              className={`highlight ${informationAccuracy ? 'checked' : ''}`}
+                              style={{
+                                backgroundColor: showErrors && !informationAccuracy ? '#ffebee' : undefined,
+                                borderLeft: showErrors && !informationAccuracy ? '4px solid #be1717' : undefined
+                              }}
+                            >
+                              <label htmlFor="informationAccuracy">
+                                <input
+                                  type="checkbox"
+                                  id="informationAccuracy"
+                                  checked={informationAccuracy}
+                                  className="w-4 h-4 text-[#be1717] bg-white border-slate-300 rounded focus:ring-[#be1717] cursor-pointer align-middle mr-2"
+                                  onChange={(e) => setInformationAccuracy(e.target.checked)}
+                                />
+                                <span>
+                                  I hereby confirm that the information provided is accurate, correct and complete <span className="star-color">*</span>
+                                </span>
+                              </label>
+                            </div>
+                            {showErrors && !informationAccuracy && (
+                              <div style={{ color: '#be1717', fontSize: '11.5px', marginTop: '-8px', marginBottom: '12px', paddingLeft: '4px', fontWeight: '500' }}>
+                                <i className="bi bi-exclamation-circle-fill me-1"></i> Please confirm that the information provided is accurate.
+                              </div>
+                            )}
 
-                          {/* 3. Terms and Conditions */}
-                          <div
-                            className={`form-group--checkbox ${termsAccepted ? 'checked' : ''}`}
-                            onClick={(e) => {
-                              if (!termsCheckboxEnabled) {
-                                openTermsModal(e);
-                              }
-                            }}
-                          >
-                            <label htmlFor="termsCheckbox" onClick={(e) => e.stopPropagation()}>
-                              <input
-                                type="checkbox"
-                                id="termsCheckbox"
-                                checked={termsAccepted}
-                                disabled={!termsCheckboxEnabled}
-                                onChange={(e) => {
-                                  if (termsCheckboxEnabled) {
-                                    setTermsAccepted(e.target.checked);
-                                  }
-                                }}
-                              />
-                              <span>
-                                I have read, understood and hereby accept the{' '}
-                                <a
-                                  href="javascript:void(0);"
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    openTermsModal();
+                            {/* 3. Terms and Conditions */}
+                            <div
+                              className={`highlight ${termsAccepted ? 'checked' : ''}`}
+                              onClick={handleTermsCheckboxClick}
+                              style={{
+                                backgroundColor: showErrors && !termsAccepted ? '#ffebee' : undefined,
+                                borderLeft: showErrors && !termsAccepted ? '4px solid #be1717' : undefined
+                              }}
+                            >
+                              <label htmlFor="termsCheckbox">
+                                <input
+                                  type="checkbox"
+                                  id="termsCheckbox"
+                                  className="w-4 h-4 text-[#be1717] bg-white border-slate-300 rounded focus:ring-[#be1717] cursor-pointer align-middle mr-2"
+                                  checked={termsAccepted}
+                                  readOnly={!termsAccepted}
+                                  onChange={(e) => {
+                                    if (termsAccepted) {
+                                      setTermsAccepted(e.target.checked);
+                                    }
                                   }}
-                                >
-                                  Terms and Conditions
-                                </a>{' '}
-                                <span className="star-color">*</span>
-                              </span>
-                            </label>
+                                />
+                                <span>
+                                  I have read, understood and hereby accept the{' '}
+                                  <a
+                                    href="javascript:void(0);"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      openTermsModal();
+                                    }}
+                                  >
+                                    Terms and Conditions
+                                  </a>{' '}
+                                  <span className="star-color">*</span>
+                                </span>
+                              </label>
+                            </div>
+                            {showErrors && !termsAccepted && (
+                              <div style={{ color: '#be1717', fontSize: '11.5px', marginTop: '-8px', marginBottom: '12px', paddingLeft: '4px', fontWeight: '500' }}>
+                                <i className="bi bi-exclamation-circle-fill me-1"></i> Please accept the Terms and Conditions to continue.
+                              </div>
+                            )}
                           </div>
                         </div>
 
                         {/* Submit Button */}
                         <div id="button_div" style={{ marginTop: '20px' }}>
-                          <div className="row">
-                            <div className="col-md-6">
-                              <div className="single-field mb-0">
-                                <button
-                                  className="button-1"
-                                  type="submit"
-                                  disabled={loading}
-                                >
-                                  {loading ? 'Submitting...' : 'Submit'}
-                                </button>
-                              </div>
-                            </div>
-                            <div className="col-md-6">
-                              <div className="single-field mb-0">
-                                <button
-                                  type="button"
-                                  className="button-2"
-                                  onClick={() => navigate('/investor/register/otp', { state: { uniqueCode, email, registerAs } })}
-                                >
-                                  Back
-                                </button>
-                              </div>
-                            </div>
+
+                          <div className="single-field mb-0 border-t pt-3 mt-3 flex justify-center gap-2">
+                            <button
+                              className="button-1"
+                              type="submit"
+                              disabled={loading}
+                            >
+                              {loading ? 'Submitting...' : 'Submit'}
+                            </button>
+                            <button
+                              type="button"
+                              className="button-2"
+                              onClick={() => navigate('/investor/register/otp', { state: { uniqueCode, email, registerAs } })}
+                            >
+                              Back
+                            </button>
                           </div>
                         </div>
                       </form>
@@ -746,7 +765,13 @@ export const SelfRegistrationStep3: React.FC = () => {
                         {/* Consents */}
                         <div id="note_confirm_div" style={{ marginTop: '24px' }}>
                           {/* 1. WhatsApp Communication */}
-                          <div className={`form-group--checkbox ${whatsappConsent ? 'checked' : ''}`}>
+                          <div
+                            className={`form-group--checkbox ${whatsappConsent ? 'checked' : ''}`}
+                            style={{
+                              backgroundColor: showErrors && !whatsappConsent ? '#ffebee' : undefined,
+                              borderLeft: showErrors && !whatsappConsent ? '4px solid #be1717' : undefined
+                            }}
+                          >
                             <label htmlFor="whatsappConsent">
                               <input
                                 type="checkbox"
@@ -759,9 +784,20 @@ export const SelfRegistrationStep3: React.FC = () => {
                               </span>
                             </label>
                           </div>
+                          {showErrors && !whatsappConsent && (
+                            <div style={{ color: '#be1717', fontSize: '11.5px', marginTop: '-8px', marginBottom: '12px', paddingLeft: '4px', fontWeight: '500' }}>
+                              <i className="bi bi-exclamation-circle-fill me-1"></i> Please accept the WhatsApp communication consent to continue.
+                            </div>
+                          )}
 
                           {/* 2. Information Accuracy */}
-                          <div className={`form-group--checkbox ${informationAccuracy ? 'checked' : ''}`}>
+                          <div
+                            className={`form-group--checkbox ${informationAccuracy ? 'checked' : ''}`}
+                            style={{
+                              backgroundColor: showErrors && !informationAccuracy ? '#ffebee' : undefined,
+                              borderLeft: showErrors && !informationAccuracy ? '4px solid #be1717' : undefined
+                            }}
+                          >
                             <label htmlFor="informationAccuracy">
                               <input
                                 type="checkbox"
@@ -774,24 +810,29 @@ export const SelfRegistrationStep3: React.FC = () => {
                               </span>
                             </label>
                           </div>
+                          {showErrors && !informationAccuracy && (
+                            <div style={{ color: '#be1717', fontSize: '11.5px', marginTop: '-8px', marginBottom: '12px', paddingLeft: '4px', fontWeight: '500' }}>
+                              <i className="bi bi-exclamation-circle-fill me-1"></i> Please confirm that the information provided is accurate.
+                            </div>
+                          )}
 
                           {/* 3. Terms and Conditions */}
                           <div
                             className={`form-group--checkbox ${termsAccepted ? 'checked' : ''}`}
-                            onClick={(e) => {
-                              if (!termsCheckboxEnabled) {
-                                openTermsModal(e);
-                              }
+                            onClick={handleTermsCheckboxClick}
+                            style={{
+                              backgroundColor: showErrors && !termsAccepted ? '#ffebee' : undefined,
+                              borderLeft: showErrors && !termsAccepted ? '4px solid #be1717' : undefined
                             }}
                           >
-                            <label htmlFor="termsCheckbox" onClick={(e) => e.stopPropagation()}>
+                            <label htmlFor="termsCheckbox">
                               <input
                                 type="checkbox"
                                 id="termsCheckbox"
                                 checked={termsAccepted}
-                                disabled={!termsCheckboxEnabled}
+                                readOnly={!termsAccepted}
                                 onChange={(e) => {
-                                  if (termsCheckboxEnabled) {
+                                  if (termsAccepted) {
                                     setTermsAccepted(e.target.checked);
                                   }
                                 }}
@@ -812,6 +853,11 @@ export const SelfRegistrationStep3: React.FC = () => {
                               </span>
                             </label>
                           </div>
+                          {showErrors && !termsAccepted && (
+                            <div style={{ color: '#be1717', fontSize: '11.5px', marginTop: '-8px', marginBottom: '12px', paddingLeft: '4px', fontWeight: '500' }}>
+                              <i className="bi bi-exclamation-circle-fill me-1"></i> Please accept the Terms and Conditions to continue.
+                            </div>
+                          )}
                         </div>
 
                         {/* Submit Button */}

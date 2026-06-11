@@ -28,50 +28,25 @@ const SelfRegistrationConsent: React.FC = () => {
     return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
   };
 
-  const handleAgree = async () => {
+  const handleAgree = () => {
     setShowErrors(true);
     if (!consent1 || !consent2) {
       toast.error('Please accept both consents to continue.');
       return;
     }
 
-    if (!email || !registerAs) {
-      toast.error('Email and registration type are required');
-      navigate('/investor/register/email');
-      return;
-    }
-
-    setLoading(true);
-    try {
-      // Now send OTP after consent is accepted
-      const response = await investorService.submitEmail({
-        email: email.trim(),
+    navigate('/investor/register/email', {
+      state: {
+        email,
         registerAs,
-      });
-
-      if (!response.success) {
-        toast.error(response.message || 'Failed to send OTP');
-        return;
+        consentGiven: true
       }
-
-      toast.success(response.message);
-      navigate('/investor/register/otp', {
-        state: {
-          uniqueCode: response.uniqueCode,
-          email,
-          registerAs
-        }
-      });
-    } catch (err: any) {
-      toast.error(err.response?.data?.message || 'Failed to send OTP');
-    } finally {
-      setLoading(false);
-    }
+    });
   };
 
   const handleDoNotAgree = () => {
     toast.warning('You must agree to the terms to continue with registration');
-    navigate('/investor/register/email');
+    navigate('/investor/register');
   };
 
   return (
@@ -91,7 +66,7 @@ const SelfRegistrationConsent: React.FC = () => {
               </div> */}
 
               {/* Stepper Progress */}
-              <RegistrationStepper currentStep={3} title="Data Consent Management" maxWidth="700px" />
+              <RegistrationStepper currentStep={2} title="Data Consent Management" maxWidth="700px" />
 
               {/* Consent Container Card */}
               <div className="consent-container" style={{ width: '100%', maxWidth: '700px', margin: '0 auto', textAlign: 'left' }}>

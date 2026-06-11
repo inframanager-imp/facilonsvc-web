@@ -31,7 +31,7 @@ const MarketInterestCheck: React.FC = () => {
 
   const handleContinue = () => {
     if (selectedOption === 'yes') {
-      navigate('/investor/register/email');
+      navigate('/investor/register/consent');
     } else if (selectedOption === 'no') {
       setShowModal(true);
     }

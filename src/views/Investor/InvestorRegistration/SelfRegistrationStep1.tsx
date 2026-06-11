@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { investorService } from '../../../services/investor.service';
 import { toast } from 'react-toastify';
 import '../IntroducedRegistration/IntroducedInvestorRegistration.scss';
@@ -9,13 +9,16 @@ import { RegistrationStepper } from '../../../components/RegistrationStepper/Reg
 import { RegistrationVisualCard } from '../../../components/RegistrationVisualCard/RegistrationVisualCard';
 
 /**
- * Step 1: Email Entry
- * User enters email and registration type, then proceeds to consent page
+ * Step 3: Email Entry & OTP Generation
+ * User enters email and registration type, then OTP is generated and sent
  */
 export const SelfRegistrationStep1: React.FC = () => {
   const navigate = useNavigate();
-  const [registerAs, setRegisterAs] = useState<number>(1);
-  const [email, setEmail] = useState<string>('');
+  const location = useLocation();
+  const { email: initialEmail, registerAs: initialRegisterAs } = location.state || {};
+
+  const [registerAs, setRegisterAs] = useState<number>(initialRegisterAs || 1);
+  const [email, setEmail] = useState<string>(initialEmail || '');
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -39,13 +42,32 @@ export const SelfRegistrationStep1: React.FC = () => {
       return;
     }
 
-    // Navigate to consent page without sending OTP
-    navigate('/investor/register/consent', {
-      state: {
+    setLoading(true);
+    try {
+      // Send OTP
+      const response = await investorService.submitEmail({
         email: email.trim(),
-        registerAs
+        registerAs,
+      });
+
+      if (!response.success) {
+        toast.error(response.message || 'Failed to send OTP');
+        return;
       }
-    });
+
+      toast.success(response.message);
+      navigate('/investor/register/otp', {
+        state: {
+          uniqueCode: response.uniqueCode,
+          email: email.trim(),
+          registerAs
+        }
+      });
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || 'Failed to send OTP');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -56,27 +78,12 @@ export const SelfRegistrationStep1: React.FC = () => {
           <div className="registration-split-layout">
             {/* Left Panel: Form & Stepper */}
             <div className="left-panel">
-              {/* Welcome text */}
-              {/* <div className="lgf4_Left_content mb-3" style={{ width: '100%', maxWidth: '550px' }}>
-                <h3 className="text-center text-lg-start m-0" style={{ lineHeight: '1.4' }}>
-                  Welcome to <br />
-                  <span>Facilon Services</span>
-                </h3>
-              </div> */}
-
               {/* Stepper Progress */}
-              <RegistrationStepper currentStep={2} title="Email Verification" maxWidth="550px" />
+              <RegistrationStepper currentStep={3} title="Email Verification" maxWidth="550px" />
 
               {/* Investor Registration Card */}
               <div className="login-form-style3-main" style={{ width: '100%', maxWidth: '550px', margin: '0 auto' }}>
                 <div className="login-form-style3-main_full">
-                  {/* <div className="login-register_style3-head">
-                    <h2 className="text-center" style={{ textAlign: 'center' }}>Investor Registration</h2>
-                    <p className="text-center mt-2 mb-0" style={{ fontSize: '12.5px', color: '#64748b' }}>
-                      Please verify your email to continue registration.
-                    </p>
-                  </div> */}
-
                   <div className="login-register3-form-middle" style={{ textAlign: 'left' }}>
                     <form onSubmit={handleEmailSubmit} noValidate>
                       {/* Register As Selection */}
@@ -126,13 +133,23 @@ export const SelfRegistrationStep1: React.FC = () => {
                         {errors.email && <span role="alert">{errors.email}</span>}
                       </div>
 
-                      {/* Submit Button */}
-                      <div className="single-field mb-0 text-center border-t pt-3 mt-3">
+                      {/* Submit / Action Buttons */}
+
+                      <div className="flex gap-2 justify-center single-field mb-0 mt-3 border-t pt-3">
                         <button
                           className="button-1"
                           type="submit"
+                          disabled={loading}
                         >
-                          Continue
+                          {loading ? 'Processing...' : 'Continue'}
+                        </button>
+                        <button
+                          type="button"
+                          className="button-2"
+                          onClick={() => navigate('/investor/register/consent', { state: { email, registerAs } })}
+                          disabled={loading}
+                        >
+                          Back
                         </button>
                       </div>
                     </form>

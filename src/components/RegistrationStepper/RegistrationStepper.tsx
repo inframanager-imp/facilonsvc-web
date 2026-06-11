@@ -9,8 +9,8 @@ interface Props {
 export const RegistrationStepper: React.FC<Props> = ({ currentStep, title, maxWidth }) => {
   const steps = [
     { num: 1, label: 'Interest', icon: 'bi-globe2' },
-    { num: 2, label: 'Email', icon: 'bi-envelope' },
-    { num: 3, label: 'Consent', icon: 'bi-shield-check' },
+    { num: 2, label: 'Consent', icon: 'bi-shield-check' },
+    { num: 3, label: 'Email', icon: 'bi-envelope' },
     { num: 4, label: 'Verify', icon: 'bi-key' },
     { num: 5, label: 'Details', icon: 'bi-person-badge' }
   ];
