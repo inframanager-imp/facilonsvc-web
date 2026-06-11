@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from '../../../components/Header/Header';
-import Footer from '../../../components/Footer/Footer';
 import { LoadingSpinner } from '../../../components/LoadingSpinner/LoadingSpinner';
 import { PremiumSelect } from '../../../components/PremiumSelect/PremiumSelect';
 import { toast } from 'react-toastify';
@@ -9,7 +7,7 @@ import { adminDsrService, DsrAdminCaseDto, DsrListFilters } from '../../../servi
 import './DsrConsole.scss';
 
 const STATUSES = [
-  'SUBMITTED', 'ACKNOWLEDGED', 'VERIFICATION_PENDING', 'CLARIFICATION_PENDING', 'UNDER_REVIEW',
+  'NEW', 'SUBMITTED', 'ACKNOWLEDGED', 'VERIFICATION_PENDING', 'CLARIFICATION_PENDING', 'UNDER_REVIEW',
   'DATA_SEARCH_IN_PROGRESS', 'LEGAL_REVIEW', 'ACTION_IN_PROGRESS', 'RESPONSE_SENT',
   'PARTIALLY_FULFILLED', 'REJECTED', 'CLOSED', 'REOPENED'
 ];
@@ -53,14 +51,13 @@ export const AdminDsrList: React.FC = () => {
   const opt = (arr: string[]) => [{ value: '', label: 'All' }, ...arr.map((v) => ({ value: v, label: v }))];
 
   return (
-    <div className="facilon-dashboard-wrapper">
-      <Header />
-      <main className="container-fluid dashboard-container-main">
+    <div>
+      <div>
         <div className="dsr-console">
           <div className="d-flex justify-content-between align-items-center mb-3">
             <h1 className="dashboard-title-modern mb-0">DSR Case Queue</h1>
-            <button className="btn btn-outline-secondary" onClick={() => navigate('/admin/dashboard')}>
-              Back to Admin Center
+            <button className="btn btn-outline-secondary" onClick={() => navigate('/admin/dsr-admins')}>
+              Back to DSR Dashboard
             </button>
           </div>
 
@@ -145,8 +142,7 @@ export const AdminDsrList: React.FC = () => {
             )}
           </div>
         </div>
-      </main>
-      <Footer />
+      </div>
     </div>
   );
 };

@@ -47,10 +47,38 @@ export interface DsrDashboardSummaryDto {
   total: number;
   open: number;
   overdue: number;
+  newToday: number;
+  notWorked: number;
+  withinTat: number;
   awaitingVerification: number;
   closedThisMonth: number;
   byRequestType: Record<string, number>;
   byStatus: Record<string, number>;
+}
+
+/** Mutually exclusive triage buckets: overdue + newToday + notWorked + withinTat = open. */
+export type DsrTriageBucket = 'OVERDUE' | 'NEW_TODAY' | 'NOT_WORKED' | 'WITHIN_TAT';
+
+export interface DsrAdminUserDto {
+  id: number;
+  firstName: string;
+  lastName: string;
+  emailId: string;
+  mobilePhone?: string;
+  loginId: string;
+  active: boolean;
+  roles: string[];
+  lastLogin?: string;
+}
+
+export interface DsrAdminRegisterRequest {
+  firstName: string;
+  lastName: string;
+  emailId: string;
+  mobilePhone?: string;
+  loginId: string;
+  password: string;
+  active?: boolean;
 }
 
 export interface DsrEvidenceFileDto {
@@ -79,6 +107,15 @@ export interface DsrListFilters {
   jurisdiction?: string;
   overdueOnly?: boolean;
   assignedTo?: string;
+  bucket?: DsrTriageBucket;
+}
+
+export interface DsrCasePageDto {
+  content: DsrAdminCaseDto[];
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
 }
 
 class AdminDsrService {
@@ -96,8 +133,27 @@ class AdminDsrService {
     if (filters.jurisdiction) params.append('jurisdiction', filters.jurisdiction);
     if (filters.overdueOnly) params.append('overdueOnly', 'true');
     if (filters.assignedTo) params.append('assignedTo', filters.assignedTo);
+    if (filters.bucket) params.append('bucket', filters.bucket);
     const url = params.toString() ? `${this.baseUrl}?${params.toString()}` : this.baseUrl;
     const response = await apiClient.get<DsrAdminCaseDto[]>(url);
+    return response.data;
+  }
+
+  async listCasesPaged(
+    filters: DsrListFilters = {},
+    page = 0,
+    size = 10
+  ): Promise<DsrCasePageDto> {
+    const params = new URLSearchParams();
+    if (filters.status) params.append('status', filters.status);
+    if (filters.requestType) params.append('requestType', filters.requestType);
+    if (filters.jurisdiction) params.append('jurisdiction', filters.jurisdiction);
+    if (filters.overdueOnly) params.append('overdueOnly', 'true');
+    if (filters.assignedTo) params.append('assignedTo', filters.assignedTo);
+    if (filters.bucket) params.append('bucket', filters.bucket);
+    params.append('page', String(page));
+    params.append('size', String(size));
+    const response = await apiClient.get<DsrCasePageDto>(`${this.baseUrl}/paged?${params.toString()}`);
     return response.data;
   }
 
@@ -145,6 +201,28 @@ class AdminDsrService {
 
   async getStatuses(): Promise<string[]> {
     const response = await apiClient.get<string[]>(`${this.baseUrl}/reference/statuses`);
+    return response.data;
+  }
+
+  // ----- DSR Admin user registration -----
+
+  async getMyAdminProfile(): Promise<DsrAdminUserDto> {
+    const response = await apiClient.get<DsrAdminUserDto>(`${this.baseUrl}/admins/me`);
+    return response.data;
+  }
+
+  async listDsrAdmins(): Promise<DsrAdminUserDto[]> {
+    const response = await apiClient.get<DsrAdminUserDto[]>(`${this.baseUrl}/admins`);
+    return response.data;
+  }
+
+  async registerDsrAdmin(payload: DsrAdminRegisterRequest): Promise<DsrAdminUserDto> {
+    const response = await apiClient.post<DsrAdminUserDto>(`${this.baseUrl}/admins`, payload);
+    return response.data;
+  }
+
+  async deactivateDsrAdmin(userId: number): Promise<DsrAdminUserDto> {
+    const response = await apiClient.delete<DsrAdminUserDto>(`${this.baseUrl}/admins/${userId}`);
     return response.data;
   }
 }

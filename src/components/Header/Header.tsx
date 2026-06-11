@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { useNavigate, Link, NavLink } from 'react-router-dom';
+import { useNavigate, Link, NavLink, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTranslation } from 'react-i18next';
 import './Header.scss';
@@ -11,11 +11,22 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ variant = 'legacy', title, subtitle }) => {
-  const { logout, userName } = useAuth();
+  const { logout, userName, userRoles } = useAuth();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLLIElement | any>(null);
   const navigate = useNavigate();
+  const location = useLocation();
   const { t } = useTranslation();
+  // Admin console pages share this header but must not show the investor nav links.
+  const isAdminArea = location.pathname.startsWith('/admin');
+  // DSR admins land on the DSR dashboard; platform admins on the admin dashboard.
+  const adminHome = userRoles.includes('DSR_ADMIN') ? '/admin/dsr-admins' : '/admin/dashboard';
+  const canManageDsrAdmins = userRoles.some((r) => r === 'ADMIN' || r === 'PLATFORM_SUPER_ADMIN');
+  const roleLabel = userRoles.includes('PLATFORM_SUPER_ADMIN') ? 'Super Admin'
+    : userRoles.includes('ADMIN') ? 'Platform Admin'
+    : userRoles.includes('DSR_ADMIN') ? 'DSR Admin'
+    : userRoles.includes('SERVICE_AGENT') ? 'Service Agent'
+    : 'Investor';
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -42,7 +53,7 @@ const Header: React.FC<HeaderProps> = ({ variant = 'legacy', title, subtitle }) 
       <aside className="group fixed left-0 top-0 h-screen w-sidebar bg-sidebar border-r border-sidebar-border z-50 flex flex-col items-center py-4 hover:w-sidebar-expanded group">
         {/* Logo Section */}
         <div className="mb-8 px-2 w-full flex justify-center">
-          <Link to="/investor/dashboard" className="flex items-center gap-2">
+          <Link to={isAdminArea ? adminHome : '/investor/dashboard'} className="flex items-center gap-2">
             <div className="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center flex-shrink-0">
               <span className="text-white font-bold text-xl">F</span>
             </div>
@@ -54,26 +65,50 @@ const Header: React.FC<HeaderProps> = ({ variant = 'legacy', title, subtitle }) 
 
         {/* Navigation Section */}
         < nav className="flex-1 w-full flex flex-col gap-2" >
-          <SidebarLink
-            to="/investor/dashboard"
-            icon="bi-house-door"
-            label="Home"
-          />
-          <SidebarLink
-            to="/investor/profile"
-            icon="bi-person"
-            label="My Profile"
-          />
-          <SidebarLink
-            to="/investor/progress"
-            icon="bi-bar-chart"
-            label="My Progress"
-          />
-          <SidebarLink
-            to="/investor/delegations"
-            icon="bi-briefcase"
-            label="Service Agent"
-          />
+          {isAdminArea ? (
+            <>
+              {canManageDsrAdmins && (
+                <SidebarLink
+                  to="/admin/dashboard"
+                  icon="bi-speedometer2"
+                  label="Admin Dashboard"
+                />
+              )}
+              <SidebarLink
+                to="/admin/dsr-admins"
+                icon="bi-clipboard-data"
+                label="DSR Dashboard"
+              />
+              <SidebarLink
+                to="/admin/dsr"
+                icon="bi-list-task"
+                label="Case Queue"
+              />
+            </>
+          ) : (
+            <>
+              <SidebarLink
+                to="/investor/dashboard"
+                icon="bi-house-door"
+                label="Home"
+              />
+              <SidebarLink
+                to="/investor/profile"
+                icon="bi-person"
+                label="My Profile"
+              />
+              <SidebarLink
+                to="/investor/progress"
+                icon="bi-bar-chart"
+                label="My Progress"
+              />
+              <SidebarLink
+                to="/investor/delegations"
+                icon="bi-briefcase"
+                label="Service Agent"
+              />
+            </>
+          )}
         </nav >
 
         {/* Bottom Section */}
@@ -124,7 +159,7 @@ const Header: React.FC<HeaderProps> = ({ variant = 'legacy', title, subtitle }) 
                 {userName || 'User'}
               </p>
               <p className="text-[10px] text-neutral-400 font-medium uppercase tracking-wider mb-0">
-                Investor
+                {roleLabel}
               </p>
             </div>
             <div className="w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-white font-medium text-sm border border-neutral-200 bg-primary-900">
@@ -143,17 +178,21 @@ const Header: React.FC<HeaderProps> = ({ variant = 'legacy', title, subtitle }) 
     <header className="facilon-header">
       <div className="container-fluid header-container">
         <div className="header-brand">
-          <Link to="/investor/dashboard" className="navbar-brand">
+          <Link to={isAdminArea ? adminHome : '/investor/dashboard'} className="navbar-brand">
             <img src="/assets/images/facilon-main-logo.png" alt="Facilon Services" />
           </Link>
         </div>
 
         <nav className="header-nav">
           <ul className="nav-links">
-            <li><NavLink to="/investor/dashboard" className="nav-link-item">Home</NavLink></li>
-            <li><NavLink to="/investor/profile" className="nav-link-item">My Profile</NavLink></li>
-            <li><NavLink to="/investor/progress" className="nav-link-item">My Progress</NavLink></li>
-            <li><NavLink to="/investor/delegations" className="nav-link-item">Service Agent</NavLink></li>
+            {!isAdminArea && (
+              <>
+                <li><NavLink to="/investor/dashboard" className="nav-link-item">Home</NavLink></li>
+                <li><NavLink to="/investor/profile" className="nav-link-item">My Profile</NavLink></li>
+                <li><NavLink to="/investor/progress" className="nav-link-item">My Progress</NavLink></li>
+                <li><NavLink to="/investor/delegations" className="nav-link-item">Service Agent</NavLink></li>
+              </>
+            )}
 
             <li ref={dropdownRef} className={`nav-dropdown ${isDropdownOpen ? 'active' : ''}`}>
               <button

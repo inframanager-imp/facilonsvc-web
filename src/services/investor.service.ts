@@ -578,7 +578,7 @@ class InvestorService {
     return response.data;
   }
 
-  async submitDsrCase(data: DsrCaseCreateDto, supportingFile?: File): Promise<DsrCaseResponseDto> {
+  async submitDsrCase(data: DsrCaseCreateDto, supportingFiles?: File[]): Promise<DsrCaseResponseDto> {
     const formData = new FormData();
     formData.append('requestType', data.requestType);
     formData.append('jurisdiction', data.jurisdiction);
@@ -588,7 +588,7 @@ class InvestorService {
     formData.append('requesterEmail', data.requesterEmail);
     if (data.requesterPhone) formData.append('requesterPhone', data.requesterPhone);
     if (data.requesterRole) formData.append('requesterRole', data.requesterRole);
-    if (supportingFile) formData.append('supportingFile', supportingFile);
+    (supportingFiles || []).forEach((file) => formData.append('supportingFiles', file));
 
     const response = await this.client.post<DsrCaseResponseDto>(`${this.baseUrl}/me/dsr`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' }

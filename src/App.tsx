@@ -73,6 +73,7 @@ import { AppointmentManagement } from './views/Admin/AppointmentManagement/Appoi
 import { AdminDsrDashboard } from './views/Admin/DsrConsole/AdminDsrDashboard';
 import { AdminDsrList } from './views/Admin/DsrConsole/AdminDsrList';
 import { AdminDsrCaseDetail } from './views/Admin/DsrConsole/AdminDsrCaseDetail';
+import { AdminDsrUserManagement } from './views/Admin/DsrConsole/AdminDsrUserManagement';
 import { NextholderManagement } from './views/Investor/NextholderManagement/NextholderManagement';
 import { ServiceAgentDashboard } from './views/ServiceAgent/ServiceAgentDashboard/ServiceAgentDashboard';
 import { SAInvestorList } from './views/ServiceAgent/InvestorList/InvestorList';
@@ -522,23 +523,39 @@ const App: React.FC = () => {
             path="/admin/dashboard"
             element={
               <ProtectedRoute requiredRoles={['ADMIN', 'PLATFORM_SUPER_ADMIN']}>
-                <AdminDsrDashboard />
+                <MainLayout title="">
+                  <AdminDsrUserManagement />
+                </MainLayout>
               </ProtectedRoute>
             }
           />
           <Route
             path="/admin/dsr"
             element={
-              <ProtectedRoute requiredRoles={['ADMIN', 'PLATFORM_SUPER_ADMIN']}>
-                <AdminDsrList />
+              <ProtectedRoute requiredRoles={['ADMIN', 'PLATFORM_SUPER_ADMIN', 'DSR_ADMIN']}>
+                <MainLayout title="">
+                  <AdminDsrList />
+                </MainLayout>
               </ProtectedRoute>
             }
           />
           <Route
             path="/admin/dsr/:caseId"
             element={
-              <ProtectedRoute requiredRoles={['ADMIN', 'PLATFORM_SUPER_ADMIN']}>
-                <AdminDsrCaseDetail />
+              <ProtectedRoute requiredRoles={['ADMIN', 'PLATFORM_SUPER_ADMIN', 'DSR_ADMIN']}>
+                <MainLayout title="">
+                  <AdminDsrCaseDetail />
+                </MainLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/dsr-admins"
+            element={
+              <ProtectedRoute requiredRoles={['ADMIN', 'PLATFORM_SUPER_ADMIN', 'DSR_ADMIN']}>
+                <MainLayout title="">
+                  <AdminDsrDashboard />
+                </MainLayout>
               </ProtectedRoute>
             }
           />

@@ -95,10 +95,13 @@ const Login: React.FC = () => {
     if (isAuthenticated) {
       const roles = userRoles.length > 0 ? userRoles : authenticationService.getUserRoles();
       const isSuperAdmin = roles.some(role => role === 'PLATFORM_SUPER_ADMIN' || role.toUpperCase().includes('SUPER_ADMIN'));
-      const isAdmin = !isSuperAdmin && roles.some(role => role === 'ADMIN' || role.toUpperCase().includes('ADMIN'));
-      const isServiceAgent = !isSuperAdmin && !isAdmin && roles.some(role => role === 'SERVICE_AGENT');
+      // DSR_ADMIN must be checked before the generic ADMIN match ("DSR_ADMIN".includes('ADMIN') is true)
+      const isDsrAdmin = !isSuperAdmin && roles.some(role => role === 'DSR_ADMIN');
+      const isAdmin = !isSuperAdmin && !isDsrAdmin && roles.some(role => role === 'ADMIN' || role.toUpperCase().includes('ADMIN'));
+      const isServiceAgent = !isSuperAdmin && !isDsrAdmin && !isAdmin && roles.some(role => role === 'SERVICE_AGENT');
 
       if (isSuperAdmin) navigate('/super-admin/dashboard', { replace: true });
+      else if (isDsrAdmin) navigate('/admin/dsr-admins', { replace: true });
       else if (isAdmin) navigate('/admin/dashboard', { replace: true });
       else if (isServiceAgent) navigate('/service-agent/dashboard', { replace: true });
       else navigate('/investor/dashboard', { replace: true });
@@ -177,10 +180,13 @@ const Login: React.FC = () => {
 
       const roles = userRoles.length > 0 ? userRoles : authenticationService.getUserRoles();
       const isSuperAdmin = roles.some(role => role === 'PLATFORM_SUPER_ADMIN' || role.toUpperCase().includes('SUPER_ADMIN'));
-      const isAdmin = !isSuperAdmin && roles.some(role => role === 'ADMIN' || role.toUpperCase().includes('ADMIN'));
-      const isServiceAgent = !isSuperAdmin && !isAdmin && roles.some(role => role === 'SERVICE_AGENT');
+      // DSR_ADMIN must be checked before the generic ADMIN match ("DSR_ADMIN".includes('ADMIN') is true)
+      const isDsrAdmin = !isSuperAdmin && roles.some(role => role === 'DSR_ADMIN');
+      const isAdmin = !isSuperAdmin && !isDsrAdmin && roles.some(role => role === 'ADMIN' || role.toUpperCase().includes('ADMIN'));
+      const isServiceAgent = !isSuperAdmin && !isDsrAdmin && !isAdmin && roles.some(role => role === 'SERVICE_AGENT');
 
       if (isSuperAdmin) navigate('/super-admin/dashboard');
+      else if (isDsrAdmin) navigate('/admin/dsr-admins');
       else if (isAdmin) navigate('/admin/dashboard');
       else if (isServiceAgent) navigate('/service-agent/dashboard');
       else navigate('/investor/dashboard');

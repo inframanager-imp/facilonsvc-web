@@ -9,6 +9,9 @@ import { authenticationService } from '../../services/authentication.service';
 function getRoleBasedDashboard(roles: string[]): string {
   const isSuperAdmin = roles.some(r => r === 'PLATFORM_SUPER_ADMIN' || r.toUpperCase().includes('SUPER_ADMIN'));
   if (isSuperAdmin) return '/super-admin/dashboard';
+  // DSR_ADMIN must be checked before the generic ADMIN match ("DSR_ADMIN".includes('ADMIN') is true)
+  const isDsrAdmin = roles.some(r => r === 'DSR_ADMIN');
+  if (isDsrAdmin) return '/admin/dsr-admins';
   const isAdmin = roles.some(r => r === 'ADMIN' || r.toUpperCase().includes('ADMIN'));
   if (isAdmin) return '/admin/dashboard';
   const isServiceAgent = roles.some(r => r === 'SERVICE_AGENT' || r.toUpperCase() === 'SERVICE_AGENT');

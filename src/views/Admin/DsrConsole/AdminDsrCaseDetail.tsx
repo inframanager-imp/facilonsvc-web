@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import Header from '../../../components/Header/Header';
-import Footer from '../../../components/Footer/Footer';
 import { LoadingSpinner } from '../../../components/LoadingSpinner/LoadingSpinner';
 import { PremiumSelect } from '../../../components/PremiumSelect/PremiumSelect';
 import { toast } from 'react-toastify';
@@ -14,12 +12,10 @@ import {
 import './DsrConsole.scss';
 
 const STATUSES = [
-  'SUBMITTED', 'ACKNOWLEDGED', 'VERIFICATION_PENDING', 'CLARIFICATION_PENDING', 'UNDER_REVIEW',
+  'NEW', 'SUBMITTED', 'ACKNOWLEDGED', 'VERIFICATION_PENDING', 'CLARIFICATION_PENDING', 'UNDER_REVIEW',
   'DATA_SEARCH_IN_PROGRESS', 'LEGAL_REVIEW', 'ACTION_IN_PROGRESS', 'RESPONSE_SENT',
   'PARTIALLY_FULFILLED', 'REJECTED', 'CLOSED', 'REOPENED'
 ];
-const VERIFICATION_STATUSES = ['PENDING', 'VERIFIED', 'FAILED', 'NOT_REQUIRED'];
-const VERIFICATION_METHODS = ['Email', 'OTP', 'Login', 'Document', 'Other'];
 const DECISIONS = ['PENDING', 'ACCEPTED', 'REJECTED', 'PARTIALLY_FULFILLED', 'ROUTED'];
 
 export const AdminDsrCaseDetail: React.FC = () => {
@@ -33,14 +29,13 @@ export const AdminDsrCaseDetail: React.FC = () => {
   // Editable working state
   const [status, setStatus] = useState('');
   const [assignedTo, setAssignedTo] = useState('');
-  const [verificationStatus, setVerificationStatus] = useState('');
-  const [verificationMethod, setVerificationMethod] = useState('');
   const [decision, setDecision] = useState('');
   const [finalOutcome, setFinalOutcome] = useState('');
   const [resolutionNotes, setResolutionNotes] = useState('');
   const [note, setNote] = useState('');
   const [internalOnly, setInternalOnly] = useState(false);
-  const [file, setFile] = useState<File | undefined>(undefined);
+  const [files, setFiles] = useState<File[]>([]);
+  const [uploadProgress, setUploadProgress] = useState<string>('');
 
   useEffect(() => {
     if (caseId) load(caseId);
@@ -51,8 +46,6 @@ export const AdminDsrCaseDetail: React.FC = () => {
     setItem(c);
     setStatus(c.status || '');
     setAssignedTo(c.assignedTo || '');
-    setVerificationStatus(c.verificationStatus || '');
-    setVerificationMethod(c.verificationMethod || '');
     setDecision(c.decision || '');
     setFinalOutcome(c.finalOutcome || '');
     setResolutionNotes(c.resolutionNotes || '');
@@ -107,8 +100,6 @@ export const AdminDsrCaseDetail: React.FC = () => {
       const payload: DsrAdminUpdateRequest = {
         status: status || undefined,
         assignedTo: assignedTo || undefined,
-        verificationStatus: verificationStatus || undefined,
-        verificationMethod: verificationMethod || undefined,
         decision: decision || undefined,
         finalOutcome: finalOutcome || undefined,
         resolutionNotes: resolutionNotes || undefined,
@@ -124,19 +115,27 @@ export const AdminDsrCaseDetail: React.FC = () => {
     }
   };
 
-  const uploadFile = async () => {
-    if (!caseId || !file) return;
+  const uploadFiles = async () => {
+    if (!caseId || files.length === 0) return;
     setSaving(true);
-    try {
-      hydrate(await adminDsrService.attachFile(caseId, file));
-      setFile(undefined);
-      await loadEvidence(caseId);
-      toast.success('File attached to evidence folder');
-    } catch (err: any) {
-      toast.error(err?.response?.data?.message || 'Upload failed');
-    } finally {
-      setSaving(false);
+    let lastCase: DsrAdminCaseDto | null = null;
+    let failed = 0;
+    for (let i = 0; i < files.length; i++) {
+      setUploadProgress(`Uploading ${i + 1} of ${files.length}: ${files[i].name}`);
+      try {
+        lastCase = await adminDsrService.attachFile(caseId, files[i]);
+      } catch (err: any) {
+        failed++;
+        toast.error(`Failed: ${files[i].name} — ${err?.response?.data?.message || 'Upload failed'}`);
+      }
     }
+    if (lastCase) hydrate(lastCase);
+    setFiles([]);
+    setUploadProgress('');
+    await loadEvidence(caseId);
+    if (failed === 0) toast.success(`${files.length} file${files.length > 1 ? 's' : ''} attached`);
+    else toast.warning(`${files.length - failed} uploaded, ${failed} failed`);
+    setSaving(false);
   };
 
   const downloadSupporting = async () => {
@@ -156,20 +155,17 @@ export const AdminDsrCaseDetail: React.FC = () => {
 
   if (loading) return <LoadingSpinner />;
   if (!item) return (
-    <div className="facilon-dashboard-wrapper"><Header />
-      <main className="container-fluid dashboard-container-main">
-        <p className="text-muted">Case not found.</p>
-        <button className="btn btn-outline-primary" onClick={() => navigate('/admin/dsr')}>Back to queue</button>
-      </main><Footer />
+    <div>
+      <p className="text-muted">Case not found.</p>
+      <button className="btn btn-outline-primary" onClick={() => navigate('/admin/dsr')}>Back to queue</button>
     </div>
   );
 
   const sel = (arr: string[]) => arr.map((v) => ({ value: v, label: v }));
 
   return (
-    <div className="facilon-dashboard-wrapper">
-      <Header />
-      <main className="container-fluid dashboard-container-main">
+    <div>
+      <div>
         <div className="dsr-console">
           <div className="d-flex justify-content-between align-items-center mb-3">
             <div>
@@ -245,19 +241,6 @@ export const AdminDsrCaseDetail: React.FC = () => {
 
                 <div className="row g-2 mb-2">
                   <div className="col-6">
-                    <label className="form-label">Verification Status</label>
-                    <PremiumSelect value={verificationStatus}
-                      onChange={setVerificationStatus} options={sel(VERIFICATION_STATUSES)} placeholder="Select" />
-                  </div>
-                  <div className="col-6">
-                    <label className="form-label">Verification Method</label>
-                    <PremiumSelect value={verificationMethod}
-                      onChange={setVerificationMethod} options={sel(VERIFICATION_METHODS)} placeholder="Select" />
-                  </div>
-                </div>
-
-                <div className="row g-2 mb-2">
-                  <div className="col-6">
                     <label className="form-label">Decision</label>
                     <PremiumSelect value={decision} onChange={setDecision}
                       options={sel(DECISIONS)} placeholder="Select" />
@@ -296,6 +279,24 @@ export const AdminDsrCaseDetail: React.FC = () => {
                   </div>
                 </div>
 
+                <div className="mb-3">
+                  <h6 className="mb-2">Attach Final Response / Evidence</h6>
+                  <p className="text-muted small mb-2">Saved to the case's <code>09_Final_Response</code> folder. You can select multiple files.</p>
+                  <div className="d-flex gap-2 align-items-center">
+                    <input type="file" className="form-control" multiple
+                      onChange={(e) => setFiles(Array.from(e.target.files || []))} />
+                    <button className="btn btn-outline-primary" disabled={files.length === 0 || saving} onClick={uploadFiles}>
+                      Upload{files.length > 1 ? ` (${files.length})` : ''}
+                    </button>
+                  </div>
+                  {files.length > 0 && (
+                    <ul className="list-unstyled mt-2 mb-0 small text-muted">
+                      {files.map((f, i) => <li key={i}>{f.name}</li>)}
+                    </ul>
+                  )}
+                  {uploadProgress && <p className="small text-primary mt-1 mb-0">{uploadProgress}</p>}
+                </div>
+
                 <button className="btn btn-primary w-100" disabled={saving} onClick={save}>
                   {saving ? 'Saving…' : 'Save Changes'}
                 </button>
@@ -305,7 +306,7 @@ export const AdminDsrCaseDetail: React.FC = () => {
                 </p>
               </div>
 
-              <div className="card p-3 mb-3">
+              <div className="card p-3">
                 <h6 className="mb-2">Evidence Files</h6>
                 <p className="text-muted small mb-2">
                   Auto-generated records and uploads in this case's evidence library.
@@ -342,23 +343,10 @@ export const AdminDsrCaseDetail: React.FC = () => {
                   </div>
                 )}
               </div>
-
-              <div className="card p-3">
-                <h6 className="mb-2">Attach Final Response / Evidence</h6>
-                <p className="text-muted small">Saved to the case's <code>09_Final_Response</code> folder.</p>
-                <div className="d-flex gap-2 align-items-center">
-                  <input type="file" className="form-control"
-                    onChange={(e) => setFile(e.target.files?.[0])} />
-                  <button className="btn btn-outline-primary" disabled={!file || saving} onClick={uploadFile}>
-                    Upload
-                  </button>
-                </div>
-              </div>
             </div>
           </div>
         </div>
-      </main>
-      <Footer />
+      </div>
     </div>
   );
 };

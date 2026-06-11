@@ -26,20 +26,27 @@ const REQUEST_TYPES = [
   'OTHER'
 ];
 
-const JURISDICTIONS = ['INDIA', 'CANADA', 'UK', 'UAE', 'HONG_KONG', 'SINGAPORE'];
+// Maps the investor's Country of Residence to a supported DSR jurisdiction code.
+const COUNTRY_TO_JURISDICTION: { [key: string]: string } = {
+  'INDIA': 'INDIA',
+  'CANADA': 'CANADA',
+  'UK': 'UK',
+  'UNITED KINGDOM': 'UK',
+  'GREAT BRITAIN': 'UK',
+  'UAE': 'UAE',
+  'UNITED ARAB EMIRATES': 'UAE',
+  'HONG KONG': 'HONG_KONG',
+  'HONGKONG': 'HONG_KONG',
+  'SINGAPORE': 'SINGAPORE'
+};
+
+const deriveJurisdiction = (country?: string): string => {
+  if (!country) return 'INDIA';
+  return COUNTRY_TO_JURISDICTION[country.trim().toUpperCase()] || 'INDIA';
+};
 
 const DATA_AREAS: { code: string; label: string }[] = [
-  { code: 'INVESTOR_ACCOUNT', label: 'My Facilon account' },
-  { code: 'APPOINT', label: 'Facilon Appoint' },
-  { code: 'ONBOARD', label: 'Facilon Onboard' },
-  { code: 'STATUS', label: 'Facilon Status' },
-  { code: 'REPORT', label: 'Facilon Report' },
-  { code: 'INSTRUCT', label: 'Facilon Instruct' },
-  { code: 'CONSENTS', label: 'Consents' },
-  { code: 'SERVICE_AGENT', label: 'Service Agent / Referrer' },
-  { code: 'WEBSITE_MARKETING', label: 'Website / marketing data' },
-  { code: 'DOCUMENTS', label: 'Uploaded documents' },
-  { code: 'NOT_SURE', label: 'I am not sure' }
+  { code: 'STATUS', label: 'Facilon Status' }
 ];
 
 const DECLARATION_TEXT =
@@ -53,8 +60,8 @@ export const DsrCenter: React.FC = () => {
   const [saving, setSaving] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [supportingFile, setSupportingFile] = useState<File | undefined>(undefined);
-  const [dataAreas, setDataAreas] = useState<string[]>([]);
+  const [supportingFiles, setSupportingFiles] = useState<File[]>([]);
+  const [dataAreas, setDataAreas] = useState<string[]>(['STATUS']);
   const [declaration, setDeclaration] = useState(false);
   const [form, setForm] = useState<DsrCaseCreateDto>({
     requestType: 'ACCESS',
@@ -91,6 +98,40 @@ export const DsrCenter: React.FC = () => {
     });
   };
 
+  const MAX_FILES = 10;
+
+  const addFiles = (list: FileList | null) => {
+    if (!list || list.length === 0) return;
+    const accepted: File[] = [];
+    for (const f of Array.from(list)) {
+      const ext = f.name.split('.').pop()?.toLowerCase();
+      if (!ext || !['pdf', 'jpg', 'jpeg'].includes(ext)) {
+        alert(`${f.name}: only PDF/JPG/JPEG files are allowed.`);
+        continue;
+      }
+      if (f.size > 5 * 1024 * 1024) {
+        alert(`${f.name}: exceeds the 5MB limit.`);
+        continue;
+      }
+      accepted.push(f);
+    }
+    setSupportingFiles((prev) => {
+      const combined = [...prev];
+      for (const f of accepted) {
+        if (!combined.some((c) => c.name === f.name && c.size === f.size)) {
+          combined.push(f);
+        }
+      }
+      if (combined.length > MAX_FILES) {
+        alert(`You can attach at most ${MAX_FILES} files.`);
+      }
+      return combined.slice(0, MAX_FILES);
+    });
+  };
+
+  const removeFile = (idx: number) =>
+    setSupportingFiles((prev) => prev.filter((_, i) => i !== idx));
+
   useEffect(() => {
     prefillFromProfile();
   }, []);
@@ -105,9 +146,10 @@ export const DsrCenter: React.FC = () => {
           .join(' ') || inv.name || '';
         setForm((prev) => ({
           ...prev,
-          requesterName: prev.requesterName || fullName,
-          requesterEmail: prev.requesterEmail || inv.email || '',
-          requesterPhone: prev.requesterPhone || inv.mobileNumber || ''
+          requesterName: fullName || prev.requesterName,
+          requesterEmail: inv.email || prev.requesterEmail,
+          requesterPhone: inv.mobileNumber || prev.requesterPhone,
+          jurisdiction: deriveJurisdiction(inv.countryOfResidence)
         }));
       }
     } catch (error) {
@@ -159,7 +201,7 @@ export const DsrCenter: React.FC = () => {
 
     try {
       setSaving(true);
-      await investorService.submitDsrCase({ ...form, dataArea: dataAreas.join(',') }, supportingFile);
+      await investorService.submitDsrCase({ ...form, dataArea: dataAreas.join(',') }, supportingFiles);
       setShowSuccessModal(true);
     } catch (error) {
       console.error('[DsrCenter] Failed submitting DSR case:', error);
@@ -218,95 +260,100 @@ export const DsrCenter: React.FC = () => {
                   </div>
 
                   <div className="form-group">
-                    <label htmlFor="dsr-jurisdiction">Jurisdiction <span className="text-danger">*</span></label>
-                    <PremiumSelect
+                    <label htmlFor="dsr-jurisdiction">Jurisdiction <span className="text-[10px] italic text-muted">(from your profile)</span></label>
+                    <input
+                      id="dsr-jurisdiction"
+                      className="form-control"
                       value={form.jurisdiction}
-                      onChange={(val) => handleFieldChange('jurisdiction', val)}
-                      options={JURISDICTIONS.map((jurisdiction) => ({ value: jurisdiction, label: jurisdiction }))}
-                      placeholder="Select Jurisdiction"
+                      readOnly
+                      style={{ backgroundColor: '#f8fafc', cursor: 'not-allowed' }}
                     />
-                    {errors.jurisdiction && <span className="text-[10px] text-red-500 font-semibold mt-1 block">{errors.jurisdiction}</span>}
                   </div>
 
                   <div className="form-group">
-                    <label htmlFor="dsr-role">Role</label>
+                    <label htmlFor="dsr-role">Role <span className="text-[10px] italic text-muted">(from your profile)</span></label>
                     <input
                       id="dsr-role"
                       className="form-control"
                       value={form.requesterRole || ''}
-                      onChange={(e) => handleFieldChange('requesterRole', e.target.value)}
-                      placeholder="INVESTOR"
+                      readOnly
+                      style={{ backgroundColor: '#f8fafc', cursor: 'not-allowed' }}
                     />
                   </div>
 
                   <div className="form-group">
-                    <label htmlFor="dsr-requester-name">Requester Name <span className="text-danger">*</span></label>
+                    <label htmlFor="dsr-requester-name">Requester Name <span className="text-[10px] italic text-muted">(from your profile)</span></label>
                     <input
                       id="dsr-requester-name"
                       className="form-control"
                       value={form.requesterName}
-                      onChange={(e) => handleFieldChange('requesterName', e.target.value)}
+                      readOnly
+                      style={{ backgroundColor: '#f8fafc', cursor: 'not-allowed' }}
                     />
                     {errors.requesterName && <span className="text-[10px] text-red-500 font-semibold mt-1 block">{errors.requesterName}</span>}
                   </div>
 
                   <div className="form-group">
-                    <label htmlFor="dsr-requester-email">Requester Email <span className="text-danger">*</span></label>
+                    <label htmlFor="dsr-requester-email">Requester Email <span className="text-[10px] italic text-muted">(from your profile)</span></label>
                     <input
                       id="dsr-requester-email"
                       type="email"
                       className="form-control"
                       value={form.requesterEmail}
-                      onChange={(e) => handleFieldChange('requesterEmail', e.target.value)}
+                      readOnly
+                      style={{ backgroundColor: '#f8fafc', cursor: 'not-allowed' }}
                     />
                     {errors.requesterEmail && <span className="text-[10px] text-red-500 font-semibold mt-1 block">{errors.requesterEmail}</span>}
                   </div>
 
                   <div className="form-group">
-                    <label htmlFor="dsr-requester-phone">Requester Phone</label>
+                    <label htmlFor="dsr-requester-phone">Requester Phone <span className="text-[10px] italic text-muted">(from your profile)</span></label>
                     <input
                       id="dsr-requester-phone"
                       className="form-control"
                       value={form.requesterPhone || ''}
-                      onChange={(e) => handleFieldChange('requesterPhone', e.target.value)}
+                      readOnly
+                      style={{ backgroundColor: '#f8fafc', cursor: 'not-allowed' }}
                     />
                   </div>
 
                   <div className="form-group">
-                    <label htmlFor="dsr-supporting-file">Supporting Evidence <span className="text-[10px] italic text-muted">(pdf/jpg/jpeg, max 5MB)</span></label>
+                    <label htmlFor="dsr-supporting-file">Supporting Evidence <span className="text-[10px] italic text-muted">(pdf/jpg/jpeg, max 5MB each — multiple allowed)</span></label>
                     <div className="mt-1">
                       <input
                         id="dsr-supporting-file"
                         type="file"
+                        multiple
                         className="hidden"
                         accept=".pdf,.jpg,.jpeg"
                         onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (file) {
-                            setSupportingFile(file);
-                          }
+                          addFiles(e.target.files);
                           e.target.value = '';
                         }}
                       />
 
-                      {!supportingFile ? (
-                        <label
-                          htmlFor="dsr-supporting-file"
-                          className="inline-flex items-center justify-center border border-[#3e6f7c] text-[#3e6f7c] font-bold text-[10px] h-[28px] px-3.5 rounded-md cursor-pointer transition-colors bg-transparent hover:bg-[#3e6f7c]/5 select-none w-auto max-w-max"
-                        >
-                          Choose File
-                        </label>
-                      ) : (
-                        <div className="inline-flex items-center gap-1.5 p-1.5 bg-slate-50 border border-slate-100 rounded-md max-w-max">
-                          <PaperclipIcon size={14} className="text-slate-400 flex-shrink-0" />
-                          <span className="text-[11px] font-semibold text-slate-600 truncate max-w-[160px]">{supportingFile.name}</span>
-                          <button
-                            type="button"
-                            className="flex items-center justify-center w-6 h-6 rounded-md hover:bg-red-50 text-red-500 hover:text-red-700 transition-colors border-0 cursor-pointer bg-transparent"
-                            onClick={() => setSupportingFile(undefined)}
-                          >
-                            <TrashIcon size={14} className="flex-shrink-0" />
-                          </button>
+                      <label
+                        htmlFor="dsr-supporting-file"
+                        className="inline-flex items-center justify-center border border-[#3e6f7c] text-[#3e6f7c] font-bold text-[10px] h-[28px] px-3.5 rounded-md cursor-pointer transition-colors bg-transparent hover:bg-[#3e6f7c]/5 select-none w-auto max-w-max"
+                      >
+                        {supportingFiles.length > 0 ? 'Add More Files' : 'Choose Files'}
+                      </label>
+
+                      {supportingFiles.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 mt-2">
+                          {supportingFiles.map((file, idx) => (
+                            <div key={idx} className="inline-flex items-center gap-1.5 p-1.5 bg-slate-50 border border-slate-100 rounded-md max-w-max">
+                              <PaperclipIcon size={14} className="text-slate-400 flex-shrink-0" />
+                              <span className="text-[11px] font-semibold text-slate-600 truncate max-w-[160px]">{file.name}</span>
+                              <button
+                                type="button"
+                                className="flex items-center justify-center w-6 h-6 rounded-md hover:bg-red-50 text-red-500 hover:text-red-700 transition-colors border-0 cursor-pointer bg-transparent"
+                                onClick={() => removeFile(idx)}
+                              >
+                                <TrashIcon size={14} className="flex-shrink-0" />
+                              </button>
+                            </div>
+                          ))}
                         </div>
                       )}
                     </div>
@@ -367,7 +414,7 @@ export const DsrCenter: React.FC = () => {
                             }
                           }}
                         />
-                        <span>{DECLARATION_TEXT}</span>
+                        <span className="font-bold">{DECLARATION_TEXT}</span>
                       </label>
                     </div>
                     {errors.declaration && <span className="text-[10px] text-red-500 font-semibold mt-1 block">{errors.declaration}</span>}
