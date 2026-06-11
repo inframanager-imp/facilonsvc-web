@@ -1,6 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../IntroducedRegistration/IntroducedInvestorRegistration.scss';
+import { CompactHeader } from '../../../components/CompactHeader/CompactHeader';
+import { CompactFooter } from '../../../components/CompactFooter/CompactFooter';
 
 /**
  * Success Page after Registration
@@ -11,44 +13,30 @@ export const SelfRegistrationSuccess: React.FC = () => {
 
   return (
     <>
-      {/* Header with Logo */}
-      <header className="header header_style_01">
-        <nav className="navbar navbar-default">
-          <div className="container">
-            <div className="navbar-header">
-              <a className="navbar-brand" href="/" style={{ padding: 0 }}>
-                <img src="/assets/images/logo.png" alt="Facilon" style={{ height: '50px' }} />
-              </a>
-            </div>
-          </div>
-        </nav>
-      </header>
+      <CompactHeader />
 
-      <section 
-        className="login-form-style4 section-padding" 
-        style={{ backgroundImage: 'url(/assets/images/banner/2125.jpg)' }}
-      >
+      <section className="login-form-style4 section-padding">
         <div className="container">
           <div className="row justify-content-center">
             <div className="col-lg-8 col-md-10 col-sm-12">
               <div className="login-form-style3-main">
-                <div className="login-form-style3-main_full" style={{ textAlign: 'center', padding: '50px 30px' }}>
+                 <div className="login-form-style3-main_full" style={{ textAlign: 'center', padding: '24px 16px' }}>
                   <div className="login-register_style3-head">
-                    <h2 style={{ color: '#28a745', marginBottom: '20px' }}>✓ Registration Successful!</h2>
+                    <h2 style={{ color: '#28a745', marginBottom: '12px' }}>✓ Registration Successful!</h2>
                   </div>
 
-                  <div style={{ fontSize: '16px', color: '#333', lineHeight: '1.8' }}>
-                    <p>Thank you for registering with Facilon Services.</p>
-                    <p>Your registration has been submitted successfully.</p>
-                    <p>We've sent you an email with a secure link to set your password and activate your account.</p>
-                    <p>Please check your inbox (and spam folder) and click the link to continue.</p>
+                  <div style={{ fontSize: '13px', color: '#475569', lineHeight: '1.5' }}>
+                    <p style={{ marginBottom: '8px' }}>Thank you for registering with Facilon Services.</p>
+                    <p style={{ marginBottom: '8px' }}>Your registration has been submitted successfully.</p>
+                    <p style={{ marginBottom: '8px' }}>We've sent you an email with a secure link to set your password and activate your account.</p>
+                    <p style={{ marginBottom: '0' }}>Please check your inbox (and spam folder) and click the link to continue.</p>
                   </div>
 
-                  <div style={{ marginTop: '40px' }}>
+                  <div style={{ marginTop: '24px' }}>
                     <button 
                       className="button-1" 
                       onClick={() => navigate('/login')}
-                      style={{ marginRight: '15px' }}
+                      style={{ marginRight: '12px' }}
                     >
                       Go to Login
                     </button>
@@ -65,6 +53,7 @@ export const SelfRegistrationSuccess: React.FC = () => {
           </div>
         </div>
       </section>
+      <CompactFooter />
     </>
   );
 };

@@ -1,6 +1,10 @@
-import React from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../IntroducedRegistration/IntroducedInvestorRegistration.scss';
+import { CompactHeader } from '../../../components/CompactHeader/CompactHeader';
+import { CompactFooter } from '../../../components/CompactFooter/CompactFooter';
+import { RegistrationStepper } from '../../../components/RegistrationStepper/RegistrationStepper';
+import { RegistrationVisualCard } from '../../../components/RegistrationVisualCard/RegistrationVisualCard';
 
 /**
  * Market interest landing page for /investor/register.
@@ -14,70 +18,138 @@ import '../IntroducedRegistration/IntroducedInvestorRegistration.scss';
  */
 const MarketInterestCheck: React.FC = () => {
   const navigate = useNavigate();
+  const [selectedOption, setSelectedOption] = useState<string | null>('yes');
+  const [showModal, setShowModal] = useState(false);
 
   const handleYes = () => {
-    navigate('/investor/register/email');
+    setSelectedOption('yes');
   };
 
   const handleNo = () => {
-    navigate('/investor/register/thank-you');
+    setSelectedOption('no');
+  };
+
+  const handleContinue = () => {
+    if (selectedOption === 'yes') {
+      navigate('/investor/register/consent');
+    } else if (selectedOption === 'no') {
+      setShowModal(true);
+    }
+  };
+
+  const handleReview = () => {
+    setSelectedOption(null);
+    setShowModal(false);
+  };
+
+  const handleExit = () => {
+    setShowModal(false);
+    const hasToken = !!localStorage.getItem('JwtToken');
+    if (hasToken) {
+      navigate('/investor/dashboard');
+    } else {
+      navigate('/login');
+    }
   };
 
   return (
-    <section
-      className="login-form-style4 steps4-sec section-padding align-items-center"
-      style={{ backgroundImage: "url('https://anvaya.online/facilon/public/frontend/images/banner/2125.jpg')" }}
-    >
-      <div className="container d-flex flex-column align-items-center justify-content-center text-center">
-        {/* Facilon Logo with white background wrapper for contrast */}
-        <div className="mb-4 bg-white px-4 py-2 rounded shadow-sm d-inline-block" style={{ borderRadius: '8px', marginTop: '-25px' }}>
-          <Link to="/">
-            <img src="/assets/images/logo.png" alt="Facilon" style={{ height: '45px', display: 'block' }} />
-          </Link>
-        </div>
+    <>
+      <CompactHeader />
+      <section className="login-form-style4 steps4-sec section-padding align-items-center">
+        <div className="container">
+          <div className="registration-split-layout">
+            {/* Left Panel: Form & Stepper */}
+            <div className="left-panel">
 
-        {/* Welcome text */}
-        <div className="lgf4_Left_content mb-4" style={{ width: '100%', maxWidth: '600px' }}>
-          <h3 className="text-center m-0" style={{ lineHeight: '1.8' }}>
-            Welcome to <br />
-            <span>Facilon Services</span>
-          </h3>
-        </div>
+              {/* Stepper Progress */}
+              <RegistrationStepper currentStep={1} title="Market Interest Check" maxWidth="550px" />
 
-        {/* Investor Registration Card */}
-        <div className="login-form-style3-main" style={{ width: '100%', maxWidth: '550px', margin: '0 auto' }}>
-          <div className="login-form-style3-main_full">
-            <div className="login-register_style3-head">
-              <h2 className="text-center" style={{ textAlign: 'center' }}>Investor Registration</h2>
-            </div>
+              {/* Investor Registration Card */}
+              <div className="login-form-style3-main" style={{ width: '100%', maxWidth: '550px', margin: '0 auto' }}>
+                <div className="login-form-style3-main_full">
+                  <div className="login-register3-form-middle">
+                    <form onSubmit={(e) => e.preventDefault()}>
+                      <div className="single-field self-sec">
+                        <label className="w-100 mb-2" style={{ fontSize: '14px', fontWeight: '600' }}>
+                          Are you interested in the Indian Market?
+                          <span className="star-color">*</span>
+                        </label>
 
-            <div className="login-register3-form-middle">
-              <form>
-                <div className="single-field self-sec">
-                  <label className="text-center w-100 mb-3" style={{ fontSize: '16px', fontWeight: '600' }}>
-                    Are you interested in the Indian Market?
-                    <span className="star-color">*</span>
-                  </label>
-                  <div className="radio-box d-flex justify-content-center gap-4">
-                    <label className="radio m-0" onClick={handleYes} style={{ cursor: 'pointer' }}>
-                      <input type="radio" name="market_interest" value="yes" />
-                      <span>Yes, I'm Interested</span>
-                    </label>
-                    <label className="radio m-0" onClick={handleNo} style={{ cursor: 'pointer' }}>
-                      <input type="radio" name="market_interest" value="no" />
-                      <span>No, Thank You</span>
-                    </label>
+                        <div className="market-choice-container p-0 m-0">
+                          <div
+                            className={`market-choice-card highlight-primary ${selectedOption === 'yes' ? 'selected' : ''}`}
+                            onClick={handleYes}
+                          >
+                            <div className="square-indicator">
+                              <i className="bi bi-check-lg" />
+                            </div>
+                            <span className="choice-label">Yes, I'm Interested</span>
+                          </div>
+
+                          <div
+                            className={`market-choice-card ${selectedOption === 'no' ? 'selected' : ''}`}
+                            onClick={handleNo}
+                          >
+                            <div className="square-indicator">
+                              <i className="bi bi-check-lg" />
+                            </div>
+                            <span className="choice-label">No, Thank You</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Submit / Continue Button */}
+                      <div className="single-field mb-0 text-center border-t pt-3 mt-3">
+                        <button
+                          className="button-1"
+                          onClick={handleContinue}
+                          disabled={!selectedOption}
+                        >
+                          Continue
+                        </button>
+                      </div>
+                    </form>
                   </div>
                 </div>
-              </form>
+              </div>
+            </div>
+
+            {/* Right Panel: Creative Illustration Panel */}
+            <div className="right-panel">
+              <RegistrationVisualCard step="interest" />
             </div>
           </div>
         </div>
+      </section>
+      <CompactFooter />
+
+      {/* Warning/Stop Registration Modal */}
+      <div
+        className={`modal ${showModal ? 'show' : ''}`}
+        style={{ display: showModal ? 'block' : 'none' }}
+      >
+        <div className="modal-content" style={{ maxWidth: '420px', textAlign: 'center', padding: '30px' }}>
+          <div style={{ fontSize: '48px', color: '#be1717', marginBottom: '15px' }}>
+            <i className="bi bi-exclamation-triangle" />
+          </div>
+          <h3 style={{ fontSize: '18px', fontWeight: '700', color: '#0c2340', marginBottom: '12px' }}>
+            Stop Registration?
+          </h3>
+          <p style={{ fontSize: '13.5px', color: '#64748b', lineHeight: '1.5', marginBottom: '24px' }}>
+            Choosing not to proceed with the Indian market will terminate your registration. Would you like to review your choice or exit?
+          </p>
+          <div className="d-flex justify-content-center gap-3">
+            <button className="button-2" onClick={handleReview} style={{ flex: 1, padding: '10px 15px' }}>
+              Review
+            </button>
+            <button className="button-1" onClick={handleExit} style={{ flex: 1, padding: '10px 15px' }}>
+              Go to Home
+            </button>
+          </div>
+        </div>
       </div>
-    </section>
+    </>
   );
 };
 
 export default MarketInterestCheck;
-
-
