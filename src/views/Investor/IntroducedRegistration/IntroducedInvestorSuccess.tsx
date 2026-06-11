@@ -1,6 +1,8 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './IntroducedInvestorRegistration.scss';
+import { CompactHeader } from '../../../components/CompactHeader/CompactHeader';
+import { CompactFooter } from '../../../components/CompactFooter/CompactFooter';
 
 /**
  * Success Page after registration completion
@@ -13,9 +15,8 @@ const IntroducedInvestorSuccess: React.FC = () => {
 
   return (
     <>
-      <br /><br />
-      <section className="login-form-style4 section-padding"
-        style={{ backgroundImage: 'url(https://anvaya.online/facilon/public/frontend/images/banner/2125.jpg)' }}>
+      <CompactHeader />
+      <section className="login-form-style4 section-padding">
         <div className="container">
           <div className="row align-items-center justify-content-center">
             <div className="col-lg-7 col-md-10 col-sm-12">
@@ -26,11 +27,11 @@ const IntroducedInvestorSuccess: React.FC = () => {
                   </div>
 
                   <div className="login-register3-form-middle" style={{ textAlign: 'center' }}>
-                    <div style={{ padding: '30px 0' }}>
-                      <div style={{ marginBottom: '30px' }}>
+                    <div style={{ padding: '16px 0' }}>
+                      <div style={{ marginBottom: '16px' }}>
                         <svg
-                          width="80"
-                          height="80"
+                          width="60"
+                          height="60"
                           viewBox="0 0 80 80"
                           fill="none"
                           xmlns="http://www.w3.org/2000/svg"
@@ -47,19 +48,19 @@ const IntroducedInvestorSuccess: React.FC = () => {
                         </svg>
                       </div>
 
-                      <h3 style={{ color: '#28a745', marginBottom: '20px' }}>
+                      <h3 style={{ color: '#28a745', marginBottom: '12px', fontSize: '16px', fontWeight: 'bold' }}>
                         Thank You for Registering with Facilon Services!
                       </h3>
 
                       {state.b2cCreated !== false && (
                         <>
-                          <p style={{ fontSize: '16px', color: '#333', marginBottom: '15px' }}>
+                          <p style={{ fontSize: '13px', color: '#475569', marginBottom: '8px' }}>
                             Your registration has been completed successfully.
                           </p>
-                          <p style={{ fontSize: '16px', color: '#333', marginBottom: '15px' }}>
+                          <p style={{ fontSize: '13px', color: '#475569', marginBottom: '8px' }}>
                             <strong>Login credentials have been sent to your email address.</strong>
                           </p>
-                          <p style={{ fontSize: '14px', color: '#666', marginBottom: '30px' }}>
+                          <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '16px' }}>
                             Please check your inbox (and spam folder) for the email containing your login details.
                           </p>
                         </>
@@ -67,25 +68,24 @@ const IntroducedInvestorSuccess: React.FC = () => {
 
                       {state.b2cCreated === false && (
                         <>
-                          <p style={{ fontSize: '16px', color: '#333', marginBottom: '15px' }}>
+                          <p style={{ fontSize: '13px', color: '#475569', marginBottom: '8px' }}>
                             Your registration has been completed, but there was an issue creating your login account.
                           </p>
-                          <p style={{ fontSize: '16px', color: '#BE1717', marginBottom: '30px' }}>
+                          <p style={{ fontSize: '13px', color: '#3e6f7c', marginBottom: '16px', fontWeight: '600' }}>
                             Please contact support at support@facilonservices.com
                           </p>
                         </>
                       )}
 
-                      <div style={{ marginTop: '40px' }}>
+                      <div style={{ marginTop: '24px' }}>
                         <button
                           className="button-1"
                           onClick={() => navigate('/login')}
-                          style={{ display: 'inline-block', minWidth: '200px' }}
+                          style={{ display: 'inline-block' }}
                         >
                           Proceed to Login
                         </button>
                       </div>
-
 
                     </div>
                   </div>
@@ -95,6 +95,7 @@ const IntroducedInvestorSuccess: React.FC = () => {
           </div>
         </div>
       </section>
+      <CompactFooter />
     </>
   );
 };

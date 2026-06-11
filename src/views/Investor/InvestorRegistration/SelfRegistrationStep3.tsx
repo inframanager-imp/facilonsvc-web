@@ -15,6 +15,11 @@ import TermsModal from '../IntroducedRegistration/TermsModal';
 import { toast } from 'react-toastify';
 import { PremiumSelect } from '../../../components/PremiumSelect/PremiumSelect';
 import '../IntroducedRegistration/IntroducedInvestorRegistration.scss';
+import { CompactHeader } from '../../../components/CompactHeader/CompactHeader';
+import { CompactFooter } from '../../../components/CompactFooter/CompactFooter';
+import { RegistrationStepper } from '../../../components/RegistrationStepper/RegistrationStepper';
+import { RegistrationVisualCard } from '../../../components/RegistrationVisualCard/RegistrationVisualCard';
+
 
 /**
  * Step 3: Registration Details with consent confirmations
@@ -75,9 +80,9 @@ export const SelfRegistrationStep3: React.FC = () => {
       return;
     }
 
-    contentService.getCountries().then(setCountries).catch(() => {});
-    contentService.getNationalities().then(setNationalities).catch(() => {});
-    contentService.getTitles().then(setTitles).catch(() => {});
+    contentService.getCountries().then(setCountries).catch(() => { });
+    contentService.getNationalities().then(setNationalities).catch(() => { });
+    contentService.getTitles().then(setTitles).catch(() => { });
   }, [uniqueCode, email, navigate]);
 
   const openTermsModal = (e?: React.MouseEvent) => {
@@ -245,40 +250,32 @@ export const SelfRegistrationStep3: React.FC = () => {
 
   return (
     <>
-      {/* Header with Logo */}
-      <header className="header header_style_01">
-        <nav className="navbar navbar-default">
-          <div className="container">
-            <div className="navbar-header">
-              <a className="navbar-brand" href="/" style={{ padding: 0 }}>
-                <img src="/assets/images/logo.png" alt="Facilon" style={{ height: '50px' }} />
-              </a>
-            </div>
-          </div>
-        </nav>
-      </header>
+      <CompactHeader />
 
-      <section 
-        className="login-form-style4 steps4-sec section-padding" 
-        style={{ backgroundImage: 'url(/assets/images/banner/2125.jpg)' }}
-      >
+      <section className="login-form-style4 steps4-sec section-padding align-items-center">
         <div className="container">
-          <div className="row align-items-center">
-            <div className="col-lg-5 col-md-12 col-sm-12">
-              <div className="lgf4_Left_content">
-                <h3>Investor <span>Registration</span></h3>
-                <p>Please provide your details to complete registration</p>
-              </div>
-            </div>
+          <div className="registration-split-layout">
+            {/* Left Panel: Form & Stepper */}
+            <div className="left-panel">
+              {/* Welcome text */}
+              {/* <div className="lgf4_Left_content mb-3" style={{ width: '100%', maxWidth: '850px' }}>
+                <h3 className="text-center text-lg-start m-0" style={{ lineHeight: '1.4' }}>
+                  Welcome to <br />
+                  <span>Facilon Services</span>
+                </h3>
+              </div> */}
 
-            <div className="col-lg-7 col-md-12 col-sm-12" style={{ marginTop: '4%' }}>
-              <div className="login-form-style3-main">
+              {/* Stepper Progress */}
+              <RegistrationStepper currentStep={5} title="Registration Details" maxWidth="850px" />
+
+              {/* Investor Registration Card */}
+              <div className="login-form-style3-main" style={{ width: '100%', maxWidth: '850px', margin: '0 auto', textAlign: 'left' }}>
                 <div className="login-form-style3-main_full">
                   <div className="login-register3-form-middle">
                     {registerAs === 1 ? (
                       /* INDIVIDUAL REGISTRATION FORM */
                       <form onSubmit={handleIndividualSubmit}>
-                        <h3 style={{ marginBottom: '20px' }}>Individual Registration</h3>
+                        {/* <h3>Individual Registration</h3> */}
 
                         {/* Title */}
                         <div className="single-field">
@@ -306,6 +303,7 @@ export const SelfRegistrationStep3: React.FC = () => {
                           <input
                             type="text"
                             id="firstName"
+                            className="form-control"
                             value={individualData.firstName}
                             onChange={(e) => setIndividualData(p => ({ ...p, firstName: e.target.value.toUpperCase() }))}
                             placeholder="Enter your first name"
@@ -320,6 +318,7 @@ export const SelfRegistrationStep3: React.FC = () => {
                           <input
                             type="text"
                             id="middleName"
+                            className="form-control"
                             value={individualData.middleName}
                             onChange={(e) => setIndividualData(p => ({ ...p, middleName: e.target.value.toUpperCase() }))}
                             placeholder="Enter your middle name (optional)"
@@ -333,6 +332,7 @@ export const SelfRegistrationStep3: React.FC = () => {
                           <input
                             type="text"
                             id="lastName"
+                            className="form-control"
                             value={individualData.lastName}
                             onChange={(e) => setIndividualData(p => ({ ...p, lastName: e.target.value.toUpperCase() }))}
                             placeholder="Enter your last name"
@@ -347,6 +347,7 @@ export const SelfRegistrationStep3: React.FC = () => {
                           <input
                             type="date"
                             id="dateOfBirth"
+                            className="form-control"
                             value={individualData.dateOfBirth}
                             onChange={(e) => setIndividualData(p => ({ ...p, dateOfBirth: e.target.value }))}
                           />
@@ -504,76 +505,74 @@ export const SelfRegistrationStep3: React.FC = () => {
                           </>
                         )}
 
-                        {/* Consents - Laravel Match */}
-                        <div id="note_confirm_div" style={{ marginTop: '30px' }}>
+                        {/* Consents */}
+                        <div id="note_confirm_div" style={{ marginTop: '24px' }}>
                           {/* 1. WhatsApp Communication */}
-                          <div className="single-field">
-                            <div className="checkbox-wrapper-33">
-                              <label className="checkbox">
-                                <input
-                                  className="checkbox__trigger visuallyhidden"
-                                  type="checkbox"
-                                  checked={whatsappConsent}
-                                  onChange={(e) => setWhatsappConsent(e.target.checked)}
-                                />
-                                <span className="checkbox__symbol">
-                                  <svg aria-hidden="true" className="icon-checkbox" width="28px" height="28px" viewBox="0 0 28 28" version="1" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M4 14l8 7L24 7"></path>
-                                  </svg>
-                                </span>
-                                <p className="checkbox__textwrapper">
-                                  I agree to receive communication on WhatsApp <span className="star-color">*</span>
-                                </p>
-                              </label>
-                            </div>
+                          <div className={`form-group--checkbox ${whatsappConsent ? 'checked' : ''}`}>
+                            <label htmlFor="whatsappConsent">
+                              <input
+                                type="checkbox"
+                                id="whatsappConsent"
+                                checked={whatsappConsent}
+                                onChange={(e) => setWhatsappConsent(e.target.checked)}
+                              />
+                              <span>
+                                I agree to receive communication on WhatsApp <span className="star-color">*</span>
+                              </span>
+                            </label>
                           </div>
 
                           {/* 2. Information Accuracy */}
-                          <div className="single-field">
-                            <div className="checkbox-wrapper-33">
-                              <label className="checkbox">
-                                <input
-                                  className="checkbox__trigger visuallyhidden"
-                                  type="checkbox"
-                                  checked={informationAccuracy}
-                                  onChange={(e) => setInformationAccuracy(e.target.checked)}
-                                />
-                                <span className="checkbox__symbol">
-                                  <svg aria-hidden="true" className="icon-checkbox" width="28px" height="28px" viewBox="0 0 28 28" version="1" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M4 14l8 7L24 7"></path>
-                                  </svg>
-                                </span>
-                                <p className="checkbox__textwrapper">
-                                  I hereby confirm that the information provided is accurate, correct and complete <span className="star-color">*</span>
-                                </p>
-                              </label>
-                            </div>
+                          <div className={`form-group--checkbox ${informationAccuracy ? 'checked' : ''}`}>
+                            <label htmlFor="informationAccuracy">
+                              <input
+                                type="checkbox"
+                                id="informationAccuracy"
+                                checked={informationAccuracy}
+                                onChange={(e) => setInformationAccuracy(e.target.checked)}
+                              />
+                              <span>
+                                I hereby confirm that the information provided is accurate, correct and complete <span className="star-color">*</span>
+                              </span>
+                            </label>
                           </div>
 
                           {/* 3. Terms and Conditions */}
-                          <div className="single-field">
-                            <div className="checkbox-wrapper-33">
-                              <label className="checkbox" onClick={(e) => !termsCheckboxEnabled && openTermsModal(e)}>
-                                <input
-                                  className="checkbox__trigger visuallyhidden"
-                                  type="checkbox"
-                                  id="termsCheckbox"
-                                  checked={termsAccepted}
-                                  disabled={!termsCheckboxEnabled}
-                                  onChange={(e) => termsCheckboxEnabled && setTermsAccepted(e.target.checked)}
-                                />
-                                <span className="checkbox__symbol">
-                                  <svg aria-hidden="true" className="icon-checkbox" width="28px" height="28px" viewBox="0 0 28 28" version="1" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M4 14l8 7L24 7"></path>
-                                  </svg>
-                                </span>
-                                <p className="checkbox__textwrapper">
-                                  I have read, understood and hereby accept the{' '}
-                                  <a href="javascript:void(0);" onClick={openTermsModal}>Terms and Conditions</a>
-                                  <span className="star-color">*</span>
-                                </p>
-                              </label>
-                            </div>
+                          <div
+                            className={`form-group--checkbox ${termsAccepted ? 'checked' : ''}`}
+                            onClick={(e) => {
+                              if (!termsCheckboxEnabled) {
+                                openTermsModal(e);
+                              }
+                            }}
+                          >
+                            <label htmlFor="termsCheckbox" onClick={(e) => e.stopPropagation()}>
+                              <input
+                                type="checkbox"
+                                id="termsCheckbox"
+                                checked={termsAccepted}
+                                disabled={!termsCheckboxEnabled}
+                                onChange={(e) => {
+                                  if (termsCheckboxEnabled) {
+                                    setTermsAccepted(e.target.checked);
+                                  }
+                                }}
+                              />
+                              <span>
+                                I have read, understood and hereby accept the{' '}
+                                <a
+                                  href="javascript:void(0);"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    openTermsModal();
+                                  }}
+                                >
+                                  Terms and Conditions
+                                </a>{' '}
+                                <span className="star-color">*</span>
+                              </span>
+                            </label>
                           </div>
                         </div>
 
@@ -582,9 +581,9 @@ export const SelfRegistrationStep3: React.FC = () => {
                           <div className="row">
                             <div className="col-md-6">
                               <div className="single-field mb-0">
-                                <button 
-                                  className="button-1" 
-                                  type="submit" 
+                                <button
+                                  className="button-1"
+                                  type="submit"
                                   disabled={loading}
                                 >
                                   {loading ? 'Submitting...' : 'Submit'}
@@ -596,7 +595,7 @@ export const SelfRegistrationStep3: React.FC = () => {
                                 <button
                                   type="button"
                                   className="button-2"
-                                  onClick={() => navigate('/investor/register/step2', { state: { uniqueCode, email, registerAs } })}
+                                  onClick={() => navigate('/investor/register/otp', { state: { uniqueCode, email, registerAs } })}
                                 >
                                   Back
                                 </button>
@@ -608,7 +607,7 @@ export const SelfRegistrationStep3: React.FC = () => {
                     ) : (
                       /* LEGAL ENTITY REGISTRATION FORM */
                       <form onSubmit={handleLegalEntitySubmit}>
-                        <h3 style={{ marginBottom: '20px' }}>Legal Entity Registration</h3>
+                        <h3>Legal Entity Registration</h3>
 
                         {/* Entity Name */}
                         <div className="single-field">
@@ -616,6 +615,7 @@ export const SelfRegistrationStep3: React.FC = () => {
                           <input
                             type="text"
                             id="entityName"
+                            className="form-control"
                             value={legalEntityData.entityName}
                             onChange={(e) => setLegalEntityData(p => ({ ...p, entityName: e.target.value }))}
                             placeholder="Enter entity name"
@@ -671,6 +671,7 @@ export const SelfRegistrationStep3: React.FC = () => {
                           <input
                             type="text"
                             id="entityRepresentativeName"
+                            className="form-control"
                             value={legalEntityData.entityRepresentativeName}
                             onChange={(e) => setLegalEntityData(p => ({ ...p, entityRepresentativeName: e.target.value }))}
                             placeholder="Name should be same as in the identity document"
@@ -743,75 +744,73 @@ export const SelfRegistrationStep3: React.FC = () => {
                         </div>
 
                         {/* Consents */}
-                        <div id="note_confirm_div" style={{ marginTop: '30px' }}>
+                        <div id="note_confirm_div" style={{ marginTop: '24px' }}>
                           {/* 1. WhatsApp Communication */}
-                          <div className="single-field">
-                            <div className="checkbox-wrapper-33">
-                              <label className="checkbox">
-                                <input
-                                  className="checkbox__trigger visuallyhidden"
-                                  type="checkbox"
-                                  checked={whatsappConsent}
-                                  onChange={(e) => setWhatsappConsent(e.target.checked)}
-                                />
-                                <span className="checkbox__symbol">
-                                  <svg aria-hidden="true" className="icon-checkbox" width="28px" height="28px" viewBox="0 0 28 28" version="1" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M4 14l8 7L24 7"></path>
-                                  </svg>
-                                </span>
-                                <p className="checkbox__textwrapper">
-                                  I agree to receive communication on WhatsApp <span className="star-color">*</span>
-                                </p>
-                              </label>
-                            </div>
+                          <div className={`form-group--checkbox ${whatsappConsent ? 'checked' : ''}`}>
+                            <label htmlFor="whatsappConsent">
+                              <input
+                                type="checkbox"
+                                id="whatsappConsent"
+                                checked={whatsappConsent}
+                                onChange={(e) => setWhatsappConsent(e.target.checked)}
+                              />
+                              <span>
+                                I agree to receive communication on WhatsApp <span className="star-color">*</span>
+                              </span>
+                            </label>
                           </div>
 
                           {/* 2. Information Accuracy */}
-                          <div className="single-field">
-                            <div className="checkbox-wrapper-33">
-                              <label className="checkbox">
-                                <input
-                                  className="checkbox__trigger visuallyhidden"
-                                  type="checkbox"
-                                  checked={informationAccuracy}
-                                  onChange={(e) => setInformationAccuracy(e.target.checked)}
-                                />
-                                <span className="checkbox__symbol">
-                                  <svg aria-hidden="true" className="icon-checkbox" width="28px" height="28px" viewBox="0 0 28 28" version="1" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M4 14l8 7L24 7"></path>
-                                  </svg>
-                                </span>
-                                <p className="checkbox__textwrapper">
-                                  I hereby confirm that the information provided is accurate, correct and complete <span className="star-color">*</span>
-                                </p>
-                              </label>
-                            </div>
+                          <div className={`form-group--checkbox ${informationAccuracy ? 'checked' : ''}`}>
+                            <label htmlFor="informationAccuracy">
+                              <input
+                                type="checkbox"
+                                id="informationAccuracy"
+                                checked={informationAccuracy}
+                                onChange={(e) => setInformationAccuracy(e.target.checked)}
+                              />
+                              <span>
+                                I hereby confirm that the information provided is accurate, correct and complete <span className="star-color">*</span>
+                              </span>
+                            </label>
                           </div>
 
                           {/* 3. Terms and Conditions */}
-                          <div className="single-field">
-                            <div className="checkbox-wrapper-33">
-                              <label className="checkbox" onClick={(e) => !termsCheckboxEnabled && openTermsModal(e)}>
-                                <input
-                                  className="checkbox__trigger visuallyhidden"
-                                  type="checkbox"
-                                  id="termsCheckbox"
-                                  checked={termsAccepted}
-                                  disabled={!termsCheckboxEnabled}
-                                  onChange={(e) => termsCheckboxEnabled && setTermsAccepted(e.target.checked)}
-                                />
-                                <span className="checkbox__symbol">
-                                  <svg aria-hidden="true" className="icon-checkbox" width="28px" height="28px" viewBox="0 0 28 28" version="1" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M4 14l8 7L24 7"></path>
-                                  </svg>
-                                </span>
-                                <p className="checkbox__textwrapper">
-                                  I have read, understood and hereby accept the{' '}
-                                  <a href="javascript:void(0);" onClick={openTermsModal}>Terms and Conditions</a>
-                                  <span className="star-color">*</span>
-                                </p>
-                              </label>
-                            </div>
+                          <div
+                            className={`form-group--checkbox ${termsAccepted ? 'checked' : ''}`}
+                            onClick={(e) => {
+                              if (!termsCheckboxEnabled) {
+                                openTermsModal(e);
+                              }
+                            }}
+                          >
+                            <label htmlFor="termsCheckbox" onClick={(e) => e.stopPropagation()}>
+                              <input
+                                type="checkbox"
+                                id="termsCheckbox"
+                                checked={termsAccepted}
+                                disabled={!termsCheckboxEnabled}
+                                onChange={(e) => {
+                                  if (termsCheckboxEnabled) {
+                                    setTermsAccepted(e.target.checked);
+                                  }
+                                }}
+                              />
+                              <span>
+                                I have read, understood and hereby accept the{' '}
+                                <a
+                                  href="javascript:void(0);"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    openTermsModal();
+                                  }}
+                                >
+                                  Terms and Conditions
+                                </a>{' '}
+                                <span className="star-color">*</span>
+                              </span>
+                            </label>
                           </div>
                         </div>
 
@@ -820,9 +819,9 @@ export const SelfRegistrationStep3: React.FC = () => {
                           <div className="row">
                             <div className="col-md-6">
                               <div className="single-field mb-0">
-                                <button 
-                                  className="button-1" 
-                                  type="submit" 
+                                <button
+                                  className="button-1"
+                                  type="submit"
                                   disabled={loading}
                                 >
                                   {loading ? 'Submitting...' : 'Submit'}
@@ -834,7 +833,7 @@ export const SelfRegistrationStep3: React.FC = () => {
                                 <button
                                   type="button"
                                   className="button-2"
-                                  onClick={() => navigate('/investor/register/step2', { state: { uniqueCode, email, registerAs } })}
+                                  onClick={() => navigate('/investor/register/otp', { state: { uniqueCode, email, registerAs } })}
                                 >
                                   Back
                                 </button>
@@ -848,6 +847,11 @@ export const SelfRegistrationStep3: React.FC = () => {
                 </div>
               </div>
             </div>
+
+            {/* Right Panel: Creative Illustration Panel */}
+            <div className="right-panel">
+              <RegistrationVisualCard step="details" registerAs={registerAs} />
+            </div>
           </div>
         </div>
       </section>
@@ -858,6 +862,7 @@ export const SelfRegistrationStep3: React.FC = () => {
         onClose={closeTermsModal}
         onAccept={acceptTerms}
       />
+      <CompactFooter />
     </>
   );
 };

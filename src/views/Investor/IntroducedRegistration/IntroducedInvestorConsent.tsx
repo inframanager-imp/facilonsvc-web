@@ -67,99 +67,101 @@ const IntroducedInvestorConsent: React.FC = () => {
             corresponding purposes.
           </p>
 
-          <table>
-            <thead>
-              <tr>
-                <th></th>
-                <th className="col-narrow">Purpose Name</th>
-                <th>Personal Information Collected</th>
-                <th>Usage</th>
-                <th className="consent-col">Consent Coverage</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>Investor Profile Creation & Account Management</td>
-                <td>First Name, Middle Name, Last Name, Email ID, mobile number, landline number, WhatsApp number, Username /
-                  Login ID, Nationality, Country of Residence, Gender, Date of Birth, Legal Name, type of entity,
-                  incorporation details, Registered address, tax identifiers, contact persons, Authorized Signatory /
-                  Representative name (for Legal Entities).</td>
-                <td>Used by Facilon to register investors and establish investor accounts, manage access credentials, manage authentication, associate users with applicable entities and relevant services and enable interaction with Platform services</td>
-                <td>Included in your consent below</td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>Platform Usage, Monitoring & Audit Logs</td>
-                <td>Login timestamps, IP/device identifiers, actions on investor records, status changes, document views/downloads/uploads, activity logs, access records, historical actions.</td>
-                <td>Used by Facilon to ensure platform security, detect anomalies, frauds, investigate incidents, regulatory reviews, maintain evidentiary audit trails, and support compliance /forensic analysis and dispute resolution</td>
-                <td>Included in your consent below</td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td>Support, Communications & Operational Assistance</td>
-                <td>Helpdesk tickets, chat transcripts, call logs and notes, email correspondence, messages, workflow actions.</td>
-                <td>Used by Facilon to provide timely support, manage service requests, improve operational effectiveness, traceability of actions, deliver support services and maintain records for audit and quality assurance purposes and legal and regulatory requirements.</td>
-                <td>Included in your consent below</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>KYC / CKYC Processing</td>
-                <td>Citizenship, Country of Birth, Country/ies of Residence, Passport, Aadhaar, PAN, Election ID, Driving License, MGNREGA Card, Govt issued ID, RBI Approval Reference (if applicable), Certificate of Incorporation, constitutional documents, registration number, licenses.</td>
-                <td>Used by Service Providers to complete regulatory onboarding, verify identity, and facilitate compliant access to financial services</td>
-                <td>Included in your consent below</td>
-              </tr>
-              <tr>
-                <td>5</td>
-                <td>FATCA / CRS & Tax Compliance</td>
-                <td>Tax residence, Tax Identification Number, FATCA classification, CRS declarations.</td>
-                <td>Used by Service Providers for classification, reporting, and ongoing tax compliance monitoring</td>
-                <td>Included in your consent below</td>
-              </tr>
-              <tr>
-                <td>6</td>
-                <td>Financial suitability assessment and regulatory risk profiling</td>
-                <td>Occupation, Line of Business, Annual Income Range, Net Worth, Educational Qualification.</td>
-                <td>Used by Service Providers under regulatory frameworks to assess financial suitability, risk profiling, and account categorization</td>
-                <td>Included in your consent below</td>
-              </tr>
-              <tr>
-                <td>7</td>
-                <td>Anti-Money Laundering (AML), Risk Monitoring & Financial Crime Prevention</td>
-                <td>Source of Funds, Source of Wealth, Politically Exposed Persons ("PEP") status and related information, Relationship to PEPs, High-value transaction disclosures, Nature and purpose of business relationship, Regulatory violations (if any).</td>
-                <td>Used by Service Providers for AML screening, transaction monitoring, suspicious activity detection, and reporting obligations required under PMLA, SEBI and international AML guidelines</td>
-                <td>Included in your consent below</td>
-              </tr>
-              <tr>
-                <td>8</td>
-                <td>Bank & Payment Details Processing</td>
-                <td>Bank account details, IFSC, payment references, cancelled cheque.</td>
-                <td>Used by Service Providers to support payment processing, reconciliation, and transaction-related communications</td>
-                <td>Included in your consent below</td>
-              </tr>
-              <tr>
-                <td>9</td>
-                <td>Analytics & Product Improvement</td>
-                <td>Page views, navigation paths, feature usage, anonymized metrics.</td>
-                <td>Used by Facilon to evaluate system performance, enhance usability, and guide product improvements</td>
-                <td>Included in your consent below</td>
-              </tr>
-              <tr>
-                <td>10</td>
-                <td>Enquiries & Contact Requests</td>
-                <td>Name, email, message content.</td>
-                <td>Used by Facilon to respond to user queries and manage communications</td>
-                <td>Included in your consent below</td>
-              </tr>
-              <tr>
-                <td>11</td>
-                <td>Third-Party Disclosures & Operational Enablement</td>
-                <td>Data Collected for providing services as mentioned under rows 1 to 11.</td>
-                <td>Used by Facilon to ensure service continuity, security, compliance, and operational effectiveness</td>
-                <td>Included in your consent below</td>
-              </tr>
-            </tbody>
-          </table>
+          <div className="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th></th>
+                  <th className="col-narrow">Purpose Name</th>
+                  <th>Personal Information Collected</th>
+                  <th>Usage</th>
+                  <th className="consent-col">Consent Coverage</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>Investor Profile Creation & Account Management</td>
+                  <td>First Name, Middle Name, Last Name, Email ID, mobile number, landline number, WhatsApp number, Username /
+                    Login ID, Nationality, Country of Residence, Gender, Date of Birth, Legal Name, type of entity,
+                    incorporation details, Registered address, tax identifiers, contact persons, Authorized Signatory /
+                    Representative name (for Legal Entities).</td>
+                  <td>Used by Facilon to register investors and establish investor accounts, manage access credentials, manage authentication, associate users with applicable entities and relevant services and enable interaction with Platform services</td>
+                  <td>Included in your consent below</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Platform Usage, Monitoring & Audit Logs</td>
+                  <td>Login timestamps, IP/device identifiers, actions on investor records, status changes, document views/downloads/uploads, activity logs, access records, historical actions.</td>
+                  <td>Used by Facilon to ensure platform security, detect anomalies, frauds, investigate incidents, regulatory reviews, maintain evidentiary audit trails, and support compliance /forensic analysis and dispute resolution</td>
+                  <td>Included in your consent below</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>Support, Communications & Operational Assistance</td>
+                  <td>Helpdesk tickets, chat transcripts, call logs and notes, email correspondence, messages, workflow actions.</td>
+                  <td>Used by Facilon to provide timely support, manage service requests, improve operational effectiveness, traceability of actions, deliver support services and maintain records for audit and quality assurance purposes and legal and regulatory requirements.</td>
+                  <td>Included in your consent below</td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td>KYC / CKYC Processing</td>
+                  <td>Citizenship, Country of Birth, Country/ies of Residence, Passport, Aadhaar, PAN, Election ID, Driving License, MGNREGA Card, Govt issued ID, RBI Approval Reference (if applicable), Certificate of Incorporation, constitutional documents, registration number, licenses.</td>
+                  <td>Used by Service Providers to complete regulatory onboarding, verify identity, and facilitate compliant access to financial services</td>
+                  <td>Included in your consent below</td>
+                </tr>
+                <tr>
+                  <td>5</td>
+                  <td>FATCA / CRS & Tax Compliance</td>
+                  <td>Tax residence, Tax Identification Number, FATCA classification, CRS declarations.</td>
+                  <td>Used by Service Providers for classification, reporting, and ongoing tax compliance monitoring</td>
+                  <td>Included in your consent below</td>
+                </tr>
+                <tr>
+                  <td>6</td>
+                  <td>Financial suitability assessment and regulatory risk profiling</td>
+                  <td>Occupation, Line of Business, Annual Income Range, Net Worth, Educational Qualification.</td>
+                  <td>Used by Service Providers under regulatory frameworks to assess financial suitability, risk profiling, and account categorization</td>
+                  <td>Included in your consent below</td>
+                </tr>
+                <tr>
+                  <td>7</td>
+                  <td>Anti-Money Laundering (AML), Risk Monitoring & Financial Crime Prevention</td>
+                  <td>Source of Funds, Source of Wealth, Politically Exposed Persons ("PEP") status and related information, Relationship to PEPs, High-value transaction disclosures, Nature and purpose of business relationship, Regulatory violations (if any).</td>
+                  <td>Used by Service Providers for AML screening, transaction monitoring, suspicious activity detection, and reporting obligations required under PMLA, SEBI and international AML guidelines</td>
+                  <td>Included in your consent below</td>
+                </tr>
+                <tr>
+                  <td>8</td>
+                  <td>Bank & Payment Details Processing</td>
+                  <td>Bank account details, IFSC, payment references, cancelled cheque.</td>
+                  <td>Used by Service Providers to support payment processing, reconciliation, and transaction-related communications</td>
+                  <td>Included in your consent below</td>
+                </tr>
+                <tr>
+                  <td>9</td>
+                  <td>Analytics & Product Improvement</td>
+                  <td>Page views, navigation paths, feature usage, anonymized metrics.</td>
+                  <td>Used by Facilon to evaluate system performance, enhance usability, and guide product improvements</td>
+                  <td>Included in your consent below</td>
+                </tr>
+                <tr>
+                  <td>10</td>
+                  <td>Enquiries & Contact Requests</td>
+                  <td>Name, email, message content.</td>
+                  <td>Used by Facilon to respond to user queries and manage communications</td>
+                  <td>Included in your consent below</td>
+                </tr>
+                <tr>
+                  <td>11</td>
+                  <td>Third-Party Disclosures & Operational Enablement</td>
+                  <td>Data Collected for providing services as mentioned under rows 1 to 11.</td>
+                  <td>Used by Facilon to ensure service continuity, security, compliance, and operational effectiveness</td>
+                  <td>Included in your consent below</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
           <h2>Consent Declaration</h2>
           <p className="section-note">
