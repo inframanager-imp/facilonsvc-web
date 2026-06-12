@@ -9,6 +9,7 @@ import {
   DsrAdminUpdateRequest,
   DsrEvidenceFileDto
 } from '../../../services/admin-dsr.service';
+import { formatDate } from '../../../utils/dateFormat';
 import './DsrConsole.scss';
 
 const STATUSES = [
@@ -190,8 +191,8 @@ export const AdminDsrCaseDetail: React.FC = () => {
                   <dt className="col-5">Role</dt><dd className="col-7">{item.requesterRole || '—'}</dd>
                   <dt className="col-5">Investor Code</dt><dd className="col-7">{item.investorUniqueCode}</dd>
                   <dt className="col-5">Data Area</dt><dd className="col-7">{item.dataArea || '—'}</dd>
-                  <dt className="col-5">Submitted</dt><dd className="col-7">{item.submittedAt?.replace('T', ' ') || '—'}</dd>
-                  <dt className="col-5">SLA Deadline</dt><dd className="col-7">{item.slaDeadline?.replace('T', ' ') || '—'}</dd>
+                  <dt className="col-5">Submitted</dt><dd className="col-7">{formatDate(item.submittedAt)}</dd>
+                  <dt className="col-5">SLA Deadline</dt><dd className="col-7">{formatDate(item.slaDeadline)}</dd>
                   <dt className="col-5">Investor sees</dt><dd className="col-7">{item.investorStatus}</dd>
                 </dl>
                 <hr />
@@ -215,7 +216,7 @@ export const AdminDsrCaseDetail: React.FC = () => {
                     <li key={i} className={e.investorVisible ? 'visible' : 'internal'}>
                       <div className="dsr-timeline__head">
                         <strong>{e.title}</strong>
-                        <span className="text-muted small">{e.createdAt?.replace('T', ' ')}</span>
+                        <span className="text-muted small">{e.createdAt && formatDate(e.createdAt)}</span>
                       </div>
                       <div className="small text-muted">
                         {e.actor || 'System'}{e.actorRole ? ` (${e.actorRole})` : ''}

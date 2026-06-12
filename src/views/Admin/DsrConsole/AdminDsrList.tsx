@@ -4,6 +4,7 @@ import { LoadingSpinner } from '../../../components/LoadingSpinner/LoadingSpinne
 import { PremiumSelect } from '../../../components/PremiumSelect/PremiumSelect';
 import { toast } from 'react-toastify';
 import { adminDsrService, DsrAdminCaseDto, DsrListFilters } from '../../../services/admin-dsr.service';
+import { formatDate } from '../../../utils/dateFormat';
 import './DsrConsole.scss';
 
 const STATUSES = [
@@ -124,9 +125,9 @@ export const AdminDsrList: React.FC = () => {
                         <td>{c.requesterName}<br /><small className="text-muted">{c.requesterEmail}</small></td>
                         <td>{c.requestType}</td>
                         <td>{c.jurisdiction}</td>
-                        <td>{c.submittedAt?.split('T')[0] || '-'}</td>
+                        <td>{formatDate(c.submittedAt)}</td>
                         <td className={c.slaOverdue ? 'text-danger fw-semibold' : ''}>
-                          {c.slaDeadline?.split('T')[0] || '-'}{c.slaOverdue ? ' (overdue)' : ''}
+                          {formatDate(c.slaDeadline)}{c.slaOverdue ? ' (overdue)' : ''}
                         </td>
                         <td><span className="badge bg-light text-dark">{c.status}</span></td>
                         <td>{c.assignedTo || <span className="text-muted">—</span>}</td>

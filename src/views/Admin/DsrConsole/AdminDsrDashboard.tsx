@@ -11,6 +11,7 @@ import {
   DsrDashboardSummaryDto,
   DsrTriageBucket
 } from '../../../services/admin-dsr.service';
+import { formatDate } from '../../../utils/dateFormat';
 import './DsrConsole.scss';
 
 const REQUEST_TYPES = [
@@ -116,7 +117,7 @@ export const AdminDsrDashboard: React.FC = () => {
                   |
                   <div className="flex items-center gap-1.5">
                     <span className="opacity-70">Last Login:</span>
-                    <span className="font-semibold">{profile?.lastLogin?.replace('T', ' ') || '—'}</span>
+                    <span className="font-semibold">{formatDate(profile?.lastLogin)}</span>
                   </div>
                   |
                   <div className="flex items-center gap-1.5">
@@ -199,9 +200,9 @@ export const AdminDsrDashboard: React.FC = () => {
                         <td>{c.requesterName}<br /><small className="text-muted">{c.requesterEmail}</small></td>
                         <td>{c.requestType}</td>
                         <td>{c.jurisdiction}</td>
-                        <td>{c.submittedAt?.split('T')[0] || '-'}</td>
+                        <td>{formatDate(c.submittedAt)}</td>
                         <td className={c.slaOverdue ? 'text-danger fw-semibold' : ''}>
-                          {c.slaDeadline?.split('T')[0] || '-'}{c.slaOverdue ? ' (overdue)' : ''}
+                          {formatDate(c.slaDeadline)}{c.slaOverdue ? ' (overdue)' : ''}
                         </td>
                         <td><span className="badge bg-light text-dark">{c.status}</span></td>
                         <td>{c.assignedTo || <span className="text-muted">—</span>}</td>

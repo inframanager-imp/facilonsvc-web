@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { investorService, DsrCaseResponseDto, DsrCaseDetailDto } from '../../../services/investor.service';
 import { LoadingSpinner } from '../../../components/LoadingSpinner/LoadingSpinner';
+import { formatDate } from '../../../utils/dateFormat';
 import { FiChevronLeft, FiEdit } from 'react-icons/fi';
 import { BsEyeFill } from 'react-icons/bs';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
@@ -164,8 +165,8 @@ export const DsrRequests: React.FC = () => {
                               </span>
                             )}
                           </td>
-                          <td className="p-2 text-[12px] text-slate-500">{item.submittedAt ? item.submittedAt.split('T')[0] : '-'}</td>
-                          <td className="p-2 text-[12px] text-slate-500">{item.slaDeadline ? item.slaDeadline.split('T')[0] : '-'}</td>
+                          <td className="p-2 text-[12px] text-slate-500">{formatDate(item.submittedAt)}</td>
+                          <td className="p-2 text-[12px] text-slate-500">{formatDate(item.slaDeadline)}</td>
                           <td className="p-2 text-[12px] text-right">
                             <div className="inline-flex items-center gap-1.5 justify-end w-full">
                               <OverlayTrigger
@@ -236,10 +237,10 @@ export const DsrRequests: React.FC = () => {
                           </dd>
 
                           <dt className="col-span-5 font-semibold text-slate-500">Submitted</dt>
-                          <dd className="col-span-7 text-slate-700">{req.submittedAt?.replace('T', ' ') || '—'}</dd>
+                          <dd className="col-span-7 text-slate-700">{formatDate(req.submittedAt)}</dd>
 
                           <dt className="col-span-5 font-semibold text-slate-500">SLA Deadline</dt>
-                          <dd className="col-span-7 text-slate-700">{req.slaDeadline?.replace('T', ' ') || '—'}</dd>
+                          <dd className="col-span-7 text-slate-700">{formatDate(req.slaDeadline)}</dd>
 
                           <dt className="col-span-5 font-semibold text-slate-500">Data Area</dt>
                           <dd className="col-span-7 text-slate-700">{req.dataArea || '—'}</dd>
@@ -286,7 +287,7 @@ export const DsrRequests: React.FC = () => {
                             <li key={i} className="visible text-[12px] pb-3 last:pb-0">
                               <div className="flex justify-between items-start gap-2 mb-1">
                                 <strong className="font-semibold text-slate-800">{e.title}</strong>
-                                <span className="text-[10px] text-slate-400 whitespace-nowrap">{e.createdAt?.split('T')[0]}</span>
+                                <span className="text-[10px] text-slate-400 whitespace-nowrap">{e.createdAt && formatDate(e.createdAt)}</span>
                               </div>
                               {e.note && <div className="text-[11px] text-slate-500 bg-slate-50 p-1.5 rounded border border-slate-100/50 mt-1">{e.note}</div>}
                             </li>

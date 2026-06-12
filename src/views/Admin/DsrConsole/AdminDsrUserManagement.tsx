@@ -9,6 +9,7 @@ import {
   DsrAdminUserDto,
   DsrAdminRegisterRequest
 } from '../../../services/admin-dsr.service';
+import { formatDate } from '../../../utils/dateFormat';
 import './DsrConsole.scss';
 
 export const AdminDsrUserManagement: React.FC = () => {
@@ -145,7 +146,7 @@ export const AdminDsrUserManagement: React.FC = () => {
                 |
                 <div className="flex items-center gap-1.5">
                   <span className="opacity-70">Last Login:</span>
-                  <span className="font-semibold">{profile?.lastLogin?.replace('T', ' ') || '—'}</span>
+                  <span className="font-semibold">{formatDate(profile?.lastLogin)}</span>
                 </div>
               </div>
             </div>
@@ -218,7 +219,7 @@ export const AdminDsrUserManagement: React.FC = () => {
                           {a.active ? 'Active' : 'Inactive'}
                         </span>
                       </td>
-                      <td>{a.lastLogin?.replace('T', ' ') || '—'}</td>
+                      <td>{formatDate(a.lastLogin)}</td>
                       <td>
                         {a.active && (
                           <button className="btn btn-sm btn-outline-danger"

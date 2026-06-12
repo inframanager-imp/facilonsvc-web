@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { investorService, DsrCaseDetailDto } from '../../../services/investor.service';
 import { LoadingSpinner } from '../../../components/LoadingSpinner/LoadingSpinner';
+import { formatDate } from '../../../utils/dateFormat';
 import '../InvestorProfile/InvestorProfile.scss';
 import './DsrCenter.scss';
 
@@ -89,10 +90,10 @@ export const DsrCaseDetail: React.FC = () => {
                       </dd>
 
                       <dt className="col-span-5 font-semibold text-slate-500">Submitted</dt>
-                      <dd className="col-span-7 text-slate-700">{req.submittedAt?.replace('T', ' ') || '—'}</dd>
+                      <dd className="col-span-7 text-slate-700">{formatDate(req.submittedAt)}</dd>
 
                       <dt className="col-span-5 font-semibold text-slate-500">SLA Deadline</dt>
-                      <dd className="col-span-7 text-slate-700">{req.slaDeadline?.replace('T', ' ') || '—'}</dd>
+                      <dd className="col-span-7 text-slate-700">{formatDate(req.slaDeadline)}</dd>
 
                       <dt className="col-span-5 font-semibold text-slate-500">Data Area</dt>
                       <dd className="col-span-7 text-slate-700">{req.dataArea || '—'}</dd>
@@ -139,7 +140,7 @@ export const DsrCaseDetail: React.FC = () => {
                         <li key={i} className="visible text-[12px] pb-3 last:pb-0">
                           <div className="flex justify-between items-start gap-2 mb-1">
                             <strong className="font-semibold text-slate-800">{e.title}</strong>
-                            <span className="text-[10px] text-slate-400 whitespace-nowrap">{e.createdAt?.split('T')[0]}</span>
+                            <span className="text-[10px] text-slate-400 whitespace-nowrap">{e.createdAt && formatDate(e.createdAt)}</span>
                           </div>
                           {e.note && <div className="text-[11px] text-slate-500 bg-slate-50 p-1.5 rounded border border-slate-100/50 mt-1">{e.note}</div>}
                         </li>
