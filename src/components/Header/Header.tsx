@@ -68,11 +68,18 @@ const Header: React.FC<HeaderProps> = ({ variant = 'legacy', title, subtitle }) 
           {isAdminArea ? (
             <>
               {canManageDsrAdmins && (
-                <SidebarLink
-                  to="/admin/dashboard"
-                  icon="bi-speedometer2"
-                  label="Admin Dashboard"
-                />
+                <>
+                  <SidebarLink
+                    to="/admin/dashboard"
+                    icon="bi-speedometer2"
+                    label="Admin Dashboard"
+                  />
+                  <SidebarAction
+                    onClick={() => navigate('/admin/dashboard?action=register')}
+                    icon="bi-person-plus"
+                    label="Register DSR Admin"
+                  />
+                </>
               )}
               <SidebarLink
                 to="/admin/dsr-admins"
@@ -242,6 +249,20 @@ const SidebarLink: React.FC<{ to: string; icon: string; label: string }> = ({ to
       <i className={`bi ${icon} text-lg`}></i>
       <span className="hidden group-hover:block font-medium text-[13px] whitespace-nowrap tracking-wide">{label}</span>
     </NavLink>
+  );
+};
+
+// Sidebar item that triggers an action instead of routing (e.g. opening a modal on the target page)
+const SidebarAction: React.FC<{ onClick: () => void; icon: string; label: string }> = ({ onClick, icon, label }) => {
+  return (
+    <button
+      onClick={onClick}
+      className="relative w-full flex items-center justify-start gap-3 px-3 py-2.5 transition-all duration-200 group-hover:px-4 text-sidebar-text hover:bg-sidebar-hover hover:text-white border-l-[3px] border-transparent"
+      title={label}
+    >
+      <i className={`bi ${icon} text-lg`}></i>
+      <span className="hidden group-hover:block font-medium text-[13px] whitespace-nowrap tracking-wide">{label}</span>
+    </button>
   );
 };
 

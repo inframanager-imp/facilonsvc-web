@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import Modal from '../../../components/Modal/Modal';
 import { LoadingSpinner } from '../../../components/LoadingSpinner/LoadingSpinner';
@@ -12,7 +12,7 @@ import {
 import './DsrConsole.scss';
 
 export const AdminDsrUserManagement: React.FC = () => {
-  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<DsrAdminUserDto | null>(null);
   const [admins, setAdmins] = useState<DsrAdminUserDto[]>([]);
@@ -32,6 +32,15 @@ export const AdminDsrUserManagement: React.FC = () => {
   useEffect(() => {
     load();
   }, []);
+
+  // The sidebar "Register DSR Admin" action lands here with ?action=register
+  useEffect(() => {
+    if (searchParams.get('action') === 'register') {
+      openCreateModal();
+      setSearchParams({}, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   const load = async () => {
     setLoading(true);
@@ -149,7 +158,7 @@ export const AdminDsrUserManagement: React.FC = () => {
           </div>
         </div>
 
-        {/* TOP ROW: summary cards + quick actions */}
+        {/* TOP ROW: summary cards (quick actions moved to the sidebar) */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-3 items-start">
           <div className="bg-white rounded-lg shadow-sm border border-[#e2e8f0] p-3">
             <div className="text-[8px] font-bold text-slate-400 uppercase tracking-wider mb-1">DSR Admins</div>
@@ -160,17 +169,6 @@ export const AdminDsrUserManagement: React.FC = () => {
             <div className="text-[8px] font-bold text-slate-400 uppercase tracking-wider mb-1">Active</div>
             <div className="text-[24px] font-bold text-[#067647] leading-none">{activeCount}</div>
             <div className="text-[11px] text-slate-500 mt-1">{admins.length - activeCount} inactive</div>
-          </div>
-          <div className="bg-white rounded-lg shadow-sm border border-[#e2e8f0] p-3 flex flex-col justify-between">
-            <div className="text-[8px] font-bold text-slate-400 uppercase tracking-wider mb-2">Quick Actions</div>
-            <div className="flex flex-wrap gap-2">
-              <button className="btn btn-sm btn-primary" onClick={openCreateModal}>
-                <i className="bi bi-person-plus me-1"></i>Register DSR Admin
-              </button>
-              <button className="btn btn-sm btn-outline-secondary" onClick={() => navigate('/admin/dsr-admins')}>
-                DSR Dashboard
-              </button>
-            </div>
           </div>
         </div>
 
@@ -297,22 +295,13 @@ export const AdminDsrUserManagement: React.FC = () => {
               {errors.loginId && <div className="invalid-feedback">{errors.loginId.message}</div>}
             </div>
             <div className="col-md-6 mb-3">
-              <label className="form-label">Initial Password *</label>
-              <input
-                type="password"
-                className={`form-control ${errors.password ? 'is-invalid' : ''}`}
-                {...register('password', {
-                  required: 'Password is required',
-                  minLength: { value: 8, message: 'Minimum 8 characters' },
-                })}
-              />
-              {errors.password && <div className="invalid-feedback">{errors.password.message}</div>}
-              <small className="text-muted">The user must change this on first login.</small>
+              <label className="form-label">Role</label>
+              <input type="text" className="form-control" value="DSR_ADMIN (assigned automatically)" disabled />
             </div>
           </div>
-          <div className="mb-3">
-            <label className="form-label">Role</label>
-            <input type="text" className="form-control" value="DSR_ADMIN (assigned automatically)" disabled />
+          <div className="alert alert-info py-2 px-3 mb-3" style={{ fontSize: 13 }}>
+            <i className="bi bi-envelope me-2"></i>
+            The user will receive an email with a link to set their own password.
           </div>
           <div className="modal-footer-actions d-flex justify-content-end gap-2">
             <button type="button" className="btn btn-secondary" onClick={closeModals}>

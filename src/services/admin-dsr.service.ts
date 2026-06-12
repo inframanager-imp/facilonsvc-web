@@ -77,7 +77,6 @@ export interface DsrAdminRegisterRequest {
   emailId: string;
   mobilePhone?: string;
   loginId: string;
-  password: string;
   active?: boolean;
 }
 
