@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import Header from '../../../components/Header/Header';
 import { investorService, InvestorDashboardDto, JourneyListItem, DsrCaseResponseDto } from '../../../services/investor.service';
 import { delegationService } from '../../../services/delegation.service';
+import { kycDocumentsService, KycRequirementsResponseDto, KycRequirementState } from '../../../services/kycDocuments.service';
 import { DelegationDto } from '../../../models/DelegationDto';
 import { LoadingSpinner } from '../../../components/LoadingSpinner/LoadingSpinner';
 import { AcceptDelegationModal, ConsentCustomization } from '../../../components/AcceptDelegationModal/AcceptDelegationModal';
@@ -19,6 +20,7 @@ let dashboardCache: {
   journeys: JourneyListItem[];
   dsrCases: DsrCaseResponseDto[];
   pendingDelegations: DelegationDto[];
+  kycRequirements: KycRequirementsResponseDto | null;
 } | null = null;
 
 export const InvestorDashboard: React.FC = () => {
@@ -29,6 +31,7 @@ export const InvestorDashboard: React.FC = () => {
   const [journeys, setJourneys] = useState<JourneyListItem[]>(dashboardCache?.journeys ?? []);
   const [dsrCases, setDsrCases] = useState<DsrCaseResponseDto[]>(dashboardCache?.dsrCases ?? []);
   const [pendingDelegations, setPendingDelegations] = useState<DelegationDto[]>(dashboardCache?.pendingDelegations ?? []);
+  const [kycRequirements, setKycRequirements] = useState<KycRequirementsResponseDto | null>(dashboardCache?.kycRequirements ?? null);
   const [processingDelegation, setProcessingDelegation] = useState<number | null>(null);
   const [showAcceptModal, setShowAcceptModal] = useState(false);
   const [selectedDelegation, setSelectedDelegation] = useState<DelegationDto | null>(null);
@@ -47,12 +50,13 @@ export const InvestorDashboard: React.FC = () => {
     fetchPendingDelegations();
     fetchJourneys();
     fetchDsrCases();
+    fetchKycRequirements();
   }, []);
 
   // Keep the session cache in sync so the next return paints instantly.
   useEffect(() => {
-    dashboardCache = { dashboardData, journeys, dsrCases, pendingDelegations };
-  }, [dashboardData, journeys, dsrCases, pendingDelegations]);
+    dashboardCache = { dashboardData, journeys, dsrCases, pendingDelegations, kycRequirements };
+  }, [dashboardData, journeys, dsrCases, pendingDelegations, kycRequirements]);
 
   const fetchJourneys = async () => {
     try {
@@ -69,6 +73,15 @@ export const InvestorDashboard: React.FC = () => {
       setDsrCases(data || []);
     } catch (error) {
       console.error('[InvestorDashboard] Error fetching DSR cases:', error);
+    }
+  };
+
+  const fetchKycRequirements = async () => {
+    try {
+      const data = await kycDocumentsService.getRequirements();
+      setKycRequirements(data);
+    } catch (error) {
+      console.error('[InvestorDashboard] Error fetching KYC requirements:', error);
     }
   };
 
@@ -154,22 +167,60 @@ export const InvestorDashboard: React.FC = () => {
     { activity: 'Fatca Declaration', centra: 'Tax Centre', status: 'REQUIRED', statusColor: 'bg-[#fef2f2] text-[#ef4444] border border-[#ef4444]/30' },
   ];
 
-  const appointments = [
-    { product: 'HYSA Consultation', provider: 'Global Wealth', date: 'May 15, 2026', status: 'CONFIRMED', statusColor: 'bg-[#ecfdf5] text-[#10b981] border-none' },
-    { product: 'Equity Review', provider: 'Northern Trust', date: 'May 22, 2026', status: 'PENDING', statusColor: 'bg-[#fff8f0] text-[#f59e0b] border-none' },
-    { product: 'Tax Strategy', provider: 'Facilon Prime', date: 'June 02, 2026', status: 'CONFIRMED', statusColor: 'bg-[#ecfdf5] text-[#10b981] border-none' },
-  ];
+  // My Appointment card hidden for now — mock data kept for when it's re-enabled
+  // const appointments = [
+  //   { product: 'HYSA Consultation', provider: 'Global Wealth', date: 'May 15, 2026', status: 'CONFIRMED', statusColor: 'bg-[#ecfdf5] text-[#10b981] border-none' },
+  //   { product: 'Equity Review', provider: 'Northern Trust', date: 'May 22, 2026', status: 'PENDING', statusColor: 'bg-[#fff8f0] text-[#f59e0b] border-none' },
+  //   { product: 'Tax Strategy', provider: 'Facilon Prime', date: 'June 02, 2026', status: 'CONFIRMED', statusColor: 'bg-[#ecfdf5] text-[#10b981] border-none' },
+  // ];
 
-  const documents = [
-    { type: 'Passport', name: 'Not Uploaded' },
-    { type: 'PAN Card', name: 'Not Uploaded' },
-    { type: 'Address Proof', name: 'Not Uploaded' },
-    { type: 'Passport Size Photo', name: 'Not Uploaded' },
-    { type: 'Bank Statement (6m)', name: 'Not Uploaded' },
-    { type: 'Income Proof (ITR)', name: 'Not Uploaded' },
-    { type: 'Tax Return (Last 3 Years)', name: 'Not Uploaded' },
-    { type: 'Net Worth Statement', name: 'Not Uploaded' },
-  ];
+  // My Documents card — derived from real KYC requirements (Smart Upload / OCR).
+  // Falls back to placeholder rows until /kyc/requirements has loaded.
+  const KYC_STATE_LABEL: Record<KycRequirementState, string> = {
+    NOT_UPLOADED: 'Not Uploaded',
+    PENDING: 'Pending',
+    PENDING_REVIEW: 'In Review',
+    VALID: 'Approved',
+    DISCREPANCY: 'Needs Attention',
+    EXPIRED: 'Expired',
+    EXPIRES_SOON: 'Expiring Soon',
+    OCR_FAILED: 'Upload Failed',
+  };
+  const KYC_STATE_COLOR: Record<KycRequirementState, string> = {
+    NOT_UPLOADED: 'text-slate-400',
+    PENDING: 'text-[#3b82f6]',
+    PENDING_REVIEW: 'text-[#f59e0b]',
+    VALID: 'text-[#10b981]',
+    DISCREPANCY: 'text-[#ef4444]',
+    EXPIRED: 'text-[#ef4444]',
+    EXPIRES_SOON: 'text-[#f59e0b]',
+    OCR_FAILED: 'text-[#ef4444]',
+  };
+
+  const kycSlots = kycRequirements?.slots ?? [];
+  const kycUploadedCount = kycSlots.filter((s) => s.state !== 'NOT_UPLOADED').length;
+  const kycTotalCount = kycSlots.length;
+  const kycApprovedCount = kycSlots.filter((s) => s.state === 'VALID').length;
+  const kycRejectedCount = kycSlots.filter(
+    (s) => s.state === 'DISCREPANCY' || s.state === 'OCR_FAILED' || s.state === 'EXPIRED'
+  ).length;
+  const kycCompletePct =
+    kycRequirements && kycRequirements.mandatoryTotal > 0
+      ? Math.round((kycRequirements.mandatoryComplete / kycRequirements.mandatoryTotal) * 100)
+      : 0;
+
+  const documents = kycSlots.length > 0
+    ? kycSlots.map((s) => ({
+        type: s.label,
+        name: KYC_STATE_LABEL[s.state] ?? s.state,
+        nameColor: KYC_STATE_COLOR[s.state] ?? 'text-slate-400',
+      }))
+    : [
+        { type: 'PAN Card', name: 'Not Uploaded', nameColor: 'text-slate-400' },
+        { type: 'Passport', name: 'Not Uploaded', nameColor: 'text-slate-400' },
+        { type: 'Aadhaar Card', name: 'Not Uploaded', nameColor: 'text-slate-400' },
+        { type: 'Address Proof', name: 'Not Uploaded', nameColor: 'text-slate-400' },
+      ];
 
   const permissions = [
     { permission: 'Account View', assignee: 'Advisor', status: 'ACTIVE', statusColor: 'bg-[#ecfdf5] text-[#10b981]' },
@@ -254,8 +305,8 @@ export const InvestorDashboard: React.FC = () => {
 
             </div>
 
-            {/* TOP ROW: 3 Column Layout */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-3 items-start">
+            {/* TOP ROW: 2 Column Layout (My Appointment hidden) */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-3 items-start">
 
               {/* Column 1: My Pending Action */}
               <div className="bg-white rounded-lg shadow-sm border border-[#e2e8f0] flex flex-col">
@@ -400,7 +451,7 @@ export const InvestorDashboard: React.FC = () => {
                 </div>
               </div>
 
-              {/* Column 3: My Appointment */}
+              {/* Column 3: My Appointment — hidden for now (Coming Soon)
               <div className="bg-white rounded-lg shadow-sm border border-[#e2e8f0] flex flex-col">
                 <div className="p-2 flex justify-between items-center border-b border-[#e2e8f0]">
                   <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
@@ -448,6 +499,7 @@ export const InvestorDashboard: React.FC = () => {
                   </div>
                 </div>
               </div>
+              */}
 
             </div>
 
@@ -460,26 +512,29 @@ export const InvestorDashboard: React.FC = () => {
                   <h2 className="text-[14px] font-bold text-slate-800 flex items-center tracking-tight mb-0">
                     <i className="bi bi-cloud-arrow-up mr-2 text-slate-500"></i> My Documents
                   </h2>
-                  <a href="#" className="text-[11px] font-semibold text-[#3e6f7c] hover:underline hover:text-[#1f4851] transition-colors flex items-center">
+                  <button
+                    onClick={() => navigate('/investor/documents-center')}
+                    className="text-[11px] font-semibold text-[#3e6f7c] hover:underline hover:text-[#1f4851] transition-colors flex items-center bg-transparent border-0 p-0 cursor-pointer"
+                  >
                     Documents Center &rarr;
-                  </a>
+                  </button>
                 </div>
 
                 <div className="grid grid-cols-4 divide-x divide-[#e2e8f0] border-b border-[#e2e8f0]">
                   <div className="py-2.5 text-center flex flex-col items-center">
-                    <span className="text-[16px] font-bold text-slate-800">0</span>
-                    <span className="text-[8px] text-slate-500">of 12 Uploaded</span>
+                    <span className="text-[16px] font-bold text-slate-800">{kycUploadedCount}</span>
+                    <span className="text-[8px] text-slate-500">of {kycTotalCount || '—'} Uploaded</span>
                   </div>
                   <div className="py-2.5 text-center flex flex-col items-center">
-                    <span className="text-[16px] font-bold text-slate-800">0%</span>
+                    <span className="text-[16px] font-bold text-slate-800">{kycCompletePct}%</span>
                     <span className="text-[8px] text-slate-500">Complete</span>
                   </div>
                   <div className="py-2.5 text-center flex flex-col items-center">
-                    <span className="text-[16px] font-bold text-[#10b981]">0</span>
+                    <span className="text-[16px] font-bold text-[#10b981]">{kycApprovedCount}</span>
                     <span className="text-[8px] text-slate-500">Approved</span>
                   </div>
                   <div className="py-2.5 text-center flex flex-col items-center">
-                    <span className="text-[16px] font-bold text-[#ef4444]">0</span>
+                    <span className="text-[16px] font-bold text-[#ef4444]">{kycRejectedCount}</span>
                     <span className="text-[8px] text-slate-500">Rejected</span>
                   </div>
                 </div>
@@ -496,9 +551,13 @@ export const InvestorDashboard: React.FC = () => {
                       {documents.map((item, idx) => (
                         <div key={idx} className="grid grid-cols-12 items-center p-1 border-b border-[#e2e8f0] last:border-0 hover:bg-slate-50/50 transition-colors">
                           <div className="col-span-5 text-[11px] font-semibold text-slate-700 pr-1">{item.type}</div>
-                          <div className="col-span-5 text-[11px] text-slate-400">{item.name}</div>
+                          <div className={`col-span-5 text-[11px] ${item.nameColor}`}>{item.name}</div>
                           <div className="col-span-2 text-right flex justify-end">
-                            <button className="text-slate-400 hover:text-[#1f4851] transition-colors p-1 border border-slate-200 rounded bg-slate-50 hover:bg-slate-100">
+                            <button
+                              onClick={() => navigate('/investor/documents-center')}
+                              className="text-slate-400 hover:text-[#1f4851] transition-colors p-1 border border-slate-200 rounded bg-slate-50 hover:bg-slate-100 cursor-pointer"
+                              title="Upload / manage in Documents Center"
+                            >
                               <i className="bi bi-cloud-arrow-up text-[10px]"></i>
                             </button>
                           </div>

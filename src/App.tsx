@@ -53,6 +53,7 @@ import { DsrCenter } from './views/Investor/DsrCenter/DsrCenter';
 import { DsrRequests } from './views/Investor/DsrCenter/DsrRequests';
 import { DsrCaseDetail } from './views/Investor/DsrCenter/DsrCaseDetail';
 import { DocumentUpload } from './views/Investor/DocumentUpload/DocumentUpload';
+import { SmartUploadTab } from './views/Investor/InvestorDashboard/components/SmartUploadTab';
 import { OnboardingDocuments } from './views/Investor/OnboardingDocuments/OnboardingDocuments';
 import { PublicDocumentSubmission } from './views/Investor/PublicDocumentSubmission/PublicDocumentSubmission';
 import { InvestorProfilePdf } from './views/Investor/InvestorProfilePdf/InvestorProfilePdf';
@@ -273,6 +274,17 @@ const App: React.FC = () => {
               <ProtectedRoute>
                 <MainLayout title="Consent Centre" subtitle="Manage your consents and Statement of Work">
                   <MyConsents />
+                </MainLayout>
+              </ProtectedRoute>
+            }
+          />
+          {/* Documents Center — Smart Upload (OCR) KYC document page */}
+          <Route
+            path="/investor/documents-center"
+            element={
+              <ProtectedRoute>
+                <MainLayout title="Documents Center" subtitle="Upload your KYC documents — we extract and validate key fields automatically via OCR">
+                  <SmartUploadTab />
                 </MainLayout>
               </ProtectedRoute>
             }
