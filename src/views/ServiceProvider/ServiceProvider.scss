@@ -1,3 +1,16 @@
+@import '../Investor/IntroducedRegistration/IntroducedInvestorRegistration.scss';
+
+.highlight {
+  background: #dcf1f6;
+  padding: 12px 16px;
+  border-left: 4px solid #2c5966;
+  border-radius: 6px;
+  margin: 12px 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: #334155;
+}
+
 /* Pixel-faithful port of inline <style> blocks in the Laravel SP blade views.
    Each scoped class corresponds 1:1 with the original blade `class` attribute,
    so pages mirror Laravel layout, colors, and box-shadows. */

@@ -5,6 +5,10 @@ import {
   SpUserPrefillDto,
 } from '../../services/serviceProvider.service';
 import './ServiceProvider.scss';
+import { CompactHeader } from '../../components/CompactHeader/CompactHeader';
+import { CompactFooter } from '../../components/CompactFooter/CompactFooter';
+import { RegistrationStepper } from '../../components/RegistrationStepper/RegistrationStepper';
+import { RegistrationVisualCard } from '../../components/RegistrationVisualCard/RegistrationVisualCard';
 
 /**
  * Pixel-faithful port of `service-provider/services_provider_user_register.blade.php`.
@@ -95,120 +99,139 @@ const SpUserRegister: React.FC = () => {
   };
 
   return (
-    <div className="sp-user-register">
-      <div className="page">
-        <div className="card">
-          <h1>Service Provider User Registration</h1>
-          <p className="meta">Authorised users of registered Service Providers</p>
+    <>
+      <CompactHeader />
+      <section className="login-form-style4 steps4-sec section-padding align-items-center">
+        <div className="container">
+          <div className="registration-split-layout">
+            {/* Left Panel: Form & Stepper */}
+            <div className="left-panel">
+              {/* Stepper Progress */}
+              <RegistrationStepper currentStep={5} title="Registration Details" maxWidth="550px" />
 
-          <div className="info">
-            Please complete this form to register as an authorised user of your
-            organisation (Service Provider) on the Facilon platform.
+              {/* Card */}
+              <div className="login-form-style3-main" style={{ width: '100%', maxWidth: '550px', margin: '0 auto', textAlign: 'left' }}>
+                <div className="login-form-style3-main_full">
+                  <div className="login-register3-form-middle">
+                    {error && <div style={{ color: '#be1717', marginBottom: 12 }}>{error}</div>}
+                    {submitError && <div style={{ color: '#be1717', marginBottom: 12 }}>{submitError}</div>}
+
+                    <form onSubmit={onSubmit}>
+                      <div className="single-field full-row">
+                        <label>
+                          Service Provider Name <span className="star-color">*</span>
+                        </label>
+                        <input type="text" value={prefill?.fullName ?? ''} readOnly />
+                      </div>
+
+                      <div className="single-field">
+                        <label>
+                          First Name <span className="star-color">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          value={firstName}
+                          onChange={(e) => setFirstName(e.target.value)}
+                          required
+                        />
+                      </div>
+
+                      <div className="single-field">
+                        <label>
+                          Last Name <span className="star-color">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          value={lastName}
+                          onChange={(e) => setLastName(e.target.value)}
+                          required
+                        />
+                      </div>
+
+                      <div className="single-field">
+                        <label>
+                          Designation <span className="star-color">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          value={designation}
+                          onChange={(e) => setDesignation(e.target.value)}
+                          required
+                        />
+                      </div>
+
+                      <div className="single-field">
+                        <label>
+                          Official Email <span className="star-color">*</span>
+                        </label>
+                        <input
+                          type="email"
+                          value={officialEmail}
+                          onChange={(e) => setOfficialEmail(e.target.value)}
+                          required
+                        />
+                      </div>
+
+                      <div className="single-field">
+                        <label>
+                          Official Phone <span className="star-color">*</span>
+                        </label>
+                        <input
+                          type="tel"
+                          value={officialPhone}
+                          onChange={(e) => setOfficialPhone(e.target.value)}
+                          required
+                        />
+                      </div>
+
+                      <div className="full-row highlight">
+                        <label style={{ display: 'flex', alignItems: 'flex-start', cursor: 'pointer', margin: 0 }}>
+                          <input
+                            type="checkbox"
+                            checked={consent}
+                            onChange={(e) => setConsent(e.target.checked)}
+                            required
+                            className="w-4 h-4 text-[#be1717] bg-white border-slate-300 rounded focus:ring-[#be1717] cursor-pointer align-middle"
+                            style={{ marginRight: '0.5rem', marginTop: '0.2rem', flexShrink: 0 }}
+                          />
+                          <span style={{ fontSize: '13px', color: '#334155', fontWeight: 500 }}>
+                            I confirm that I have read and agree to the Service Provider User
+                            Privacy &amp; Consent Notice
+                          </span>
+                        </label>
+                        <p className="consent-note" style={{ paddingLeft: '1.7rem', margin: '4px 0 0', fontSize: '11px', color: '#64748b' }}>
+                          Consent is mandatory for registration and platform access.
+                        </p>
+                      </div>
+
+                      <div className="actions mb-0 text-center border-t pt-3 mt-3 flex justify-center gap-2">
+                        <button
+                          className="button-2"
+                          type="button"
+                          onClick={() => window.history.back()}
+                          disabled={submitting}
+                        >
+                          Cancel
+                        </button>
+                        <button className="button-1" type="submit" disabled={submitting}>
+                          {submitting ? 'Submitting...' : 'Submit Registration'}
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Panel: Creative Illustration Panel */}
+            <div className="right-panel">
+              <RegistrationVisualCard step="details" />
+            </div>
           </div>
-
-          {error && <div className="info error">{error}</div>}
-          {submitError && <div className="info error">{submitError}</div>}
-
-          <form onSubmit={onSubmit}>
-            <div className="full-row">
-              <label>
-                Service Provider Name <span className="required">*</span>
-              </label>
-              <input type="text" value={prefill?.fullName ?? ''} readOnly />
-            </div>
-
-            <div>
-              <label>
-                First Name <span className="required">*</span>
-              </label>
-              <input
-                type="text"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                required
-              />
-            </div>
-
-            <div>
-              <label>
-                Last Name <span className="required">*</span>
-              </label>
-              <input
-                type="text"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                required
-              />
-            </div>
-
-            <div>
-              <label>
-                Designation <span className="required">*</span>
-              </label>
-              <input
-                type="text"
-                value={designation}
-                onChange={(e) => setDesignation(e.target.value)}
-                required
-              />
-            </div>
-
-            <div>
-              <label>
-                Official Email <span className="required">*</span>
-              </label>
-              <input
-                type="email"
-                value={officialEmail}
-                onChange={(e) => setOfficialEmail(e.target.value)}
-                required
-              />
-            </div>
-
-            <div>
-              <label>
-                Official Phone <span className="required">*</span>
-              </label>
-              <input
-                type="tel"
-                value={officialPhone}
-                onChange={(e) => setOfficialPhone(e.target.value)}
-                required
-              />
-            </div>
-
-            <div className="full-row">
-              <label>
-                <input
-                  type="checkbox"
-                  checked={consent}
-                  onChange={(e) => setConsent(e.target.checked)}
-                  required
-                />{' '}
-                I confirm that I have read and agree to the Service Provider User
-                Privacy &amp; Consent Notice
-              </label>
-              <p className="consent-note">
-                Consent is mandatory for registration and platform access.
-              </p>
-            </div>
-
-            <div className="actions">
-              <button
-                className="btn-secondary"
-                type="button"
-                onClick={() => window.history.back()}
-              >
-                Cancel
-              </button>
-              <button className="btn-primary" type="submit" disabled={submitting}>
-                {submitting ? 'Submitting...' : 'Submit Registration'}
-              </button>
-            </div>
-          </form>
         </div>
-      </div>
-    </div>
+      </section>
+      <CompactFooter />
+    </>
   );
 };
 

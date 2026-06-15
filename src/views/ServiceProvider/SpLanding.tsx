@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { serviceProviderService, SpLandingDto } from '../../services/serviceProvider.service';
 import './ServiceProvider.scss';
+import { CompactHeader } from '../../components/CompactHeader/CompactHeader';
+import { CompactFooter } from '../../components/CompactFooter/CompactFooter';
+import { RegistrationStepper } from '../../components/RegistrationStepper/RegistrationStepper';
+import { RegistrationVisualCard } from '../../components/RegistrationVisualCard/RegistrationVisualCard';
 
 /**
  * Pixel-faithful port of `service-provider/register_sp.blade.php`.
@@ -44,69 +48,81 @@ const SpLanding: React.FC = () => {
   const continueDisabled = !consentChecked || submitting;
 
   return (
-    <section className="sp-landing">
-      <div className="container">
-        <div className="row align-items-center">
-          <div className="col-lg-5 col-md-12 col-sm-12">
-            <div className="lgf4-left-content">
-              <h3>
-                Service Provider <span>Registration</span>
-              </h3>
-            </div>
-          </div>
+    <>
+      <CompactHeader />
+      <section className="login-form-style4 steps4-sec section-padding align-items-center">
+        <div className="container">
+          <div className="registration-split-layout">
+            {/* Left Panel: Form & Stepper */}
+            <div className="left-panel">
+              {/* Stepper Progress */}
+              <RegistrationStepper currentStep={1} title="Service Provider Registration" maxWidth="550px" />
 
-          <div className="col-lg-7 col-md-12 col-sm-12">
-            <div className="login-form-style3-main">
-              <div className="login-register3-form-middle">
-                {error && (
-                  <div style={{ color: '#be1717', marginBottom: 12 }}>{error}</div>
-                )}
+              {/* Card */}
+              <div className="login-form-style3-main" style={{ width: '100%', maxWidth: '550px', margin: '0 auto' }}>
+                <div className="login-form-style3-main_full">
+                  <div className="login-register3-form-middle" style={{ textAlign: 'left' }}>
+                    {error && (
+                      <div style={{ color: '#be1717', marginBottom: 12 }}>{error}</div>
+                    )}
 
-                <h4>Dear {greetingName},</h4>
-                <p>
-                  Welcome to <strong>Facilon Service Provider User Registration</strong>.
-                </p>
-                <p>
-                  You have been invited to create your individual user account to access
-                  your organisation&rsquo;s workspace on the Facilon platform. Before
-                  proceeding, please review and provide your consent to the applicable
-                  Privacy Notice, Terms of Use, and related policies governing platform
-                  access and the processing of your information.
-                </p>
-                <p>
-                  By continuing, you confirm that you are authorised to register as a
-                  user for your organisation and agree to the stated terms.
-                </p>
+                    <h4 className="mt-0">Dear {greetingName},</h4>
+                    <p>
+                      Welcome to <strong>Facilon Service Provider User Registration</strong>.
+                    </p>
+                    <p>
+                      You have been invited to create your individual user account to access
+                      your organisation&rsquo;s workspace on the Facilon platform. Before
+                      proceeding, please review and provide your consent to the applicable
+                      Privacy Notice, Terms of Use, and related policies governing platform
+                      access and the processing of your information.
+                    </p>
+                    <p>
+                      By continuing, you confirm that you are authorised to register as a
+                      user for your organisation and agree to the stated terms.
+                    </p>
 
-                <div className="consent-row">
-                  <input
-                    type="checkbox"
-                    id="consentCheckbox"
-                    checked={consentChecked}
-                    onChange={(e) => setConsentChecked(e.target.checked)}
-                  />
-                  <label htmlFor="consentCheckbox" style={{ marginBottom: 0 }}>
-                    I confirm that I am duly authorized to register and bind my
-                    organization and agree to proceed with registration.
-                  </label>
-                </div>
+                    <div className="highlight">
+                      <label style={{ display: 'flex', alignItems: 'flex-start', cursor: 'pointer', margin: 0 }}>
+                        <input
+                          type="checkbox"
+                          id="consentCheckbox"
+                          checked={consentChecked}
+                          onChange={(e) => setConsentChecked(e.target.checked)}
+                          className="w-4 h-4 text-[#be1717] bg-white border-slate-300 rounded focus:ring-[#be1717] cursor-pointer align-middle"
+                          style={{ marginRight: '0.5rem', marginTop: '0.2rem', flexShrink: 0 }}
+                        />
+                        <span style={{ fontSize: '13px', color: '#334155', fontWeight: 500 }}>
+                          I confirm that I am duly authorized to register and bind my
+                          organization and agree to proceed with registration.
+                        </span>
+                      </label>
+                    </div>
 
-                <div style={{ marginTop: 20 }}>
-                  <Link
-                    to="#"
-                    id="continueBtn"
-                    className={`button-1${continueDisabled ? ' disabled' : ''}`}
-                    onClick={onContinue}
-                  >
-                    {submitting ? 'Submitting...' : 'Continue'}
-                  </Link>
+                    <div className="single-field mb-0 text-center border-t pt-3 mt-3">
+                      <Link
+                        to="#"
+                        id="continueBtn"
+                        className={`button-1${continueDisabled ? ' disabled' : ''}`}
+                        onClick={onContinue}
+                      >
+                        {submitting ? 'Submitting...' : 'Continue'}
+                      </Link>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
+
+            {/* Right Panel: Creative Illustration Panel */}
+            <div className="right-panel">
+              <RegistrationVisualCard step="interest" />
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+      <CompactFooter />
+    </>
   );
 };
 
