@@ -4,6 +4,10 @@ import introducedInvestorService, { Step4CompletionDto } from '../../../services
 import TermsModal from './TermsModal';
 import './IntroducedInvestorRegistration.scss';
 import { PremiumSelect } from '../../../components/PremiumSelect/PremiumSelect';
+import { CompactHeader } from '../../../components/CompactHeader/CompactHeader';
+import { CompactFooter } from '../../../components/CompactFooter/CompactFooter';
+import { RegistrationStepper } from '../../../components/RegistrationStepper/RegistrationStepper';
+import { RegistrationVisualCard } from '../../../components/RegistrationVisualCard/RegistrationVisualCard';
 
 /**
  * Step 4: Final Registration Details (Nationality-specific fields)
@@ -139,23 +143,21 @@ const IntroducedInvestorStep4: React.FC = () => {
 
   return (
     <>
-      <br /><br />
-      <section className="login-form-style4 steps4-sec section-padding align-items-center"
-        style={{ backgroundImage: 'url(https://anvaya.online/facilon/public/frontend/images/banner/2125.jpg)' }}>
+      <CompactHeader />
+      <section className="login-form-style4 steps4-sec section-padding align-items-center">
         <div className="container">
-          <div className="row align-items-center">
-            <div className="col-lg-5 col-md-12 col-sm-12">
-              <div className="lgf4_Left_content">
-                <h3>Investor <span>Registration</span></h3>
-              </div>
-            </div>
+          <div className="registration-split-layout">
+            {/* Left Panel: Form & Stepper */}
+            <div className="left-panel">
+              {/* Stepper Progress */}
+              <RegistrationStepper currentStep={5} title="Registration Details" maxWidth="850px" />
 
-            <div className="col-lg-7 col-md-12 col-sm-12" style={{ marginTop: '4%' }}>
-              <div className="login-form-style3-main">
+              {/* Investor Registration Card */}
+              <div className="login-form-style3-main" style={{ width: '100%', maxWidth: '850px', margin: '0 auto' }}>
                 <div className="login-form-style3-main_full">
                   {error && <div className="alert alert-danger">{error}</div>}
 
-                  <div className="login-register3-form-middle">
+                  <div className="login-register3-form-middle" style={{ textAlign: 'left' }}>
                     <form onSubmit={handleSubmit} id="investor_form">
                       <input type="hidden" name="unique_code" value={uniqueCode} />
                       <input type="hidden" name="market_invest" value="Self" />
@@ -538,41 +540,37 @@ const IntroducedInvestorStep4: React.FC = () => {
                       </div>
 
                       {/* Submit Button */}
-                      <div id="button_div">
-                        <div className="row">
-                          <div className="col-md-6">
-                            <div className="single-field mb-0">
-                              <button
-                                className="button-1"
-                                type="submit"
-                                id="submitBtn"
-                                disabled={loading || !termsAccepted}
-                              >
-                                {loading ? 'Submitting...' : 'Submit'}
-                              </button>
-                            </div>
-                          </div>
-                          <div className="col-md-6">
-                            <div className="single-field mb-0">
-                              <button
-                                type="button"
-                                className="button-2"
-                                onClick={() => navigate(-1)}
-                              >
-                                Cancel
-                              </button>
-                            </div>
-                          </div>
-                        </div>
+                      <div id="button_div" className="flex gap-2 justify-center single-field mb-0 mt-3 border-t pt-3">
+                        <button
+                          className="button-1"
+                          type="submit"
+                          id="submitBtn"
+                          disabled={loading || !termsAccepted}
+                        >
+                          {loading ? 'Submitting...' : 'Submit'}
+                        </button>
+                        <button
+                          type="button"
+                          className="button-2"
+                          onClick={() => navigate(-1)}
+                        >
+                          Cancel
+                        </button>
                       </div>
                     </form>
                   </div>
                 </div>
               </div>
             </div>
+
+            {/* Right Panel: Creative Illustration Panel */}
+            <div className="right-panel">
+              <RegistrationVisualCard step="details" registerAs={1} />
+            </div>
           </div>
         </div>
       </section>
+      <CompactFooter />
 
       {/* Modals */}
       <TermsModal

@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import introducedInvestorService from '../../../services/introducedInvestorService';
 import './IntroducedInvestorRegistration.scss';
+import { CompactHeader } from '../../../components/CompactHeader/CompactHeader';
+import { CompactFooter } from '../../../components/CompactFooter/CompactFooter';
+import { RegistrationStepper } from '../../../components/RegistrationStepper/RegistrationStepper';
+import { RegistrationVisualCard } from '../../../components/RegistrationVisualCard/RegistrationVisualCard';
 
 /**
  * Step 0: Initial landing page showing investor details from Dataverse.
@@ -69,81 +73,80 @@ const IntroducedInvestorStart: React.FC = () => {
   }
 
   return (
-    <section
-      className="login-form-style4 steps4-sec section-padding align-items-center"
-      style={{ backgroundImage: "url('https://anvaya.online/facilon/public/frontend/images/banner/2125.jpg')" }}
-    >
-      <div className="container">
-        <div className="row align-items-center">
-          {/* Left column — intro text */}
-          <div className="col-lg-5 col-md-12 col-sm-12">
-            <div className="lgf4_Left_content">
-              <h3>Welcome To <span>Facilon Services</span> Registration Process</h3>
-            </div>
-          </div>
+    <>
+      <CompactHeader />
+      <section className="login-form-style4 steps4-sec section-padding align-items-center">
+        <div className="container">
+          <div className="registration-split-layout">
+            {/* Left Panel: Form & Stepper */}
+            <div className="left-panel">
+              {/* Stepper Progress */}
+              <RegistrationStepper currentStep={1} title="Investor Registration" maxWidth="550px" />
 
-          {/* Right column — white card */}
-          <div className="col-lg-7 col-md-12 col-sm-12">
-            <div className="login-form-style3-main">
-              <div className="login-form-style3-main_full">
-                <div className="login-register_style3-head">
-                  <h2>Investor Registration</h2>
-                </div>
+              {/* Investor Registration Card */}
+              <div className="login-form-style3-main" style={{ width: '100%', maxWidth: '550px', margin: '0 auto' }}>
+                <div className="login-form-style3-main_full">
+                  <p><strong>Welcome {investorDetails.firstName?.toUpperCase()},</strong></p>
+                  <p>
+                    You have been introduced to Facilon by your{' '}
+                    {investorDetails.serviceProviderType}{' '}
+                    {investorDetails.brokerName?.toUpperCase()}.
+                  </p>
+                  <p>
+                    Facilon has been engaged by {investorDetails.brokerName?.toUpperCase()} to
+                    facilitate your onboarding journey.
+                  </p>
+                  <p>Please confirm the details below before registering with us.</p>
 
-                <p><strong>Welcome {investorDetails.firstName?.toUpperCase()},</strong></p>
-                <p>
-                  You have been introduced to Facilon by your{' '}
-                  {investorDetails.serviceProviderType}{' '}
-                  {investorDetails.brokerName?.toUpperCase()}.
-                </p>
-                <p>
-                  Facilon has been engaged by {investorDetails.brokerName?.toUpperCase()} to
-                  facilitate your onboarding journey.
-                </p>
-                <p>Please confirm the details below before registering with us.</p>
+                  <div className="login-register3-form-middle" style={{ textAlign: 'left' }}>
+                    {/* Gray detail box — matches the Laravel screenshot exactly:
+                        plain bold text labels, light gray background, rounded corners */}
+                    <div className="investor-detail-box">
+                      <p><strong>INVESTOR TYPE : </strong>{investorDetails.investorTypeName?.toUpperCase()}</p>
+                      <p><strong>NATIONALITY : </strong>{investorDetails.nationalityName?.toUpperCase()}</p>
+                      {investorDetails.countryOfResidence && (
+                        <p><strong>COUNTRY OF RESIDENCE : </strong>{investorDetails.countryOfResidence?.toUpperCase()}</p>
+                      )}
+                      <p><strong>PRODUCT : </strong>{investorDetails.productName?.toUpperCase()}</p>
+                      <p><strong>PLAN : </strong>{investorDetails.planName?.toUpperCase()}</p>
+                      <p><strong>SCHEME : </strong>Not Applicable</p>
 
-                <div className="login-register3-form-middle">
-                  {/* Gray detail box — matches the Laravel screenshot exactly:
-                      plain bold text labels, light gray background, rounded corners */}
-                  <div className="investor-detail-box">
-                    <p><strong>INVESTOR TYPE : </strong>{investorDetails.investorTypeName?.toUpperCase()}</p>
-                    <p><strong>NATIONALITY : </strong>{investorDetails.nationalityName?.toUpperCase()}</p>
-                    {investorDetails.countryOfResidence && (
-                      <p><strong>COUNTRY OF RESIDENCE : </strong>{investorDetails.countryOfResidence?.toUpperCase()}</p>
-                    )}
-                    <p><strong>PRODUCT : </strong>{investorDetails.productName?.toUpperCase()}</p>
-                    <p><strong>PLAN : </strong>{investorDetails.planName?.toUpperCase()}</p>
-                    <p><strong>SCHEME : </strong>Not Applicable</p>
-
-                    {investorDetails.emailAlreadyExists ? (
-                      <>
-                        <br />
-                        <p>Your email <strong>{investorDetails.email}</strong> is already registered with Us.</p>
-                        <div className="single-field mb-0">
-                          <button className="button-1" onClick={() => navigate('/login')}>
-                            Login with Existing and Check details
-                          </button>
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <br />
-                        <p>Please click on Continue to provide your consent for the data and proceed with the registration.</p>
-                        <div className="single-field mb-0">
-                          <button className="button-1" onClick={handleContinue}>
-                            Continue
-                          </button>
-                        </div>
-                      </>
-                    )}
+                      {investorDetails.emailAlreadyExists ? (
+                        <>
+                          <br />
+                          <p>Your email <strong>{investorDetails.email}</strong> is already registered with Us.</p>
+                          <div className="single-field mb-0 text-center border-t pt-3 mt-3">
+                            <button className="button-1" onClick={() => navigate('/login')}>
+                              Login with Existing and Check details
+                            </button>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <br />
+                          <p>Please click on Continue to provide your consent for the data and proceed with the registration.</p>
+                          <div className="single-field mb-0 text-center border-t pt-3 mt-3">
+                            <button className="button-1" onClick={handleContinue}>
+                              Continue
+                            </button>
+                          </div>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+
+            {/* Right Panel: Creative Illustration Panel */}
+            <div className="right-panel">
+              <RegistrationVisualCard step="interest" />
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+      <CompactFooter />
+    </>
   );
 };
 

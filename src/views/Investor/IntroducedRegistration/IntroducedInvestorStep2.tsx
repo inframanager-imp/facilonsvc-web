@@ -2,6 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import introducedInvestorService from '../../../services/introducedInvestorService';
 import './IntroducedInvestorRegistration.scss';
+import { CompactHeader } from '../../../components/CompactHeader/CompactHeader';
+import { CompactFooter } from '../../../components/CompactFooter/CompactFooter';
+import { RegistrationStepper } from '../../../components/RegistrationStepper/RegistrationStepper';
+import { RegistrationVisualCard } from '../../../components/RegistrationVisualCard/RegistrationVisualCard';
 
 /**
  * Step 3: OTP Verification Page
@@ -120,43 +124,24 @@ const IntroducedInvestorStep2: React.FC = () => {
 
   return (
     <>
-      <br /><br />
-      <section className="login-form-style4 section-padding"
-        style={{ backgroundImage: 'url(https://anvaya.online/facilon/public/frontend/images/banner/2125.jpg)' }}>
+      <CompactHeader />
+      <section className="login-form-style4 steps4-sec section-padding align-items-center">
         <div className="container">
-          <div className="row align-items-center">
-            <div className="col-lg-7 col-md-7 col-sm-12">
-              <div className="lgf4_Left_content">
-                <h3>Investor <span>Registration</span></h3>
+          <div className="registration-split-layout">
+            {/* Left Panel: Form & Stepper */}
+            <div className="left-panel">
+              {/* Stepper Progress */}
+              <RegistrationStepper currentStep={4} title="Verify OTP" maxWidth="550px" />
 
-                <div className="list-type1">
-                  <ul>
-                    <li>
-                      <i className="fa-solid fa-check"></i>
+              {/* Investor Registration Card */}
+              <div className="login-form-style3-main" style={{ width: '100%', maxWidth: '550px', margin: '0 auto' }}>
+                <div className="login-form-style3-main_full">
+                  <div className="login-register3-form-middle" style={{ textAlign: 'left' }}>
+                    <p>
                       An email with a One-Time Password has been sent to your email address.
                       This OTP is valid for 10 minutes.
-                    </li>
-                    <li>
-                      <i className="fa-solid fa-check"></i>
-                      Please check your spam or junk folder if you do not see the email.
-                    </li>
-                    <li>
-                      <i className="fa-solid fa-check"></i>
-                      If you have not received the OTP, you may resend it after the timer ends.
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
+                    </p>
 
-            <div className="col-lg-5 col-md-5 col-sm-12">
-              <div className="login-form-style3-main">
-                <div className="login-form-style3-main_full">
-                  <div className="login-register_style3-head">
-                    <h2>Investor Registration</h2>
-                  </div>
-
-                  <div className="login-register3-form-middle">
                     {success && <div className="alert alert-success">{success}</div>}
                     {error && <div className="alert alert-danger">{error}</div>}
 
@@ -164,39 +149,33 @@ const IntroducedInvestorStep2: React.FC = () => {
                       <input type="hidden" name="unique_code" value={uniqueCode} />
 
                       <div className="single-field">
-                        <label>
-                          Please enter your Email OTP:
-                          <span className="star-color">*</span>
-                        </label>
-
-                        <div className="row otp-sec">
+                        <label htmlFor="otp-input-0">Enter 4-digit OTP <span className="star-color">*</span></label>
+                        <div className="otp-inputs-container">
                           {otp.map((digit, index) => (
-                            <div className="col" key={index}>
-                              <input
-                                type="text"
-                                maxLength={1}
-                                value={digit}
-                                ref={inputRefs[index]}
-                                onChange={(e) => handleOtpChange(index, e.target.value)}
-                                onKeyDown={(e) => handleKeyDown(index, e)}
-                                required
-                              />
-                            </div>
+                            <input
+                              key={index}
+                              id={`otp-input-${index}`}
+                              type="text"
+                              maxLength={1}
+                              value={digit}
+                              ref={inputRefs[index]}
+                              onChange={(e) => handleOtpChange(index, e.target.value)}
+                              onKeyDown={(e) => handleKeyDown(index, e)}
+                              className="otp-digit-input"
+                              autoComplete="off"
+                              required
+                            />
                           ))}
                         </div>
                       </div>
 
-                      <div className="row mt-2">
-                        <div className="col-md-6"></div>
-                        <div className="col-md-6 text-end">
-                          <div className="timer-sec">
-                            Time Remaining:
-                            <span id="timer" className="timer">{formatTime(timeLeft)}</span>
-                          </div>
-                        </div>
+                      <div className="timer-sec mt-2">
+                        <p className="mb-0">
+                          Time Remaining: <span className="timer">{formatTime(timeLeft)}</span>
+                        </p>
                       </div>
 
-                      <div className="single-field mb-0 d-flex gap-2 mt-3">
+                      <div className="flex gap-2 justify-center single-field mb-0 mt-3 border-t pt-3">
                         <button
                           className="button-1"
                           type="submit"
@@ -222,9 +201,15 @@ const IntroducedInvestorStep2: React.FC = () => {
                 </div>
               </div>
             </div>
+
+            {/* Right Panel: Creative Illustration Panel */}
+            <div className="right-panel">
+              <RegistrationVisualCard step="otp" />
+            </div>
           </div>
         </div>
       </section>
+      <CompactFooter />
     </>
   );
 };

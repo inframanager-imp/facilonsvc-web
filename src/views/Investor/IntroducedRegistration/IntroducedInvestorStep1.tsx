@@ -4,6 +4,10 @@ import introducedInvestorService, { Step1RequestDto } from '../../../services/in
 import './IntroducedInvestorRegistration.scss';
 import { PremiumSelect } from '../../../components/PremiumSelect/PremiumSelect';
 import { contentService } from '../../../services/content.service';
+import { CompactHeader } from '../../../components/CompactHeader/CompactHeader';
+import { CompactFooter } from '../../../components/CompactFooter/CompactFooter';
+import { RegistrationStepper } from '../../../components/RegistrationStepper/RegistrationStepper';
+import { RegistrationVisualCard } from '../../../components/RegistrationVisualCard/RegistrationVisualCard';
 
 // Dropdown values are UPPERCASE by convention (see V12__uppercase_dropdown_values.sql),
 // so the option value and the stored DB value match and the select re-renders on reload.
@@ -128,27 +132,18 @@ const IntroducedInvestorStep1: React.FC = () => {
 
   return (
     <>
-      <br /><br />
-      <section className="login-form-style4 section-padding"
-        style={{ backgroundImage: 'url(https://anvaya.online/facilon/public/frontend/images/banner/2125.jpg)' }}>
+      <CompactHeader />
+      <section className="login-form-style4 steps4-sec section-padding align-items-center">
         <div className="container">
-          <div className="row align-items-center">
-            <div className="col-lg-7 col-md-7 col-sm-12">
-              <div className="lgf4_Left_content">
-                <h3>Investor <span>Registration</span></h3>
-                <p>
-                  Before we start the registration process we would like to verify your email address
-                </p>
-              </div>
-            </div>
+          <div className="registration-split-layout">
+            {/* Left Panel: Form & Stepper */}
+            <div className="left-panel">
+              {/* Stepper Progress */}
+              <RegistrationStepper currentStep={3} title="Registration Details" maxWidth="850px" />
 
-            <div className="col-lg-5 col-md-5 col-sm-12">
-              <div className="login-form-style3-main">
+              {/* Investor Registration Card */}
+              <div className="login-form-style3-main" style={{ width: '100%', maxWidth: '850px', margin: '0 auto', textAlign: 'left' }}>
                 <div className="login-form-style3-main_full">
-                  <div className="login-register_style3-head">
-                    <h2>Investor Registrations</h2>
-                  </div>
-
                   {error && <div className="alert alert-danger">{error}</div>}
 
                   <div className="login-register3-form-middle">
@@ -289,7 +284,7 @@ const IntroducedInvestorStep1: React.FC = () => {
                         </div>
                       </div>
 
-                      <div className="single-field mb-0">
+                      <div className="single-field mb-0 text-center border-t pt-3 mt-3">
                         <button
                           className="button-1"
                           id="submitBtn"
@@ -304,9 +299,15 @@ const IntroducedInvestorStep1: React.FC = () => {
                 </div>
               </div>
             </div>
+
+            {/* Right Panel: Creative Illustration Panel */}
+            <div className="right-panel">
+              <RegistrationVisualCard step="details" registerAs={1} />
+            </div>
           </div>
         </div>
       </section>
+      <CompactFooter />
     </>
   );
 };
