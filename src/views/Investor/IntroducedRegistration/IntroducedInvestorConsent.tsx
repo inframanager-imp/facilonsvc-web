@@ -30,7 +30,6 @@ const IntroducedInvestorConsent: React.FC = () => {
   const handleAgree = async () => {
     setShowErrors(true);
     if (!consent1 || !consent2) {
-      alert('Please accept both consents to continue.');
       return;
     }
 

@@ -77,7 +77,7 @@ const MarketInterestCheck: React.FC = () => {
 
                         <div className="market-choice-container p-0 m-0">
                           <div
-                            className={`market-choice-card highlight-primary ${selectedOption === 'yes' ? 'selected' : ''}`}
+                            className={`market-choice-card ${selectedOption === 'yes' ? 'selected' : ''}`}
                             onClick={handleYes}
                           >
                             <div className="square-indicator">

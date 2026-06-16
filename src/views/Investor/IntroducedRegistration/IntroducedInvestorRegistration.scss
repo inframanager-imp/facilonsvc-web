@@ -208,7 +208,7 @@ $input-border: rgba(62, 111, 124, 0.27);
         font-size: 12px;
 
         .star-color {
-          color: $teal;
+          color: #be1717;
           margin-left: 2px;
         }
 
@@ -310,14 +310,14 @@ $input-border: rgba(62, 111, 124, 0.27);
       // mobile <input> collapses to zero width and disappears.
       select,
       .country-code-select {
-        width: 35%;
-        min-width: 120px;
+        width: 140px;
         flex-shrink: 0;
       }
 
       input[type='text'] {
         flex: 1;
         min-width: 0;
+        margin-top: 0 !important;
       }
     }
 
@@ -555,7 +555,7 @@ $input-border: rgba(62, 111, 124, 0.27);
         font-size: 13px;
 
         .star-color {
-          color: $teal;
+          color: #be1717;
         }
 
         a {
@@ -1792,7 +1792,7 @@ span[role='alert'] {
   align-items: center;
   gap: 14px;
   padding: 14px 18px;
-  background-color: #ffffff;
+  background-color: transparent;
   border: 1.5px solid #e2e8f0;
   border-radius: 8px;
   cursor: pointer;
@@ -1802,17 +1802,21 @@ span[role='alert'] {
 
   &:hover {
     border-color: #7facb7;
-    background-color: #fafbfc;
+    background-color: rgba(62, 111, 124, 0.02);
     transform: translateY(-1px);
     box-shadow: 0 6px 12px rgba(44, 89, 102, 0.04);
+
+    .choice-label {
+      color: $teal;
+    }
   }
 
   &.highlight-primary {
-    background-color: rgb(174 209 219 / 38%);
+    background-color: transparent;
     border-color: rgba(62, 111, 124, 0.22);
 
     &:hover {
-      background-color: rgb(174 209 219 / 62%);
+      background-color: rgba(62, 111, 124, 0.02);
       border-color: rgba(62, 111, 124, 0.35);
       transform: translateY(-1px);
       box-shadow: 0 6px 12px rgba(44, 89, 102, 0.06);
@@ -1833,7 +1837,7 @@ span[role='alert'] {
     align-items: center;
     justify-content: center;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    background-color: #ffffff;
+    background-color: transparent;
     color: transparent;
     font-size: 14px;
     flex-shrink: 0;
@@ -1848,13 +1852,13 @@ span[role='alert'] {
   .choice-label {
     font-size: 13.5px;
     font-weight: 500;
-    color: #0c2340;
+    color: #64748b;
     transition: all 0.2s ease;
   }
 
   &.selected {
     border-color: $teal;
-    background-color: rgba(62, 111, 124, 0.04);
+    background-color: rgba(62, 111, 124, 0.08);
     box-shadow: 0 4px 12px rgba(62, 111, 124, 0.08);
 
     .square-indicator {

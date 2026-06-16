@@ -88,6 +88,7 @@ import SpLanding from './views/ServiceProvider/SpLanding';
 import SpUserConsent from './views/ServiceProvider/SpUserConsent';
 import SpUserRegister from './views/ServiceProvider/SpUserRegister';
 import SpThankYou from './views/ServiceProvider/SpThankYou';
+import ScrollToTop from './components/ScrollToTop/ScrollToTop';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { ToastContainer } from './components/ToastContainer';
@@ -122,6 +123,7 @@ const App: React.FC = () => {
   return (
     <AuthProvider>
       <Router>
+        <ScrollToTop />
         <Routes>
           {/* Public Routes - root with ?code= goes to callback so we don't lose auth code */}
           <Route path="/" element={<RootRedirect />} />

@@ -24,7 +24,8 @@ const IntroducedInvestorStep4: React.FC = () => {
   const [showLegalEntityDiv, setShowLegalEntityDiv] = useState(false);
   const [showWhatsappDiv, setShowWhatsappDiv] = useState(false);
   const [showDiffWhatsappDiv, setShowDiffWhatsappDiv] = useState(false);
-  
+  const [sameWhatsapp, setSameWhatsapp] = useState<string | null>(null);
+
   // Modal states
   // Privacy consent is captured earlier in the flow (consent step), so step4 only gates on Terms — matches Laravel.
   const [showTermsModal, setShowTermsModal] = useState(false);
@@ -47,13 +48,14 @@ const IntroducedInvestorStep4: React.FC = () => {
     privacyPolicyAccepted: false,
     agreeForWhatsapp: false,
     agreeForMarketing: false,
-    whatsappNumber: ''
+    whatsappNumber: '',
+    whatsappCountryCode: '+91'
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
     const checked = (e.target as HTMLInputElement).checked;
-    
+
     setFormData(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value
@@ -88,7 +90,7 @@ const IntroducedInvestorStep4: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!termsAccepted) {
       alert('Please read and accept the Terms and Conditions to continue');
       return;
@@ -104,15 +106,15 @@ const IntroducedInvestorStep4: React.FC = () => {
         // Privacy was already accepted at the consent step earlier in the flow.
         privacyPolicyAccepted: true
       };
-      
+
       const response = await introducedInvestorService.completeRegistration(submitData);
-      
+
       if (response.data.success) {
-        navigate('/investor/introduced/success', { 
-          state: { 
+        navigate('/investor/introduced/success', {
+          state: {
             message: response.data.message,
-            b2cCreated: response.data.b2cAccountCreated 
-          } 
+            b2cCreated: response.data.b2cAccountCreated
+          }
         });
       }
     } catch (err: any) {
@@ -403,8 +405,16 @@ const IntroducedInvestorStep4: React.FC = () => {
                       )}
 
                       {/* WhatsApp Communication */}
-                      <div id="note_confirm_div">
-                        <div className="single-field">
+                      <div id="note_confirm_div" className="consent-container m-0 p-0" style={{ marginTop: '24px', background: 'transparent', boxShadow: 'none' }}>
+                        <div
+                          className="highlight"
+                          style={{
+                            backgroundColor: formData.agreeForWhatsapp ? '#dcf1f6' : '#fafbfc',
+                            borderLeftColor: formData.agreeForWhatsapp ? '#2c5966' : '#cbd5e1',
+                            borderLeftStyle: 'solid',
+                            borderLeftWidth: '4px'
+                          }}
+                        >
                           <div className="checkbox-wrapper-33">
                             <label className="checkbox">
                               <input
@@ -419,77 +429,93 @@ const IntroducedInvestorStep4: React.FC = () => {
                                   <path d="M4 14l8 7L24 7"></path>
                                 </svg>
                               </span>
-                              <p className="checkbox__textwrapper">
+                              <p className="checkbox__textwrapper" style={{ fontWeight: '600' }}>
                                 I agree to receive communication on WhatsApp
                               </p>
                             </label>
                           </div>
+
+                          {showWhatsappDiv && (
+                            <div id="whatsapp_no_div" className="mt-3">
+                              <div className="single-field">
+                                <label htmlFor="sameWhatsapp">
+                                  Is your mobile number the same as your WhatsApp number?
+                                  <span className="star-color">*</span>
+                                </label>
+
+                                <div className="d-flex flex-row gap-3 mt-2" style={{ width: '100%', maxWidth: '480px' }}>
+                                  <div
+                                    className={`market-choice-card m-0 p-2 ${sameWhatsapp === 'Yes' ? 'selected' : ''}`}
+                                    onClick={() => {
+                                      setSameWhatsapp('Yes');
+                                      setShowDiffWhatsappDiv(false);
+                                    }}
+                                  >
+                                    <div className="square-indicator">
+                                      <i className="bi bi-check-lg" />
+                                    </div>
+                                    <span className="choice-label">Yes</span>
+                                  </div>
+
+                                  <div
+                                    className={`market-choice-card m-0 p-2 ${sameWhatsapp === 'No' ? 'selected' : ''}`}
+                                    onClick={() => {
+                                      setSameWhatsapp('No');
+                                      setShowDiffWhatsappDiv(true);
+                                    }}
+                                  >
+                                    <div className="square-indicator">
+                                      <i className="bi bi-check-lg" />
+                                    </div>
+                                    <span className="choice-label">No</span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {showDiffWhatsappDiv && (
+                                <div className="single-field mt-3" id="second_mob_div">
+                                  <label htmlFor="whatsappNumber">Please enter WhatsApp Mobile No:</label>
+                                  <div className="mobile-input-row">
+                                    <PremiumSelect
+                                      value={formData.whatsappCountryCode || '+91'}
+                                      onChange={(val) => setFormData(prev => ({ ...prev, whatsappCountryCode: val }))}
+                                      options={[
+                                        { value: '+91', label: '+91 (India)' },
+                                        { value: '+1', label: '+1 (USA)' },
+                                        { value: '+44', label: '+44 (UK)' },
+                                      ]}
+                                      className="country-code-select"
+                                    />
+                                    <input
+                                      type="text"
+                                      name="whatsappNumber"
+                                      className="form-control mt-0"
+                                      value={formData.whatsappNumber}
+                                      onChange={(e) => {
+                                        const value = e.target.value.replace(/[^0-9]/g, '');
+                                        setFormData(prev => ({ ...prev, whatsappNumber: value }));
+                                      }}
+                                      placeholder="Enter WhatsApp number"
+                                      minLength={10}
+                                      maxLength={16}
+                                    />
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          )}
                         </div>
 
-                        {showWhatsappDiv && (
-                          <div id="whatsapp_no_div">
-                            <div className="single-field">
-                              <label htmlFor="sameWhatsapp">
-                                Is your mobile number the same as your WhatsApp number?
-                                <span className="star-color">*</span>
-                                <a href="#" data-toggle="popover" data-trigger="hover" title="WhatsApp Mobile No." data-content="If different from mobile number input earlier">
-                                  <img src="/frontend/images/information-button.png" alt="info" />
-                                </a>
-                              </label>
-
-                              <div className="radio-box">
-                                <label className="radio">
-                                  <input
-                                    name="sameWhatsapp"
-                                    type="radio"
-                                    value="Yes"
-                                    onChange={() => setShowDiffWhatsappDiv(false)}
-                                  />
-                                  <span>Yes</span>
-                                </label>
-                                <label className="radio">
-                                  <input
-                                    name="sameWhatsapp"
-                                    type="radio"
-                                    value="No"
-                                    onChange={() => setShowDiffWhatsappDiv(true)}
-                                  />
-                                  <span>No</span>
-                                </label>
-                              </div>
-                            </div>
-
-                            {showDiffWhatsappDiv && (
-                              <div className="single-field mobile-no" id="second_mob_div">
-                                <label htmlFor="whatsappNumber">Please enter WhatsApp Mobile No:</label>
-                                <PremiumSelect
-                                  value={formData.whatsappCountryCode || '+91'}
-                                  onChange={(val) => setFormData(prev => ({ ...prev, whatsappCountryCode: val }))}
-                                  style={{ marginBottom: '10px' }}
-                                  options={[
-                                    { value: '+91', label: '+91 (India)' },
-                                    { value: '+1', label: '+1 (USA)' },
-                                    { value: '+44', label: '+44 (UK)' },
-                                  ]}
-                                />
-                                <input
-                                  type="text"
-                                  name="whatsappNumber"
-                                  value={formData.whatsappNumber}
-                                  onChange={(e) => {
-                                    const value = e.target.value.replace(/[^0-9]/g, '');
-                                    setFormData(prev => ({ ...prev, whatsappNumber: value }));
-                                  }}
-                                  minLength={10}
-                                  maxLength={16}
-                                />
-                              </div>
-                            )}
-                          </div>
-                        )}
-
                         {/* Marketing Communications */}
-                        <div className="single-field">
+                        <div
+                          className="highlight"
+                          style={{
+                            backgroundColor: formData.agreeForMarketing ? '#dcf1f6' : '#fafbfc',
+                            borderLeftColor: formData.agreeForMarketing ? '#2c5966' : '#cbd5e1',
+                            borderLeftStyle: 'solid',
+                            borderLeftWidth: '4px'
+                          }}
+                        >
                           <div className="checkbox-wrapper-33">
                             <label className="checkbox">
                               <input
@@ -504,7 +530,7 @@ const IntroducedInvestorStep4: React.FC = () => {
                                   <path d="M4 14l8 7L24 7"></path>
                                 </svg>
                               </span>
-                              <p className="checkbox__textwrapper">
+                              <p className="checkbox__textwrapper" style={{ fontWeight: '600' }}>
                                 Yes, I would like to receive marketing communications from Facilon Services Private Limited
                               </p>
                             </label>
@@ -512,7 +538,15 @@ const IntroducedInvestorStep4: React.FC = () => {
                         </div>
 
                         {/* Terms and Conditions */}
-                        <div className="single-field">
+                        <div
+                          className="highlight"
+                          style={{
+                            backgroundColor: termsAccepted ? '#dcf1f6' : '#fafbfc',
+                            borderLeftColor: termsAccepted ? '#2c5966' : '#cbd5e1',
+                            borderLeftStyle: 'solid',
+                            borderLeftWidth: '4px'
+                          }}
+                        >
                           <div className="checkbox-wrapper-33">
                             <label className="checkbox" onClick={(e) => !termsCheckboxEnabled && openTermsModal(e)}>
                               <input
@@ -529,7 +563,7 @@ const IntroducedInvestorStep4: React.FC = () => {
                                   <path d="M4 14l8 7L24 7"></path>
                                 </svg>
                               </span>
-                              <p className="checkbox__textwrapper">
+                              <p className="checkbox__textwrapper" style={{ fontWeight: '600' }}>
                                 I have read, understood and hereby accept the{' '}
                                 <a href="javascript:void(0);" onClick={openTermsModal}>Terms and Conditions</a>
                                 <span className="star-color">*</span>

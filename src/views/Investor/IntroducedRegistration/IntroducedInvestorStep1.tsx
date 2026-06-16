@@ -35,6 +35,7 @@ const IntroducedInvestorStep1: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [prefillLoading, setPrefillLoading] = useState(true);
   const [error, setError] = useState('');
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [countryCodeOptions, setCountryCodeOptions] = useState(COUNTRY_CODE_OPTIONS);
   const [formData, setFormData] = useState<Step1RequestDto>({
     uniqueCode: uniqueCode!,
@@ -100,13 +101,48 @@ const IntroducedInvestorStep1: React.FC = () => {
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
+
+    if (errors[name]) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrors({});
 
+    const validationErrors: Record<string, string> = {};
+
+    if (!formData.firstName?.trim()) {
+      validationErrors.firstName = 'First name is required';
+    }
+    if (!formData.lastName?.trim()) {
+      validationErrors.lastName = 'Last name is required';
+    }
+    if (!formData.dateOfBirth) {
+      validationErrors.dateOfBirth = 'Date of birth is required';
+    }
+    if (!formData.gender) {
+      validationErrors.gender = 'Gender is required';
+    }
+    if (!formData.email?.trim()) {
+      validationErrors.email = 'Email is required';
+    }
+    if (!formData.mobileNumber?.trim()) {
+      validationErrors.mobileNumber = 'Mobile number is required';
+    } else if (formData.mobileNumber.length < 10) {
+      validationErrors.mobileNumber = 'Mobile number must be at least 10 digits';
+    }
     if (!formData.agreeForOtp) {
-      alert('Please agree to receive OTP on your email');
+      validationErrors.agreeForOtp = 'Please agree to receive OTP on your email';
+    }
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
       return;
     }
 
@@ -147,7 +183,7 @@ const IntroducedInvestorStep1: React.FC = () => {
                   {error && <div className="alert alert-danger">{error}</div>}
 
                   <div className="login-register3-form-middle">
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={handleSubmit} noValidate>
                       <input type="hidden" name="unique_code" value={uniqueCode} />
                       <input type="hidden" name="version" value="1.0" />
 
@@ -159,11 +195,12 @@ const IntroducedInvestorStep1: React.FC = () => {
                           type="text"
                           name="firstName"
                           id="firstName"
+                          className="form-control"
                           value={formData.firstName}
                           onChange={handleChange}
                           style={{ textTransform: 'uppercase' }}
-                          required
                         />
+                        {errors.firstName && <span role="alert">{errors.firstName}</span>}
                       </div>
 
                       <div className="single-field">
@@ -172,6 +209,7 @@ const IntroducedInvestorStep1: React.FC = () => {
                           type="text"
                           name="middleName"
                           id="middleName"
+                          className="form-control"
                           value={formData.middleName}
                           onChange={handleChange}
                           style={{ textTransform: 'uppercase' }}
@@ -186,11 +224,12 @@ const IntroducedInvestorStep1: React.FC = () => {
                           type="text"
                           name="lastName"
                           id="lastName"
+                          className="form-control"
                           value={formData.lastName}
                           onChange={handleChange}
                           style={{ textTransform: 'uppercase' }}
-                          required
                         />
+                        {errors.lastName && <span role="alert">{errors.lastName}</span>}
                       </div>
 
                       <div className="single-field">
@@ -201,11 +240,12 @@ const IntroducedInvestorStep1: React.FC = () => {
                           type="date"
                           name="dateOfBirth"
                           id="dateOfBirth"
+                          className="form-control"
                           value={formData.dateOfBirth}
                           onChange={handleChange}
                           max={new Date(new Date().setFullYear(new Date().getFullYear() - 18)).toISOString().split('T')[0]}
-                          required
                         />
+                        {errors.dateOfBirth && <span role="alert">{errors.dateOfBirth}</span>}
                       </div>
 
                       <div className="single-field">
@@ -214,10 +254,20 @@ const IntroducedInvestorStep1: React.FC = () => {
                         </label>
                         <PremiumSelect
                           value={formData.gender}
-                          onChange={(val) => setFormData(prev => ({ ...prev, gender: val }))}
+                          onChange={(val) => {
+                            setFormData(prev => ({ ...prev, gender: val }));
+                            if (errors.gender) {
+                              setErrors(prev => {
+                                const newErrors = { ...prev };
+                                delete newErrors.gender;
+                                return newErrors;
+                              });
+                            }
+                          }}
                           options={GENDER_OPTIONS}
                           placeholder="Select Gender"
                         />
+                        {errors.gender && <span role="alert">{errors.gender}</span>}
                       </div>
 
                       <div className="single-field">
@@ -228,10 +278,11 @@ const IntroducedInvestorStep1: React.FC = () => {
                           type="email"
                           name="email"
                           id="email"
+                          className="form-control"
                           value={formData.email}
                           readOnly
-                          required
                         />
+                        {errors.email && <span role="alert">{errors.email}</span>}
                       </div>
 
                       <div className="single-field">
@@ -249,17 +300,25 @@ const IntroducedInvestorStep1: React.FC = () => {
                             type="text"
                             name="mobileNumber"
                             id="mobileNumber"
+                            className="form-control"
                             value={formData.mobileNumber}
                             onChange={(e) => {
                               const value = e.target.value.replace(/[^0-9]/g, '');
                               setFormData(prev => ({ ...prev, mobileNumber: value }));
+                              if (errors.mobileNumber) {
+                                setErrors(prev => {
+                                  const newErrors = { ...prev };
+                                  delete newErrors.mobileNumber;
+                                  return newErrors;
+                                });
+                              }
                             }}
                             placeholder="Enter mobile number"
                             minLength={10}
                             maxLength={16}
-                            required
                           />
                         </div>
+                        {errors.mobileNumber && <span role="alert">{errors.mobileNumber}</span>}
                       </div>
 
                       <div className="single-field">
@@ -282,6 +341,7 @@ const IntroducedInvestorStep1: React.FC = () => {
                             </p>
                           </label>
                         </div>
+                        {errors.agreeForOtp && <span role="alert">{errors.agreeForOtp}</span>}
                       </div>
 
                       <div className="single-field mb-0 text-center border-t pt-3 mt-3">
