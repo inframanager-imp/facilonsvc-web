@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { investorService, JourneyListItem } from '../../../services/investor.service';
 import { LoadingSpinner } from '../../../components/LoadingSpinner/LoadingSpinner';
+import AlertDialog from '../../../components/AlertDialog/AlertDialog';
 
 const statusBadgeClass = (status?: string): string => {
   switch ((status || '').toUpperCase()) {
@@ -20,6 +21,8 @@ export const JourneyList: React.FC = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [journeys, setJourneys] = useState<JourneyListItem[]>([]);
+  // The journey awaiting KYC-reuse consent (Phase 3 gate). Non-null shows the modal.
+  const [consentItem, setConsentItem] = useState<JourneyListItem | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -34,13 +37,67 @@ export const JourneyList: React.FC = () => {
     })();
   }, []);
 
-  const openJourney = (item: JourneyListItem) => {
+  const navigateToJourney = (item: JourneyListItem) => {
     if (item.actionRoute) {
       navigate(item.actionRoute);
     } else if (item.journeyId) {
       navigate(`/investor/journey/${item.journeyId}`);
     } else {
       navigate('/investor/journey');
+    }
+  };
+
+  // Phase 3: gate the first open of a journey. If KYC isn't complete, send the
+  // investor to finish it; if complete but not yet consented for this journey,
+  // ask consent before opening; otherwise open straight through.
+  const openJourney = async (item: JourneyListItem) => {
+    if (!item.journeyId) {
+      navigateToJourney(item);
+      return;
+    }
+    try {
+      const gate = await investorService.getJourneyKycGate(item.journeyId);
+      if (!gate.kycComplete) {
+        navigate('/investor/documents-center');
+        return;
+      }
+      if (gate.consentGiven) {
+        navigateToJourney(item);
+        return;
+      }
+      setConsentItem(item); // need consent — open modal
+    } catch (error) {
+      // Gate failure shouldn't trap the user — fall back to opening the journey.
+      console.error('[JourneyList] KYC gate check failed:', error);
+      navigateToJourney(item);
+    }
+  };
+
+  // Tracks whether the user chose "I Agree" so onClose doesn't also record a Skip.
+  const agreedRef = useRef(false);
+
+  // Close the consent prompt and open the journey regardless of the choice —
+  // consent is optional, so it never blocks entry. On Skip/X (no agree), record
+  // the decision so the prompt is asked only ONCE.
+  const closeConsentAndOpen = () => {
+    const item = consentItem;
+    if (item?.journeyId && !agreedRef.current) {
+      investorService
+        .skipJourneyKycConsent(item.journeyId)
+        .catch((error) => console.error('[JourneyList] Failed to record KYC skip:', error));
+    }
+    agreedRef.current = false;
+    setConsentItem(null);
+    if (item) navigateToJourney(item);
+  };
+
+  // "I Agree": record consent in the background (server then archives the docs).
+  const handleConsentAgree = () => {
+    agreedRef.current = true; // set before onClose runs so it won't also record a Skip
+    if (consentItem?.journeyId) {
+      investorService
+        .giveJourneyKycConsent(consentItem.journeyId)
+        .catch((error) => console.error('[JourneyList] Failed to record KYC consent:', error));
     }
   };
 
@@ -108,6 +165,16 @@ export const JourneyList: React.FC = () => {
           )}
         </div>
       </div>
+
+      <AlertDialog
+        show={!!consentItem}
+        title="Use your KYC documents for this application?"
+        message={`To continue${consentItem?.product ? ` "${consentItem.product}"` : ' this journey'}, do you consent to Facilon using the KYC documents you uploaded in your Document Center — and the details extracted from them — for this application? Your documents will be submitted as part of this journey and used to auto-fill your details. Your consent is recorded with the date and time.`}
+        confirmText="I Agree"
+        cancelText="Skip for now"
+        onConfirm={handleConsentAgree}
+        onClose={closeConsentAndOpen}
+      />
     </div>
   );
 };

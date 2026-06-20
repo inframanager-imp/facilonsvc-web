@@ -11,6 +11,8 @@ import { RequirementCard } from './RequirementCard';
 import { UploadDialog } from './UploadDialog';
 import { ExtractedFieldsReview } from './ExtractedFieldsReview';
 import { ExpiryNotice } from './ExpiryNotice';
+import { blockingAlertText } from './kycDiscrepancy';
+import AlertDialog from '../../../../../components/AlertDialog/AlertDialog';
 import './SmartUpload.scss';
 
 export const KycDocumentsPage: React.FC = () => {
@@ -20,6 +22,7 @@ export const KycDocumentsPage: React.FC = () => {
   const [activeSlot, setActiveSlot] = useState<KycRequirementSlotDto | null>(null);
   const [reviewDoc, setReviewDoc] = useState<KycSmartDocumentDto | null>(null);
   const [submitting, setSubmitting] = useState<boolean>(false);
+  const [alert, setAlert] = useState<{ title: string; message: string } | null>(null);
 
   const load = useCallback(async () => {
     try {
@@ -56,12 +59,21 @@ export const KycDocumentsPage: React.FC = () => {
     } catch (err: any) {
       if (err?.response?.status === 409 && err?.response?.data) {
         setActiveSlot(null);
-        setReviewDoc(err.response.data as KycSmartDocumentDto);
-        toast.warning('Upload needs review - please check the flagged fields');
+        const doc = err.response.data as KycSmartDocumentDto;
+        const blockingText = blockingAlertText(doc);
+        if (blockingText) {
+          // Rejected (mismatch / random / unreadable / unverifiable) - surface the
+          // specific reason in the shared alert popup, per design.
+          setAlert({ title: 'Document not accepted', message: blockingText });
+        } else {
+          // 409 without a blocking reason: fall back to the review modal.
+          setReviewDoc(doc);
+          toast.warning('Upload needs review - please check the flagged fields');
+        }
         await load();
       } else {
         const message = err?.response?.data?.message || err?.message || 'Upload failed';
-        toast.error(message);
+        setAlert({ title: 'Upload failed', message });
       }
     } finally {
       setSubmitting(false);
@@ -167,6 +179,13 @@ export const KycDocumentsPage: React.FC = () => {
           }}
         />
       )}
+
+      <AlertDialog
+        show={!!alert}
+        title={alert?.title}
+        message={alert?.message ?? ''}
+        onClose={() => setAlert(null)}
+      />
     </div>
   );
 };

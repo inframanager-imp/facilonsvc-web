@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import { KycSmartDocumentDto } from '../../../../../services/kycDocuments.service';
+import { discrepancyMessage } from './kycDiscrepancy';
 
 interface Props {
   doc: KycSmartDocumentDto;
@@ -104,9 +105,7 @@ export const ExtractedFieldsReview: React.FC<Props> = ({ doc, onClose, onConfirm
             <strong>Upload blocked</strong>
             <ul className="mb-0 small">
               {blocking.map((d) => (
-                <li key={d.id}>
-                  {d.fieldName || d.canonicalSource}: expected "{d.expectedValue}", got "{d.observedValue}"
-                </li>
+                <li key={d.id}>{discrepancyMessage(d, doc.documentType)}</li>
               ))}
             </ul>
           </div>
@@ -117,9 +116,7 @@ export const ExtractedFieldsReview: React.FC<Props> = ({ doc, onClose, onConfirm
             <strong>Review flags</strong>
             <ul className="mb-0 small">
               {warnings.map((d) => (
-                <li key={d.id}>
-                  {d.fieldName || d.canonicalSource}: expected "{d.expectedValue}", got "{d.observedValue}"
-                </li>
+                <li key={d.id}>{discrepancyMessage(d, doc.documentType)}</li>
               ))}
             </ul>
           </div>
@@ -175,22 +172,28 @@ export const ExtractedFieldsReview: React.FC<Props> = ({ doc, onClose, onConfirm
       <Modal.Footer>
         {canDecide && !alreadyConfirmed && (
           <>
-            <button
-              type="button"
-              className="btn btn-outline-danger"
-              onClick={handleReject}
-              disabled={submitting !== null}
-            >
-              {submitting === 'reject' ? "Removing..." : "Something's wrong"}
-            </button>
-            <button
-              type="button"
-              className="btn btn-success"
-              onClick={handleConfirm}
-              disabled={submitting !== null}
-            >
-              {submitting === 'confirm' ? 'Saving...' : 'Looks right'}
-            </button>
+            {/* Hide the reject button while a confirm is in flight so its red
+                "Something's wrong" label doesn't flash next to "Saving...". */}
+            {submitting !== 'confirm' && (
+              <button
+                type="button"
+                className="btn btn-outline-danger"
+                onClick={handleReject}
+                disabled={submitting !== null}
+              >
+                {submitting === 'reject' ? "Removing..." : "Something's wrong"}
+              </button>
+            )}
+            {submitting !== 'reject' && (
+              <button
+                type="button"
+                className="btn btn-success"
+                onClick={handleConfirm}
+                disabled={submitting !== null}
+              >
+                {submitting === 'confirm' ? 'Saving...' : 'Looks right'}
+              </button>
+            )}
           </>
         )}
         {alreadyConfirmed && (

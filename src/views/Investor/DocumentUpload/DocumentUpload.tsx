@@ -26,11 +26,21 @@ export const DocumentUpload: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [showReasonsModal, setShowReasonsModal] = useState(false);
 
-  const handlePreview = (documentId: number, documentUrl?: string) => {
-    if (documentUrl) {
+  const handlePreview = async (documentId: number, documentUrl?: string) => {
+    // A real http(s) URL (e.g. a SharePoint web link) can be opened directly.
+    if (documentUrl && /^https?:\/\//i.test(documentUrl)) {
       window.open(documentUrl, '_blank');
-    } else {
-      window.open(`/api/clients/me/documents/${documentId}/download`, '_blank');
+      return;
+    }
+    // Otherwise the stored ref is a non-openable scheme (azureblob:// / sharepoint://
+    // / item id), so stream the bytes via the authenticated endpoint and open a blob URL.
+    try {
+      const blob = await investorService.downloadDocument(documentId);
+      const url = URL.createObjectURL(blob);
+      window.open(url, '_blank');
+      setTimeout(() => URL.revokeObjectURL(url), 60_000);
+    } catch (e) {
+      toast.error('Unable to open document');
     }
   };
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Header from '../../../components/Header/Header';
@@ -8,6 +8,7 @@ import { kycDocumentsService, KycRequirementsResponseDto, KycRequirementState } 
 import { DelegationDto } from '../../../models/DelegationDto';
 import { LoadingSpinner } from '../../../components/LoadingSpinner/LoadingSpinner';
 import { AcceptDelegationModal, ConsentCustomization } from '../../../components/AcceptDelegationModal/AcceptDelegationModal';
+import AlertDialog from '../../../components/AlertDialog/AlertDialog';
 // import './InvestorDashboard.scss';
 
 /**
@@ -44,6 +45,60 @@ export const InvestorDashboard: React.FC = () => {
   const [requestType, setRequestType] = useState('Right to Access');
   const [requestComments, setRequestComments] = useState('');
   const [requestFile, setRequestFile] = useState<File | null>(null);
+
+  // Per-journey KYC consent gate (same as the /investor/journeys page).
+  const [consentItem, setConsentItem] = useState<JourneyListItem | null>(null);
+
+  const navigateToJourney = (item: JourneyListItem) =>
+    navigate(item.actionRoute || '/investor/journeys');
+
+  // Gate the play button: KYC incomplete -> finish it first; complete but not
+  // consented for this journey -> ask consent; otherwise open straight through.
+  const openJourney = async (item: JourneyListItem) => {
+    if (!item.journeyId) {
+      navigateToJourney(item);
+      return;
+    }
+    try {
+      const gate = await investorService.getJourneyKycGate(item.journeyId);
+      if (!gate.kycComplete) {
+        navigate('/investor/documents-center');
+        return;
+      }
+      if (gate.consentGiven) {
+        navigateToJourney(item);
+        return;
+      }
+      setConsentItem(item);
+    } catch (error) {
+      console.error('[Dashboard] KYC gate check failed:', error);
+      navigateToJourney(item);
+    }
+  };
+
+  // Consent is optional and never blocks entry. On Skip/X (no agree) record the
+  // decision so the prompt is asked only ONCE. agreedRef stops onClose from also
+  // recording a Skip right after "I Agree".
+  const agreedRef = useRef(false);
+  const closeConsentAndOpen = () => {
+    const item = consentItem;
+    if (item?.journeyId && !agreedRef.current) {
+      investorService
+        .skipJourneyKycConsent(item.journeyId)
+        .catch((error) => console.error('[Dashboard] Failed to record KYC skip:', error));
+    }
+    agreedRef.current = false;
+    setConsentItem(null);
+    if (item) navigateToJourney(item);
+  };
+  const handleConsentAgree = () => {
+    agreedRef.current = true;
+    if (consentItem?.journeyId) {
+      investorService
+        .giveJourneyKycConsent(consentItem.journeyId)
+        .catch((error) => console.error('[Dashboard] Failed to record KYC consent:', error));
+    }
+  };
 
   useEffect(() => {
     fetchDashboardData();
@@ -160,12 +215,19 @@ export const InvestorDashboard: React.FC = () => {
     );
   }
 
-  // MOCK DATA for the new layout
-  const pendingActions = [
-    { activity: 'KYC Document Verification', centra: 'Compliance', status: 'PENDING', statusColor: 'bg-[#fff8f0] text-[#f59e0b] border border-[#f59e0b]/30' },
-    { activity: 'Risk Profile Assessment', centra: 'Onboarding', status: 'REVIEW', statusColor: 'bg-[#eff6ff] text-[#3b82f6] border border-[#3b82f6]/30' },
-    { activity: 'Fatca Declaration', centra: 'Tax Centre', status: 'REQUIRED', statusColor: 'bg-[#fef2f2] text-[#ef4444] border border-[#ef4444]/30' },
-  ];
+  // My Pending Action — real incomplete Facilon-status steps from the backend
+  // (InvestorDashboardDto.pendingActions). PENDING = current step (amber), REQUIRED = not
+  // started yet (red).
+  const pendingActions = (dashboardData.pendingActions ?? []).map((item) => ({
+    activity: item.activity ?? '',
+    centra: item.centre ?? '-',
+    status: item.status ?? 'REQUIRED',
+    statusColor:
+      item.status === 'PENDING'
+        ? 'bg-[#fff8f0] text-[#f59e0b] border border-[#f59e0b]/30'
+        : 'bg-[#fef2f2] text-[#ef4444] border border-[#ef4444]/30',
+    route: item.actionRoute || '/investor/journeys',
+  }));
 
   // My Appointment card hidden for now — mock data kept for when it's re-enabled
   // const appointments = [
@@ -315,7 +377,7 @@ export const InvestorDashboard: React.FC = () => {
                     <i className="bi bi-list-task mr-2 text-slate-500"></i> My Pending Action
                   </h2>
                   <span className="bg-[#e0ecf0] text-[#1f4851] text-[9px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider">
-                    3 PENDING
+                    {pendingActions.length} PENDING
                   </span>
                 </div>
 
@@ -329,29 +391,42 @@ export const InvestorDashboard: React.FC = () => {
                     </div>
 
                     <div className="flex flex-col">
-                      {pendingActions.map((item, idx) => (
-                        <div key={idx} className="grid grid-cols-12 items-center p-1 border-b border-[#e2e8f0] last:border-0 hover:bg-slate-50/50 transition-colors">
-                          <div className="col-span-6 text-[11px] font-semibold text-slate-700 pr-1">{item.activity}</div>
-                          <div className="col-span-3 text-[11px] text-slate-500">{item.centra}</div>
-                          <div className="col-span-2 flex items-center">
-                            <span className={`text-[7.5px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${item.statusColor}`}>
-                              {item.status}
-                            </span>
-                          </div>
-                          <div className="col-span-1 text-right flex justify-end">
-                            <button className="text-slate-400 hover:text-slate-600 transition-colors p-1.5 border border-slate-200 rounded bg-slate-50">
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                              </svg>
-                            </button>
-                          </div>
+                      {pendingActions.length === 0 ? (
+                        <div className="py-4 text-center text-[11px] text-slate-400">
+                          You're all caught up — no pending actions.
                         </div>
-                      ))}
+                      ) : (
+                        pendingActions.map((item, idx) => (
+                          <div key={idx} className="grid grid-cols-12 items-center p-1 border-b border-[#e2e8f0] last:border-0 hover:bg-slate-50/50 transition-colors">
+                            <div className="col-span-6 text-[11px] font-semibold text-slate-700 pr-1">{item.activity}</div>
+                            <div className="col-span-3 text-[11px] text-slate-500">{item.centra}</div>
+                            <div className="col-span-2 flex items-center">
+                              <span className={`text-[7.5px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${item.statusColor}`}>
+                                {item.status}
+                              </span>
+                            </div>
+                            <div className="col-span-1 text-right flex justify-end">
+                              <button
+                                onClick={() => navigate(item.route)}
+                                className="text-slate-400 hover:text-slate-600 transition-colors p-1.5 border border-slate-200 rounded bg-slate-50 hover:bg-slate-100 cursor-pointer"
+                                title={`Go to ${item.activity}`}
+                              >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
+                        ))
+                      )}
                     </div>
                   </div>
 
                   <div className="mt-3">
-                    <button className="w-full py-1.5 text-[10px] font-semibold text-[#1f4851] border border-[#1f4851] rounded hover:bg-[#1f4851]/5 transition-colors">
+                    <button
+                      onClick={() => navigate(journeys[0]?.actionRoute || '/investor/journeys')}
+                      className="w-full py-1.5 text-[10px] font-semibold text-[#1f4851] border border-[#1f4851] rounded hover:bg-[#1f4851]/5 transition-colors cursor-pointer"
+                    >
                       View All Pending Actions
                     </button>
                   </div>
@@ -402,7 +477,7 @@ export const InvestorDashboard: React.FC = () => {
                                 : 'text-[#3b82f6] bg-[#eff6ff]';
                           const barColor = completed ? 'bg-[#10b981]' : status === 'IN PROGRESS' ? 'bg-[#3b82f6]' : status === 'ABANDONED' ? 'bg-[#ef4444]' : 'bg-[#f59e0b]';
                           const progress = typeof item.progress === 'number' ? item.progress : (completed ? 100 : status === 'ABANDONED' ? 100 : 0);
-                          const goToJourney = () => navigate(item.actionRoute || '/investor/journeys');
+                          const goToJourney = () => openJourney(item);
                           return (
                             <div key={item.journeyId || idx} className="grid grid-cols-12 items-center p-1 border-b border-[#e2e8f0] last:border-0 hover:bg-slate-50/50 transition-colors">
                               <div className="col-span-4 pr-1">
@@ -947,6 +1022,16 @@ export const InvestorDashboard: React.FC = () => {
           processing={processingDelegation === selectedDelegation.id}
         />
       )}
+
+      <AlertDialog
+        show={!!consentItem}
+        title="Use your KYC documents for this application?"
+        message={`To continue${consentItem?.product ? ` "${consentItem.product}"` : ' this journey'}, do you consent to Facilon using the KYC documents you uploaded in your Document Center — and the details extracted from them — for this application? Your documents will be submitted as part of this journey and used to auto-fill your details. Your consent is recorded with the date and time.`}
+        confirmText="I Agree"
+        cancelText="Skip for now"
+        onConfirm={handleConsentAgree}
+        onClose={closeConsentAndOpen}
+      />
 
 
 

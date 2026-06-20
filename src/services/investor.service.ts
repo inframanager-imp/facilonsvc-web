@@ -183,9 +183,19 @@ export interface InvestorDashboardDto {
   productAssignment?: ProductAssignment;
   applications?: ApplicationItem[];
   consentCenter?: ConsentItem[];
+  /** Incomplete Facilon-status steps for the "My Pending Action" card. */
+  pendingActions?: PendingActionDto[];
   delegation?: DelegationInfo;
   /** True once the investor has agreed to their SOW. The onboarding journey is gated on this. */
   sowAgreed?: boolean;
+}
+
+export interface PendingActionDto {
+  activity?: string;     // step label, e.g. "KYC Docs"
+  centre?: string;       // CENTRA column grouping, e.g. "Compliance"
+  status?: string;       // "PENDING" (current step) | "REQUIRED" (not started)
+  stepKey?: string;      // information|documents|onboarding|verification|physical|account
+  actionRoute?: string;  // frontend route to act on this step
 }
 
 export interface AccountSnapshot {
@@ -465,6 +475,11 @@ export interface JourneyListItem {
   actionRoute?: string;
 }
 
+export interface JourneyKycGate {
+  kycComplete: boolean;
+  consentGiven: boolean;
+}
+
 class InvestorService {
   private readonly baseUrl = '/api/clients';
 
@@ -576,6 +591,37 @@ class InvestorService {
       `${this.baseUrl}/me/journeys`
     );
     return response.data;
+  }
+
+  // Phase 3: per-journey KYC-reuse consent gate.
+  async getJourneyKycGate(journeyId: string): Promise<JourneyKycGate> {
+    const response = await this.client.get<JourneyKycGate>(
+      `${this.baseUrl}/me/journeys/${encodeURIComponent(journeyId)}/kyc-gate`
+    );
+    return response.data;
+  }
+
+  async giveJourneyKycConsent(journeyId: string): Promise<void> {
+    await this.client.post(
+      `${this.baseUrl}/me/journeys/${encodeURIComponent(journeyId)}/kyc-consent`
+    );
+  }
+
+  // Records a "Skip for now" decision so the consent prompt is asked only once.
+  async skipJourneyKycConsent(journeyId: string): Promise<void> {
+    await this.client.post(
+      `${this.baseUrl}/me/journeys/${encodeURIComponent(journeyId)}/kyc-skip`
+    );
+  }
+
+  // Streams a KYC document's bytes (resolves SharePoint or decrypts the Blob copy).
+  // Goes through the authenticated client so the JWT is attached.
+  async downloadDocument(documentId: number): Promise<Blob> {
+    const response = await this.client.get(
+      `${this.baseUrl}/me/documents/${documentId}/download`,
+      { responseType: 'blob' }
+    );
+    return response.data as Blob;
   }
 
   async submitDsrCase(data: DsrCaseCreateDto, supportingFiles?: File[]): Promise<DsrCaseResponseDto> {
