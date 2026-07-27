@@ -8,7 +8,7 @@
 
   // Top thin contact bar
   .top-info-bar {
-    background-color: #0b141a; // Very dark background
+    background-color: #bf1c1c; // Very dark background
     color: #cbd5e1;
     font-size: 12px;
     padding: 6px 0;
@@ -48,7 +48,7 @@
   // Main navigation header bar
   .main-nav-bar {
     background-color: #295a68; // Dark teal color from the production screenshot
-    height: 75px;
+    height: 50px;
     display: flex;
     align-items: stretch;
 
@@ -101,12 +101,12 @@
         list-style: none;
         display: flex;
         align-items: center;
-        gap: 1.5rem;
+        gap: 5px;
 
         .nav-item {
           color: #ffffff;
           font-size: 13.5px;
-          font-weight: 700;
+          font-weight: 500;
           text-decoration: none;
           letter-spacing: 0.8px;
           padding: 8px 12px;
@@ -162,10 +162,10 @@
       padding-right: 3rem;
       clip-path: polygon(0 0, 100% 0, 85% 100%, 0 100%);
     }
-    
+
     .nav-menu-tab .nav-list {
       gap: 0.8rem;
-      
+
       .nav-item {
         font-size: 12.5px;
         padding: 6px 8px;

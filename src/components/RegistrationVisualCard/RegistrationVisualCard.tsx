@@ -314,31 +314,25 @@ export const RegistrationVisualCard: React.FC<Props> = ({ step, registerAs = 1 }
       <div className="decor-glow" />
       <div className="decor-glow-bottom" />
 
-      {/* Card Header Section */}
-      <div className="card-top">
-        <div className="card-brand flex flex-col">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <i className={`bi ${header.icon}`} style={{ fontSize: '15px', color: '#7facb7' }} />
-            <span style={{ fontSize: '10.5px', fontWeight: 800, letterSpacing: '1.5px', textTransform: 'uppercase', color: 'rgba(255, 255, 255, 0.8)' }}>
-              {header.badge}
-            </span>
-          </div>
-          <span style={{ fontSize: '11px', fontWeight: 600, color: 'rgba(255, 255, 255, 0.6)', display: 'flex', alignItems: 'center', gap: '4px', whiteSpace: 'nowrap', paddingLeft: '12px' }}>
-            <i className="bi bi-clock-history" style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.6)' }} />
-            Time Required: {header.time}
-          </span>
-        </div>
-      </div>
-
-      {/* Visual / Illustration Area */}
-      <div className="card-illustration-container">
-        {details.illustration}
-      </div>
 
       {/* Text / Context Info */}
       <div className="card-bottom">
         <h3 className='text-center'>{details.title}</h3>
         <p className='text-center'>{details.description}</p>
+      </div>
+
+      {/* Card Header Section */}
+      <div className="card-top mt-3">
+        <div className="card-brand flex flex-col" style={{ alignItems: 'center' }}>
+          <span style={{ fontSize: '11px', fontWeight: 600, color: 'rgba(255, 255, 255, 0.6)', display: 'flex', alignItems: 'center', gap: '4px', whiteSpace: 'nowrap' }}>
+            <i className="bi bi-clock-history" style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.6)' }} />
+            Time Required: {header.time}
+          </span>
+        </div>
+      </div>
+      {/* Visual / Illustration Area */}
+      <div className="card-illustration-container">
+        {details.illustration}
       </div>
     </div>
   );
